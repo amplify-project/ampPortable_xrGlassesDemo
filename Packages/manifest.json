@@ -14,6 +14,7 @@
     "com.unity.xr.arfoundation": "6.2.0",
     "com.unity.xr.hands": "1.6.1",
     "com.unity.xr.interaction.toolkit": "3.2.1",
+    "com.unity.xr.mock-hmd": "1.4.0-preview.2",
     "com.unity.xr.openxr": "1.15.1",
     "com.xreal.xr": "file:C:/Users/Bryan Dunphy/Downloads/com.xreal.xr.tar.gz",
     "com.unity.modules.accessibility": "1.0.0",
