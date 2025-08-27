@@ -1,0 +1,1 @@
+A Unity project intended as a PoC demo for real-time display of audience data in XR glasses. Data visualisations act as abstract graphical scores and also as a way to provide information on audience engagement levels.
