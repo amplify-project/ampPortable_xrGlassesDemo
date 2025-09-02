@@ -312,7 +312,7 @@
       "url": "https://packages.unity.com"
     },
     "com.xreal.xr": {
-      "version": "file:C:/Users/Bryan Dunphy/Downloads/com.xreal.xr.tar.gz",
+      "version": "file:C:/Users/Bryan Dunphy/Documents/XRealSDK/com.xreal.xr.tar.gz",
       "depth": 0,
       "source": "local-tarball",
       "dependencies": {
