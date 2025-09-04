@@ -220,12 +220,12 @@ namespace AmpPortableDataViz.Tests.Core
             Assert.DoesNotThrow(() => sync.Publish("", 42, 0));
         }
 
-        /*[Test]
+        [Test]
         public void INetworkSync_Publish_NullPayload()
         {
             var sync = new MockNetworkSync();
-            Assert.DoesNotThrow(() => sync.Publish("topic", null, 0));
-        }*/
+            Assert.DoesNotThrow(() => sync.Publish<object>("topic", null, 0));
+        }
 
         [Test]
         public void INetworkSync_Subscribe_NullHandler()
