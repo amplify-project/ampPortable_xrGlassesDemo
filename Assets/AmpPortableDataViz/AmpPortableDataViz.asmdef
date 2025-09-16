@@ -1,3 +1,16 @@
 {
-	"name": "Amp"
+    "name": "Amp",
+    "rootNamespace": "",
+    "references": [
+        "GUID:702f733b4deb246808c6ce84d93b5c9c"
+    ],
+    "includePlatforms": [],
+    "excludePlatforms": [],
+    "allowUnsafeCode": false,
+    "overrideReferences": false,
+    "precompiledReferences": [],
+    "autoReferenced": true,
+    "defineConstraints": [],
+    "versionDefines": [],
+    "noEngineReferences": false
 }
