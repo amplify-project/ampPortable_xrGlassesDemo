@@ -4,6 +4,7 @@ using AmpPortableDataViz.Core;
 using AmpPortableDataViz.Infra;
 using AmpPortableDataViz.Presentation.Anchors;
 using AmpPortableDataViz.Presentation.Mapping;
+using AmpPortableDataViz.Presentation.Sources;
 using AmpPortableDataViz.Presentation.Visualization;
 using UnityEngine;
 
@@ -12,7 +13,8 @@ namespace AmpPortableDataViz.Presentation.Bootstrap
     public sealed class Bootstrapper : MonoBehaviour
     {
         public AnchorRegistry AnchorRegistry;
-        public AmpPortableDataViz.Presentation.Sources.SineWaveSource SineSource;
+        public SineWaveSource SineSource;
+        public LiveKitTelemetryReceiver LiveKitSource;
         public GameObject VisualPrefab;
         public bool IsHost = true;
 
@@ -20,6 +22,7 @@ namespace AmpPortableDataViz.Presentation.Bootstrap
         private IAnchorService _anchorService;
         private INetworkSync _networkSync;
         private IDisposable _spawnSubscription;
+        private Transform _liveKitTargetTransform;
 
         private const string SpawnTopic = "session/visual/spawn";
         private const string ParamTopic = "session/visual/param";
@@ -34,8 +37,9 @@ namespace AmpPortableDataViz.Presentation.Bootstrap
             if (SineSource == null)
             {
                 var sourceGameObject = new GameObject("SineWaveSource");
-                SineSource = sourceGameObject.AddComponent<AmpPortableDataViz.Presentation.Sources.SineWaveSource>();
+                SineSource = sourceGameObject.AddComponent<SineWaveSource>();
             }
+            if (LiveKitSource == null) LiveKitSource = FindObjectOfType<LiveKitTelemetryReceiver>();
             if (VisualPrefab == null)
             {
                 VisualPrefab = GameObject.CreatePrimitive(PrimitiveType.Sphere);
@@ -48,12 +52,28 @@ namespace AmpPortableDataViz.Presentation.Bootstrap
         private void OnEnable()
         {
             _spawnSubscription = _networkSync.Subscribe(SpawnTopic, OnSpawnMessageReceived);
+            if (LiveKitSource == null) LiveKitSource = FindObjectOfType<LiveKitTelemetryReceiver>();
+            if (LiveKitSource != null)
+            {
+                LiveKitSource.OnFrame += OnLiveKitFrame;
+            }
+            else
+            {
+                Debug.LogWarning("Bootstrapper could not locate a LiveKitTelemetryReceiver in the scene.");
+            }
         }
 
         private void OnDisable()
         {
             _spawnSubscription?.Dispose();
             _spawnSubscription = null;
+
+            if (LiveKitSource != null)
+            {
+                LiveKitSource.OnFrame -= OnLiveKitFrame;
+            }
+
+            _liveKitTargetTransform = null;
         }
 
         private IEnumerator Start()
@@ -145,14 +165,34 @@ namespace AmpPortableDataViz.Presentation.Bootstrap
             spawnedVisualization.name = $"Viz_{spawnMessage.VisualId}";
 
             var anchoredComponent = spawnedVisualization.GetComponent<AnchoredVisualization>();
-            anchoredComponent.AnchorId = resolvedAnchorId;
-            anchoredComponent.BindTransform();
+            if (anchoredComponent != null)
+            {
+                anchoredComponent.AnchorId = resolvedAnchorId;
+                anchoredComponent.BindTransform();
+                _liveKitTargetTransform = anchoredComponent.VisualRoot == null ? anchoredComponent.transform : anchoredComponent.VisualRoot;
+            }
+            else
+            {
+                _liveKitTargetTransform = spawnedVisualization.transform;
+            }
+        }
+
+        private void OnLiveKitFrame(DataFrame<LiveKitTelemetryService.TelemetryFrame> frame)
+        {
+            if (_liveKitTargetTransform == null)
+            {
+                return;
+            }
+
+            var payload = frame.Payload;
+            _liveKitTargetTransform.localPosition = payload.Position;
+            _liveKitTargetTransform.localRotation = payload.Rotation;
         }
     }
 
     internal static class TaskExtensions
     {
-        public static IEnumerator AsIEnumerator<TResult>(this System.Threading.Tasks.Task<TResult> task, System.Action<TResult> onCompleteAction)
+        public static IEnumerator AsIEnumerator<TResult>(this System.Threading.Tasks.Task<TResult> task, Action<TResult> onCompleteAction)
         {
             while (!task.IsCompleted) yield return null;
             if (task.IsFaulted) yield break;
