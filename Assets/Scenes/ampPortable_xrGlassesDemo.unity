@@ -194,6 +194,11 @@ Transform:
   m_Children: []
   m_Father: {fileID: 2089247644}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!4 &150258995 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 5734278484202258844, guid: cb5f5548eeaac80439b15658a3e67a94, type: 3}
+  m_PrefabInstance: {fileID: 2093917564}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1 &203844586
 GameObject:
   m_ObjectHideFlags: 0
@@ -1102,6 +1107,7 @@ GameObject:
   - component: {fileID: 2089247650}
   - component: {fileID: 2089247651}
   - component: {fileID: 2089247652}
+  - component: {fileID: 2089247653}
   m_Layer: 0
   m_Name: ImageBoard
   m_TagString: Untagged
@@ -1468,6 +1474,20 @@ MonoBehaviour:
   - {fileID: 770065267}
   - {fileID: 96360393}
   - {fileID: 612644800}
+--- !u!114 &2089247653
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2089247639}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1e126d09f0b4ce243b941a0ab2396dc5, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Amp::FaceUserSmooth
+  userTransform: {fileID: 150258995}
+  rotationSpeed: 5
 --- !u!1001 &2093917564
 PrefabInstance:
   m_ObjectHideFlags: 0
