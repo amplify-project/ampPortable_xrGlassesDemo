@@ -253,6 +253,7 @@ GameObject:
   - component: {fileID: 126310690}
   - component: {fileID: 126310689}
   - component: {fileID: 126310688}
+  - component: {fileID: 126310691}
   m_Layer: 5
   m_Name: SopranoSax
   m_TagString: Untagged
@@ -323,7 +324,19 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 126310689}
   m_OnClick:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 126310691}
+        m_TargetAssemblyTypeName: ScoreLoader, Amp
+        m_MethodName: LoadScore
+        m_Mode: 5
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: Soprano Sax
+          m_BoolArgument: 0
+        m_CallState: 2
 --- !u!114 &126310689
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -362,6 +375,21 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 126310686}
   m_CullTransparentMesh: 1
+--- !u!114 &126310691
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 126310686}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: de51e62691e7a98409d0657d4dafca5a, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Amp::ScoreLoader
+  imageBoardPrefab: {fileID: 4718808774520319148, guid: f76925451474e044490134be6cd2b2bd, type: 3}
+  spawnParent: {fileID: 2056354647}
+  pathKind: 2
 --- !u!1 &203844586
 GameObject:
   m_ObjectHideFlags: 0
@@ -550,6 +578,7 @@ GameObject:
   - component: {fileID: 341071170}
   - component: {fileID: 341071169}
   - component: {fileID: 341071168}
+  - component: {fileID: 341071171}
   m_Layer: 5
   m_Name: Acordeao
   m_TagString: Untagged
@@ -620,7 +649,19 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 341071169}
   m_OnClick:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 341071171}
+        m_TargetAssemblyTypeName: ScoreLoader, Amp
+        m_MethodName: LoadScore
+        m_Mode: 5
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: Acordeao
+          m_BoolArgument: 0
+        m_CallState: 2
 --- !u!114 &341071169
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -659,6 +700,21 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 341071166}
   m_CullTransparentMesh: 1
+--- !u!114 &341071171
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 341071166}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: de51e62691e7a98409d0657d4dafca5a, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Amp::ScoreLoader
+  imageBoardPrefab: {fileID: 4718808774520319148, guid: f76925451474e044490134be6cd2b2bd, type: 3}
+  spawnParent: {fileID: 2056354647}
+  pathKind: 2
 --- !u!1 &698791613
 GameObject:
   m_ObjectHideFlags: 0
@@ -1042,7 +1098,7 @@ RectTransform:
   m_GameObject: {fileID: 1014201508}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0.75}
-  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_LocalScale: {x: 0.005, y: 0.005, z: 0.005}
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 21247885}
@@ -1065,6 +1121,7 @@ GameObject:
   - component: {fileID: 1247730188}
   - component: {fileID: 1247730187}
   - component: {fileID: 1247730186}
+  - component: {fileID: 1247730189}
   m_Layer: 5
   m_Name: BaritoneSax
   m_TagString: Untagged
@@ -1135,7 +1192,19 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 1247730187}
   m_OnClick:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 1247730189}
+        m_TargetAssemblyTypeName: ScoreLoader, Amp
+        m_MethodName: LoadScore
+        m_Mode: 5
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: Baritone Sax
+          m_BoolArgument: 0
+        m_CallState: 2
 --- !u!114 &1247730187
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1174,6 +1243,21 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1247730184}
   m_CullTransparentMesh: 1
+--- !u!114 &1247730189
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1247730184}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: de51e62691e7a98409d0657d4dafca5a, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Amp::ScoreLoader
+  imageBoardPrefab: {fileID: 4718808774520319148, guid: f76925451474e044490134be6cd2b2bd, type: 3}
+  spawnParent: {fileID: 2056354647}
+  pathKind: 2
 --- !u!1 &1598542470
 GameObject:
   m_ObjectHideFlags: 0
@@ -1717,6 +1801,37 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &2056354646
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 2056354647}
+  m_Layer: 0
+  m_Name: ImageBoardParent
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &2056354647
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2056354646}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 1.5, z: 1}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1001 &2093917564
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -1794,3 +1909,4 @@ SceneRoots:
   - {fileID: 57692145}
   - {fileID: 1645591785}
   - {fileID: 1014201513}
+  - {fileID: 2056354647}
