@@ -7,6 +7,13 @@ public class FaceUserSmooth : MonoBehaviour
     public Transform userTransform; // Reference to the user's Transform (e.g., the camera or XR rig)
     public float rotationSpeed = 5f; // Speed of the rotation
 
+    void Start()
+    {
+        if (userTransform == null)
+        userTransform = Camera.main.transform;
+    }
+
+
     void Update()
     {
         if (userTransform != null)

@@ -1,4 +1,5 @@
-﻿using UnityEngine;
+using UnityEngine;
+using UnityEngine.Events;
 
 public class ScoreLoader : MonoBehaviour
 {
@@ -8,6 +9,11 @@ public class ScoreLoader : MonoBehaviour
 
     [Header("Image Loading")]
     [SerializeField] private RuntimePngLoader.PathKind pathKind = RuntimePngLoader.PathKind.StreamingAssets;
+
+    [Header("Events")]
+    [SerializeField] private static UnityEvent imageBoardInstantiated = new UnityEvent();
+
+    public static UnityEvent ImageBoardInstantiated => imageBoardInstantiated;
 
     /// <summary>
     /// Instantiates an ImageBoard and points its RuntimePngLoader at the requested file.
@@ -38,7 +44,9 @@ public class ScoreLoader : MonoBehaviour
                 fileName2 = "Corridinho do Algarve - Acordeao_2.png";
 
                 GameObject boardInstance = Instantiate(imageBoardPrefab, spawnParent);
+                imageBoardInstantiated?.Invoke();
                 GameObject boardInstance2 = Instantiate(imageBoardPrefab, spawnParent);
+                imageBoardInstantiated?.Invoke();
                 RuntimePngLoader pngLoader = boardInstance.GetComponent<RuntimePngLoader>();
                 RuntimePngLoader pngLoader2 = boardInstance2.GetComponent<RuntimePngLoader>();
 
@@ -58,6 +66,7 @@ public class ScoreLoader : MonoBehaviour
                 fileName = "Corridinho do Algarve - Baritone Sax.png";
 
                 boardInstance = Instantiate(imageBoardPrefab, spawnParent);
+                imageBoardInstantiated?.Invoke();
                 pngLoader = boardInstance.GetComponent<RuntimePngLoader>();
             
                 if (pngLoader == null)
@@ -74,6 +83,7 @@ public class ScoreLoader : MonoBehaviour
                 fileName = "Corridinho do Algarve - Soprano Sax.png";
 
                 boardInstance = Instantiate(imageBoardPrefab, spawnParent);
+                imageBoardInstantiated?.Invoke();
                 pngLoader = boardInstance.GetComponent<RuntimePngLoader>();
             
                 if (pngLoader == null)
@@ -94,3 +104,4 @@ public class ScoreLoader : MonoBehaviour
         // }
     }
 }
+
