@@ -132,6 +132,7 @@ GameObject:
   - component: {fileID: 126310689}
   - component: {fileID: 126310688}
   - component: {fileID: 126310691}
+  - component: {fileID: 126310692}
   m_Layer: 5
   m_Name: SopranoSax
   m_TagString: Untagged
@@ -268,6 +269,22 @@ MonoBehaviour:
   imageBoardPrefab: {fileID: 4718808774520319148, guid: f76925451474e044490134be6cd2b2bd, type: 3}
   spawnParent: {fileID: 2056354647}
   pathKind: 2
+--- !u!114 &126310692
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 126310686}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 28ce5df460578e0489f83db918a66610, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Amp::ToggleButtonColor
+  targetGraphic: {fileID: 126310689}
+  offColor: {r: 0.78431374, g: 0.78431374, b: 0.78431374, a: 1}
+  onColor: {r: 0.19607843, g: 0.78431374, b: 0.3529412, a: 1}
+  isOn: 0
 --- !u!1 &203844586
 GameObject:
   m_ObjectHideFlags: 0
@@ -462,6 +479,7 @@ GameObject:
   - component: {fileID: 341071169}
   - component: {fileID: 341071168}
   - component: {fileID: 341071171}
+  - component: {fileID: 341071172}
   m_Layer: 5
   m_Name: Acordeao
   m_TagString: Untagged
@@ -598,6 +616,22 @@ MonoBehaviour:
   imageBoardPrefab: {fileID: 4718808774520319148, guid: f76925451474e044490134be6cd2b2bd, type: 3}
   spawnParent: {fileID: 2056354647}
   pathKind: 2
+--- !u!114 &341071172
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 341071166}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 28ce5df460578e0489f83db918a66610, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Amp::ToggleButtonColor
+  targetGraphic: {fileID: 341071169}
+  offColor: {r: 0.78431374, g: 0.78431374, b: 0.78431374, a: 1}
+  onColor: {r: 0.19607843, g: 0.78431374, b: 0.3529412, a: 1}
+  isOn: 0
 --- !u!1 &380675824
 GameObject:
   m_ObjectHideFlags: 0
@@ -963,7 +997,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4c3778dff08120141b424a8fa9c6b3c7, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Amp::PinchToggle
-  follower: {fileID: 1581585344}
+  follower: {fileID: 1581585346}
   poseProviderBehaviour: {fileID: 2093917575}
   pinchThreshold: 0.03
   unshowPalmUpDot: 0.2
@@ -1136,6 +1170,7 @@ GameObject:
   - component: {fileID: 1247730187}
   - component: {fileID: 1247730186}
   - component: {fileID: 1247730189}
+  - component: {fileID: 1247730190}
   m_Layer: 5
   m_Name: BaritoneSax
   m_TagString: Untagged
@@ -1272,6 +1307,22 @@ MonoBehaviour:
   imageBoardPrefab: {fileID: 4718808774520319148, guid: f76925451474e044490134be6cd2b2bd, type: 3}
   spawnParent: {fileID: 2056354647}
   pathKind: 2
+--- !u!114 &1247730190
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1247730184}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 28ce5df460578e0489f83db918a66610, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Amp::ToggleButtonColor
+  targetGraphic: {fileID: 1247730187}
+  offColor: {r: 0.78431374, g: 0.78431374, b: 0.78431374, a: 1}
+  onColor: {r: 0.19607843, g: 0.78431374, b: 0.3529412, a: 1}
+  isOn: 0
 --- !u!1 &1581585342
 GameObject:
   m_ObjectHideFlags: 0
@@ -1364,8 +1415,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Amp::WristMenuUlnarRigid
   leftHand: 1
-  sideDistance: 0.055
-  alongPalmDistance: -0.02
+  sideDistance: 0.085
+  alongPalmDistance: 0.05
   liftDistance: 0.008
   invertNormal: 0
   invertUlnar: 0
@@ -1852,14 +1903,14 @@ RectTransform:
   m_GameObject: {fileID: 2056354646}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 1}
-  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_LocalScale: {x: 0.4, y: 0.4, z: 0.4}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 0, y: 1.5}
+  m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 100, y: 100}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &2056354648

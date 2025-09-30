@@ -3,7 +3,7 @@ using UnityEngine.XR.Hands;
 
 public class PinchToggle : MonoBehaviour
 {
-    public WristMenuFollower follower;
+    public WristMenuUlnarRigid follower;
     public MonoBehaviour poseProviderBehaviour; // same provider as follower
     public float pinchThreshold = 0.03f; // meters
     public float unshowPalmUpDot = 0.2f; // hide if palm faces downward (dot with world up < 0.2)
