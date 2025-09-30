@@ -695,7 +695,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!224 &442794507
 RectTransform:
   m_ObjectHideFlags: 0
@@ -703,7 +703,7 @@ RectTransform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 442794506}
-  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 0.001, y: 0.001, z: 0.001}
   m_ConstrainProportionsScale: 0
@@ -1282,6 +1282,8 @@ GameObject:
   m_Component:
   - component: {fileID: 1581585343}
   - component: {fileID: 1581585344}
+  - component: {fileID: 1581585345}
+  - component: {fileID: 1581585346}
   m_Layer: 0
   m_Name: MenuAnchor
   m_TagString: Untagged
@@ -1313,15 +1315,15 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1581585342}
-  m_Enabled: 1
+  m_Enabled: 0
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 2001cc8113081f143a1f171c5e8ad73c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Amp::WristMenuFollower
   poseProviderBehaviour: {fileID: 2093917575}
-  leftHand: 0
-  localOffset: {x: 0, y: 0, z: 0}
-  localEulerOffset: {x: 0, y: 0, z: 0}
+  leftHand: 1
+  localOffset: {x: 0.055, y: 0.02, z: 0}
+  localEulerOffset: {x: 0, y: 90, z: 0}
   head: {fileID: 2093917569}
   faceBlend: 0.35
   followSmoothing: 20
@@ -1330,6 +1332,44 @@ MonoBehaviour:
   maxSwingAngle: 65
   jointsAreInSessionSpace: 1
   sessionToWorld: {fileID: 1144862934}
+--- !u!114 &1581585345
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1581585342}
+  m_Enabled: 0
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ce52e32aea44d3244ad1b37204b6cc9d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Amp::WristMenuUlnarFollower
+  leftHand: 1
+  sideDistance: 0.055
+  backDistance: 0.02
+  liftDistance: 0
+  head: {fileID: 2093917569}
+  faceBlend: 1
+  followSmoothing: 16
+--- !u!114 &1581585346
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1581585342}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 31ecf9bac06fa484c8201beb2b21d579, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Amp::WristMenuUlnarRigid
+  leftHand: 1
+  sideDistance: 0.055
+  alongPalmDistance: -0.02
+  liftDistance: 0.008
+  invertNormal: 0
+  invertUlnar: 0
+  followSmoothing: 18
 --- !u!1 &1618358326
 GameObject:
   m_ObjectHideFlags: 0
@@ -1348,7 +1388,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &1618358327
 Transform:
   m_ObjectHideFlags: 0
