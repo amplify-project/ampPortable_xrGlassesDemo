@@ -15,6 +15,10 @@ public class ScoreLoader : MonoBehaviour
 
     public static UnityEvent ImageBoardInstantiated => imageBoardInstantiated;
 
+    private bool acordeaoVisible = false;
+    private bool baritoneVisible = false;
+    private bool sopranoVisible = false;
+
     /// <summary>
     /// Instantiates an ImageBoard and points its RuntimePngLoader at the requested file.
     /// Hook this up to a button's OnClick event and pass the desired file name as the argument.
@@ -22,7 +26,7 @@ public class ScoreLoader : MonoBehaviour
     public void LoadScore(string buttonName)
     {
         Debug.Log(buttonName);
-        
+
         if (imageBoardPrefab == null)
         {
             Debug.LogError("[ScoreLoader] ImageBoard prefab is not assigned.");
@@ -40,6 +44,23 @@ public class ScoreLoader : MonoBehaviour
         switch (buttonName)
         {
             case "Acordeao":
+
+                acordeaoVisible = !acordeaoVisible;
+                if (!acordeaoVisible)
+                {
+                    // Destroy existing Acordeao boards
+                    foreach (Transform child in spawnParent)
+                    {
+                        RuntimePngLoader currentPngLoader = child.GetComponent<RuntimePngLoader>();
+                        if (currentPngLoader != null && (currentPngLoader.pathOrFileName == "Corridinho do Algarve - Acordeao_1.png" || currentPngLoader.pathOrFileName == "Corridinho do Algarve - Acordeao_2.png"))
+                        {
+                            Destroy(child.gameObject);
+                        }
+                    }
+                    break;
+                }
+
+                // Load Acordeao boards
                 fileName = "Corridinho do Algarve - Acordeao_1.png";
                 fileName2 = "Corridinho do Algarve - Acordeao_2.png";
 
@@ -63,12 +84,29 @@ public class ScoreLoader : MonoBehaviour
                 break;
 
             case "Baritone Sax":
+
+                baritoneVisible = !baritoneVisible;
+                if (!baritoneVisible)
+                {
+                    // Destroy existing Baritone Sax boards
+                    foreach (Transform child in spawnParent)
+                    {
+                        RuntimePngLoader currentPngLoader = child.GetComponent<RuntimePngLoader>();
+                        if (currentPngLoader != null && currentPngLoader.pathOrFileName == "Corridinho do Algarve - Baritone Sax.png")
+                        {
+                            Destroy(child.gameObject);
+                        }
+                    }
+                    break;
+                }
+
+                // Load Baritone Sax board
                 fileName = "Corridinho do Algarve - Baritone Sax.png";
 
                 boardInstance = Instantiate(imageBoardPrefab, spawnParent);
                 imageBoardInstantiated?.Invoke();
                 pngLoader = boardInstance.GetComponent<RuntimePngLoader>();
-            
+
                 if (pngLoader == null)
                 {
                     Debug.LogError("[ScoreLoader] RuntimePngLoader component not found on ImageBoard instance.");
@@ -80,12 +118,29 @@ public class ScoreLoader : MonoBehaviour
                 break;
 
             case "Soprano Sax":
+            
+                sopranoVisible = !sopranoVisible;
+                if (!sopranoVisible)
+                {
+                    // Destroy existing Soprano Sax boards
+                    foreach (Transform child in spawnParent)
+                    {
+                        RuntimePngLoader currentPngLoader = child.GetComponent<RuntimePngLoader>();
+                        if (currentPngLoader != null && currentPngLoader.pathOrFileName == "Corridinho do Algarve - Soprano Sax.png")
+                        {
+                            Destroy(child.gameObject);
+                        }
+                    }
+                    break;
+                }
+
+                // Load Soprano Sax board
                 fileName = "Corridinho do Algarve - Soprano Sax.png";
 
                 boardInstance = Instantiate(imageBoardPrefab, spawnParent);
                 imageBoardInstantiated?.Invoke();
                 pngLoader = boardInstance.GetComponent<RuntimePngLoader>();
-            
+
                 if (pngLoader == null)
                 {
                     Debug.LogError("[ScoreLoader] RuntimePngLoader component not found on ImageBoard instance.");
@@ -94,7 +149,7 @@ public class ScoreLoader : MonoBehaviour
 
                 pngLoader.pathKind = pathKind;
                 pngLoader.pathOrFileName = fileName;
-                break;    
+                break;
         }
 
         // If the prefab does not auto-load on Start, trigger loading immediately.
