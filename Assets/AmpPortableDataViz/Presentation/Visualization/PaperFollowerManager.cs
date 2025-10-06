@@ -9,6 +9,8 @@ public class PaperFollowerManager : MonoBehaviour
 
     public void PassFollowerEnum(int dropdownIndex)
     {
+        Debug.Log($"PaperFollowerManager: Dropdown index selected: {dropdownIndex}");
+        
         TMP_Dropdown dropdown = GetComponent<TMP_Dropdown>();
         if (dropdown == null)
         {
@@ -35,6 +37,8 @@ public class PaperFollowerManager : MonoBehaviour
             Debug.LogWarning($"PaperFollowerManager: Unable to parse '{selectedOption}' into FollowMode.");
             return;
         }
+
+        Debug.Log($"PaperFollowerManager: Setting follow mode to {mode} for all papers.");
 
         foreach (Transform child in imageBoardParent.transform)
         {
