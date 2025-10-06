@@ -1978,6 +1978,14 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 2615830543947862315, guid: cb5f5548eeaac80439b15658a3e67a94, type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 3954780067192135206, guid: cb5f5548eeaac80439b15658a3e67a94, type: 3}
+      propertyPath: m_Enabled
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 5195097746130255902, guid: cb5f5548eeaac80439b15658a3e67a94, type: 3}
       propertyPath: m_RequestedTrackingOriginMode
       value: 2
@@ -1986,9 +1994,29 @@ PrefabInstance:
       propertyPath: m_Name
       value: XR Interaction Hands Setup Variant
       objectReference: {fileID: 0}
+    - target: {fileID: 5945138293639911635, guid: cb5f5548eeaac80439b15658a3e67a94, type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 6360025454940357857, guid: cb5f5548eeaac80439b15658a3e67a94, type: 3}
       propertyPath: m_LocalPosition.y
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7436515952783402209, guid: cb5f5548eeaac80439b15658a3e67a94, type: 3}
+      propertyPath: m_DrawMeshes
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 7436515952783402209, guid: cb5f5548eeaac80439b15658a3e67a94, type: 3}
+      propertyPath: m_DebugDrawJoints
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7436515952783402209, guid: cb5f5548eeaac80439b15658a3e67a94, type: 3}
+      propertyPath: m_UseOptimizedControls
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 7735104926034685713, guid: cb5f5548eeaac80439b15658a3e67a94, type: 3}
+      propertyPath: m_Enabled
+      value: 1
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
