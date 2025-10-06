@@ -204,6 +204,7 @@ GameObject:
   - component: {fileID: 4135392985920743012}
   - component: {fileID: 7711005683878842863}
   - component: {fileID: 4551343929195319095}
+  - component: {fileID: 6310952287406710097}
   m_Layer: 0
   m_Name: ImageBoard
   m_TagString: Untagged
@@ -547,6 +548,28 @@ MonoBehaviour:
   m_EditorClassIdentifier: Amp::FaceUserSmooth
   userTransform: {fileID: 0}
   rotationSpeed: 5
+--- !u!114 &6310952287406710097
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4718808774520319148}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6915fa7a7433b084a8295a5fb73d84fa, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Amp::PaperPlacementMode
+  followMode: 0
+  defaultLocalOffset: {x: 0.35, y: -0.1, z: 0.75}
+  captureOffsetOnRelease: 1
+  positionSmoothTime: 0.12
+  rotationLerpSpeed: 8
+  maxFollowSpeed: 2
+  faceUser: 1
+  yawOnly: 1
+  maxDistance: 1.25
+  maxOffAxisAngle: 40
 --- !u!1 &5830266926129170114
 GameObject:
   m_ObjectHideFlags: 0
