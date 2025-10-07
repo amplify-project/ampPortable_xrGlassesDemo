@@ -12,8 +12,10 @@ public class ScoreLoader : MonoBehaviour
 
     [Header("Events")]
     [SerializeField] private static UnityEvent imageBoardInstantiated = new UnityEvent();
+    [SerializeField] private static UnityEvent imageBoardRemoved = new UnityEvent();
 
     public static UnityEvent ImageBoardInstantiated => imageBoardInstantiated;
+    public static UnityEvent ImageBoardRemoved => imageBoardRemoved;
 
     private bool acordeaoVisible = false;
     private bool baritoneVisible = false;
@@ -55,6 +57,7 @@ public class ScoreLoader : MonoBehaviour
                         if (currentPngLoader != null && (currentPngLoader.pathOrFileName == "Corridinho do Algarve - Acordeao_1.png" || currentPngLoader.pathOrFileName == "Corridinho do Algarve - Acordeao_2.png"))
                         {
                             Destroy(child.gameObject);
+                            imageBoardRemoved?.Invoke();
                         }
                     }
                     break;
@@ -65,8 +68,12 @@ public class ScoreLoader : MonoBehaviour
                 fileName2 = "Corridinho do Algarve - Acordeao_2.png";
 
                 GameObject boardInstance = Instantiate(imageBoardPrefab, spawnParent);
+                boardInstance.transform.SetParent(spawnParent, worldPositionStays:false);
+
                 imageBoardInstantiated?.Invoke();
                 GameObject boardInstance2 = Instantiate(imageBoardPrefab, spawnParent);
+                boardInstance2.transform.SetParent(spawnParent, worldPositionStays:false);
+
                 imageBoardInstantiated?.Invoke();
                 RuntimePngLoader pngLoader = boardInstance.GetComponent<RuntimePngLoader>();
                 RuntimePngLoader pngLoader2 = boardInstance2.GetComponent<RuntimePngLoader>();
@@ -95,6 +102,7 @@ public class ScoreLoader : MonoBehaviour
                         if (currentPngLoader != null && currentPngLoader.pathOrFileName == "Corridinho do Algarve - Baritone Sax.png")
                         {
                             Destroy(child.gameObject);
+                            imageBoardRemoved?.Invoke();
                         }
                     }
                     break;
@@ -104,6 +112,7 @@ public class ScoreLoader : MonoBehaviour
                 fileName = "Corridinho do Algarve - Baritone Sax.png";
 
                 boardInstance = Instantiate(imageBoardPrefab, spawnParent);
+                boardInstance.transform.SetParent(spawnParent, worldPositionStays:false);
                 imageBoardInstantiated?.Invoke();
                 pngLoader = boardInstance.GetComponent<RuntimePngLoader>();
 
@@ -129,6 +138,7 @@ public class ScoreLoader : MonoBehaviour
                         if (currentPngLoader != null && currentPngLoader.pathOrFileName == "Corridinho do Algarve - Soprano Sax.png")
                         {
                             Destroy(child.gameObject);
+                            imageBoardRemoved?.Invoke();
                         }
                     }
                     break;
@@ -138,6 +148,7 @@ public class ScoreLoader : MonoBehaviour
                 fileName = "Corridinho do Algarve - Soprano Sax.png";
 
                 boardInstance = Instantiate(imageBoardPrefab, spawnParent);
+                boardInstance.transform.SetParent(spawnParent, worldPositionStays:false);
                 imageBoardInstantiated?.Invoke();
                 pngLoader = boardInstance.GetComponent<RuntimePngLoader>();
 
