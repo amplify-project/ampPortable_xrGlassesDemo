@@ -144,7 +144,7 @@ public class PaperPlacementMode : MonoBehaviour
             if (yawOnly)
             {
                 // Keep upright: rotate only around world up to face camera
-                Vector3 toCamOnPlane = Vector3.ProjectOnPlane(_camera.position - transform.position, Vector3.up);
+                Vector3 toCamOnPlane = Vector3.ProjectOnPlane(transform.position - _camera.position, Vector3.up);
                 if (toCamOnPlane.sqrMagnitude < 1e-4f) toCamOnPlane = Vector3.forward;
                 targetRot = Quaternion.LookRotation(toCamOnPlane.normalized, Vector3.up);
             }
