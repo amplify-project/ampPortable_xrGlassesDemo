@@ -54,7 +54,7 @@ public class PaperGridManager : MonoBehaviour
             float x = c * (cell.x + spacing.x);
             float y = -r * (cell.y + spacing.y);
 
-            children[i].localPosition = new Vector3(x, y, 0f);
+            children[i].localPosition = new Vector3(x, y, transform.localPosition.z);
             children[i].localRotation = Quaternion.identity;
         }
 
@@ -67,7 +67,7 @@ public class PaperGridManager : MonoBehaviour
             content.localPosition = new Vector3(
                 -totalW * 0.5f + cell.x * 0.5f,
                  totalH * 0.5f - cell.y * 0.5f,
-                 0f
+                 transform.localPosition.z
             );
         }
 

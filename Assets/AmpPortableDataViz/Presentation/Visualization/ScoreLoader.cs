@@ -68,11 +68,11 @@ public class ScoreLoader : MonoBehaviour
                 fileName2 = "Corridinho do Algarve - Acordeao_2.png";
 
                 GameObject boardInstance = Instantiate(imageBoardPrefab, spawnParent);
-                boardInstance.transform.SetParent(spawnParent, worldPositionStays:false);
+                //boardInstance.transform.SetParent(spawnParent, worldPositionStays:false);
 
                 imageBoardInstantiated?.Invoke();
                 GameObject boardInstance2 = Instantiate(imageBoardPrefab, spawnParent);
-                boardInstance2.transform.SetParent(spawnParent, worldPositionStays:false);
+                //boardInstance2.transform.SetParent(spawnParent, worldPositionStays:false);
 
                 imageBoardInstantiated?.Invoke();
                 RuntimePngLoader pngLoader = boardInstance.GetComponent<RuntimePngLoader>();
@@ -112,7 +112,7 @@ public class ScoreLoader : MonoBehaviour
                 fileName = "Corridinho do Algarve - Baritone Sax.png";
 
                 boardInstance = Instantiate(imageBoardPrefab, spawnParent);
-                boardInstance.transform.SetParent(spawnParent, worldPositionStays:false);
+                //boardInstance.transform.SetParent(spawnParent, worldPositionStays:false);
                 imageBoardInstantiated?.Invoke();
                 pngLoader = boardInstance.GetComponent<RuntimePngLoader>();
 
@@ -148,7 +148,7 @@ public class ScoreLoader : MonoBehaviour
                 fileName = "Corridinho do Algarve - Soprano Sax.png";
 
                 boardInstance = Instantiate(imageBoardPrefab, spawnParent);
-                boardInstance.transform.SetParent(spawnParent, worldPositionStays:false);
+                //boardInstance.transform.SetParent(spawnParent, worldPositionStays:false);
                 imageBoardInstantiated?.Invoke();
                 pngLoader = boardInstance.GetComponent<RuntimePngLoader>();
 

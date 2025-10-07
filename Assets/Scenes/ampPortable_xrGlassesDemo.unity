@@ -2981,6 +2981,7 @@ GameObject:
   - component: {fileID: 2056354650}
   - component: {fileID: 2056354649}
   - component: {fileID: 2056354653}
+  - component: {fileID: 2056354654}
   m_Layer: 0
   m_Name: ImageBoardParent
   m_TagString: Untagged
@@ -2996,8 +2997,8 @@ RectTransform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 2056354646}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 1}
-  m_LocalScale: {x: 0.4, y: 0.4, z: 0.4}
+  m_LocalPosition: {x: 0, y: 0, z: 2}
+  m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 0}
@@ -3080,12 +3081,13 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Unity.XR.Interaction.Toolkit::UnityEngine.XR.Interaction.Toolkit.Interactables.XRGrabInteractable
   m_InteractionManager: {fileID: 0}
-  m_Colliders: []
+  m_Colliders:
+  - {fileID: 2056354650}
   m_InteractionLayers:
     m_Bits: 1
   m_DistanceCalculationMode: 1
-  m_SelectMode: 0
-  m_FocusMode: 1
+  m_SelectMode: 1
+  m_FocusMode: 2
   m_CustomReticle: {fileID: 0}
   m_AllowGazeInteraction: 0
   m_AllowGazeSelect: 0
@@ -3141,7 +3143,7 @@ MonoBehaviour:
   m_StartingInteractionStrengthFilters: []
   m_AttachTransform: {fileID: 0}
   m_SecondaryAttachTransform: {fileID: 0}
-  m_UseDynamicAttach: 0
+  m_UseDynamicAttach: 1
   m_MatchAttachPosition: 1
   m_MatchAttachRotation: 1
   m_SnapToColliderVolume: 1
@@ -3154,16 +3156,16 @@ MonoBehaviour:
   m_AngularVelocityDamping: 1
   m_AngularVelocityScale: 1
   m_TrackPosition: 1
-  m_SmoothPosition: 0
-  m_SmoothPositionAmount: 8
+  m_SmoothPosition: 1
+  m_SmoothPositionAmount: 14.5
   m_TightenPosition: 0.1
   m_TrackRotation: 1
-  m_SmoothRotation: 0
-  m_SmoothRotationAmount: 8
+  m_SmoothRotation: 1
+  m_SmoothRotationAmount: 14.4
   m_TightenRotation: 0.1
   m_TrackScale: 1
-  m_SmoothScale: 0
-  m_SmoothScaleAmount: 8
+  m_SmoothScale: 1
+  m_SmoothScaleAmount: 14.5
   m_TightenScale: 0.1
   m_ThrowOnDetach: 1
   m_ThrowSmoothingDuration: 0.25
@@ -3228,7 +3230,7 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 2056354646}
-  m_Enabled: 1
+  m_Enabled: 0
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 2cde6ceca91644847b5ea9c0db2105ef, type: 3}
   m_Name: 
@@ -3238,6 +3240,25 @@ MonoBehaviour:
   spacing: {x: 0.65, y: 0.65}
   centerPivot: 1
   defaultCellSize: {x: 0.21, y: 0.297}
+--- !u!114 &2056354654
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2056354646}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6e843f8dd2567534e80c9ccf3ad92019, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Amp::PaperGridLayoutFixed
+  content: {fileID: 2056354647}
+  columns: 2
+  rows: 2
+  cellSize: {x: 0.3, y: 0.21}
+  spacing: {x: 0.65, y: 0.65}
+  centerPivot: 1
+  colliderDepth: 0.03
 --- !u!1 &2088709608
 GameObject:
   m_ObjectHideFlags: 0
