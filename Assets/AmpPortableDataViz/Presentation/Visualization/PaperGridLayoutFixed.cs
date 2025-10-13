@@ -9,7 +9,7 @@ public class PaperGridLayoutFixed : MonoBehaviour
 
     [Header("Grid config")]
     public int columns = 2;
-    public int rows = 2;
+    public int rows = 1;
 
     [Tooltip("Size of ONE sheet in meters (X=width, Y=height). Keep constant.")]
     public Vector2 cellSize = new Vector2(0.30f, 0.21f);  // example; set to your sheet’s real size

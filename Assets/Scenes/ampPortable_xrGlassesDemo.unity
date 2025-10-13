@@ -1773,11 +1773,6 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1069163771}
   m_CullTransparentMesh: 1
---- !u!4 &1144862934 stripped
-Transform:
-  m_CorrespondingSourceObject: {fileID: 1139102089679945825, guid: cb5f5548eeaac80439b15658a3e67a94, type: 3}
-  m_PrefabInstance: {fileID: 2093917564}
-  m_PrefabAsset: {fileID: 0}
 --- !u!1 &1201461116
 GameObject:
   m_ObjectHideFlags: 0
@@ -2200,8 +2195,6 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1581585343}
-  - component: {fileID: 1581585344}
-  - component: {fileID: 1581585345}
   - component: {fileID: 1581585346}
   m_Layer: 0
   m_Name: MenuAnchor
@@ -2227,49 +2220,6 @@ Transform:
   - {fileID: 1618358327}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &1581585344
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1581585342}
-  m_Enabled: 0
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 2001cc8113081f143a1f171c5e8ad73c, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Amp::WristMenuFollower
-  poseProviderBehaviour: {fileID: 2093917575}
-  leftHand: 1
-  localOffset: {x: 0.055, y: 0.02, z: 0}
-  localEulerOffset: {x: 0, y: 90, z: 0}
-  head: {fileID: 2093917569}
-  faceBlend: 0.35
-  followSmoothing: 20
-  minHeadDistance: 0.25
-  canvasGroup: {fileID: 0}
-  maxSwingAngle: 65
-  jointsAreInSessionSpace: 1
-  sessionToWorld: {fileID: 1144862934}
---- !u!114 &1581585345
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1581585342}
-  m_Enabled: 0
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: ce52e32aea44d3244ad1b37204b6cc9d, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Amp::WristMenuUlnarFollower
-  leftHand: 1
-  sideDistance: 0.055
-  backDistance: 0.02
-  liftDistance: 0
-  head: {fileID: 2093917569}
-  faceBlend: 1
-  followSmoothing: 16
 --- !u!114 &1581585346
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2992,12 +2942,8 @@ GameObject:
   m_Component:
   - component: {fileID: 2056354647}
   - component: {fileID: 2056354648}
-  - component: {fileID: 2056354652}
-  - component: {fileID: 2056354651}
-  - component: {fileID: 2056354650}
   - component: {fileID: 2056354649}
-  - component: {fileID: 2056354653}
-  - component: {fileID: 2056354654}
+  - component: {fileID: 2056354650}
   m_Layer: 0
   m_Name: ImageBoardParent
   m_TagString: Untagged
@@ -3031,60 +2977,44 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 2056354646}
-  m_Enabled: 0
+  m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: a19fa007b3a8eb847a11a4dcf5748cf2, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Amp::SimpleGrid3D
   columns: 2
-  rows: 2
+  rows: 1
   cellSize: {x: 1, y: 1}
   spacing: {x: 0.1, y: 0.1}
   origin: {x: 0, y: 0}
---- !u!114 &2056354649
-MonoBehaviour:
+--- !u!54 &2056354649
+Rigidbody:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 2056354646}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 6915fa7a7433b084a8295a5fb73d84fa, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Amp::PaperPlacementMode
-  followMode: 0
-  defaultLocalOffset: {x: 0, y: -0.1, z: 0.75}
-  captureOffsetOnRelease: 1
-  positionSmoothTime: 0.12
-  rotationLerpSpeed: 8
-  maxFollowSpeed: 2
-  faceUser: 1
-  yawOnly: 1
-  maxDistance: 1.25
-  maxOffAxisAngle: 40
---- !u!65 &2056354650
-BoxCollider:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2056354646}
-  m_Material: {fileID: 0}
+  serializedVersion: 5
+  m_Mass: 1
+  m_LinearDamping: 0
+  m_AngularDamping: 0.05
+  m_CenterOfMass: {x: 0, y: 0, z: 0}
+  m_InertiaTensor: {x: 1, y: 1, z: 1}
+  m_InertiaRotation: {x: 0, y: 0, z: 0, w: 1}
   m_IncludeLayers:
     serializedVersion: 2
     m_Bits: 0
   m_ExcludeLayers:
     serializedVersion: 2
     m_Bits: 0
-  m_LayerOverridePriority: 0
-  m_IsTrigger: 0
-  m_ProvidesContacts: 0
-  m_Enabled: 1
-  serializedVersion: 3
-  m_Size: {x: 1, y: 1, z: 1}
-  m_Center: {x: 0, y: 0, z: 0}
---- !u!114 &2056354651
+  m_ImplicitCom: 1
+  m_ImplicitTensor: 1
+  m_UseGravity: 0
+  m_IsKinematic: 1
+  m_Interpolate: 0
+  m_Constraints: 0
+  m_CollisionDetection: 0
+--- !u!114 &2056354650
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -3097,13 +3027,12 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Unity.XR.Interaction.Toolkit::UnityEngine.XR.Interaction.Toolkit.Interactables.XRGrabInteractable
   m_InteractionManager: {fileID: 0}
-  m_Colliders:
-  - {fileID: 2056354650}
+  m_Colliders: []
   m_InteractionLayers:
     m_Bits: 1
   m_DistanceCalculationMode: 1
   m_SelectMode: 1
-  m_FocusMode: 2
+  m_FocusMode: 1
   m_CustomReticle: {fileID: 0}
   m_AllowGazeInteraction: 0
   m_AllowGazeSelect: 0
@@ -3173,15 +3102,15 @@ MonoBehaviour:
   m_AngularVelocityScale: 1
   m_TrackPosition: 1
   m_SmoothPosition: 1
-  m_SmoothPositionAmount: 14.5
+  m_SmoothPositionAmount: 14.3
   m_TightenPosition: 0.1
   m_TrackRotation: 1
   m_SmoothRotation: 1
-  m_SmoothRotationAmount: 14.4
+  m_SmoothRotationAmount: 14
   m_TightenRotation: 0.1
   m_TrackScale: 1
   m_SmoothScale: 1
-  m_SmoothScaleAmount: 14.5
+  m_SmoothScaleAmount: 14.1
   m_TightenScale: 0.1
   m_ThrowOnDetach: 1
   m_ThrowSmoothingDuration: 0.25
@@ -3212,69 +3141,6 @@ MonoBehaviour:
   m_LimitAngularVelocity: 0
   m_MaxLinearVelocityDelta: 10
   m_MaxAngularVelocityDelta: 20
---- !u!54 &2056354652
-Rigidbody:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2056354646}
-  serializedVersion: 5
-  m_Mass: 1
-  m_LinearDamping: 0
-  m_AngularDamping: 0.05
-  m_CenterOfMass: {x: 0, y: 0, z: 0}
-  m_InertiaTensor: {x: 1, y: 1, z: 1}
-  m_InertiaRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_IncludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_ExcludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_ImplicitCom: 1
-  m_ImplicitTensor: 1
-  m_UseGravity: 0
-  m_IsKinematic: 1
-  m_Interpolate: 0
-  m_Constraints: 0
-  m_CollisionDetection: 0
---- !u!114 &2056354653
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2056354646}
-  m_Enabled: 0
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 2cde6ceca91644847b5ea9c0db2105ef, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Amp::PaperGridManager
-  content: {fileID: 2056354647}
-  columns: 2
-  spacing: {x: 0.65, y: 0.65}
-  centerPivot: 1
-  defaultCellSize: {x: 0.21, y: 0.297}
---- !u!114 &2056354654
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2056354646}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 6e843f8dd2567534e80c9ccf3ad92019, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Amp::PaperGridLayoutFixed
-  content: {fileID: 2056354647}
-  columns: 2
-  rows: 2
-  cellSize: {x: 0.3, y: 0.21}
-  spacing: {x: 0.65, y: 0.65}
-  centerPivot: 1
-  colliderDepth: 0.03
 --- !u!1 &2088709608
 GameObject:
   m_ObjectHideFlags: 0
@@ -3513,11 +3379,6 @@ PrefabInstance:
 --- !u!20 &2093917565 stripped
 Camera:
   m_CorrespondingSourceObject: {fileID: 6360025455027214533, guid: cb5f5548eeaac80439b15658a3e67a94, type: 3}
-  m_PrefabInstance: {fileID: 2093917564}
-  m_PrefabAsset: {fileID: 0}
---- !u!4 &2093917569 stripped
-Transform:
-  m_CorrespondingSourceObject: {fileID: 6360025455027214528, guid: cb5f5548eeaac80439b15658a3e67a94, type: 3}
   m_PrefabInstance: {fileID: 2093917564}
   m_PrefabAsset: {fileID: 0}
 --- !u!114 &2093917575

@@ -1,10 +1,11 @@
 using UnityEngine;
+using UnityEngine.SocialPlatforms.Impl;
 
 public class SimpleGrid3D : MonoBehaviour
 {
     [Header("Grid shape")]
     public int columns = 2;
-    public int rows = 2;
+    public int rows = 1;
 
     [Header("Cell layout (local units)")]
     public Vector2 cellSize = new Vector2(1f, 1f);
@@ -13,19 +14,11 @@ public class SimpleGrid3D : MonoBehaviour
     [Header("Origin & order")]
     public Vector2 origin = Vector2.zero; // local X (right), Y (up). Y will go negative per row.
 
-    void OnValidate() { Layout(); }
-    void Start() { Layout(); }
-
-    void OnEnable()
+    //void OnValidate() { Layout(); }
+    void Start()
     {
-        Layout();
-
-        if (!Application.isPlaying)
-        {
-            return;
-        }
-
         ScoreLoader.ImageBoardInstantiated.AddListener(OnImageBoardInstantiated);
+        Layout(); 
     }
 
     void OnDisable()
@@ -35,10 +28,9 @@ public class SimpleGrid3D : MonoBehaviour
 
     public void Layout()
     {
-        int i = 0;
-        for (int c = 0; c < transform.childCount; c++)
+        for (int i = 0; i < transform.childCount; i++)
         {
-            var child = transform.GetChild(c);
+            var child = transform.GetChild(i);
             if (!child.gameObject.activeInHierarchy) continue;
 
             int col = i % columns;
@@ -51,9 +43,9 @@ public class SimpleGrid3D : MonoBehaviour
 
             // Optional: scale each quad to cell size assuming a 1x1 Unity quad
             child.localScale = new Vector3(cellSize.x, cellSize.y, 1f);
-
-            i++;
         }
+        
+        Debug.Log("Number of children: " + transform.childCount);
     }
 
     private void OnImageBoardInstantiated()

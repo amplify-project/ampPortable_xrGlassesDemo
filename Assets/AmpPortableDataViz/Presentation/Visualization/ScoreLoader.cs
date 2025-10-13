@@ -1,6 +1,8 @@
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Events;
+
 
 public class ScoreLoader : MonoBehaviour
 {
@@ -22,16 +24,30 @@ public class ScoreLoader : MonoBehaviour
     private bool baritoneVisible;
     private bool sopranoVisible;
     private static readonly Dictionary<string, List<GameObject>> activeBoards = new Dictionary<string, List<GameObject>>();
+    private Coroutine imageBoardNotificationCoroutine;
+    [SerializeField] private UnityEngine.XR.Interaction.Toolkit.Interactables.XRGrabInteractable parentGrabInteractable;
+    private readonly List<Collider> registeredBoardColliders = new List<Collider>();
 
     private const string AcordeaoKey = "Acordeao";
     private const string BaritoneKey = "Baritone Sax";
     private const string SopranoKey = "Soprano Sax";
 
-    void Start()
+    private void Awake()
     {
-        // acordeaoVisible = false;
-        // baritoneVisible = false;
-        // sopranoVisible = false;
+        if (parentGrabInteractable != null)
+        {
+            return;
+        }
+
+        if (spawnParent != null)
+        {
+            parentGrabInteractable = spawnParent.GetComponent<UnityEngine.XR.Interaction.Toolkit.Interactables.XRGrabInteractable>() ?? spawnParent.GetComponentInParent<UnityEngine.XR.Interaction.Toolkit.Interactables.XRGrabInteractable>();
+        }
+
+        if (parentGrabInteractable == null)
+        {
+            parentGrabInteractable = GetComponent<UnityEngine.XR.Interaction.Toolkit.Interactables.XRGrabInteractable>() ?? GetComponentInParent<UnityEngine.XR.Interaction.Toolkit.Interactables.XRGrabInteractable>();
+        }
     }
     
     /// <summary>
@@ -60,20 +76,16 @@ public class ScoreLoader : MonoBehaviour
         {
             case AcordeaoKey:
 
-                //acordeaoVisible = !acordeaoVisible;
-                if (acordeaoVisible)
+                acordeaoVisible = !acordeaoVisible;
+                if (!acordeaoVisible)
                 {
                     DestroyBoards(AcordeaoKey);
-                    acordeaoVisible = false;
                     break;
                 }
-                else if(!acordeaoVisible)
-                {
-                    acordeaoVisible = true;
-                }
 
-                DestroyBoards(BaritoneKey);
-                DestroyBoards(SopranoKey);
+                var acordeaoPendingDestruction = new List<GameObject>();
+                DestroyBoards(BaritoneKey, acordeaoPendingDestruction);
+                DestroyBoards(SopranoKey, acordeaoPendingDestruction);
                 baritoneVisible = false;
                 sopranoVisible = false;
 
@@ -82,15 +94,12 @@ public class ScoreLoader : MonoBehaviour
                 fileName2 = "Corridinho do Algarve - Acordeao_2.png";
 
                 GameObject acordeaoInstance = Instantiate(imageBoardPrefab, spawnParent);
-                //acordeaoInstance.transform.SetParent(spawnParent, worldPositionStays:false);
-
-                //imageBoardInstantiated?.Invoke();
                 RegisterBoard(AcordeaoKey, acordeaoInstance);
+                AttachBoardColliders(acordeaoInstance);
                 GameObject acordeaoInstance2 = Instantiate(imageBoardPrefab, spawnParent);
-                //acordeaoInstance2.transform.SetParent(spawnParent, worldPositionStays:false);
 
-                //imageBoardInstantiated?.Invoke();
                 RegisterBoard(AcordeaoKey, acordeaoInstance2);
+                AttachBoardColliders(acordeaoInstance2);
                 RuntimePngLoader pngLoader = acordeaoInstance.GetComponent<RuntimePngLoader>();
                 RuntimePngLoader pngLoader2 = acordeaoInstance2.GetComponent<RuntimePngLoader>();
 
@@ -104,23 +113,22 @@ public class ScoreLoader : MonoBehaviour
                 pngLoader.pathOrFileName = fileName;
                 pngLoader2.pathKind = pathKind;
                 pngLoader2.pathOrFileName = fileName2;
+
+                NotifyAfterBoardsDestroyed(acordeaoPendingDestruction);
                 break;
 
             case BaritoneKey:
 
-                //baritoneVisible = !baritoneVisible;
-                if (baritoneVisible)
+                baritoneVisible = !baritoneVisible;
+                if (!baritoneVisible)
                 {
                     DestroyBoards(BaritoneKey);
                     break;
                 }
-                else if(!baritoneVisible)
-                {
-                    baritoneVisible = true;
-                }
 
-                DestroyBoards(AcordeaoKey);
-                DestroyBoards(SopranoKey);
+                var baritonePendingDestruction = new List<GameObject>();
+                DestroyBoards(AcordeaoKey, baritonePendingDestruction);
+                DestroyBoards(SopranoKey, baritonePendingDestruction);
                 acordeaoVisible = false;
                 sopranoVisible = false;
 
@@ -128,9 +136,9 @@ public class ScoreLoader : MonoBehaviour
                 fileName = "Corridinho do Algarve - Baritone Sax.png";
 
                 GameObject baritoneInstance = Instantiate(imageBoardPrefab, spawnParent);
-                //baritoneInstance.transform.SetParent(spawnParent, worldPositionStays:false);
-                //imageBoardInstantiated?.Invoke();
+                
                 RegisterBoard(BaritoneKey, baritoneInstance);
+                AttachBoardColliders(baritoneInstance);
                 pngLoader = baritoneInstance.GetComponent<RuntimePngLoader>();
 
                 if (pngLoader == null)
@@ -141,23 +149,22 @@ public class ScoreLoader : MonoBehaviour
 
                 pngLoader.pathKind = pathKind;
                 pngLoader.pathOrFileName = fileName;
+
+                NotifyAfterBoardsDestroyed(baritonePendingDestruction);
                 break;
 
             case SopranoKey:
 
-                //sopranoVisible = !sopranoVisible;
-                if (sopranoVisible)
+                sopranoVisible = !sopranoVisible;
+                if (!sopranoVisible)
                 {
                     DestroyBoards(SopranoKey);
                     break;
                 }
-                else if(!sopranoVisible)
-                {
-                    sopranoVisible = true;
-                }
 
-                DestroyBoards(AcordeaoKey);
-                DestroyBoards(BaritoneKey);
+                var sopranoPendingDestruction = new List<GameObject>();
+                DestroyBoards(AcordeaoKey, sopranoPendingDestruction);
+                DestroyBoards(BaritoneKey, sopranoPendingDestruction);
                 acordeaoVisible = false;
                 baritoneVisible = false;
 
@@ -165,9 +172,9 @@ public class ScoreLoader : MonoBehaviour
                 fileName = "Corridinho do Algarve - Soprano Sax.png";
 
                 GameObject sopranoInstance = Instantiate(imageBoardPrefab, spawnParent);
-                //sopranoInstance.transform.SetParent(spawnParent, worldPositionStays:false);
-                //imageBoardInstantiated?.Invoke();
+                
                 RegisterBoard(SopranoKey, sopranoInstance);
+                AttachBoardColliders(sopranoInstance);
                 pngLoader = sopranoInstance.GetComponent<RuntimePngLoader>();
 
                 if (pngLoader == null)
@@ -178,14 +185,10 @@ public class ScoreLoader : MonoBehaviour
 
                 pngLoader.pathKind = pathKind;
                 pngLoader.pathOrFileName = fileName;
+
+                NotifyAfterBoardsDestroyed(sopranoPendingDestruction);
                 break;
         }
-
-        // If the prefab does not auto-load on Start, trigger loading immediately.
-        // if (!pngLoader.loadOnStart)
-        // {
-        //     pngLoader.LoadFromPath(fileName, pathKind);
-        // }
     }
 
     private void RegisterBoard(string key, GameObject board)
@@ -204,7 +207,7 @@ public class ScoreLoader : MonoBehaviour
         boards.Add(board);
     }
 
-    private void DestroyBoards(string key)
+    private void DestroyBoards(string key, List<GameObject> pendingDestruction = null)
     {
         if (!activeBoards.TryGetValue(key, out var boards) || boards.Count == 0)
         {
@@ -215,11 +218,121 @@ public class ScoreLoader : MonoBehaviour
         {
             if (board != null)
             {
+                DetachBoardColliders(board);
+                pendingDestruction?.Add(board);
                 Destroy(board);
-                //imageBoardRemoved?.Invoke();
             }
         }
 
         activeBoards.Remove(key);
+    }
+
+    private void NotifyAfterBoardsDestroyed(List<GameObject> pendingDestruction)
+    {
+        if (imageBoardNotificationCoroutine != null)
+        {
+            StopCoroutine(imageBoardNotificationCoroutine);
+        }
+
+        imageBoardNotificationCoroutine = StartCoroutine(WaitForBoardsToBeDestroyed(pendingDestruction));
+    }
+
+    private IEnumerator WaitForBoardsToBeDestroyed(List<GameObject> pendingDestruction)
+    {
+        if (pendingDestruction == null || pendingDestruction.Count == 0)
+        {
+            imageBoardInstantiated?.Invoke();
+            imageBoardNotificationCoroutine = null;
+            yield break;
+        }
+
+        bool allDestroyed = false;
+        while (!allDestroyed)
+        {
+            allDestroyed = true;
+
+            for (int i = 0; i < pendingDestruction.Count; i++)
+            {
+                if (pendingDestruction[i] != null)
+                {
+                    allDestroyed = false;
+                    break;
+                }
+            }
+
+            if (!allDestroyed)
+            {
+                yield return null;
+            }
+        }
+
+        imageBoardInstantiated?.Invoke();
+        imageBoardNotificationCoroutine = null;
+    }
+
+    private void AttachBoardColliders(GameObject board)
+    {
+        if (board == null || parentGrabInteractable == null)
+        {
+            return;
+        }
+
+        var colliders = board.GetComponentsInChildren<Collider>();
+        if (colliders == null || colliders.Length == 0)
+        {
+            return;
+        }
+
+        var interactableColliders = parentGrabInteractable.colliders;
+        if (interactableColliders == null)
+        {
+            return;
+        }
+
+        foreach (var collider in colliders)
+        {
+            if (collider == null || registeredBoardColliders.Contains(collider))
+            {
+                continue;
+            }
+
+            if (!interactableColliders.Contains(collider))
+            {
+                interactableColliders.Add(collider);
+            }
+
+            registeredBoardColliders.Add(collider);
+        }
+    }
+
+    private void DetachBoardColliders(GameObject board)
+    {
+        if (board == null || parentGrabInteractable == null)
+        {
+            return;
+        }
+
+        var colliders = board.GetComponentsInChildren<Collider>();
+        if (colliders == null || colliders.Length == 0)
+        {
+            return;
+        }
+
+        var interactableColliders = parentGrabInteractable.colliders;
+        if (interactableColliders == null)
+        {
+            return;
+        }
+
+        foreach (var collider in colliders)
+        {
+            if (collider == null || !registeredBoardColliders.Contains(collider))
+            {
+                continue;
+            }
+
+            interactableColliders.Remove(collider);
+            registeredBoardColliders.Remove(collider);
+        }
     }
 }
