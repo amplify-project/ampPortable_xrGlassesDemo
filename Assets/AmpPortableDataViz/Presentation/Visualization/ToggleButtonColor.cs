@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -15,6 +16,7 @@ public class ToggleButtonColor : MonoBehaviour
     public bool isOn = false;
 
     Button _btn;
+    private static readonly List<ToggleButtonColor> allButtons = new List<ToggleButtonColor>();
 
     void Awake()
     {
@@ -24,19 +26,24 @@ public class ToggleButtonColor : MonoBehaviour
         // Prevent the Button's ColorBlock from fighting our tint.
         _btn.transition = Selectable.Transition.None;
 
-        Apply();
+        allButtons.Add(this);
         _btn.onClick.AddListener(Toggle);
+    }
+
+    void Start()
+    {
+        SetOn(isOn);
     }
 
     void OnDestroy()
     {
+        allButtons.Remove(this);
         _btn.onClick.RemoveListener(Toggle);
     }
 
     public void Toggle()
     {
-        isOn = !isOn;
-        Apply();
+        SetOn(!isOn);
     }
 
     void Apply()
@@ -45,5 +52,28 @@ public class ToggleButtonColor : MonoBehaviour
     }
 
     // Optional: let other scripts set it explicitly
-    public void SetOn(bool value) { isOn = value; Apply(); }
+    public void SetOn(bool value)
+    {
+        if (isOn == value)
+        {
+            Apply();
+            return;
+        }
+
+        isOn = value;
+
+        if (isOn)
+        {
+            // Ensure this is the only active button
+            foreach (var button in allButtons)
+            {
+                if (button != this)
+                {
+                    button.SetOn(false);
+                }
+            }
+        }
+
+        Apply();
+    }
 }

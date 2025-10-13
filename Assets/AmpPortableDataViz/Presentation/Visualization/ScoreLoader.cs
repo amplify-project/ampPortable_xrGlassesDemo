@@ -18,19 +18,22 @@ public class ScoreLoader : MonoBehaviour
     public static UnityEvent ImageBoardInstantiated => imageBoardInstantiated;
     public static UnityEvent ImageBoardRemoved => imageBoardRemoved;
 
-    private bool acordeaoVisible = false;
-    private bool baritoneVisible = false;
-    private bool sopranoVisible = false;
+    private bool acordeaoVisible;
+    private bool baritoneVisible;
+    private bool sopranoVisible;
+    private static readonly Dictionary<string, List<GameObject>> activeBoards = new Dictionary<string, List<GameObject>>();
 
-    private static readonly string[] acordeaoFileNames =
+    private const string AcordeaoKey = "Acordeao";
+    private const string BaritoneKey = "Baritone Sax";
+    private const string SopranoKey = "Soprano Sax";
+
+    void Start()
     {
-        "Corridinho do Algarve - Acordeao_1.png",
-        "Corridinho do Algarve - Acordeao_2.png"
-    };
-
-    private const string baritoneFileName = "Corridinho do Algarve - Baritone Sax.png";
-    private const string sopranoFileName = "Corridinho do Algarve - Soprano Sax.png";
-
+        // acordeaoVisible = false;
+        // baritoneVisible = false;
+        // sopranoVisible = false;
+    }
+    
     /// <summary>
     /// Instantiates an ImageBoard and points its RuntimePngLoader at the requested file.
     /// Hook this up to a button's OnClick event and pass the desired file name as the argument.
@@ -55,16 +58,22 @@ public class ScoreLoader : MonoBehaviour
         string fileName2 = "";
         switch (buttonName)
         {
-            case "Acordeao":
+            case AcordeaoKey:
 
-                acordeaoVisible = !acordeaoVisible;
-                if (!acordeaoVisible)
+                //acordeaoVisible = !acordeaoVisible;
+                if (acordeaoVisible)
                 {
-                    DestroyBoardsByNames(acordeaoFileNames);
+                    DestroyBoards(AcordeaoKey);
+                    acordeaoVisible = false;
                     break;
                 }
+                else if(!acordeaoVisible)
+                {
+                    acordeaoVisible = true;
+                }
 
-                DestroyBoardsByNames(baritoneFileName, sopranoFileName);
+                DestroyBoards(BaritoneKey);
+                DestroyBoards(SopranoKey);
                 baritoneVisible = false;
                 sopranoVisible = false;
 
@@ -72,16 +81,18 @@ public class ScoreLoader : MonoBehaviour
                 fileName = "Corridinho do Algarve - Acordeao_1.png";
                 fileName2 = "Corridinho do Algarve - Acordeao_2.png";
 
-                GameObject boardInstance = Instantiate(imageBoardPrefab, spawnParent);
-                //boardInstance.transform.SetParent(spawnParent, worldPositionStays:false);
+                GameObject acordeaoInstance = Instantiate(imageBoardPrefab, spawnParent);
+                //acordeaoInstance.transform.SetParent(spawnParent, worldPositionStays:false);
 
-                imageBoardInstantiated?.Invoke();
-                GameObject boardInstance2 = Instantiate(imageBoardPrefab, spawnParent);
-                //boardInstance2.transform.SetParent(spawnParent, worldPositionStays:false);
+                //imageBoardInstantiated?.Invoke();
+                RegisterBoard(AcordeaoKey, acordeaoInstance);
+                GameObject acordeaoInstance2 = Instantiate(imageBoardPrefab, spawnParent);
+                //acordeaoInstance2.transform.SetParent(spawnParent, worldPositionStays:false);
 
-                imageBoardInstantiated?.Invoke();
-                RuntimePngLoader pngLoader = boardInstance.GetComponent<RuntimePngLoader>();
-                RuntimePngLoader pngLoader2 = boardInstance2.GetComponent<RuntimePngLoader>();
+                //imageBoardInstantiated?.Invoke();
+                RegisterBoard(AcordeaoKey, acordeaoInstance2);
+                RuntimePngLoader pngLoader = acordeaoInstance.GetComponent<RuntimePngLoader>();
+                RuntimePngLoader pngLoader2 = acordeaoInstance2.GetComponent<RuntimePngLoader>();
 
                 if (pngLoader == null || pngLoader2 == null)
                 {
@@ -95,27 +106,32 @@ public class ScoreLoader : MonoBehaviour
                 pngLoader2.pathOrFileName = fileName2;
                 break;
 
-            case "Baritone Sax":
+            case BaritoneKey:
 
-                baritoneVisible = !baritoneVisible;
-                if (!baritoneVisible)
+                //baritoneVisible = !baritoneVisible;
+                if (baritoneVisible)
                 {
-                    DestroyBoardsByNames(baritoneFileName);
+                    DestroyBoards(BaritoneKey);
                     break;
                 }
+                else if(!baritoneVisible)
+                {
+                    baritoneVisible = true;
+                }
 
-                DestroyBoardsByNames(acordeaoFileNames);
-                DestroyBoardsByNames(sopranoFileName);
+                DestroyBoards(AcordeaoKey);
+                DestroyBoards(SopranoKey);
                 acordeaoVisible = false;
                 sopranoVisible = false;
 
                 // Load Baritone Sax board
                 fileName = "Corridinho do Algarve - Baritone Sax.png";
 
-                boardInstance = Instantiate(imageBoardPrefab, spawnParent);
-                //boardInstance.transform.SetParent(spawnParent, worldPositionStays:false);
-                imageBoardInstantiated?.Invoke();
-                pngLoader = boardInstance.GetComponent<RuntimePngLoader>();
+                GameObject baritoneInstance = Instantiate(imageBoardPrefab, spawnParent);
+                //baritoneInstance.transform.SetParent(spawnParent, worldPositionStays:false);
+                //imageBoardInstantiated?.Invoke();
+                RegisterBoard(BaritoneKey, baritoneInstance);
+                pngLoader = baritoneInstance.GetComponent<RuntimePngLoader>();
 
                 if (pngLoader == null)
                 {
@@ -127,27 +143,32 @@ public class ScoreLoader : MonoBehaviour
                 pngLoader.pathOrFileName = fileName;
                 break;
 
-            case "Soprano Sax":
-            
-                sopranoVisible = !sopranoVisible;
-                if (!sopranoVisible)
+            case SopranoKey:
+
+                //sopranoVisible = !sopranoVisible;
+                if (sopranoVisible)
                 {
-                    DestroyBoardsByNames(sopranoFileName);
+                    DestroyBoards(SopranoKey);
                     break;
                 }
+                else if(!sopranoVisible)
+                {
+                    sopranoVisible = true;
+                }
 
-                DestroyBoardsByNames(acordeaoFileNames);
-                DestroyBoardsByNames(baritoneFileName);
+                DestroyBoards(AcordeaoKey);
+                DestroyBoards(BaritoneKey);
                 acordeaoVisible = false;
                 baritoneVisible = false;
 
                 // Load Soprano Sax board
                 fileName = "Corridinho do Algarve - Soprano Sax.png";
 
-                boardInstance = Instantiate(imageBoardPrefab, spawnParent);
-                //boardInstance.transform.SetParent(spawnParent, worldPositionStays:false);
-                imageBoardInstantiated?.Invoke();
-                pngLoader = boardInstance.GetComponent<RuntimePngLoader>();
+                GameObject sopranoInstance = Instantiate(imageBoardPrefab, spawnParent);
+                //sopranoInstance.transform.SetParent(spawnParent, worldPositionStays:false);
+                //imageBoardInstantiated?.Invoke();
+                RegisterBoard(SopranoKey, sopranoInstance);
+                pngLoader = sopranoInstance.GetComponent<RuntimePngLoader>();
 
                 if (pngLoader == null)
                 {
@@ -167,29 +188,38 @@ public class ScoreLoader : MonoBehaviour
         // }
     }
 
-    private void DestroyBoardsByNames(params string[] fileNames)
+    private void RegisterBoard(string key, GameObject board)
     {
-        if (spawnParent == null || fileNames == null || fileNames.Length == 0)
+        if (board == null)
         {
             return;
         }
 
-        var targets = new HashSet<string>(fileNames);
-        List<GameObject> boardsToDestroy = new List<GameObject>();
-
-        foreach (Transform child in spawnParent)
+        if (!activeBoards.TryGetValue(key, out var boards))
         {
-            RuntimePngLoader currentPngLoader = child.GetComponent<RuntimePngLoader>();
-            if (currentPngLoader != null && targets.Contains(currentPngLoader.pathOrFileName))
+            boards = new List<GameObject>();
+            activeBoards[key] = boards;
+        }
+
+        boards.Add(board);
+    }
+
+    private void DestroyBoards(string key)
+    {
+        if (!activeBoards.TryGetValue(key, out var boards) || boards.Count == 0)
+        {
+            return;
+        }
+
+        foreach (var board in boards)
+        {
+            if (board != null)
             {
-                boardsToDestroy.Add(child.gameObject);
+                Destroy(board);
+                //imageBoardRemoved?.Invoke();
             }
         }
 
-        foreach (GameObject board in boardsToDestroy)
-        {
-            Destroy(board);
-            imageBoardRemoved?.Invoke();
-        }
+        activeBoards.Remove(key);
     }
 }

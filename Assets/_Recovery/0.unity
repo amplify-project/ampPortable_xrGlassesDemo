@@ -204,7 +204,7 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 380675828}
+      - m_Target: {fileID: 126310691}
         m_TargetAssemblyTypeName: ScoreLoader, Amp
         m_MethodName: LoadScore
         m_Mode: 5
@@ -261,7 +261,7 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 126310686}
-  m_Enabled: 0
+  m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: de51e62691e7a98409d0657d4dafca5a, type: 3}
   m_Name: 
@@ -551,7 +551,7 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 380675828}
+      - m_Target: {fileID: 341071171}
         m_TargetAssemblyTypeName: ScoreLoader, Amp
         m_MethodName: LoadScore
         m_Mode: 5
@@ -608,7 +608,7 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 341071166}
-  m_Enabled: 0
+  m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: de51e62691e7a98409d0657d4dafca5a, type: 3}
   m_Name: 
@@ -643,7 +643,6 @@ GameObject:
   - component: {fileID: 380675825}
   - component: {fileID: 380675827}
   - component: {fileID: 380675826}
-  - component: {fileID: 380675828}
   m_Layer: 0
   m_Name: Panel
   m_TagString: Untagged
@@ -712,21 +711,6 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 380675824}
   m_CullTransparentMesh: 1
---- !u!114 &380675828
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 380675824}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: de51e62691e7a98409d0657d4dafca5a, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Amp::ScoreLoader
-  imageBoardPrefab: {fileID: 4718808774520319148, guid: f76925451474e044490134be6cd2b2bd, type: 3}
-  spawnParent: {fileID: 2056354647}
-  pathKind: 2
 --- !u!1 &442794506
 GameObject:
   m_ObjectHideFlags: 0
@@ -1938,7 +1922,7 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 380675828}
+      - m_Target: {fileID: 1247730189}
         m_TargetAssemblyTypeName: ScoreLoader, Amp
         m_MethodName: LoadScore
         m_Mode: 5
@@ -1995,7 +1979,7 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1247730184}
-  m_Enabled: 0
+  m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: de51e62691e7a98409d0657d4dafca5a, type: 3}
   m_Name: 
