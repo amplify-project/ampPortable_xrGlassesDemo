@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Events;
 
@@ -20,6 +21,15 @@ public class ScoreLoader : MonoBehaviour
     private bool acordeaoVisible = false;
     private bool baritoneVisible = false;
     private bool sopranoVisible = false;
+
+    private static readonly string[] acordeaoFileNames =
+    {
+        "Corridinho do Algarve - Acordeao_1.png",
+        "Corridinho do Algarve - Acordeao_2.png"
+    };
+
+    private const string baritoneFileName = "Corridinho do Algarve - Baritone Sax.png";
+    private const string sopranoFileName = "Corridinho do Algarve - Soprano Sax.png";
 
     /// <summary>
     /// Instantiates an ImageBoard and points its RuntimePngLoader at the requested file.
@@ -50,18 +60,13 @@ public class ScoreLoader : MonoBehaviour
                 acordeaoVisible = !acordeaoVisible;
                 if (!acordeaoVisible)
                 {
-                    // Destroy existing Acordeao boards
-                    foreach (Transform child in spawnParent)
-                    {
-                        RuntimePngLoader currentPngLoader = child.GetComponent<RuntimePngLoader>();
-                        if (currentPngLoader != null && (currentPngLoader.pathOrFileName == "Corridinho do Algarve - Acordeao_1.png" || currentPngLoader.pathOrFileName == "Corridinho do Algarve - Acordeao_2.png"))
-                        {
-                            Destroy(child.gameObject);
-                            imageBoardRemoved?.Invoke();
-                        }
-                    }
+                    DestroyBoardsByNames(acordeaoFileNames);
                     break;
                 }
+
+                DestroyBoardsByNames(baritoneFileName, sopranoFileName);
+                baritoneVisible = false;
+                sopranoVisible = false;
 
                 // Load Acordeao boards
                 fileName = "Corridinho do Algarve - Acordeao_1.png";
@@ -95,18 +100,14 @@ public class ScoreLoader : MonoBehaviour
                 baritoneVisible = !baritoneVisible;
                 if (!baritoneVisible)
                 {
-                    // Destroy existing Baritone Sax boards
-                    foreach (Transform child in spawnParent)
-                    {
-                        RuntimePngLoader currentPngLoader = child.GetComponent<RuntimePngLoader>();
-                        if (currentPngLoader != null && currentPngLoader.pathOrFileName == "Corridinho do Algarve - Baritone Sax.png")
-                        {
-                            Destroy(child.gameObject);
-                            imageBoardRemoved?.Invoke();
-                        }
-                    }
+                    DestroyBoardsByNames(baritoneFileName);
                     break;
                 }
+
+                DestroyBoardsByNames(acordeaoFileNames);
+                DestroyBoardsByNames(sopranoFileName);
+                acordeaoVisible = false;
+                sopranoVisible = false;
 
                 // Load Baritone Sax board
                 fileName = "Corridinho do Algarve - Baritone Sax.png";
@@ -131,18 +132,14 @@ public class ScoreLoader : MonoBehaviour
                 sopranoVisible = !sopranoVisible;
                 if (!sopranoVisible)
                 {
-                    // Destroy existing Soprano Sax boards
-                    foreach (Transform child in spawnParent)
-                    {
-                        RuntimePngLoader currentPngLoader = child.GetComponent<RuntimePngLoader>();
-                        if (currentPngLoader != null && currentPngLoader.pathOrFileName == "Corridinho do Algarve - Soprano Sax.png")
-                        {
-                            Destroy(child.gameObject);
-                            imageBoardRemoved?.Invoke();
-                        }
-                    }
+                    DestroyBoardsByNames(sopranoFileName);
                     break;
                 }
+
+                DestroyBoardsByNames(acordeaoFileNames);
+                DestroyBoardsByNames(baritoneFileName);
+                acordeaoVisible = false;
+                baritoneVisible = false;
 
                 // Load Soprano Sax board
                 fileName = "Corridinho do Algarve - Soprano Sax.png";
@@ -169,5 +166,30 @@ public class ScoreLoader : MonoBehaviour
         //     pngLoader.LoadFromPath(fileName, pathKind);
         // }
     }
-}
 
+    private void DestroyBoardsByNames(params string[] fileNames)
+    {
+        if (spawnParent == null || fileNames == null || fileNames.Length == 0)
+        {
+            return;
+        }
+
+        var targets = new HashSet<string>(fileNames);
+        List<GameObject> boardsToDestroy = new List<GameObject>();
+
+        foreach (Transform child in spawnParent)
+        {
+            RuntimePngLoader currentPngLoader = child.GetComponent<RuntimePngLoader>();
+            if (currentPngLoader != null && targets.Contains(currentPngLoader.pathOrFileName))
+            {
+                boardsToDestroy.Add(child.gameObject);
+            }
+        }
+
+        foreach (GameObject board in boardsToDestroy)
+        {
+            Destroy(board);
+            imageBoardRemoved?.Invoke();
+        }
+    }
+}
