@@ -39,7 +39,7 @@ public class SimpleGrid3D : MonoBehaviour
             float x = origin.x + col * (cellSize.x + spacing.x);
             float y = origin.y - row * (cellSize.y + spacing.y); // downwards
 
-            child.localPosition = new Vector3(x, y, 0f);
+            child.localPosition = new Vector3(x, y, transform.localPosition.z);
 
             // Optional: scale each quad to cell size assuming a 1x1 Unity quad
             child.localScale = new Vector3(cellSize.x, cellSize.y, 1f);
