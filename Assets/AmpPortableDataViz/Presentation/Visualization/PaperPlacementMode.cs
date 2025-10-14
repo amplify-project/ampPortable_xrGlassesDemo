@@ -43,7 +43,6 @@ public class PaperPlacementMode : MonoBehaviour
     private bool _isGrabbed;
     private Vector3 _targetLocalOffset;
     private Quaternion _localRotOffset = Quaternion.identity;
-    private Vector3 _vel; // for SmoothDamp
 
     private void Awake()
     {
@@ -77,7 +76,6 @@ public class PaperPlacementMode : MonoBehaviour
         Debug.Log("PaperPlacementMode: Grabbed, disabling follow.");
         // While held, stop following so the user can place it anywhere.
         _isGrabbed = true;
-        _vel = Vector3.zero; // clear smoothing so we don't lerp from old velocity
     }
 
     private void OnReleased(SelectExitEventArgs args)
@@ -145,8 +143,46 @@ public class PaperPlacementMode : MonoBehaviour
 
     private void FollowCamera()
     {
-        // Target position based on stored offset
-        Vector3 targetPos = _camera.TransformPoint(_targetLocalOffset);
+        Vector3 camPos = _camera.position;
+        Vector3 desiredLocal = _camera.TransformDirection(_targetLocalOffset);
+        float desiredRadius = desiredLocal.magnitude;
+
+        if (desiredRadius < 1e-4f)
+        {
+            // Fallback: keep a small forward offset if the configured radius collapses.
+            desiredLocal = _camera.forward * 0.5f;
+            desiredRadius = desiredLocal.magnitude;
+        }
+
+        Vector3 currentLocal = transform.position - camPos;
+        if (currentLocal.sqrMagnitude < 1e-6f)
+        {
+            currentLocal = desiredLocal;
+        }
+
+        Vector3 currentDir = currentLocal.normalized;
+        Vector3 desiredDir = desiredLocal.normalized;
+
+        float slerpT = 1f;
+        if (positionSmoothTime > 0f)
+        {
+            slerpT = 1f - Mathf.Exp(-Time.deltaTime / Mathf.Max(positionSmoothTime, 1e-4f));
+        }
+
+        Vector3 candidateDir = Vector3.Slerp(currentDir, desiredDir, slerpT);
+
+        if (maxFollowSpeed > 0f && desiredRadius > 1e-4f)
+        {
+            float candidateRadians = Vector3.Angle(currentDir, candidateDir) * Mathf.Deg2Rad;
+            float maxRadians = (maxFollowSpeed * Time.deltaTime) / desiredRadius;
+
+            if (candidateRadians > maxRadians && maxRadians > 0f)
+            {
+                candidateDir = Vector3.RotateTowards(currentDir, desiredDir, maxRadians, 0f);
+            }
+        }
+
+        Vector3 targetPos = camPos + candidateDir.normalized * desiredRadius;
 
         // Compute desired rotation
         Quaternion targetRot;
@@ -171,14 +207,8 @@ public class PaperPlacementMode : MonoBehaviour
         }
 
         // Temporarily kinematic for smooth placement (prevents physics jitter when following)
-        bool wasKinematic = _rb.isKinematic;
         _rb.isKinematic = true;
-
-        // Smooth position
-        float maxSpeed = (maxFollowSpeed > 0f) ? maxFollowSpeed : Mathf.Infinity;
-        Vector3 current = transform.position;
-        Vector3 next = Vector3.SmoothDamp(current, targetPos, ref _vel, positionSmoothTime, maxSpeed);
-        transform.position = next;
+        transform.position = targetPos;
 
         // Smooth rotation
         transform.rotation = Quaternion.Slerp(transform.rotation, targetRot, Time.deltaTime * rotationLerpSpeed);
