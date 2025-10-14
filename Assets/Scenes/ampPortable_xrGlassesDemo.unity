@@ -131,7 +131,6 @@ GameObject:
   - component: {fileID: 126310690}
   - component: {fileID: 126310689}
   - component: {fileID: 126310688}
-  - component: {fileID: 126310691}
   - component: {fileID: 126310692}
   m_Layer: 5
   m_Name: SopranoSax
@@ -254,21 +253,6 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 126310686}
   m_CullTransparentMesh: 1
---- !u!114 &126310691
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 126310686}
-  m_Enabled: 0
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: de51e62691e7a98409d0657d4dafca5a, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Amp::ScoreLoader
-  imageBoardPrefab: {fileID: 4718808774520319148, guid: f76925451474e044490134be6cd2b2bd, type: 3}
-  spawnParent: {fileID: 2056354647}
-  pathKind: 2
 --- !u!114 &126310692
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -478,7 +462,6 @@ GameObject:
   - component: {fileID: 341071170}
   - component: {fileID: 341071169}
   - component: {fileID: 341071168}
-  - component: {fileID: 341071171}
   - component: {fileID: 341071172}
   m_Layer: 5
   m_Name: Acordeao
@@ -601,21 +584,6 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 341071166}
   m_CullTransparentMesh: 1
---- !u!114 &341071171
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 341071166}
-  m_Enabled: 0
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: de51e62691e7a98409d0657d4dafca5a, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Amp::ScoreLoader
-  imageBoardPrefab: {fileID: 4718808774520319148, guid: f76925451474e044490134be6cd2b2bd, type: 3}
-  spawnParent: {fileID: 2056354647}
-  pathKind: 2
 --- !u!114 &341071172
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -727,6 +695,7 @@ MonoBehaviour:
   imageBoardPrefab: {fileID: 4718808774520319148, guid: f76925451474e044490134be6cd2b2bd, type: 3}
   spawnParent: {fileID: 2056354647}
   pathKind: 2
+  parentGrabInteractable: {fileID: 0}
 --- !u!1 &442794506
 GameObject:
   m_ObjectHideFlags: 0
@@ -1848,6 +1817,17 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1201461116}
   m_CullTransparentMesh: 1
+--- !u!114 &1222902292 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 5666008590438085566, guid: cb5f5548eeaac80439b15658a3e67a94, type: 3}
+  m_PrefabInstance: {fileID: 2093917564}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 83e4e6cca11330d4088d729ab4fc9d9f, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &1247730184
 GameObject:
   m_ObjectHideFlags: 0
@@ -1860,7 +1840,6 @@ GameObject:
   - component: {fileID: 1247730188}
   - component: {fileID: 1247730187}
   - component: {fileID: 1247730186}
-  - component: {fileID: 1247730189}
   - component: {fileID: 1247730190}
   m_Layer: 5
   m_Name: BaritoneSax
@@ -1983,21 +1962,6 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1247730184}
   m_CullTransparentMesh: 1
---- !u!114 &1247730189
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1247730184}
-  m_Enabled: 0
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: de51e62691e7a98409d0657d4dafca5a, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Amp::ScoreLoader
-  imageBoardPrefab: {fileID: 4718808774520319148, guid: f76925451474e044490134be6cd2b2bd, type: 3}
-  spawnParent: {fileID: 2056354647}
-  pathKind: 2
 --- !u!114 &1247730190
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2944,6 +2908,9 @@ GameObject:
   - component: {fileID: 2056354648}
   - component: {fileID: 2056354649}
   - component: {fileID: 2056354650}
+  - component: {fileID: 2056354652}
+  - component: {fileID: 2056354653}
+  - component: {fileID: 2056354654}
   m_Layer: 0
   m_Name: ImageBoardParent
   m_TagString: Untagged
@@ -3026,13 +2993,14 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0ad34abafad169848a38072baa96cdb2, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Unity.XR.Interaction.Toolkit::UnityEngine.XR.Interaction.Toolkit.Interactables.XRGrabInteractable
-  m_InteractionManager: {fileID: 0}
-  m_Colliders: []
+  m_InteractionManager: {fileID: 1222902292}
+  m_Colliders:
+  - {fileID: 2056354653}
   m_InteractionLayers:
     m_Bits: 1
   m_DistanceCalculationMode: 1
   m_SelectMode: 1
-  m_FocusMode: 1
+  m_FocusMode: 2
   m_CustomReticle: {fileID: 0}
   m_AllowGazeInteraction: 0
   m_AllowGazeSelect: 0
@@ -3141,6 +3109,56 @@ MonoBehaviour:
   m_LimitAngularVelocity: 0
   m_MaxLinearVelocityDelta: 10
   m_MaxAngularVelocityDelta: 20
+--- !u!114 &2056354652
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2056354646}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 85b8b2a0d4acdb44aa6527f690464ae7, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Amp::DynamicAttachPointHandler
+  grabInteractable: {fileID: 2056354650}
+  attachPoints: []
+--- !u!65 &2056354653
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2056354646}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 0
+  m_ProvidesContacts: 0
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Size: {x: 1, y: 1, z: 1}
+  m_Center: {x: 0, y: 0, z: 0}
+--- !u!114 &2056354654
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2056354646}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5a0d30e5f68770c4e9989c277c8a5bbf, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Amp::ColliderSizeManager
+  targetCollider: {fileID: 2056354653}
+  padding: {x: 0, y: 0, z: 0}
+  minimumDepth: 0.01
 --- !u!1 &2088709608
 GameObject:
   m_ObjectHideFlags: 0
