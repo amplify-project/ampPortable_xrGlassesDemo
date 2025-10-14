@@ -40,6 +40,7 @@ public class PaperPlacementMode : MonoBehaviour
     private Transform _camera;
 
     // Follow state
+    private bool _isGrabbed;
     private Vector3 _targetLocalOffset;
     private Quaternion _localRotOffset = Quaternion.identity;
     private Vector3 _vel; // for SmoothDamp
@@ -50,7 +51,9 @@ public class PaperPlacementMode : MonoBehaviour
         _rb   = GetComponent<Rigidbody>();
 
         _grab.selectEntered.AddListener(OnGrabbed);
-        _grab.selectExited.AddListener(OnReleased);
+        _grab.lastSelectExited.AddListener(OnReleased);
+
+        Debug.Log("PaperPlacementMode: Awake complete.");
     }
 
     private void Start()
@@ -66,29 +69,36 @@ public class PaperPlacementMode : MonoBehaviour
     private void OnDestroy()
     {
         _grab.selectEntered.RemoveListener(OnGrabbed);
-        _grab.selectExited.RemoveListener(OnReleased);
+        _grab.lastSelectExited.RemoveListener(OnReleased);
     }
 
     private void OnGrabbed(SelectEnterEventArgs args)
     {
+        Debug.Log("PaperPlacementMode: Grabbed, disabling follow.");
         // While held, stop following so the user can place it anywhere.
-        // Let XRIT drive pose during grab.
+        _isGrabbed = true;
+        _vel = Vector3.zero; // clear smoothing so we don't lerp from old velocity
     }
 
     private void OnReleased(SelectExitEventArgs args)
     {
+        Debug.Log("PaperPlacementMode: Released, setting follow mode: " + followMode);
+        _isGrabbed = false;
+
         if (_camera == null) return;
 
-        if (followMode == FollowMode.WorldLocked)
-        {
-            // Do nothing: paper stays in world where released.
-            return;
-        }
+        // if (followMode == FollowMode.WorldLocked)
+        // {
+        //     // Do nothing: paper stays in world where released.
+        //     return;
+        // }
 
         // For follow modes, compute the desired offset relative to the current camera.
         if (captureOffsetOnRelease)
         {
+            Debug.Log("PaperPlacementMode: Capturing offset on release. Transform pos: " + transform.position   + " Camera pos: " + _camera.position);
             _targetLocalOffset = _camera.InverseTransformPoint(transform.position);
+            Debug.Log($"PaperPlacementMode: Captured offset on release: {_targetLocalOffset}");
 
             if (!faceUser)
             {
@@ -111,6 +121,7 @@ public class PaperPlacementMode : MonoBehaviour
     private void LateUpdate()
     {
         if (_camera == null) return;
+        if (_isGrabbed) return;
 
         switch (followMode)
         {

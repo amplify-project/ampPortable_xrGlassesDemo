@@ -1,5 +1,5 @@
+using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.SocialPlatforms.Impl;
 
 public class SimpleGrid3D : MonoBehaviour
 {
@@ -14,7 +14,6 @@ public class SimpleGrid3D : MonoBehaviour
     [Header("Origin & order")]
     public Vector2 origin = Vector2.zero; // local X (right), Y (up). Y will go negative per row.
 
-    //void OnValidate() { Layout(); }
     void Start()
     {
         ScoreLoader.ImageBoardInstantiated.AddListener(OnImageBoardInstantiated);
@@ -28,11 +27,17 @@ public class SimpleGrid3D : MonoBehaviour
 
     public void Layout()
     {
+        var activeChildren = new List<Transform>(transform.childCount);
         for (int i = 0; i < transform.childCount; i++)
         {
             var child = transform.GetChild(i);
             if (!child.gameObject.activeInHierarchy) continue;
+            activeChildren.Add(child);
+        }
 
+        for (int i = 0; i < activeChildren.Count; i++)
+        {
+            var child = activeChildren[i];
             int col = i % columns;
             int row = i / columns;
 
@@ -45,7 +50,7 @@ public class SimpleGrid3D : MonoBehaviour
             child.localScale = new Vector3(cellSize.x, cellSize.y, 1f);
         }
         
-        Debug.Log("Number of children: " + transform.childCount);
+        Debug.Log("Number of active children: " + activeChildren.Count);
     }
 
     private void OnImageBoardInstantiated()
