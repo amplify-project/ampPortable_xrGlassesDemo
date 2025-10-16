@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using System.IO;
 using UnityEngine;
 using UnityEngine.Events;
 
@@ -31,6 +32,7 @@ public class ScoreLoader : MonoBehaviour
     private const string AcordeaoKey = "Acordeao";
     private const string BaritoneKey = "Baritone Sax";
     private const string SopranoKey = "Soprano Sax";
+    private const string ImportedKeyPrefix = "Imported::";
 
     private void Awake()
     {
@@ -48,6 +50,65 @@ public class ScoreLoader : MonoBehaviour
         {
             parentGrabInteractable = GetComponent<UnityEngine.XR.Interaction.Toolkit.Interactables.XRGrabInteractable>() ?? GetComponentInParent<UnityEngine.XR.Interaction.Toolkit.Interactables.XRGrabInteractable>();
         }
+    }
+
+    /// <summary>
+    /// Instantiates an ImageBoard for a score that lives outside the predefined toggle set.
+    /// Pass in an absolute path (or URI) at runtime – e.g. a file that the user picked.
+    /// </summary>
+    /// <param name="absolutePath">Absolute file system path or URI to a PNG score.</param>
+    /// <param name="displayNameOverride">Optional friendly name for bookkeeping/UI.</param>
+    public void LoadScoreFromAbsolutePath(string absolutePath, string displayNameOverride = null)
+    {
+        if (imageBoardPrefab == null)
+        {
+            Debug.LogError("[ScoreLoader] ImageBoard prefab is not assigned.");
+            return;
+        }
+
+        if (string.IsNullOrWhiteSpace(absolutePath))
+        {
+            Debug.LogWarning("[ScoreLoader] No path provided to LoadScoreFromAbsolutePath.");
+            return;
+        }
+
+        if (!File.Exists(absolutePath))
+        {
+            Debug.LogError($"[ScoreLoader] File not found at '{absolutePath}'.");
+            return;
+        }
+
+        string friendlyName = string.IsNullOrEmpty(displayNameOverride)
+            ? Path.GetFileNameWithoutExtension(absolutePath)
+            : displayNameOverride;
+
+        string key = $"{ImportedKeyPrefix}{friendlyName}";
+        var pendingDestruction = new List<GameObject>();
+        DestroyBoards(key, pendingDestruction);
+
+        var instance = Instantiate(imageBoardPrefab, spawnParent);
+        if (instance == null)
+        {
+            Debug.LogError("[ScoreLoader] Failed to instantiate ImageBoard prefab.");
+            return;
+        }
+
+        RegisterBoard(key, instance);
+        AttachBoardColliders(instance);
+
+        var pngLoader = instance.GetComponent<RuntimePngLoader>();
+        if (pngLoader == null)
+        {
+            Debug.LogError("[ScoreLoader] RuntimePngLoader component not found on ImageBoard instance.");
+            Destroy(instance);
+            activeBoards.Remove(key);
+            return;
+        }
+
+        pngLoader.pathKind = RuntimePngLoader.PathKind.AbsoluteOrUri;
+        pngLoader.pathOrFileName = absolutePath;
+
+        NotifyAfterBoardsDestroyed(pendingDestruction);
     }
     
     /// <summary>
@@ -225,6 +286,7 @@ public class ScoreLoader : MonoBehaviour
         }
 
         activeBoards.Remove(key);
+        imageBoardRemoved?.Invoke();
     }
 
     private void NotifyAfterBoardsDestroyed(List<GameObject> pendingDestruction)
