@@ -3164,7 +3164,7 @@ MonoBehaviour:
   maxFollowSpeed: 2
   faceUser: 1
   yawOnly: 1
-  maxDistance: 2
+  maxDistance: 4
   maxOffAxisAngle: 40
 --- !u!114 &2056354656
 MonoBehaviour:
