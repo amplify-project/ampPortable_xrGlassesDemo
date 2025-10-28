@@ -1025,13 +1025,15 @@ GameObject:
   - component: {fileID: 598052046}
   - component: {fileID: 598052045}
   - component: {fileID: 598052044}
+  - component: {fileID: 598052049}
+  - component: {fileID: 598052048}
   m_Layer: 0
   m_Name: Sphere
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!135 &598052044
 SphereCollider:
   m_ObjectHideFlags: 0
@@ -1124,6 +1126,34 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &598052048
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 598052043}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0bfc7734deebf364e8678717e9b17c16, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Amp::RedisDataPump
+  targetRenderer: {fileID: 0}
+  emissionProperty: _Emission
+  emissionRange: {x: 0.5, y: 5}
+  logValues: 1
+--- !u!114 &598052049
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 598052043}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: cefa4e9695b578d489b788eaafcddda1, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Amp::RedisManager
 --- !u!1 &698791613
 GameObject:
   m_ObjectHideFlags: 0
@@ -1945,7 +1975,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!114 &1219557743
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1985,6 +2015,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0bfc7734deebf364e8678717e9b17c16, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Amp::RedisDataPump
+  targetRenderer: {fileID: 0}
+  emissionProperty: _Emission
+  emissionRange: {x: 0.5, y: 5}
+  logValues: 0
 --- !u!114 &1222902292 stripped
 MonoBehaviour:
   m_CorrespondingSourceObject: {fileID: 5666008590438085566, guid: cb5f5548eeaac80439b15658a3e67a94, type: 3}
