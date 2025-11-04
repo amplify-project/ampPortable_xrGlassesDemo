@@ -10,6 +10,9 @@ using UnityEngine;
 
 namespace AmpPortableDataViz.Presentation.Bootstrap
 {
+    /// <summary>
+    /// Bootstraps the data visualization application, setting up services, data sources, and visualizations.
+    /// </summary>
     public sealed class Bootstrapper : MonoBehaviour
     {
         public AnchorRegistry AnchorRegistry;
