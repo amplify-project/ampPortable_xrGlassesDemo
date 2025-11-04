@@ -1,5 +1,4 @@
 using AmpPortableDataViz.Core;
-using AmpPortableDataViz.Presentation.Visualization;
 using UnityEngine;
 
 namespace AmpPortableDataViz.Presentation.Mapping

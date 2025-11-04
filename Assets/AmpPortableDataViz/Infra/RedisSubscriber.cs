@@ -11,18 +11,33 @@ public static class RedisSubscriber
     private static ConnectionMultiplexer? _redis;
     private static ISubscriber? _subscriber;
     private static bool _isInitialized;
+    private static string _host = "192.168.0.6";
+    private static int _port = 6379;
+    private static string _channel = "sensor_data";
 
-    public static async Task Begin(string channelName = "sensor_data")
+    public static async Task Begin(string host = "192.168.0.6", int port = 6379, string channelName = "sensor_data")
     {
-        if (_isInitialized)
+        if (_isInitialized &&
+            string.Equals(_host, host, StringComparison.OrdinalIgnoreCase) &&
+            _port == port &&
+            string.Equals(_channel, channelName, StringComparison.Ordinal))
         {
             return;
         }
 
+        if (_isInitialized)
+        {
+            await CleanupAsync();
+        }
+
+        _host = host;
+        _port = port;
+        _channel = channelName;
+
         try
         {
             await ConnectToRedis();
-            await SubscribeToChannel(channelName);
+            await SubscribeToChannel(_channel);
             _isInitialized = true;
         }
         catch (Exception ex)
@@ -55,7 +70,7 @@ public static class RedisSubscriber
     {
         var config = new ConfigurationOptions
         {
-            EndPoints = { "192.168.0.6:6379" },
+            EndPoints = { $"{_host}:{_port}" },
             ConnectTimeout = 5000,
             SyncTimeout = 5000
         };

@@ -7,7 +7,7 @@ using UnityEngine;
 namespace AmpPortableDataViz.Presentation.Sources
 {
     [DisallowMultipleComponent]
-    public sealed class LiveKitTelemetryReceiver : MonoBehaviour, IDataSource<LiveKitTelemetryService.TelemetryFrame>
+    public sealed class LiveKitTelemetryReceiver : MonoBehaviour, IDataSource<PoseSample>
     {
         [Header("Sandbox token endpoint + header")]
         public string tokenEndpoint = "https://cloud-api.livekit.io/api/sandbox/connection-details";
@@ -22,7 +22,7 @@ namespace AmpPortableDataViz.Presentation.Sources
         private int _sequenceId;
 
         public string SourceId => string.IsNullOrEmpty(identity) ? gameObject.name : identity;
-        public event Action<DataFrame<LiveKitTelemetryService.TelemetryFrame>> OnFrame;
+        public event Action<DataFrame<PoseSample>> OnFrame;
 
         private void Awake()
         {
@@ -37,12 +37,9 @@ namespace AmpPortableDataViz.Presentation.Sources
             yield return _telemetryService.Connect();
         }
 
-        private void OnTelemetryReceived(LiveKitTelemetryService.TelemetryFrame frame)
+        private void OnTelemetryReceived(PoseSample sample)
         {
-            var dataFrame = new DataFrame<LiveKitTelemetryService.TelemetryFrame>(
-                _clock.UtcNowTicks,
-                _sequenceId++,
-                frame);
+            var dataFrame = new DataFrame<PoseSample>(_clock.UtcNowTicks, _sequenceId++, sample);
 
             OnFrame?.Invoke(dataFrame);
         }

@@ -1,17 +1,12 @@
 using System.Collections.Generic;
+using AmpPortableDataViz.Core;
 using UnityEngine;
 
 namespace AmpPortableDataViz.Presentation.Anchors
 {
-    public sealed class AnchorRegistry : MonoBehaviour
+    public sealed class AnchorRegistry : MonoBehaviour, IAnchorRegistry
     {
-        public static AnchorRegistry Instance { get; private set; }
         private readonly Dictionary<string, Transform> _anchorIdToTransformMap = new Dictionary<string, Transform>();
-
-        private void Awake()
-        {
-            Instance = this;
-        }
 
         public void Register(string anchorId, Transform anchorTransform)
         {
@@ -23,6 +18,11 @@ namespace AmpPortableDataViz.Presentation.Anchors
         {
             _anchorIdToTransformMap.TryGetValue(anchorId, out var transformForAnchor);
             return transformForAnchor;
+        }
+
+        public bool TryGet(string anchorId, out Transform anchorTransform)
+        {
+            return _anchorIdToTransformMap.TryGetValue(anchorId, out anchorTransform);
         }
     }
 }

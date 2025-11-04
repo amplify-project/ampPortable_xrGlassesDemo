@@ -19,27 +19,27 @@ namespace AmpPortableDataViz.Tests.PlayMode
             var stubClock = new StubClock { UtcNowTicks = 987654321L };
             SetPrivateField(receiver, "_clock", stubClock);
 
-            var telemetryFrame = new LiveKitTelemetryService.TelemetryFrame(
+            var poseSample = new PoseSample(
                 new Vector3(0.1f, 0.2f, 0.3f),
                 new Quaternion(0.4f, 0.5f, 0.6f, 0.7f),
                 123456789L);
 
             bool eventRaised = false;
-            DataFrame<LiveKitTelemetryService.TelemetryFrame> capturedFrame = default;
+            DataFrame<PoseSample> capturedFrame = default;
             receiver.OnFrame += frame =>
             {
                 eventRaised = true;
                 capturedFrame = frame;
             };
 
-            InvokePrivateMethod(receiver, "OnTelemetryReceived", telemetryFrame);
+            InvokePrivateMethod(receiver, "OnTelemetryReceived", poseSample);
 
             Assert.IsTrue(eventRaised);
             Assert.That(capturedFrame.TimestampTicksUtc, Is.EqualTo(stubClock.UtcNowTicks));
             Assert.That(capturedFrame.SequenceId, Is.Zero);
-            Assert.That(capturedFrame.Payload.Position, Is.EqualTo(telemetryFrame.Position));
-            Assert.That(capturedFrame.Payload.Rotation, Is.EqualTo(telemetryFrame.Rotation));
-            Assert.That(capturedFrame.Payload.Timestamp, Is.EqualTo(telemetryFrame.Timestamp));
+            Assert.That(capturedFrame.Payload.Position, Is.EqualTo(poseSample.Position));
+            Assert.That(capturedFrame.Payload.Rotation, Is.EqualTo(poseSample.Rotation));
+            Assert.That(capturedFrame.Payload.TimestampTicksUtc, Is.EqualTo(poseSample.TimestampTicksUtc));
 
             Object.DestroyImmediate(gameObject);
         }
@@ -54,15 +54,15 @@ namespace AmpPortableDataViz.Tests.PlayMode
             SetPrivateField(receiver, "_clock", new StubClock { UtcNowTicks = 1 });
             SetPrivateField(receiver, "_sequenceId", 5);
 
-            var telemetryFrame = new LiveKitTelemetryService.TelemetryFrame(
+            var poseSample = new PoseSample(
                 Vector3.one,
                 Quaternion.identity,
                 10L);
 
-            DataFrame<LiveKitTelemetryService.TelemetryFrame> capturedFrame = default;
+            DataFrame<PoseSample> capturedFrame = default;
             receiver.OnFrame += frame => capturedFrame = frame;
 
-            InvokePrivateMethod(receiver, "OnTelemetryReceived", telemetryFrame);
+            InvokePrivateMethod(receiver, "OnTelemetryReceived", poseSample);
 
             Assert.That(capturedFrame.SequenceId, Is.EqualTo(5));
             Assert.That(GetPrivateField<int>(receiver, "_sequenceId"), Is.EqualTo(6));

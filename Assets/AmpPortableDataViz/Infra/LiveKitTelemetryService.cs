@@ -2,6 +2,7 @@ using System;
 using System.Collections;
 using System.Text;
 using LiveKit;
+using AmpPortableDataViz.Core;
 using UnityEngine;
 using UnityEngine.Networking;
 
@@ -17,7 +18,7 @@ namespace AmpPortableDataViz.Infra
 
         private Room _room;
 
-        public event Action<TelemetryFrame> TelemetryReceived;
+        public event Action<PoseSample> TelemetryReceived;
 
         public LiveKitTelemetryService(
             Func<IEnumerator, Coroutine> startCoroutine,
@@ -112,7 +113,7 @@ namespace AmpPortableDataViz.Infra
             var data = JsonUtility.FromJson<TelemetryPayload>(SanitizeForJsonUtility(json));
             if (data?.IsValid ?? false)
             {
-                TelemetryReceived?.Invoke(data.ToFrame());
+                TelemetryReceived?.Invoke(data.ToPoseSample());
                 return true;
             }
 
@@ -176,26 +177,12 @@ namespace AmpPortableDataViz.Infra
 
             public bool IsValid => position?.Length == 3 && rotation?.Length == 4;
 
-            public TelemetryFrame ToFrame()
+            public PoseSample ToPoseSample()
             {
-                return new TelemetryFrame(
+                return new PoseSample(
                     new Vector3(position[0], position[1], position[2]),
                     new Quaternion(rotation[0], rotation[1], rotation[2], rotation[3]),
                     timestamp);
-            }
-        }
-
-        public readonly struct TelemetryFrame
-        {
-            public readonly Vector3 Position;
-            public readonly Quaternion Rotation;
-            public readonly long Timestamp;
-
-            public TelemetryFrame(Vector3 position, Quaternion rotation, long timestamp)
-            {
-                Position = position;
-                Rotation = rotation;
-                Timestamp = timestamp;
             }
         }
     }

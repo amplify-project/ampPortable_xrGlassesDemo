@@ -13,6 +13,7 @@ namespace AmpPortableDataViz.Presentation.Visualization
         private static readonly int BaseColorPropertyId = Shader.PropertyToID("_BaseColor");
         private static readonly int IntensityPropertyId = Shader.PropertyToID("_Intensity");
         private static readonly int FlowVectorPropertyId = Shader.PropertyToID("_Flow");
+        private static readonly int EmissionPropertyId = Shader.PropertyToID("_Emission");
 
         private void Awake()
         {
@@ -33,6 +34,7 @@ namespace AmpPortableDataViz.Presentation.Visualization
             _materialPropertyBlock.SetColor(BaseColorPropertyId, parameters.Color);
             _materialPropertyBlock.SetFloat(IntensityPropertyId, Mathf.Clamp01(parameters.Intensity));
             _materialPropertyBlock.SetVector(FlowVectorPropertyId, parameters.Flow);
+            _materialPropertyBlock.SetFloat(EmissionPropertyId, Mathf.Max(0f, parameters.Intensity));
             _meshRenderer.SetPropertyBlock(_materialPropertyBlock);
         }
     }

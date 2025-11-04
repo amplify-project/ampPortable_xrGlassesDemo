@@ -1,7 +1,7 @@
 using UnityEngine;
 using AmpPortableDataViz.Core;
 
-namespace AmpPortableDataViz.Presentation
+namespace AmpPortableDataViz.Application
 {
     [System.Serializable]
     public struct SpawnVisualizationMsg
@@ -21,3 +21,4 @@ namespace AmpPortableDataViz.Presentation
         public Vector4 Params1;
     }
 }
+

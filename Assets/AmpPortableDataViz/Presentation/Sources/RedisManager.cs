@@ -1,15 +1,51 @@
 using UnityEngine;
+using AmpPortableDataViz.Presentation.Sources;
 
-public class RedisManager : MonoBehaviour
+[DisallowMultipleComponent]
+public sealed class RedisManager : MonoBehaviour
 {
-    // Start is called once before the first execution of Update after the MonoBehaviour is created
-    async void Start()
+    [SerializeField]
+    private RedisDataPump dataPump;
+
+    [SerializeField]
+    private string host = "192.168.0.6";
+
+    [SerializeField]
+    private int port = 6379;
+
+    [SerializeField]
+    private string channelName = "sensor_data";
+
+    private void Awake()
     {
-        await RedisSubscriber.Begin();
+        if (dataPump == null)
+        {
+            dataPump = GetComponent<RedisDataPump>();
+        }
+
+        ApplyConfiguration();
     }
 
-    async void OnDestroy()
+    private void Reset()
     {
-        await RedisSubscriber.CleanupAsync();
+        dataPump = GetComponent<RedisDataPump>();
+    }
+
+    public void Configure(string newHost, int newPort, string newChannel)
+    {
+        host = newHost;
+        port = newPort;
+        channelName = newChannel;
+        ApplyConfiguration();
+    }
+
+    private void ApplyConfiguration()
+    {
+        if (dataPump == null)
+        {
+            return;
+        }
+
+        dataPump.ConfigureConnection(host, port, channelName);
     }
 }

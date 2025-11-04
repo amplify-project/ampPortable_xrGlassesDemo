@@ -1,3 +1,4 @@
+using AmpPortableDataViz.Core;
 using AmpPortableDataViz.Infra;
 using NUnit.Framework;
 using UnityEngine;
@@ -21,7 +22,7 @@ namespace AmpPortableDataViz.Tests.PlayMode
             var json = "{\"position\":[1,2,3],\"rotation\":[0,0,0,1],\"timestamp\":4242}";
 
             bool eventRaised = false;
-            LiveKitTelemetryService.TelemetryFrame capturedFrame = default;
+            PoseSample capturedFrame = default;
             service.TelemetryReceived += frame =>
             {
                 eventRaised = true;
@@ -34,7 +35,7 @@ namespace AmpPortableDataViz.Tests.PlayMode
             Assert.IsTrue(eventRaised);
             Assert.That(capturedFrame.Position, Is.EqualTo(expectedPosition));
             Assert.That(capturedFrame.Rotation, Is.EqualTo(expectedRotation));
-            Assert.That(capturedFrame.Timestamp, Is.EqualTo(expectedTimestamp));
+            Assert.That(capturedFrame.TimestampTicksUtc, Is.EqualTo(expectedTimestamp));
         }
 
         [Test]

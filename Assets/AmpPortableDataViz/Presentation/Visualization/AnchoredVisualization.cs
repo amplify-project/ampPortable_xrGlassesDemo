@@ -8,11 +8,11 @@ namespace AmpPortableDataViz.Presentation.Visualization
         public string AnchorId;
         public Transform VisualRoot;
 
-        public void BindTransform()
+        public void BindToAnchor(Transform anchorTransform)
         {
-            var targetAnchorTransform = AnchorRegistry.Instance?.Get(AnchorId);
+            if (anchorTransform == null) return;
             var transformToBind = VisualRoot == null ? transform : VisualRoot;
-            transformToBind.SetParent(targetAnchorTransform, worldPositionStays: false);
+            transformToBind.SetParent(anchorTransform, worldPositionStays: false);
             transformToBind.localPosition = Vector3.zero;
             transformToBind.localRotation = Quaternion.identity;
         }

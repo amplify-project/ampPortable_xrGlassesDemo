@@ -1,7 +1,10 @@
 using UnityEngine;
 
-namespace AmpPortableDataViz.Presentation.Visualization
+namespace AmpPortableDataViz.Core
 {
+    /// <summary>
+    /// Parameters that drive the simple visualization shader/material.
+    /// </summary>
     public struct SimpleVisualParams
     {
         public float Intensity;
@@ -9,3 +12,4 @@ namespace AmpPortableDataViz.Presentation.Visualization
         public Vector3 Flow;
     }
 }
+
