@@ -87,10 +87,17 @@ namespace AmpPortableDataViz.Presentation.Sources
 
         private bool TryGetLatestMessage(out RedisSubscriber.RedisMessage message)
         {
+            message = default;
+
+            if (string.IsNullOrWhiteSpace(redisChannel))
+            {
+                return false;
+            }
+
             bool hasMessage = false;
             RedisSubscriber.RedisMessage latestMessage = default;
 
-            while (RedisSubscriber.TryDequeue(out var dequeuedMessage))
+            while (RedisSubscriber.TryDequeue(redisChannel, out var dequeuedMessage))
             {
                 latestMessage = dequeuedMessage;
                 hasMessage = true;
@@ -144,7 +151,7 @@ namespace AmpPortableDataViz.Presentation.Sources
             _connectionInProgress = true;
             try
             {
-                await RedisSubscriber.Begin(redisHost, redisPort, redisChannel);
+                await RedisSubscriber.RegisterChannelAsync(redisHost, redisPort, redisChannel);
                 _isConnected = true;
             }
             catch (Exception ex)
@@ -167,7 +174,7 @@ namespace AmpPortableDataViz.Presentation.Sources
             _connectionInProgress = true;
             try
             {
-                await RedisSubscriber.CleanupAsync();
+                await RedisSubscriber.UnregisterChannelAsync(redisChannel);
                 _isConnected = false;
             }
             catch (Exception ex)

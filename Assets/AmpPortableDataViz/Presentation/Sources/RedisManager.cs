@@ -1,9 +1,18 @@
+using System;
+using System.Linq;
 using UnityEngine;
 using AmpPortableDataViz.Presentation.Sources;
 
 [DisallowMultipleComponent]
 public sealed class RedisManager : MonoBehaviour
 {
+    [Serializable]
+    private struct ChannelSubscription
+    {
+        public string ChannelName;
+        public RedisDataPump DataPump;
+    }
+
     [SerializeField]
     private RedisDataPump dataPump;
 
@@ -14,7 +23,15 @@ public sealed class RedisManager : MonoBehaviour
     private int port = 6379;
 
     [SerializeField]
-    private string channelName = "sensor_data";
+    private string channelName = "amplify.engagement.engagement";
+
+    [SerializeField]
+    private ChannelSubscription[] additionalChannelSubscriptions = new[]
+    {
+        new ChannelSubscription { ChannelName = "amplify.engagement.boredom" },
+        new ChannelSubscription { ChannelName = "amplify.engagement.confusion" },
+        new ChannelSubscription { ChannelName = "amplify.engagement.frustration" }
+    };
 
     private void Awake()
     {
@@ -31,21 +48,67 @@ public sealed class RedisManager : MonoBehaviour
         dataPump = GetComponent<RedisDataPump>();
     }
 
-    public void Configure(string newHost, int newPort, string newChannel)
+    public void Configure(string newHost, int newPort, params string[] channels)
     {
         host = newHost;
         port = newPort;
-        channelName = newChannel;
+
+        var normalizedChannels = channels?
+            .Where(channel => !string.IsNullOrWhiteSpace(channel))
+            .Select(channel => channel.Trim())
+            .Distinct(StringComparer.Ordinal)
+            .ToArray();
+
+        if (normalizedChannels != null && normalizedChannels.Length > 0)
+        {
+            channelName = normalizedChannels[0];
+            ApplyChannelNames(normalizedChannels);
+        }
+
         ApplyConfiguration();
     }
 
-    private void ApplyConfiguration()
+    private void ApplyChannelNames(string[] channels)
     {
-        if (dataPump == null)
+        if (channels.Length <= 1 || additionalChannelSubscriptions == null || additionalChannelSubscriptions.Length == 0)
         {
             return;
         }
 
-        dataPump.ConfigureConnection(host, port, channelName);
+        for (int i = 0; i < additionalChannelSubscriptions.Length; i++)
+        {
+            int channelIndex = i + 1;
+            if (channelIndex >= channels.Length)
+            {
+                break;
+            }
+
+            var binding = additionalChannelSubscriptions[i];
+            binding.ChannelName = channels[channelIndex];
+            additionalChannelSubscriptions[i] = binding;
+        }
+    }
+
+    private void ApplyConfiguration()
+    {
+        if (dataPump != null && !string.IsNullOrWhiteSpace(channelName))
+        {
+            dataPump.ConfigureConnection(host, port, channelName);
+        }
+
+        if (additionalChannelSubscriptions == null)
+        {
+            return;
+        }
+
+        foreach (var subscription in additionalChannelSubscriptions)
+        {
+            if (subscription.DataPump == null || string.IsNullOrWhiteSpace(subscription.ChannelName))
+            {
+                continue;
+            }
+
+            subscription.DataPump.ConfigureConnection(host, port, subscription.ChannelName);
+        }
     }
 }

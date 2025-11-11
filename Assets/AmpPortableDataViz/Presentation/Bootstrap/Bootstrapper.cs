@@ -1,4 +1,6 @@
+using System;
 using System.Collections;
+using System.Collections.Generic;
 using AmpPortableDataViz.Application;
 using AmpPortableDataViz.Core;
 using AmpPortableDataViz.Infra;
@@ -43,7 +45,13 @@ namespace AmpPortableDataViz.Presentation.Bootstrap
         [Header("Redis Settings")]
         public string RedisHost = "192.168.0.6";
         public int RedisPort = 6379;
-        public string RedisChannel = "sensor_data";
+        public string RedisChannel = "amplify.engagement.engagement";
+        public string[] RedisChannels =
+        {
+            "amplify.engagement.boredom",
+            "amplify.engagement.confusion",
+            "amplify.engagement.frustration"
+        };
 
         [Header("LiveKit Settings")]
         public string LiveKitTokenEndpoint = "https://cloud-api.livekit.io/api/sandbox/connection-details";
@@ -255,15 +263,18 @@ namespace AmpPortableDataViz.Presentation.Bootstrap
                 SineSource.enabled = useSine;
             }
 
+            var redisChannels = GetRedisChannels();
+            var primaryRedisChannel = redisChannels[0];
+
             if (RedisSource != null)
             {
-                RedisSource.ConfigureConnection(RedisHost, RedisPort, RedisChannel);
+                RedisSource.ConfigureConnection(RedisHost, RedisPort, primaryRedisChannel);
                 RedisSource.enabled = useRedis;
             }
 
             if (RedisManager != null)
             {
-                RedisManager.Configure(RedisHost, RedisPort, RedisChannel);
+                RedisManager.Configure(RedisHost, RedisPort, redisChannels);
                 RedisManager.enabled = useRedis;
             }
 
@@ -288,5 +299,38 @@ namespace AmpPortableDataViz.Presentation.Bootstrap
             ApplySignalConfiguration();
         }
 #endif
+
+        private string[] GetRedisChannels()
+        {
+            var channels = new List<string>();
+
+            if (!string.IsNullOrWhiteSpace(RedisChannel))
+            {
+                channels.Add(RedisChannel);
+            }
+
+            if (RedisChannels != null && RedisChannels.Length > 0)
+            {
+                foreach (var channel in RedisChannels)
+                {
+                    if (string.IsNullOrWhiteSpace(channel))
+                    {
+                        continue;
+                    }
+
+                    if (!channels.Contains(channel))
+                    {
+                        channels.Add(channel);
+                    }
+                }
+            }
+
+            if (channels.Count == 0)
+            {
+                channels.Add("sensor_data");
+            }
+
+            return channels.ToArray();
+        }
     }
 }

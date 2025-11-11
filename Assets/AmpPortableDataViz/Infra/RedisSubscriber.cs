@@ -1,68 +1,135 @@
 using System;
 using System.Collections.Concurrent;
+using System.Collections.Generic;
+using System.Linq;
+using System.Globalization;
 using System.Text.Json;
+using System.Threading;
 using System.Threading.Tasks;
 using StackExchange.Redis;
 using UnityEngine;
 
 public static class RedisSubscriber
 {
-    private static readonly ConcurrentQueue<RedisMessage> _messageQueue = new();
+    private static readonly ConcurrentDictionary<string, ConcurrentQueue<RedisMessage>> _channelQueues = new(StringComparer.Ordinal);
+    private static readonly ConcurrentDictionary<string, int> _channelRefCounts = new(StringComparer.Ordinal);
+    private static readonly SemaphoreSlim _connectionLock = new(1, 1);
     private static ConnectionMultiplexer? _redis;
     private static ISubscriber? _subscriber;
     private static bool _isInitialized;
     private static string _host = "192.168.0.6";
     private static int _port = 6379;
-    private static string _channel = "sensor_data";
+    private static string _defaultChannel = "sensor_data";
 
-    public static async Task Begin(string host = "192.168.0.6", int port = 6379, string channelName = "sensor_data")
+    public static Task Begin(string host = "192.168.0.6", int port = 6379, params string[] channelNames)
     {
-        if (_isInitialized &&
-            string.Equals(_host, host, StringComparison.OrdinalIgnoreCase) &&
-            _port == port &&
-            string.Equals(_channel, channelName, StringComparison.Ordinal))
+        if (channelNames == null || channelNames.Length == 0)
+        {
+            channelNames = new[] { _defaultChannel };
+        }
+
+        return Task.WhenAll(channelNames
+            .Where(name => !string.IsNullOrWhiteSpace(name))
+            .Select(name => RegisterChannelAsync(host, port, name)));
+    }
+
+    public static bool TryDequeue(string channelName, out RedisMessage message)
+    {
+        message = default;
+
+        if (string.IsNullOrWhiteSpace(channelName))
+        {
+            return false;
+        }
+
+        if (!_channelQueues.TryGetValue(channelName, out var queue))
+        {
+            return false;
+        }
+
+        return queue.TryDequeue(out message);
+    }
+
+    public static async Task RegisterChannelAsync(string host, int port, string channelName)
+    {
+        var normalizedChannel = NormalizeChannelName(channelName);
+        if (normalizedChannel == null)
+        {
+            throw new ArgumentException("Channel name must be provided.", nameof(channelName));
+        }
+
+        await _connectionLock.WaitAsync();
+        try
+        {
+            await EnsureConnectionAsync(host, port);
+
+            if (_channelRefCounts.AddOrUpdate(normalizedChannel, 1, (_, count) => count + 1) == 1)
+            {
+                await SubscribeToChannel(normalizedChannel);
+            }
+        }
+        catch (Exception ex)
+        {
+            Debug.LogError($"RedisSubscriber failed to register channel '{normalizedChannel}': {ex.Message}");
+        }
+        finally
+        {
+            _connectionLock.Release();
+        }
+    }
+
+    public static async Task UnregisterChannelAsync(string channelName)
+    {
+        var normalizedChannel = NormalizeChannelName(channelName);
+        if (normalizedChannel == null)
         {
             return;
         }
 
-        if (_isInitialized)
-        {
-            await CleanupAsync();
-        }
-
-        _host = host;
-        _port = port;
-        _channel = channelName;
-
+        await _connectionLock.WaitAsync();
         try
         {
-            await ConnectToRedis();
-            await SubscribeToChannel(_channel);
-            _isInitialized = true;
+            if (!_channelRefCounts.TryGetValue(normalizedChannel, out var count))
+            {
+                return;
+            }
+
+            if (count <= 1)
+            {
+                _channelRefCounts.TryRemove(normalizedChannel, out _);
+                await UnsubscribeFromChannel(normalizedChannel);
+                _channelQueues.TryRemove(normalizedChannel, out _);
+            }
+            else
+            {
+                _channelRefCounts[normalizedChannel] = count - 1;
+            }
+
+            if (_channelRefCounts.IsEmpty)
+            {
+                await CleanupInternalAsync();
+            }
         }
         catch (Exception ex)
         {
-            Debug.LogError($"RedisSubscriber failed to begin: {ex.Message}");
+            Debug.LogError($"RedisSubscriber failed to unregister channel '{normalizedChannel}': {ex.Message}");
+        }
+        finally
+        {
+            _connectionLock.Release();
         }
     }
 
-    public static bool TryDequeue(out RedisMessage message) => _messageQueue.TryDequeue(out message);
-
     public static async Task CleanupAsync()
     {
-        _isInitialized = false;
-
-        if (_subscriber != null)
+        await _connectionLock.WaitAsync();
+        try
         {
-            await _subscriber.UnsubscribeAllAsync();
-            _subscriber = null;
+            await CleanupInternalAsync();
         }
-
-        if (_redis != null)
+        finally
         {
-            await _redis.CloseAsync();
-            _redis.Dispose();
-            _redis = null;
+            _connectionLock.Release();
         }
     }
 
@@ -80,6 +147,25 @@ public static class RedisSubscriber
         Debug.Log("Connected to Redis.");
     }
 
+    private static async Task EnsureConnectionAsync(string host, int port)
+    {
+        if (_isInitialized)
+        {
+            if (!string.Equals(_host, host, StringComparison.OrdinalIgnoreCase) || _port != port)
+            {
+                throw new InvalidOperationException($"Redis subscriber already connected to {_host}:{_port}. Requested {host}:{port}.");
+            }
+
+            return;
+        }
+
+        _host = host;
+        _port = port;
+
+        await ConnectToRedis();
+        _isInitialized = true;
+    }
+
     private static async Task SubscribeToChannel(string channelName)
     {
         if (_subscriber == null)
@@ -87,22 +173,35 @@ public static class RedisSubscriber
             throw new InvalidOperationException("Redis subscriber not initialized.");
         }
 
-        await _subscriber.SubscribeAsync(channelName, (_, message) =>
+        var queue = _channelQueues.GetOrAdd(channelName, _ => new ConcurrentQueue<RedisMessage>());
+
+        await _subscriber.SubscribeAsync(channelName, (redisChannel, message) =>
         {
             try
             {
-                ProcessMessage(message);
+                ProcessMessage(redisChannel, message, queue);
             }
             catch (Exception ex)
             {
-                Debug.LogError($"Redis message processing failed: {ex.Message}");
+                Debug.LogError($"Redis message processing failed for channel '{redisChannel}': {ex.Message}");
             }
         });
 
         Debug.Log($"Subscribed to Redis channel '{channelName}'.");
     }
 
-    private static void ProcessMessage(RedisValue message)
+    private static async Task UnsubscribeFromChannel(string channelName)
+    {
+        if (_subscriber == null)
+        {
+            return;
+        }
+
+        await _subscriber.UnsubscribeAsync(channelName);
+        Debug.Log($"Unsubscribed from Redis channel '{channelName}'.");
+    }
+
+    private static void ProcessMessage(RedisChannel channel, RedisValue message, ConcurrentQueue<RedisMessage> targetQueue)
     {
         if (message.IsNullOrEmpty)
         {
@@ -110,19 +209,15 @@ public static class RedisSubscriber
         }
 
         var messageText = message.ToString();
+        var channelName = channel.ToString();
 
         try
         {
             using var jsonDoc = JsonDocument.Parse(messageText);
             var root = jsonDoc.RootElement;
 
-            var value = root.TryGetProperty("value", out var valueProp) ? valueProp.GetDouble() : 0d;
-            var sequence = root.TryGetProperty("sequence", out var sequenceProp) ? sequenceProp.GetInt32() : -1;
-            var timestamp = root.TryGetProperty("timestamp", out var timestampProp)
-                ? timestampProp.GetString() ?? string.Empty
-                : string.Empty;
-
-            _messageQueue.Enqueue(new RedisMessage(value, sequence, timestamp));
+            var parsedMessage = ParseRedisMessage(channelName, root);
+            targetQueue.Enqueue(parsedMessage);
         }
         catch (JsonException ex)
         {
@@ -130,15 +225,172 @@ public static class RedisSubscriber
         }
     }
 
+    private static RedisMessage ParseRedisMessage(string channelName, JsonElement rootElement)
+    {
+        if (rootElement.ValueKind == JsonValueKind.Object)
+        {
+            var value = rootElement.TryGetProperty("value", out var valueProp)
+                ? ReadAsDouble(valueProp)
+                : ExtractFirstNumericValue(rootElement);
+
+            var sequence = rootElement.TryGetProperty("sequence", out var sequenceProp)
+                ? ReadAsInt(sequenceProp)
+                : -1;
+
+            var timestamp = rootElement.TryGetProperty("timestamp", out var timestampProp)
+                ? ReadAsString(timestampProp)
+                : string.Empty;
+
+            return new RedisMessage(channelName, value, sequence, timestamp);
+        }
+
+        // Support payloads that are just a primitive (e.g., raw numbers or numeric strings)
+        var primitiveValue = ReadAsDouble(rootElement);
+        return new RedisMessage(channelName, primitiveValue, -1, string.Empty);
+    }
+
+    private static double ExtractFirstNumericValue(JsonElement rootElement)
+    {
+        foreach (var property in rootElement.EnumerateObject())
+        {
+            if (property.Value.ValueKind == JsonValueKind.Object ||
+                property.Value.ValueKind == JsonValueKind.Array)
+            {
+                continue;
+            }
+
+            var numeric = ReadAsDouble(property.Value, double.NaN);
+            if (!double.IsNaN(numeric))
+            {
+                return numeric;
+            }
+        }
+
+        return 0d;
+    }
+
+    private static double ReadAsDouble(JsonElement element, double fallback = 0d)
+    {
+        try
+        {
+            switch (element.ValueKind)
+            {
+                case JsonValueKind.Number:
+                    return element.GetDouble();
+                case JsonValueKind.String:
+                    if (double.TryParse(element.GetString(), NumberStyles.Float, CultureInfo.InvariantCulture, out var parsed))
+                    {
+                        return parsed;
+                    }
+                    break;
+                case JsonValueKind.True:
+                    return 1d;
+                case JsonValueKind.False:
+                    return 0d;
+            }
+        }
+        catch
+        {
+            // ignored on purpose
+        }
+
+        return fallback;
+    }
+
+    private static int ReadAsInt(JsonElement element, int fallback = -1)
+    {
+        try
+        {
+            switch (element.ValueKind)
+            {
+                case JsonValueKind.Number:
+                    if (element.TryGetInt32(out var intVal))
+                    {
+                        return intVal;
+                    }
+
+                    var asDouble = element.GetDouble();
+                    return (int)Math.Round(asDouble);
+                case JsonValueKind.String:
+                    if (int.TryParse(element.GetString(), NumberStyles.Integer, CultureInfo.InvariantCulture, out var parsed))
+                    {
+                        return parsed;
+                    }
+                    break;
+            }
+        }
+        catch
+        {
+            // ignored on purpose
+        }
+
+        return fallback;
+    }
+
+    private static string ReadAsString(JsonElement element)
+    {
+        try
+        {
+            switch (element.ValueKind)
+            {
+                case JsonValueKind.String:
+                    return element.GetString() ?? string.Empty;
+                case JsonValueKind.Number:
+                case JsonValueKind.True:
+                case JsonValueKind.False:
+                    return element.GetRawText();
+            }
+        }
+        catch
+        {
+            // ignored on purpose
+        }
+
+        return string.Empty;
+    }
+
+    private static string? NormalizeChannelName(string channelName)
+    {
+        if (string.IsNullOrWhiteSpace(channelName))
+        {
+            return null;
+        }
+
+        return channelName.Trim();
+    }
+
+    private static async Task CleanupInternalAsync()
+    {
+        _isInitialized = false;
+
+        if (_subscriber != null)
+        {
+            await _subscriber.UnsubscribeAllAsync();
+            _subscriber = null;
+        }
+
+        if (_redis != null)
+        {
+            await _redis.CloseAsync();
+            _redis.Dispose();
+            _redis = null;
+        }
+
+        _channelQueues.Clear();
+        _channelRefCounts.Clear();
+    }
+
     public readonly struct RedisMessage
     {
-        public RedisMessage(double value, int sequence, string timestamp)
+        public RedisMessage(string channel, double value, int sequence, string timestamp)
         {
+            Channel = channel;
             Value = value;
             Sequence = sequence;
             Timestamp = timestamp;
         }
 
+        public string Channel { get; }
         public double Value { get; }
         public int Sequence { get; }
         public string Timestamp { get; }
