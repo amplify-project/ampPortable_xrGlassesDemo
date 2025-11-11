@@ -45,13 +45,12 @@ namespace AmpPortableDataViz.Presentation.Bootstrap
         [Header("Redis Settings")]
         public string RedisHost = "192.168.0.6";
         public int RedisPort = 6379;
-        public string RedisChannel = "amplify.engagement.engagement";
-        public string[] RedisChannels =
-        {
-            "amplify.engagement.boredom",
-            "amplify.engagement.confusion",
-            "amplify.engagement.frustration"
-        };
+        public string RedisChannel = RedisEmotionChannels.BroadcastChannel;
+        public string[] RedisChannels = Array.Empty<string>();
+
+        [Header("Emotion Channel Settings")]
+        public bool IncludeEmotionChannels = true;
+        public string[] EmotionDeviceIds = RedisEmotionChannels.GetDefaultDeviceIds();
 
         [Header("LiveKit Settings")]
         public string LiveKitTokenEndpoint = "https://cloud-api.livekit.io/api/sandbox/connection-details";
@@ -274,6 +273,7 @@ namespace AmpPortableDataViz.Presentation.Bootstrap
 
             if (RedisManager != null)
             {
+                RedisManager.SetEmotionDeviceIds(EmotionDeviceIds);
                 RedisManager.Configure(RedisHost, RedisPort, redisChannels);
                 RedisManager.enabled = useRedis;
             }
@@ -303,31 +303,45 @@ namespace AmpPortableDataViz.Presentation.Bootstrap
         private string[] GetRedisChannels()
         {
             var channels = new List<string>();
+            var seen = new HashSet<string>(StringComparer.Ordinal);
+
+            void AddChannel(string channel)
+            {
+                if (string.IsNullOrWhiteSpace(channel))
+                {
+                    return;
+                }
+
+                if (seen.Add(channel))
+                {
+                    channels.Add(channel);
+                }
+            }
 
             if (!string.IsNullOrWhiteSpace(RedisChannel))
             {
-                channels.Add(RedisChannel);
+                AddChannel(RedisChannel);
             }
 
             if (RedisChannels != null && RedisChannels.Length > 0)
             {
                 foreach (var channel in RedisChannels)
                 {
-                    if (string.IsNullOrWhiteSpace(channel))
-                    {
-                        continue;
-                    }
+                    AddChannel(channel);
+                }
+            }
 
-                    if (!channels.Contains(channel))
-                    {
-                        channels.Add(channel);
-                    }
+            if (IncludeEmotionChannels)
+            {
+                foreach (var channel in RedisEmotionChannels.BuildChannelList(EmotionDeviceIds, includeBroadcast: false))
+                {
+                    AddChannel(channel);
                 }
             }
 
             if (channels.Count == 0)
             {
-                channels.Add("sensor_data");
+                AddChannel(RedisEmotionChannels.BroadcastChannel);
             }
 
             return channels.ToArray();

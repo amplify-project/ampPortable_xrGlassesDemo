@@ -19,7 +19,7 @@ public static class RedisSubscriber
     private static bool _isInitialized;
     private static string _host = "192.168.0.6";
     private static int _port = 6379;
-    private static string _defaultChannel = "sensor_data";
+    private static string _defaultChannel = RedisEmotionChannels.BroadcastChannel;
 
     public static Task Begin(string host = "192.168.0.6", int port = 6379, params string[] channelNames)
     {
@@ -31,6 +31,15 @@ public static class RedisSubscriber
         return Task.WhenAll(channelNames
             .Where(name => !string.IsNullOrWhiteSpace(name))
             .Select(name => RegisterChannelAsync(host, port, name)));
+    }
+
+    public static Task BeginEmotionChannelsAsync(string host, int port, IEnumerable<string>? deviceIds = null, bool includeBroadcast = true)
+    {
+        var channels = RedisEmotionChannels
+            .BuildChannelList(deviceIds, includeBroadcast)
+            .ToArray();
+
+        return Begin(host, port, channels);
     }
 
     public static bool TryDequeue(string channelName, out RedisMessage message)
@@ -394,5 +403,106 @@ public static class RedisSubscriber
         public double Value { get; }
         public int Sequence { get; }
         public string Timestamp { get; }
+    }
+}
+
+public enum EmotionChannelKind
+{
+    Broadcast,
+    Valence,
+    Arousal
+}
+
+public static class RedisEmotionChannels
+{
+    public const string BroadcastChannel = "emotion_scores";
+    public const string ValenceTemplate = "device:{0}:valence";
+    public const string ArousalTemplate = "device:{0}:arousal";
+
+    private static readonly string[] _defaultDeviceIds =
+    {
+        "MD-V5-0000448",
+        "MD-V5-0000334"
+    };
+
+    public static IReadOnlyList<string> DefaultDeviceIds => _defaultDeviceIds;
+
+    public static string[] GetDefaultDeviceIds()
+    {
+        return (string[])_defaultDeviceIds.Clone();
+    }
+
+    public static IReadOnlyList<string> BuildChannelList(IEnumerable<string>? deviceIds = null, bool includeBroadcast = true)
+    {
+        var orderedChannels = new List<string>();
+        var seen = new HashSet<string>(StringComparer.OrdinalIgnoreCase);
+
+        void AddChannel(string? channel)
+        {
+            if (string.IsNullOrWhiteSpace(channel))
+            {
+                return;
+            }
+
+            if (seen.Add(channel))
+            {
+                orderedChannels.Add(channel);
+            }
+        }
+
+        if (includeBroadcast)
+        {
+            AddChannel(BroadcastChannel);
+        }
+
+        var normalizedIds = (deviceIds ?? _defaultDeviceIds)
+            .Where(id => !string.IsNullOrWhiteSpace(id))
+            .Select(id => id.Trim())
+            .Distinct(StringComparer.OrdinalIgnoreCase)
+            .ToArray();
+
+        foreach (var deviceId in normalizedIds)
+        {
+            if (TryFormatChannel(EmotionChannelKind.Valence, deviceId, out var valenceChannel))
+            {
+                AddChannel(valenceChannel);
+            }
+
+            if (TryFormatChannel(EmotionChannelKind.Arousal, deviceId, out var arousalChannel))
+            {
+                AddChannel(arousalChannel);
+            }
+        }
+
+        return orderedChannels;
+    }
+
+    public static bool TryFormatChannel(EmotionChannelKind channelKind, string? deviceId, out string channelName)
+    {
+        switch (channelKind)
+        {
+            case EmotionChannelKind.Broadcast:
+                channelName = BroadcastChannel;
+                return true;
+            case EmotionChannelKind.Valence:
+                channelName = FormatDeviceChannel(ValenceTemplate, deviceId);
+                return !string.IsNullOrWhiteSpace(channelName);
+            case EmotionChannelKind.Arousal:
+                channelName = FormatDeviceChannel(ArousalTemplate, deviceId);
+                return !string.IsNullOrWhiteSpace(channelName);
+            default:
+                channelName = string.Empty;
+                return false;
+        }
+    }
+
+    private static string FormatDeviceChannel(string template, string? deviceId)
+    {
+        if (string.IsNullOrWhiteSpace(deviceId))
+        {
+            return string.Empty;
+        }
+
+        return string.Format(CultureInfo.InvariantCulture, template, deviceId.Trim());
     }
 }

@@ -20,7 +20,12 @@ namespace AmpPortableDataViz.Presentation.Sources
         [Header("Connection")]
         [SerializeField] private string redisHost = "192.168.0.6";
         [SerializeField] private int redisPort = 6379;
-        [SerializeField] private string redisChannel = "sensor_data";
+        [SerializeField] private string redisChannel = RedisEmotionChannels.BroadcastChannel;
+
+        [Header("Emotion Channel Template (optional)")]
+        [SerializeField] private bool useEmotionChannelTemplate;
+        [SerializeField] private EmotionChannelKind emotionChannelKind = EmotionChannelKind.Broadcast;
+        [SerializeField] private string emotionDeviceId = RedisEmotionChannels.DefaultDeviceIds[0];
 
         [Header("Renderer Feedback (optional)")]
         [SerializeField] private Renderer targetRenderer;
@@ -40,13 +45,39 @@ namespace AmpPortableDataViz.Presentation.Sources
         private int _sequenceId;
         private bool _isConnected;
         private bool _connectionInProgress;
+        private string _activeChannelName = string.Empty;
+        private string _cachedSourceName = string.Empty;
 
-        public string SourceId => string.IsNullOrEmpty(sourceId) ? gameObject.name : sourceId;
+        public string SourceId
+        {
+            get
+            {
+                if (!string.IsNullOrEmpty(sourceId))
+                {
+                    return sourceId;
+                }
+
+                if (this == null)
+                {
+                    return string.IsNullOrEmpty(_cachedSourceName) ? nameof(RedisDataPump) : _cachedSourceName;
+                }
+
+                var resolvedName = TryResolveGameObjectName();
+                if (!string.IsNullOrEmpty(resolvedName))
+                {
+                    _cachedSourceName = resolvedName;
+                    return resolvedName;
+                }
+
+                return string.IsNullOrEmpty(_cachedSourceName) ? nameof(RedisDataPump) : _cachedSourceName;
+            }
+        }
         public event Action<DataFrame<float>> OnFrame;
 
         private void Awake()
         {
             _clock = new UnityClock();
+            _cachedSourceName = TryResolveGameObjectName();
 
             if (targetRenderer == null)
             {
@@ -89,7 +120,7 @@ namespace AmpPortableDataViz.Presentation.Sources
         {
             message = default;
 
-            if (string.IsNullOrWhiteSpace(redisChannel))
+            if (!TryGetSubscribedChannel(out var channelName))
             {
                 return false;
             }
@@ -97,7 +128,7 @@ namespace AmpPortableDataViz.Presentation.Sources
             bool hasMessage = false;
             RedisSubscriber.RedisMessage latestMessage = default;
 
-            while (RedisSubscriber.TryDequeue(redisChannel, out var dequeuedMessage))
+            while (RedisSubscriber.TryDequeue(channelName, out var dequeuedMessage))
             {
                 latestMessage = dequeuedMessage;
                 hasMessage = true;
@@ -134,6 +165,8 @@ namespace AmpPortableDataViz.Presentation.Sources
             redisHost = host;
             redisPort = port;
             redisChannel = channel;
+            useEmotionChannelTemplate = false;
+            emotionDeviceId = string.Empty;
 
             if (isActiveAndEnabled)
             {
@@ -149,14 +182,22 @@ namespace AmpPortableDataViz.Presentation.Sources
             }
 
             _connectionInProgress = true;
+            string channelName = string.Empty;
             try
             {
-                await RedisSubscriber.RegisterChannelAsync(redisHost, redisPort, redisChannel);
+                if (!TryResolveConfiguredChannel(out channelName))
+                {
+                    return;
+                }
+
+                await RedisSubscriber.RegisterChannelAsync(redisHost, redisPort, channelName);
+                _activeChannelName = channelName;
                 _isConnected = true;
             }
             catch (Exception ex)
             {
-                Debug.LogError($"RedisDataPump: Failed to connect to Redis at {redisHost}:{redisPort} ({redisChannel}): {ex.Message}");
+                var label = string.IsNullOrWhiteSpace(channelName) ? redisChannel : channelName;
+                Debug.LogError($"RedisDataPump: Failed to connect to Redis at {redisHost}:{redisPort} ({label}): {ex.Message}");
             }
             finally
             {
@@ -172,14 +213,23 @@ namespace AmpPortableDataViz.Presentation.Sources
             }
 
             _connectionInProgress = true;
+            string channelName = string.Empty;
             try
             {
-                await RedisSubscriber.UnregisterChannelAsync(redisChannel);
+                if (!TryGetSubscribedChannel(out channelName))
+                {
+                    _isConnected = false;
+                    return;
+                }
+
+                await RedisSubscriber.UnregisterChannelAsync(channelName);
+                _activeChannelName = string.Empty;
                 _isConnected = false;
             }
             catch (Exception ex)
             {
-                Debug.LogError($"RedisDataPump: Failed to clean up Redis connection: {ex.Message}");
+                var label = string.IsNullOrWhiteSpace(channelName) ? redisChannel : channelName;
+                Debug.LogError($"RedisDataPump: Failed to clean up Redis connection for channel '{label}': {ex.Message}");
             }
             finally
             {
@@ -217,6 +267,76 @@ namespace AmpPortableDataViz.Presentation.Sources
             {
                 await Task.Yield();
             }
+        }
+
+        private string TryResolveGameObjectName()
+        {
+            try
+            {
+                if (gameObject != null && !string.IsNullOrEmpty(gameObject.name))
+                {
+                    return gameObject.name;
+                }
+
+                return string.IsNullOrEmpty(name) ? string.Empty : name;
+            }
+            catch (MissingReferenceException)
+            {
+                return string.Empty;
+            }
+            catch (NullReferenceException)
+            {
+                return string.Empty;
+            }
+        }
+
+        public void ConfigureEmotionChannel(string host, int port, EmotionChannelKind channelKind, string? deviceId = null)
+        {
+            redisHost = host;
+            redisPort = port;
+            useEmotionChannelTemplate = true;
+            emotionChannelKind = channelKind;
+            emotionDeviceId = deviceId ?? string.Empty;
+
+            if (isActiveAndEnabled)
+            {
+                _ = RestartConnectionAsync();
+            }
+        }
+
+        private bool TryResolveConfiguredChannel(out string channelName)
+        {
+            if (useEmotionChannelTemplate)
+            {
+                if (RedisEmotionChannels.TryFormatChannel(emotionChannelKind, emotionDeviceId, out channelName))
+                {
+                    return true;
+                }
+
+                Debug.LogWarning($"RedisDataPump[{SourceId}] has an invalid emotion channel configuration.");
+                channelName = string.Empty;
+                return false;
+            }
+
+            channelName = string.IsNullOrWhiteSpace(redisChannel) ? string.Empty : redisChannel.Trim();
+            if (string.IsNullOrWhiteSpace(channelName))
+            {
+                Debug.LogWarning($"RedisDataPump[{SourceId}] has no Redis channel configured.");
+                return false;
+            }
+
+            return true;
+        }
+
+        private bool TryGetSubscribedChannel(out string channelName)
+        {
+            if (!string.IsNullOrWhiteSpace(_activeChannelName))
+            {
+                channelName = _activeChannelName;
+                return true;
+            }
+
+            return TryResolveConfiguredChannel(out channelName);
         }
     }
 }

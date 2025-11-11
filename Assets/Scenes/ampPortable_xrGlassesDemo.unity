@@ -269,6 +269,63 @@ MonoBehaviour:
   offColor: {r: 0.78431374, g: 0.78431374, b: 0.78431374, a: 1}
   onColor: {r: 0.19607843, g: 0.78431374, b: 0.3529412, a: 1}
   isOn: 0
+--- !u!1 &132873938
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 132873939}
+  - component: {fileID: 132873940}
+  m_Layer: 0
+  m_Name: Valence
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &132873939
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 132873938}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 141618190}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &132873940
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 132873938}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0bfc7734deebf364e8678717e9b17c16, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Amp::AmpPortableDataViz.Presentation.Sources.RedisDataPump
+  sourceId: Emotibit334_valence
+  redisHost: 192.168.0.6
+  redisPort: 6379
+  redisChannel: emotion_scores
+  useEmotionChannelTemplate: 1
+  emotionChannelKind: 1
+  emotionDeviceId: MD-V5-0000334
+  targetRenderer: {fileID: 0}
+  emissionProperty: _DensityGain
+  emissionRange: {x: 0.5, y: 5}
+  logValues: 0
+  clampToZeroOne: 0
+  normalizeEmission: 1
 --- !u!1 &138745967
 GameObject:
   m_ObjectHideFlags: 0
@@ -298,17 +355,54 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: cefa4e9695b578d489b788eaafcddda1, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Amp::RedisManager
-  dataPump: {fileID: 730216188}
+  dataPump: {fileID: 1051905818}
   host: 192.168.0.6
   port: 6379
   channelName: amplify.engagement.engagement
+  emotionDeviceIds:
+  - MD-V5-0000448
+  - MD-V5-0000334
   additionalChannelSubscriptions:
+  - ChannelName: amplify.engagement.engagement
+    UseEmotionChannel: 0
+    EmotionChannel: 2
+    EmotionDeviceIndex: 1
+    DataPump: {fileID: 730216188}
   - ChannelName: amplify.engagement.boredom
+    UseEmotionChannel: 0
+    EmotionChannel: 0
+    EmotionDeviceIndex: 0
     DataPump: {fileID: 1145263008}
   - ChannelName: amplify.engagement.confusion
+    UseEmotionChannel: 0
+    EmotionChannel: 0
+    EmotionDeviceIndex: 0
     DataPump: {fileID: 1163058620}
   - ChannelName: amplify.engagement.frustration
+    UseEmotionChannel: 0
+    EmotionChannel: 0
+    EmotionDeviceIndex: 0
     DataPump: {fileID: 1820537051}
+  - ChannelName: 
+    UseEmotionChannel: 1
+    EmotionChannel: 1
+    EmotionDeviceIndex: 0
+    DataPump: {fileID: 216265220}
+  - ChannelName: 
+    UseEmotionChannel: 1
+    EmotionChannel: 2
+    EmotionDeviceIndex: 0
+    DataPump: {fileID: 1054936604}
+  - ChannelName: 
+    UseEmotionChannel: 1
+    EmotionChannel: 1
+    EmotionDeviceIndex: 1
+    DataPump: {fileID: 132873940}
+  - ChannelName: 
+    UseEmotionChannel: 1
+    EmotionChannel: 2
+    EmotionDeviceIndex: 1
+    DataPump: {fileID: 566877852}
 --- !u!4 &138745969
 Transform:
   m_ObjectHideFlags: 0
@@ -323,6 +417,39 @@ Transform:
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &141618189
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 141618190}
+  m_Layer: 0
+  m_Name: 334
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &141618190
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 141618189}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children:
+  - {fileID: 132873939}
+  - {fileID: 566877851}
+  m_Father: {fileID: 1051905817}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &203844586
 GameObject:
@@ -456,6 +583,63 @@ GameObject:
   m_CorrespondingSourceObject: {fileID: 5734278484202258847, guid: cb5f5548eeaac80439b15658a3e67a94, type: 3}
   m_PrefabInstance: {fileID: 2093917564}
   m_PrefabAsset: {fileID: 0}
+--- !u!1 &216265218
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 216265219}
+  - component: {fileID: 216265220}
+  m_Layer: 0
+  m_Name: Valence
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &216265219
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 216265218}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 1158734196}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &216265220
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 216265218}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0bfc7734deebf364e8678717e9b17c16, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Amp::AmpPortableDataViz.Presentation.Sources.RedisDataPump
+  sourceId: Emotibit448_valence
+  redisHost: 192.168.0.6
+  redisPort: 6379
+  redisChannel: emotion_scores
+  useEmotionChannelTemplate: 1
+  emotionChannelKind: 1
+  emotionDeviceId: MD-V5-0000448
+  targetRenderer: {fileID: 0}
+  emissionProperty: _WarpStrength
+  emissionRange: {x: 0.5, y: 5}
+  logValues: 0
+  clampToZeroOne: 0
+  normalizeEmission: 1
 --- !u!1 &312667386 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 6360025455027214531, guid: cb5f5548eeaac80439b15658a3e67a94, type: 3}
@@ -1068,6 +1252,63 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 554557687}
   m_CullTransparentMesh: 1
+--- !u!1 &566877850
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 566877851}
+  - component: {fileID: 566877852}
+  m_Layer: 0
+  m_Name: Arousal
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &566877851
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 566877850}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 141618190}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &566877852
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 566877850}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0bfc7734deebf364e8678717e9b17c16, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Amp::AmpPortableDataViz.Presentation.Sources.RedisDataPump
+  sourceId: Emotibit334_arousal
+  redisHost: 192.168.0.6
+  redisPort: 6379
+  redisChannel: emotion_scores
+  useEmotionChannelTemplate: 1
+  emotionChannelKind: 2
+  emotionDeviceId: MD-V5-0000334
+  targetRenderer: {fileID: 0}
+  emissionProperty: _DensityThreshold
+  emissionRange: {x: 0.5, y: 5}
+  logValues: 0
+  clampToZeroOne: 0
+  normalizeEmission: 1
 --- !u!1 &698791613
 GameObject:
   m_ObjectHideFlags: 0
@@ -1229,12 +1470,12 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 730216186}
   serializedVersion: 2
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
-  m_Father: {fileID: 2010320700}
+  m_Father: {fileID: 1481941724}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &730216188
 MonoBehaviour:
@@ -1252,11 +1493,14 @@ MonoBehaviour:
   redisHost: 192.168.0.6
   redisPort: 6379
   redisChannel: amplify.engagement.engagement
+  useEmotionChannelTemplate: 0
+  emotionChannelKind: 0
+  emotionDeviceId: MD-V5-0000448
   targetRenderer: {fileID: 0}
   emissionProperty: _Emission
   emissionRange: {x: 0.5, y: 5}
   logValues: 1
-  clampToZeroOne: 1
+  clampToZeroOne: 0
   normalizeEmission: 1
 --- !u!1 &744982700
 GameObject:
@@ -1728,6 +1972,122 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1013710336}
   m_CullTransparentMesh: 1
+--- !u!1 &1051905816
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1051905817}
+  - component: {fileID: 1051905818}
+  m_Layer: 0
+  m_Name: EmotionParent
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &1051905817
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1051905816}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children:
+  - {fileID: 1158734196}
+  - {fileID: 141618190}
+  m_Father: {fileID: 2010320700}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1051905818
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1051905816}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0bfc7734deebf364e8678717e9b17c16, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Amp::AmpPortableDataViz.Presentation.Sources.RedisDataPump
+  sourceId: EmotionBroadcast
+  redisHost: 192.168.0.6
+  redisPort: 6379
+  redisChannel: emotion_scores
+  useEmotionChannelTemplate: 0
+  emotionChannelKind: 0
+  emotionDeviceId: MD-V5-0000448
+  targetRenderer: {fileID: 0}
+  emissionProperty: 
+  emissionRange: {x: 0.5, y: 5}
+  logValues: 0
+  clampToZeroOne: 1
+  normalizeEmission: 1
+--- !u!1 &1054936602
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1054936603}
+  - component: {fileID: 1054936604}
+  m_Layer: 0
+  m_Name: Arousal
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &1054936603
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1054936602}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 1158734196}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1054936604
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1054936602}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0bfc7734deebf364e8678717e9b17c16, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Amp::AmpPortableDataViz.Presentation.Sources.RedisDataPump
+  sourceId: Emotibit448_arousal
+  redisHost: 192.168.0.6
+  redisPort: 6379
+  redisChannel: emotion_scores
+  useEmotionChannelTemplate: 1
+  emotionChannelKind: 2
+  emotionDeviceId: MD-V5-0000448
+  targetRenderer: {fileID: 0}
+  emissionProperty: _FlowSpeed
+  emissionRange: {x: 0.5, y: 5}
+  logValues: 0
+  clampToZeroOne: 0
+  normalizeEmission: 1
 --- !u!1 &1069163771
 GameObject:
   m_ObjectHideFlags: 0
@@ -1828,12 +2188,12 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1145263006}
   serializedVersion: 2
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
-  m_Father: {fileID: 2010320700}
+  m_Father: {fileID: 1481941724}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &1145263008
 MonoBehaviour:
@@ -1851,12 +2211,48 @@ MonoBehaviour:
   redisHost: 192.168.0.6
   redisPort: 6379
   redisChannel: amplify.engagement.boredom
+  useEmotionChannelTemplate: 0
+  emotionChannelKind: 0
+  emotionDeviceId: MD-V5-0000448
   targetRenderer: {fileID: 0}
   emissionProperty: _Falloff
   emissionRange: {x: 0.5, y: 5}
   logValues: 1
-  clampToZeroOne: 1
+  clampToZeroOne: 0
   normalizeEmission: 1
+--- !u!1 &1158734195
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1158734196}
+  m_Layer: 0
+  m_Name: 448
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &1158734196
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1158734195}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children:
+  - {fileID: 216265219}
+  - {fileID: 1054936603}
+  m_Father: {fileID: 1051905817}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1163058618
 GameObject:
   m_ObjectHideFlags: 0
@@ -1882,12 +2278,12 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1163058618}
   serializedVersion: 2
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
-  m_Father: {fileID: 2010320700}
+  m_Father: {fileID: 1481941724}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &1163058620
 MonoBehaviour:
@@ -1905,12 +2301,81 @@ MonoBehaviour:
   redisHost: 192.168.0.6
   redisPort: 6379
   redisChannel: amplify.engagement.confusion
+  useEmotionChannelTemplate: 0
+  emotionChannelKind: 0
+  emotionDeviceId: MD-V5-0000448
   targetRenderer: {fileID: 0}
   emissionProperty: _Absorption
   emissionRange: {x: 0.5, y: 5}
   logValues: 1
-  clampToZeroOne: 1
+  clampToZeroOne: 0
   normalizeEmission: 1
+--- !u!1 &1168724530
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1168724532}
+  - component: {fileID: 1168724531}
+  m_Layer: 0
+  m_Name: Logger
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &1168724531
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1168724530}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0793b080831e93042936e6867e6cf6ac, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Amp::AmpPortableDataViz.Presentation.Diagnostics.EmotionTelemetryLogger
+  logPrefix: '[EmotionTelemetry]'
+  includeSequenceAndTimestamp: 1
+  broadcastPump:
+    Label: emotion_scores
+    Pump: {fileID: 1051905818}
+  additionalPumps:
+  - Label: 448Valence
+    Pump: {fileID: 216265220}
+  - Label: 448Arousal
+    Pump: {fileID: 1054936604}
+  - Label: 334Valence
+    Pump: {fileID: 132873940}
+  - Label: 334Arousal
+    Pump: {fileID: 566877852}
+  - Label: Engagement
+    Pump: {fileID: 730216188}
+  - Label: Boredom
+    Pump: {fileID: 1145263008}
+  - Label: Confusion
+    Pump: {fileID: 1163058620}
+  - Label: Frustration
+    Pump: {fileID: 1820537051}
+--- !u!4 &1168724532
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1168724530}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0.39474, y: 0, z: 1.08816}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1201461116
 GameObject:
   m_ObjectHideFlags: 0
@@ -2319,6 +2784,41 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1299462107}
   m_CullTransparentMesh: 1
+--- !u!1 &1481941723
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1481941724}
+  m_Layer: 0
+  m_Name: EngagementParent
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &1481941724
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1481941723}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children:
+  - {fileID: 730216187}
+  - {fileID: 1145263007}
+  - {fileID: 1163058619}
+  - {fileID: 1820537050}
+  m_Father: {fileID: 2010320700}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1581585342
 GameObject:
   m_ObjectHideFlags: 0
@@ -2402,7 +2902,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::AmpPortableDataViz.Presentation.Bootstrap.Bootstrapper
   AnchorRegistry: {fileID: 0}
   SineSource: {fileID: 0}
-  RedisSource: {fileID: 0}
+  RedisSource: {fileID: 1051905818}
   LiveKitSource: {fileID: 0}
   RedisManager: {fileID: 138745968}
   VisualPrefab: {fileID: 2775751591111269604, guid: 6181c8d3a60738646a748488a8ed7a7f, type: 3}
@@ -2413,11 +2913,16 @@ MonoBehaviour:
   ActiveSignalSource: 1
   RedisHost: 192.168.0.6
   RedisPort: 6379
-  RedisChannel: amplify.engagement.engagement
+  RedisChannel: emotion_scores
   RedisChannels:
+  - amplify.engagement.engagement
   - amplify.engagement.boredom
   - amplify.engagement.confusion
   - amplify.engagement.frustration
+  IncludeEmotionChannels: 1
+  EmotionDeviceIds:
+  - MD-V5-0000448
+  - MD-V5-0000334
   LiveKitTokenEndpoint: https://cloud-api.livekit.io/api/sandbox/connection-details
   LiveKitSandboxId: amp-portable-viz-16o67i
   LiveKitRoomName: xr-room
@@ -2598,12 +3103,12 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1820537049}
   serializedVersion: 2
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
-  m_Father: {fileID: 2010320700}
+  m_Father: {fileID: 1481941724}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &1820537051
 MonoBehaviour:
@@ -2621,11 +3126,14 @@ MonoBehaviour:
   redisHost: 192.168.0.6
   redisPort: 6379
   redisChannel: amplify.engagement.frustration
+  useEmotionChannelTemplate: 0
+  emotionChannelKind: 0
+  emotionDeviceId: MD-V5-0000448
   targetRenderer: {fileID: 0}
   emissionProperty: _DensityPower
   emissionRange: {x: 0.5, y: 5}
   logValues: 1
-  clampToZeroOne: 1
+  clampToZeroOne: 0
   normalizeEmission: 1
 --- !u!1 &1827814974
 GameObject:
@@ -2903,10 +3411,8 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
-  - {fileID: 730216187}
-  - {fileID: 1145263007}
-  - {fileID: 1163058619}
-  - {fileID: 1820537050}
+  - {fileID: 1481941724}
+  - {fileID: 1051905817}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &2056354646
@@ -3518,3 +4024,4 @@ SceneRoots:
   - {fileID: 1581585343}
   - {fileID: 2010320700}
   - {fileID: 138745969}
+  - {fileID: 1168724532}
