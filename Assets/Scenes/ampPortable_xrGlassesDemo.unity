@@ -2905,7 +2905,7 @@ MonoBehaviour:
   RedisSource: {fileID: 1051905818}
   LiveKitSource: {fileID: 0}
   RedisManager: {fileID: 138745968}
-  VisualPrefab: {fileID: 2775751591111269604, guid: 6181c8d3a60738646a748488a8ed7a7f, type: 3}
+  VisualPrefab: {fileID: 8746336824958587703, guid: 80e7ad267774ae148acddd79d82dadd2, type: 3}
   IsHost: 1
   VisualId: SimpleDemo
   ProfileId: Default
