@@ -2310,37 +2310,6 @@ MonoBehaviour:
   logValues: 1
   clampToZeroOne: 0
   normalizeEmission: 1
---- !u!1 &1165166119
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 1165166120}
-  m_Layer: 0
-  m_Name: EmotionVisualParent
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!4 &1165166120
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1165166119}
-  serializedVersion: 2
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 1, z: 0.5}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 0
-  m_Children: []
-  m_Father: {fileID: 0}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1168724530
 GameObject:
   m_ObjectHideFlags: 0
@@ -2936,7 +2905,7 @@ MonoBehaviour:
   RedisSource: {fileID: 0}
   LiveKitSource: {fileID: 0}
   RedisManager: {fileID: 0}
-  VisualPrefab: {fileID: 4820931441542737784, guid: 80e7ad267774ae148acddd79d82dadd2, type: 3}
+  VisualPrefab: {fileID: 8746336824958587703, guid: 80e7ad267774ae148acddd79d82dadd2, type: 3}
   IsHost: 1
   VisualId: SimpleDemo
   ProfileId: Default
@@ -2950,7 +2919,7 @@ MonoBehaviour:
   EmotionDeviceIds:
   - MD-V5-0000448
   AutoSpawnEmotionVisualsFromChannels: 1
-  EmotionVisualParent: {fileID: 1165166120}
+  EmotionVisualParent: {fileID: 0}
   EmotionVisualOriginOffset: {x: 0, y: 0, z: 0}
   EmotionVisualSpacing: {x: 0.75, y: 0, z: 0.75}
   EmotionVisualsPerRow: 2
@@ -4056,4 +4025,3 @@ SceneRoots:
   - {fileID: 2010320700}
   - {fileID: 138745969}
   - {fileID: 1168724532}
-  - {fileID: 1165166120}

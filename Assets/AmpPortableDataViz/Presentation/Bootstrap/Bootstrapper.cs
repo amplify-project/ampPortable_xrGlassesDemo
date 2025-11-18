@@ -52,6 +52,14 @@ namespace AmpPortableDataViz.Presentation.Bootstrap
         public bool IncludeEmotionChannels = true;
         public string[] EmotionDeviceIds = RedisEmotionChannels.GetDefaultDeviceIds();
 
+        [Header("Emotion Visual Settings")]
+        public bool AutoSpawnEmotionVisualsFromChannels = true;
+        public Transform EmotionVisualParent;
+        public Vector3 EmotionVisualOriginOffset = Vector3.zero;
+        public Vector3 EmotionVisualSpacing = new Vector3(0.75f, 0f, 0.75f);
+        [Min(1)]
+        public int EmotionVisualsPerRow = 2;
+
         [Header("LiveKit Settings")]
         public string LiveKitTokenEndpoint = "https://cloud-api.livekit.io/api/sandbox/connection-details";
         public string LiveKitSandboxId = "amp-portable-viz-16o67i";
@@ -79,6 +87,7 @@ namespace AmpPortableDataViz.Presentation.Bootstrap
         private VisualizationSessionController _sessionController;
         private FloatToSimpleParams _floatToParamsMapper;
         private Coroutine _initializationRoutine;
+        private readonly List<EmotionDeviceInstance> _emotionDeviceInstances = new List<EmotionDeviceInstance>();
 
         private void Awake()
         {
@@ -104,7 +113,11 @@ namespace AmpPortableDataViz.Presentation.Bootstrap
         private void OnEnable()
         {
             ApplySignalConfiguration();
-            if (_sessionController == null) return;
+            if (!ShouldInitializeSessionController())
+            {
+                return;
+            }
+
             _initializationRoutine = StartCoroutine(BeginSession());
         }
 
@@ -132,12 +145,14 @@ namespace AmpPortableDataViz.Presentation.Bootstrap
             }
 
             _sessionController?.Shutdown();
+            ClearEmotionDeviceVisuals();
         }
 
         private void OnDestroy()
         {
             _sessionController?.Dispose();
             _sessionController = null;
+            ClearEmotionDeviceVisuals();
         }
 
         private void EnsureAnchorRegistry()
@@ -286,6 +301,15 @@ namespace AmpPortableDataViz.Presentation.Bootstrap
                 LiveKitSource.identity = LiveKitIdentity;
                 LiveKitSource.enabled = useLiveKit;
             }
+
+            if (useRedis && AutoSpawnEmotionVisualsFromChannels)
+            {
+                EnsureEmotionDeviceVisuals(redisChannels);
+            }
+            else
+            {
+                ClearEmotionDeviceVisuals();
+            }
         }
 
 #if UNITY_EDITOR
@@ -299,6 +323,236 @@ namespace AmpPortableDataViz.Presentation.Bootstrap
             ApplySignalConfiguration();
         }
 #endif
+
+        private void EnsureEmotionDeviceVisuals(string[] redisChannels)
+        {
+            if (!AutoSpawnEmotionVisualsFromChannels)
+            {
+                return;
+            }
+
+            if (VisualPrefab == null)
+            {
+                Debug.LogWarning("Bootstrapper: VisualPrefab is missing, cannot spawn EmotionPlasma instances.");
+                ClearEmotionDeviceVisuals();
+                return;
+            }
+
+            if (redisChannels == null || redisChannels.Length == 0)
+            {
+                ClearEmotionDeviceVisuals();
+                return;
+            }
+
+            if (VisualPrefab.GetComponentInChildren<EmotionPlasmaBinding>() == null)
+            {
+                Debug.LogWarning("Bootstrapper: VisualPrefab does not contain an EmotionPlasmaBinding component.");
+                ClearEmotionDeviceVisuals();
+                return;
+            }
+
+            var deviceDefinitions = BuildDeviceChannelDefinitions(redisChannels);
+            ClearEmotionDeviceVisuals();
+
+            if (deviceDefinitions.Count == 0)
+            {
+                Debug.LogWarning("Bootstrapper: No device-specific valence/arousal channels were found.");
+                return;
+            }
+
+            bool hasCustomParent = EmotionVisualParent != null;
+            int deviceIndex = 0;
+            foreach (var definition in deviceDefinitions)
+            {
+                if (string.IsNullOrEmpty(definition.DeviceId) ||
+                    string.IsNullOrEmpty(definition.ValenceChannel) ||
+                    string.IsNullOrEmpty(definition.ArousalChannel))
+                {
+                    Debug.LogWarning($"Bootstrapper: Incomplete channel set for device '{definition.DeviceId}', skipping visual spawn.");
+                    continue;
+                }
+
+                var instance = hasCustomParent
+                    ? Instantiate(VisualPrefab, EmotionVisualParent)
+                    : Instantiate(VisualPrefab);
+
+                instance.name = $"{VisualPrefab.name}_{definition.DeviceId}";
+                PositionEmotionVisual(instance.transform, deviceIndex, hasCustomParent);
+
+                var binding = instance.GetComponent<EmotionPlasmaBinding>() ?? instance.AddComponent<EmotionPlasmaBinding>();
+
+                var valencePump = CreateRedisPumpForChannel(definition.DeviceId, EmotionChannelKind.Valence, definition.ValenceChannel);
+                var arousalPump = CreateRedisPumpForChannel(definition.DeviceId, EmotionChannelKind.Arousal, definition.ArousalChannel);
+
+                binding.ConfigureSources(valencePump, arousalPump, definition.DeviceId);
+
+                _emotionDeviceInstances.Add(new EmotionDeviceInstance
+                {
+                    DeviceId = definition.DeviceId,
+                    Binding = binding,
+                    ValencePump = valencePump,
+                    ArousalPump = arousalPump
+                });
+
+                deviceIndex++;
+            }
+
+            if (deviceIndex == 0)
+            {
+                Debug.LogWarning("Bootstrapper: Unable to spawn EmotionPlasma visuals because no device had both valence and arousal channels.");
+            }
+        }
+
+        private RedisDataPump CreateRedisPumpForChannel(string deviceId, EmotionChannelKind channelKind, string channelName)
+        {
+            var pumpObject = new GameObject($"RedisPump_{deviceId}_{channelKind}");
+            pumpObject.transform.SetParent(transform, false);
+            pumpObject.SetActive(false);
+
+            var pump = pumpObject.AddComponent<RedisDataPump>();
+            pump.ConfigureConnection(RedisHost, RedisPort, channelName);
+
+            pumpObject.SetActive(true);
+            return pump;
+        }
+
+        private void ClearEmotionDeviceVisuals()
+        {
+            if (_emotionDeviceInstances.Count == 0)
+            {
+                return;
+            }
+
+            foreach (var instance in _emotionDeviceInstances)
+            {
+                if (instance.Binding != null)
+                {
+                    Destroy(instance.Binding.gameObject);
+                }
+
+                if (instance.ValencePump != null)
+                {
+                    Destroy(instance.ValencePump.gameObject);
+                }
+
+                if (instance.ArousalPump != null)
+                {
+                    Destroy(instance.ArousalPump.gameObject);
+                }
+            }
+
+            _emotionDeviceInstances.Clear();
+        }
+
+        private void PositionEmotionVisual(Transform target, int index, bool useLocalSpace)
+        {
+            if (target == null)
+            {
+                return;
+            }
+
+            int perRow = Mathf.Max(1, EmotionVisualsPerRow);
+            int row = index / perRow;
+            int column = index % perRow;
+
+            Vector3 offset = EmotionVisualOriginOffset + new Vector3(
+                column * EmotionVisualSpacing.x,
+                row * EmotionVisualSpacing.y,
+                row * EmotionVisualSpacing.z);
+
+            if (useLocalSpace)
+            {
+                target.localPosition = offset;
+                target.localRotation = Quaternion.identity;
+            }
+            else
+            {
+                target.position = AnchorPosition + offset;
+                target.rotation = Quaternion.Euler(AnchorRotationEuler);
+            }
+        }
+
+        private static List<DeviceChannelDefinition> BuildDeviceChannelDefinitions(IEnumerable<string> redisChannels)
+        {
+            var orderedDeviceIds = new List<string>();
+            var map = new Dictionary<string, DeviceChannelDefinition>(StringComparer.OrdinalIgnoreCase);
+
+            foreach (var channel in redisChannels)
+            {
+                if (!TryParseDeviceChannel(channel, out var deviceId, out var kind))
+                {
+                    continue;
+                }
+
+                if (!map.TryGetValue(deviceId, out var definition))
+                {
+                    definition = new DeviceChannelDefinition { DeviceId = deviceId };
+                    orderedDeviceIds.Add(deviceId);
+                }
+
+                if (kind == EmotionChannelKind.Valence)
+                {
+                    definition.ValenceChannel = channel;
+                }
+                else if (kind == EmotionChannelKind.Arousal)
+                {
+                    definition.ArousalChannel = channel;
+                }
+
+                map[deviceId] = definition;
+            }
+
+            var ordered = new List<DeviceChannelDefinition>();
+            foreach (var deviceId in orderedDeviceIds)
+            {
+                if (map.TryGetValue(deviceId, out var definition))
+                {
+                    ordered.Add(definition);
+                }
+            }
+
+            return ordered;
+        }
+
+        private static bool TryParseDeviceChannel(string channelName, out string deviceId, out EmotionChannelKind channelKind)
+        {
+            deviceId = string.Empty;
+            channelKind = EmotionChannelKind.Broadcast;
+
+            if (string.IsNullOrWhiteSpace(channelName))
+            {
+                return false;
+            }
+
+            const string prefix = "device:";
+            if (!channelName.StartsWith(prefix, StringComparison.OrdinalIgnoreCase))
+            {
+                return false;
+            }
+
+            int finalColon = channelName.LastIndexOf(':');
+            if (finalColon <= prefix.Length || finalColon >= channelName.Length - 1)
+            {
+                return false;
+            }
+
+            string suffix = channelName.Substring(finalColon + 1);
+            if (suffix.Equals("valence", StringComparison.OrdinalIgnoreCase))
+            {
+                channelKind = EmotionChannelKind.Valence;
+            }
+            else if (suffix.Equals("arousal", StringComparison.OrdinalIgnoreCase))
+            {
+                channelKind = EmotionChannelKind.Arousal;
+            }
+            else
+            {
+                return false;
+            }
+
+            deviceId = channelName.Substring(prefix.Length, finalColon - prefix.Length).Trim();
+            return deviceId.Length > 0;
+        }
 
         private string[] GetRedisChannels()
         {
@@ -345,6 +599,32 @@ namespace AmpPortableDataViz.Presentation.Bootstrap
             }
 
             return channels.ToArray();
+        }
+
+        private sealed class EmotionDeviceInstance
+        {
+            public string DeviceId;
+            public EmotionPlasmaBinding Binding;
+            public RedisDataPump ValencePump;
+            public RedisDataPump ArousalPump;
+        }
+
+        private struct DeviceChannelDefinition
+        {
+            public string DeviceId;
+            public string ValenceChannel;
+            public string ArousalChannel;
+        }
+
+        private bool ShouldInitializeSessionController()
+        {
+            if (_sessionController == null)
+            {
+                return false;
+            }
+
+            bool redisEmotionOnly = AutoSpawnEmotionVisualsFromChannels && ActiveSignalSource == SignalSourceType.Redis;
+            return !redisEmotionOnly;
         }
     }
 }
