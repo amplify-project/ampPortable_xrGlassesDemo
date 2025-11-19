@@ -3574,7 +3574,7 @@ MonoBehaviour:
   RedisSource: {fileID: 0}
   LiveKitSource: {fileID: 0}
   RedisManager: {fileID: 0}
-  VisualPrefab: {fileID: 4820931441542737784, guid: 80e7ad267774ae148acddd79d82dadd2, type: 3}
+  VisualPrefab: {fileID: 2946598769923695923, guid: b58615530f585244994540c483f2bd7f, type: 3}
   IsHost: 1
   VisualId: SimpleDemo
   ProfileId: Default
@@ -3587,10 +3587,9 @@ MonoBehaviour:
   IncludeEmotionChannels: 1
   EmotionDeviceIds:
   - MD-V5-0000334
-  - MD-V5-0000448
   AutoSpawnEmotionVisualsFromChannels: 1
   EmotionVisualParent: {fileID: 1165166120}
-  EmotionVisualOriginOffset: {x: 0, y: 0, z: 0}
+  EmotionVisualOriginOffset: {x: 0, y: 0, z: 1}
   EmotionVisualSpacing: {x: 2, y: 0, z: 0.75}
   EmotionVisualsPerRow: 2
   LiveKitTokenEndpoint: https://cloud-api.livekit.io/api/sandbox/connection-details

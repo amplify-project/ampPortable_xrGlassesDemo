@@ -52,4 +52,28 @@ namespace AmpPortableDataViz.Core
         public float NoiseScale;
         public float NoiseContrast;
     }
+
+    /// <summary>
+    /// Snapshot of all parameters exposed by the PlasmaMass raymarch shader.
+    /// </summary>
+    [Serializable]
+    public struct RaymarchPlasmaParams
+    {
+        public Color ColorInner;
+        public Color ColorOuter;
+
+        public float BoundsRadius;
+        public float StepSize;
+        public float PlasmaScale;
+        public float WarpStrength;
+        public float FlowSpeed;
+
+        public float DensityGain;
+        public float DensityThreshold;
+        public float DensityPower;
+
+        public float Absorption;
+        public float Falloff;
+        public float Emission;
+    }
 }

@@ -14,12 +14,12 @@ Shader "Unlit/PlasmaMass"
         _PlasmaScale ("Noise Scale", Float) = 3.0
         _WarpStrength ("Warp Strength", Float) = 0.65
         _FlowSpeed ("Flow Speed", Float) = 1.25
-        _DensityGain ("Density Gain", Float) = 1.1
-        _DensityThreshold ("Density Threshold", Range(0.0, 1.0)) = 0.35
-        _DensityPower ("Density Power", Float) = 1.7
-        _Absorption ("Absorption", Float) = 1.9
-        _Falloff ("Edge Falloff", Float) = 1.6
-        _Emission ("Emission Strength", Float) = 1.5
+        _DensityGain ("Density Gain", Float) = 1.35
+        _DensityThreshold ("Density Threshold", Range(0.0, 0.8)) = 0.25
+        _DensityPower ("Density Power", Float) = 1.3
+        _Absorption ("Absorption", Range(0.05, 2.5)) = 0.8
+        _Falloff ("Edge Falloff", Range(0.25, 1.5)) = 0.8
+        _Emission ("Emission Strength", Range(0.5, 6.0)) = 2.5
     }
     SubShader
     {

@@ -344,9 +344,13 @@ namespace AmpPortableDataViz.Presentation.Bootstrap
                 return;
             }
 
-            if (VisualPrefab.GetComponentInChildren<EmotionPlasmaBinding>() == null)
+            bool hasSupportedBinding =
+                VisualPrefab.GetComponentInChildren<EmotionPlasmaBinding>() != null ||
+                VisualPrefab.GetComponentInChildren<EmotionRayPlasmaBinding>() != null;
+
+            if (!hasSupportedBinding)
             {
-                Debug.LogWarning("Bootstrapper: VisualPrefab does not contain an EmotionPlasmaBinding component.");
+                Debug.LogWarning("Bootstrapper: VisualPrefab does not contain an EmotionPlasmaBinding or EmotionRayPlasmaBinding component.");
                 ClearEmotionDeviceVisuals();
                 return;
             }
@@ -379,17 +383,25 @@ namespace AmpPortableDataViz.Presentation.Bootstrap
                 instance.name = $"{VisualPrefab.name}_{definition.DeviceId}";
                 PositionEmotionVisual(instance.transform, deviceIndex, hasCustomParent);
 
-                var binding = instance.GetComponent<EmotionPlasmaBinding>() ?? instance.AddComponent<EmotionPlasmaBinding>();
+                var bindingComponent = FindEmotionBindingComponent(instance) ?? instance.AddComponent<EmotionPlasmaBinding>();
 
                 var valencePump = CreateRedisPumpForChannel(definition.DeviceId, EmotionChannelKind.Valence, definition.ValenceChannel);
                 var arousalPump = CreateRedisPumpForChannel(definition.DeviceId, EmotionChannelKind.Arousal, definition.ArousalChannel);
 
-                binding.ConfigureSources(valencePump, arousalPump, definition.DeviceId);
+                if (!TryConfigureEmotionBinding(bindingComponent, valencePump, arousalPump, definition.DeviceId))
+                {
+                    Debug.LogWarning($"Bootstrapper: Unable to configure emotion binding on '{instance.name}', skipping visual spawn.");
+                    Destroy(instance);
+                    Destroy(valencePump.gameObject);
+                    Destroy(arousalPump.gameObject);
+                    continue;
+                }
 
                 _emotionDeviceInstances.Add(new EmotionDeviceInstance
                 {
                     DeviceId = definition.DeviceId,
-                    Binding = binding,
+                    VisualInstance = instance,
+                    BindingComponent = bindingComponent,
                     ValencePump = valencePump,
                     ArousalPump = arousalPump
                 });
@@ -399,7 +411,7 @@ namespace AmpPortableDataViz.Presentation.Bootstrap
 
             if (deviceIndex == 0)
             {
-                Debug.LogWarning("Bootstrapper: Unable to spawn EmotionPlasma visuals because no device had both valence and arousal channels.");
+                Debug.LogWarning("Bootstrapper: Unable to spawn emotion visuals because no device had both valence and arousal channels.");
             }
         }
 
@@ -416,6 +428,44 @@ namespace AmpPortableDataViz.Presentation.Bootstrap
             return pump;
         }
 
+        private Component FindEmotionBindingComponent(GameObject target)
+        {
+            if (target == null)
+            {
+                return null;
+            }
+
+            var plasmaBinding = target.GetComponentInChildren<EmotionPlasmaBinding>();
+            if (plasmaBinding != null)
+            {
+                return plasmaBinding;
+            }
+
+            return target.GetComponentInChildren<EmotionRayPlasmaBinding>();
+        }
+
+        private static bool TryConfigureEmotionBinding(Component bindingComponent, RedisDataPump valencePump, RedisDataPump arousalPump, string deviceId)
+        {
+            if (bindingComponent == null)
+            {
+                return false;
+            }
+
+            if (bindingComponent is EmotionPlasmaBinding plasmaBinding)
+            {
+                plasmaBinding.ConfigureSources(valencePump, arousalPump, deviceId);
+                return true;
+            }
+
+            if (bindingComponent is EmotionRayPlasmaBinding rayBinding)
+            {
+                rayBinding.ConfigureSources(valencePump, arousalPump, deviceId);
+                return true;
+            }
+
+            return false;
+        }
+
         private void ClearEmotionDeviceVisuals()
         {
             if (_emotionDeviceInstances.Count == 0)
@@ -425,9 +475,13 @@ namespace AmpPortableDataViz.Presentation.Bootstrap
 
             foreach (var instance in _emotionDeviceInstances)
             {
-                if (instance.Binding != null)
+                if (instance.VisualInstance != null)
                 {
-                    Destroy(instance.Binding.gameObject);
+                    Destroy(instance.VisualInstance);
+                }
+                else if (instance.BindingComponent != null)
+                {
+                    Destroy(instance.BindingComponent.gameObject);
                 }
 
                 if (instance.ValencePump != null)
@@ -604,7 +658,8 @@ namespace AmpPortableDataViz.Presentation.Bootstrap
         private sealed class EmotionDeviceInstance
         {
             public string DeviceId;
-            public EmotionPlasmaBinding Binding;
+            public GameObject VisualInstance;
+            public Component BindingComponent;
             public RedisDataPump ValencePump;
             public RedisDataPump ArousalPump;
         }
