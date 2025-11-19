@@ -2134,11 +2134,11 @@ MonoBehaviour:
   redisChannel: engagement_score
   useEmotionChannelTemplate: 0
   emotionChannelKind: 0
-  emotionDeviceId: MD-V5-0000448
+  emotionDeviceId: 
   targetRenderer: {fileID: 0}
   emissionProperty: _Emission
   emissionRange: {x: 0.5, y: 5}
-  logValues: 1
+  logValues: 0
   clampToZeroOne: 1
   normalizeEmission: 1
 --- !u!4 &898437719
@@ -2804,7 +2804,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!4 &1165166120
 Transform:
   m_ObjectHideFlags: 0
@@ -2814,7 +2814,7 @@ Transform:
   m_GameObject: {fileID: 1165166119}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 1, z: 0.5}
+  m_LocalPosition: {x: -0.25, y: 0.5, z: 1}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -3504,7 +3504,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!4 &1581585343
 Transform:
   m_ObjectHideFlags: 0
@@ -3584,13 +3584,14 @@ MonoBehaviour:
   RedisPort: 6379
   RedisChannel: engagement_score
   RedisChannels: []
-  IncludeEmotionChannels: 0
+  IncludeEmotionChannels: 1
   EmotionDeviceIds:
+  - MD-V5-0000334
   - MD-V5-0000448
-  AutoSpawnEmotionVisualsFromChannels: 0
+  AutoSpawnEmotionVisualsFromChannels: 1
   EmotionVisualParent: {fileID: 1165166120}
   EmotionVisualOriginOffset: {x: 0, y: 0, z: 0}
-  EmotionVisualSpacing: {x: 0.75, y: 0, z: 0.75}
+  EmotionVisualSpacing: {x: 2, y: 0, z: 0.75}
   EmotionVisualsPerRow: 2
   LiveKitTokenEndpoint: https://cloud-api.livekit.io/api/sandbox/connection-details
   LiveKitSandboxId: amp-portable-viz-16o67i
@@ -4265,7 +4266,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!224 &2056354647
 RectTransform:
   m_ObjectHideFlags: 0
