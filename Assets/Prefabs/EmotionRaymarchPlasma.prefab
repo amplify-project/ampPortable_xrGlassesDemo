@@ -14,6 +14,7 @@ GameObject:
   - component: {fileID: 1991746486325859514}
   - component: {fileID: 8708829231059598037}
   - component: {fileID: 7894838685427212536}
+  - component: {fileID: 1911319447252277585}
   m_Layer: 0
   m_Name: EmotionRaymarchPlasma
   m_TagString: Untagged
@@ -133,7 +134,7 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 2946598769923695923}
-  m_Enabled: 1
+  m_Enabled: 0
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 398cb510321987a4897e287ad4047fb1, type: 3}
   m_Name: 
@@ -154,3 +155,18 @@ MonoBehaviour:
   logResolvedSamples: 0
   logRawInputs: 0
   logShaderParameters: 0
+--- !u!114 &1911319447252277585
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2946598769923695923}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 27b57e1e63f87ce498cd627ceab41433, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Amp::EmotionRayPlasmaManualDriver
+  valence: 0
+  arousal: 0
+  autoApply: 1
