@@ -15,6 +15,7 @@ GameObject:
   - component: {fileID: 3256666596046525092}
   - component: {fileID: 4309995123131272153}
   - component: {fileID: 1468452752121766693}
+  - component: {fileID: 3931239551713100500}
   m_Layer: 0
   m_Name: EmotionPlasma
   m_TagString: Untagged
@@ -169,3 +170,18 @@ MonoBehaviour:
   logResolvedSamples: 0
   logRawInputs: 0
   logShaderParameters: 0
+--- !u!114 &3931239551713100500
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4820931441542737784}
+  m_Enabled: 0
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a9b63c4f5f500b24b805fe7711d68027, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Amp::EmotionPlasmaManualDriver
+  valence: 1
+  arousal: 1
+  autoApply: 1

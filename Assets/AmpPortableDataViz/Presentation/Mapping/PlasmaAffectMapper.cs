@@ -27,13 +27,13 @@ public static class PlasmaAffectMapper
         float brightness =
             Mathf.Lerp(0.6f, 4.5f, (aNorm + 1f) * 0.5f) +
             0.5f * vNorm;
-        brightness = Mathf.Clamp(brightness, 0f, 5.5f);
+        brightness = Mathf.Clamp(brightness, 2.0f, 5.5f);
 
         float saturation =
             0.7f +
             1.6f * vNorm +
             1.2f * aNorm;
-        saturation = Mathf.Clamp(saturation, 0f, 3.5f);
+        saturation = Mathf.Clamp(saturation, 1.5f, 3.5f);
 
         float curvature =
             0.45f +

@@ -13,7 +13,7 @@ PlayerSettings:
   useOnDemandResources: 0
   accelerometerFrequency: 60
   companyName: Amplify
-  productName: XR Score Viewer
+  productName: XR Score Viewer - Raymarch
   defaultCursor: {fileID: 0}
   cursorHotspot: {x: 0, y: 0}
   m_SplashScreenBackgroundColor: {r: 0.13725491, g: 0.12156863, b: 0.1254902, a: 1}
@@ -141,9 +141,13 @@ PlayerSettings:
   loadStoreDebugModeEnabled: 0
   visionOSBundleVersion: 1.0
   tvOSBundleVersion: 1.0
-  bundleVersion: v0.1.0-alpha.2
+  bundleVersion: v0.1.0-alpha.3b
   preloadedAssets:
   - {fileID: -944628639613478452, guid: 052faaac586de48259a63d0c4782560b, type: 3}
+  - {fileID: 11400000, guid: f2409c3952eb5354195ed5c85ec08ceb, type: 2}
+  - {fileID: 6928794152957539422, guid: 367526966c83a44439fded79094a6ab0, type: 2}
+  - {fileID: 11400000, guid: ce330ccd6f42d72428e67e29dd92e3e3, type: 2}
+  - {fileID: 3843051431942383266, guid: 6b4108bd18445ee4a8d7f996c85d1d9a, type: 2}
   metroInputSource: 0
   wsaTransparentSwapchain: 0
   m_HolographicPauseOnTrackingLoss: 1
