@@ -9,6 +9,7 @@ using AmpPortableDataViz.Presentation.Mapping;
 using AmpPortableDataViz.Presentation.Sources;
 using AmpPortableDataViz.Presentation.Utility;
 using AmpPortableDataViz.Presentation.Visualization;
+using TMPro;
 using UnityEngine;
 
 namespace AmpPortableDataViz.Presentation.Bootstrap
@@ -59,6 +60,11 @@ namespace AmpPortableDataViz.Presentation.Bootstrap
         public Vector3 EmotionVisualSpacing = new Vector3(0.75f, 0f, 0.75f);
         [Min(1)]
         public int EmotionVisualsPerRow = 2;
+        [Header("Emotion Visual Labels")]
+        public bool ShowDeviceLabels = true;
+        public Vector3 DeviceLabelOffset = new Vector3(0f, -0.35f, 0f);
+        public float DeviceLabelFontSize = 0.22f;
+        public Color DeviceLabelColor = Color.white;
 
         [Header("LiveKit Settings")]
         public string LiveKitTokenEndpoint = "https://cloud-api.livekit.io/api/sandbox/connection-details";
@@ -416,6 +422,7 @@ namespace AmpPortableDataViz.Presentation.Bootstrap
                     HeartRatePump = heartRatePump
                 });
 
+                AttachDeviceLabel(instance, definition.DeviceId, deviceIndex);
                 deviceIndex++;
             }
 
@@ -679,6 +686,97 @@ namespace AmpPortableDataViz.Presentation.Bootstrap
             }
 
             return channels.ToArray();
+        }
+
+        private void AttachDeviceLabel(GameObject visualInstance, string deviceId, int deviceIndex)
+        {
+            if (!ShowDeviceLabels || visualInstance == null)
+            {
+                return;
+            }
+
+            Transform labelParent = ResolveVisualRoot(visualInstance);
+            if (labelParent == null)
+            {
+                return;
+            }
+
+            var labelObject = new GameObject("DeviceLabel");
+            labelObject.transform.SetParent(labelParent, false);
+            labelObject.transform.localPosition = DeviceLabelOffset;
+            labelObject.transform.localRotation = Quaternion.identity;
+            labelObject.transform.localScale = Vector3.one;
+            labelObject.layer = visualInstance.layer;
+
+            var text = labelObject.AddComponent<TextMeshPro>();
+            text.text = FormatDeviceLabel(deviceId, deviceIndex);
+            text.fontSize = Mathf.Max(0.01f, DeviceLabelFontSize);
+            text.color = DeviceLabelColor;
+            text.alignment = TextAlignmentOptions.Center;
+            text.enableWordWrapping = false;
+            text.richText = false;
+
+            labelObject.AddComponent<BillboardLabel>();
+        }
+
+        private static string FormatDeviceLabel(string deviceId, int deviceIndex)
+        {
+            if (!string.IsNullOrWhiteSpace(deviceId))
+            {
+                string numeric = ExtractTrailingDigits(deviceId);
+                if (!string.IsNullOrEmpty(numeric))
+                {
+                    return $"Device {numeric}";
+                }
+
+                return $"Device {deviceId.Trim()}";
+            }
+
+            return $"Device {deviceIndex + 1}";
+        }
+
+        private static string ExtractTrailingDigits(string value)
+        {
+            if (string.IsNullOrWhiteSpace(value))
+            {
+                return string.Empty;
+            }
+
+            int end = value.Length - 1;
+            while (end >= 0 && !char.IsDigit(value[end]))
+            {
+                end--;
+            }
+
+            if (end < 0)
+            {
+                return string.Empty;
+            }
+
+            int start = end;
+            while (start >= 0 && char.IsDigit(value[start]))
+            {
+                start--;
+            }
+
+            int length = end - start;
+            return length > 0 ? value.Substring(start + 1, length) : string.Empty;
+        }
+
+        private static Transform ResolveVisualRoot(GameObject instance)
+        {
+            if (instance == null)
+            {
+                return null;
+            }
+
+            var anchored = instance.GetComponent<AnchoredVisualization>();
+            if (anchored != null && anchored.VisualRoot != null)
+            {
+                return anchored.VisualRoot;
+            }
+
+            return instance.transform;
         }
 
         private sealed class EmotionDeviceInstance

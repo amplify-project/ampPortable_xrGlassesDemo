@@ -153,8 +153,8 @@ MonoBehaviour:
     InputRange: {x: 0, y: 2}
     LowThreshold: 0.35
     HighThreshold: 0.65
-  logResolvedSamples: 1
-  logRawInputs: 1
+  logResolvedSamples: 0
+  logRawInputs: 0
   logShaderParameters: 0
 --- !u!114 &1911319447252277585
 MonoBehaviour:
