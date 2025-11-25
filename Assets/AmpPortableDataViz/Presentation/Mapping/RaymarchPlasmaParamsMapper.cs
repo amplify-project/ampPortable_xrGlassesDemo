@@ -4,9 +4,17 @@ using UnityEngine;
 public static class RaymarchPlasmaParamsMapper
 {
     /// <summary>
-    /// Builds raymarch plasma shader parameters from valence levels {0,1,2} and arousal levels {0,1,2}.
+    /// Builds raymarch plasma shader parameters from valence/arousal inputs in the range [0, 2].
     /// </summary>
     public static RaymarchPlasmaParams BuildParams(int valenceLevel, int arousalLevel)
+    {
+        return BuildParams((float)valenceLevel, (float)arousalLevel);
+    }
+
+    /// <summary>
+    /// Builds raymarch plasma shader parameters from continuous valence/arousal inputs in the range [0, 2].
+    /// </summary>
+    public static RaymarchPlasmaParams BuildParams(float valenceLevel, float arousalLevel)
     {
         float vLevel = Mathf.Clamp(valenceLevel, 0f, 2f); // 0 negative, 1 neutral, 2 positive
         float aLevel = Mathf.Clamp(arousalLevel, 0f, 2f); // 0 low, 1 medium, 2 high

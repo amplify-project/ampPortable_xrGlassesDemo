@@ -387,6 +387,11 @@ namespace AmpPortableDataViz.Presentation.Bootstrap
 
                 var valencePump = CreateRedisPumpForChannel(definition.DeviceId, EmotionChannelKind.Valence, definition.ValenceChannel);
                 var arousalPump = CreateRedisPumpForChannel(definition.DeviceId, EmotionChannelKind.Arousal, definition.ArousalChannel);
+                RedisDataPump heartRatePump = null;
+                if (!string.IsNullOrWhiteSpace(definition.HeartRateChannel))
+                {
+                    heartRatePump = CreateRedisPumpForChannel(definition.DeviceId, EmotionChannelKind.HeartRate, definition.HeartRateChannel);
+                }
 
                 if (!TryConfigureEmotionBinding(bindingComponent, valencePump, arousalPump, definition.DeviceId))
                 {
@@ -394,6 +399,10 @@ namespace AmpPortableDataViz.Presentation.Bootstrap
                     Destroy(instance);
                     Destroy(valencePump.gameObject);
                     Destroy(arousalPump.gameObject);
+                    if (heartRatePump != null)
+                    {
+                        Destroy(heartRatePump.gameObject);
+                    }
                     continue;
                 }
 
@@ -403,7 +412,8 @@ namespace AmpPortableDataViz.Presentation.Bootstrap
                     VisualInstance = instance,
                     BindingComponent = bindingComponent,
                     ValencePump = valencePump,
-                    ArousalPump = arousalPump
+                    ArousalPump = arousalPump,
+                    HeartRatePump = heartRatePump
                 });
 
                 deviceIndex++;
@@ -493,6 +503,11 @@ namespace AmpPortableDataViz.Presentation.Bootstrap
                 {
                     Destroy(instance.ArousalPump.gameObject);
                 }
+
+                if (instance.HeartRatePump != null)
+                {
+                    Destroy(instance.HeartRatePump.gameObject);
+                }
             }
 
             _emotionDeviceInstances.Clear();
@@ -552,6 +567,10 @@ namespace AmpPortableDataViz.Presentation.Bootstrap
                 {
                     definition.ArousalChannel = channel;
                 }
+                else if (kind == EmotionChannelKind.HeartRate)
+                {
+                    definition.HeartRateChannel = channel;
+                }
 
                 map[deviceId] = definition;
             }
@@ -591,13 +610,20 @@ namespace AmpPortableDataViz.Presentation.Bootstrap
             }
 
             string suffix = channelName.Substring(finalColon + 1);
-            if (suffix.Equals("valence", StringComparison.OrdinalIgnoreCase))
+            if (suffix.Equals("valence_cont", StringComparison.OrdinalIgnoreCase) ||
+                suffix.Equals("valence", StringComparison.OrdinalIgnoreCase)) // allow legacy channel names
             {
                 channelKind = EmotionChannelKind.Valence;
             }
-            else if (suffix.Equals("arousal", StringComparison.OrdinalIgnoreCase))
+            else if (suffix.Equals("arousal_cont", StringComparison.OrdinalIgnoreCase) ||
+                     suffix.Equals("arousal", StringComparison.OrdinalIgnoreCase)) // allow legacy channel names
             {
                 channelKind = EmotionChannelKind.Arousal;
+            }
+            else if (suffix.Equals("hr_filtered", StringComparison.OrdinalIgnoreCase) ||
+                     suffix.Equals("hr", StringComparison.OrdinalIgnoreCase))
+            {
+                channelKind = EmotionChannelKind.HeartRate;
             }
             else
             {
@@ -662,6 +688,7 @@ namespace AmpPortableDataViz.Presentation.Bootstrap
             public Component BindingComponent;
             public RedisDataPump ValencePump;
             public RedisDataPump ArousalPump;
+            public RedisDataPump HeartRatePump;
         }
 
         private struct DeviceChannelDefinition
@@ -669,6 +696,7 @@ namespace AmpPortableDataViz.Presentation.Bootstrap
             public string DeviceId;
             public string ValenceChannel;
             public string ArousalChannel;
+            public string HeartRateChannel;
         }
 
         private bool ShouldInitializeSessionController()

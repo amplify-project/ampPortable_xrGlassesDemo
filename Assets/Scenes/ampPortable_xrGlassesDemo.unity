@@ -2115,7 +2115,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!114 &898437718
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2129,7 +2129,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Amp::AmpPortableDataViz.Presentation.Sources.RedisDataPump
   sourceId: 
-  redisHost: 10.68.97.160
+  redisHost: 192.168.0.6
   redisPort: 6379
   redisChannel: engagement_score
   useEmotionChannelTemplate: 0
@@ -3504,7 +3504,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &1581585343
 Transform:
   m_ObjectHideFlags: 0
@@ -3580,7 +3580,7 @@ MonoBehaviour:
   ProfileId: Default
   Seed: 12345
   ActiveSignalSource: 1
-  RedisHost: 10.68.97.160
+  RedisHost: 192.168.0.6
   RedisPort: 6379
   RedisChannel: engagement_score
   RedisChannels: []
@@ -4265,7 +4265,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &2056354647
 RectTransform:
   m_ObjectHideFlags: 0

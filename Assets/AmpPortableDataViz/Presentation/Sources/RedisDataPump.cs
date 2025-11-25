@@ -112,7 +112,8 @@ namespace AmpPortableDataViz.Presentation.Sources
 
             if (logValues)
             {
-                Debug.Log($"RedisDataPump[{SourceId}] value {rawValue:F4} frameValue {frameValue:F4}");
+                string channelLabel = string.IsNullOrWhiteSpace(latestMessage.Channel) ? _activeChannelName : latestMessage.Channel;
+                Debug.Log($"RedisDataPump[{SourceId}] channel={channelLabel} value {rawValue:F4} frameValue {frameValue:F4} seq={latestMessage.Sequence} ts={latestMessage.Timestamp}");
             }
         }
 

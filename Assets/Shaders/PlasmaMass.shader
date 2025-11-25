@@ -37,7 +37,7 @@ Shader "Unlit/PlasmaMass"
 
             #include "UnityCG.cginc"
 
-            #define MAX_STEPS 50
+            #define MAX_STEPS 24
 
             struct appdata
             {

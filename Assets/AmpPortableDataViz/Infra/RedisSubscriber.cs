@@ -227,6 +227,11 @@ public static class RedisSubscriber
 
             var parsedMessage = ParseRedisMessage(channelName, root);
             targetQueue.Enqueue(parsedMessage);
+
+            if (channelName.EndsWith(":hr_filtered", StringComparison.OrdinalIgnoreCase))
+            {
+                Debug.Log($"RedisSubscriber[{channelName}] value={parsedMessage.Value:F4} seq={parsedMessage.Sequence} ts={parsedMessage.Timestamp}");
+            }
         }
         catch (JsonException ex)
         {
@@ -410,14 +415,16 @@ public enum EmotionChannelKind
 {
     Broadcast,
     Valence,
-    Arousal
+    Arousal,
+    HeartRate
 }
 
 public static class RedisEmotionChannels
 {
     public const string BroadcastChannel = "emotion_scores";
-    public const string ValenceTemplate = "device:{0}:valence";
-    public const string ArousalTemplate = "device:{0}:arousal";
+    public const string ValenceTemplate = "device:{0}:valence_cont";
+    public const string ArousalTemplate = "device:{0}:arousal_cont";
+    public const string HeartRateTemplate = "device:{0}:hr_filtered";
 
     private static readonly string[] _defaultDeviceIds =
     {
@@ -472,6 +479,11 @@ public static class RedisEmotionChannels
             {
                 AddChannel(arousalChannel);
             }
+
+            if (TryFormatChannel(EmotionChannelKind.HeartRate, deviceId, out var heartRateChannel))
+            {
+                AddChannel(heartRateChannel);
+            }
         }
 
         return orderedChannels;
@@ -489,6 +501,9 @@ public static class RedisEmotionChannels
                 return !string.IsNullOrWhiteSpace(channelName);
             case EmotionChannelKind.Arousal:
                 channelName = FormatDeviceChannel(ArousalTemplate, deviceId);
+                return !string.IsNullOrWhiteSpace(channelName);
+            case EmotionChannelKind.HeartRate:
+                channelName = FormatDeviceChannel(HeartRateTemplate, deviceId);
                 return !string.IsNullOrWhiteSpace(channelName);
             default:
                 channelName = string.Empty;
