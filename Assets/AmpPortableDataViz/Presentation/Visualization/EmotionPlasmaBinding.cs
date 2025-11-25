@@ -52,7 +52,7 @@ namespace AmpPortableDataViz.Presentation.Visualization
                 return new AffectLevelQuantizer
                 {
                     InputIsDiscreteLevels = false,
-                    InputRange = new Vector2(-1f, 1f),
+                    InputRange = new Vector2(0f, 2f),
                     LowThreshold = 0.35f,
                     HighThreshold = 0.65f
                 };
@@ -63,7 +63,7 @@ namespace AmpPortableDataViz.Presentation.Visualization
                 return new AffectLevelQuantizer
                 {
                     InputIsDiscreteLevels = false,
-                    InputRange = new Vector2(0f, 1f),
+                    InputRange = new Vector2(0f, 2f),
                     LowThreshold = 0.35f,
                     HighThreshold = 0.65f
                 };

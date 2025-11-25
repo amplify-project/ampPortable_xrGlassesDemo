@@ -133,7 +133,16 @@ Shader "Unlit/PlasmaMass"
                 float3 rd = normalize(i.hitPos - ro);
 
                 float2 hit;
-                if (!RaySphere(ro, rd, _BoundsRadius, hit))
+                // Enlarge bounds to include torus halo around the sphere.
+                float torusMajor = _BoundsRadius * 1.1;
+                float torusMinorBase = _BoundsRadius * 0.08;
+                float pulsePhaseInit = _Time.y * _HaloPulseSpeed;
+                float pulseInit = 1.0 + _HaloPulseAmplitude * sin(pulsePhaseInit);
+                float torusMinorInit = torusMinorBase * saturate(pulseInit);
+                float torusOuterRadius = torusMajor + torusMinorInit;
+                float maxBounds = max(_BoundsRadius, torusOuterRadius);
+
+                if (!RaySphere(ro, rd, maxBounds, hit))
                 {
                     return 0;
                 }
@@ -142,6 +151,7 @@ Shader "Unlit/PlasmaMass"
                 float tEnd = hit.y;
                 float transmittance = 1.0;
                 float3 accum = 0.0;
+                float torusAlphaAccum = 0.0;
 
                 UNITY_LOOP
                 for (int step = 0; step < MAX_STEPS; ++step)
@@ -153,47 +163,58 @@ Shader "Unlit/PlasmaMass"
 
                     float3 samplePos = ro + rd * (t + _StepSize * 0.5);
                     float radius = length(samplePos);
-                    if (radius > _BoundsRadius)
+
+                    // Pulse state shared by halo calculations.
+                    float pulsePhase = _Time.y * _HaloPulseSpeed;
+                    float pulseWave = sin(pulsePhase);
+                    float pulse = 1.0 + _HaloPulseAmplitude * pulseWave;
+
+                    // Plasma sphere sampling only inside its radius.
+                    if (radius <= _BoundsRadius)
                     {
-                        break;
+                        float density = SampleDensity(samplePos);
+                        float rim = saturate(radius / _BoundsRadius);
+                        density *= exp(-_Falloff * rim * rim);
+
+                        if (density > 1e-4)
+                        {
+                            float absorb = saturate(1.0 - exp(-density * _Absorption * _StepSize));
+                            float3 sampleColor = EvaluateColor(density);
+                            accum += transmittance * absorb * sampleColor;
+                            transmittance *= (1.0 - absorb);
+                        }
                     }
 
-                    float density = SampleDensity(samplePos);
-                    float rim = saturate(radius / _BoundsRadius);
-                    density *= exp(-_Falloff * rim * rim);
-
-                    if (density > 1e-4)
+                    // Torus halo around the sphere (emissive only, no absorption).
                     {
-                        float absorb = saturate(1.0 - exp(-density * _Absorption * _StepSize));
-                        float3 sampleColor = EvaluateColor(density);
-                        accum += transmittance * absorb * sampleColor;
-                        transmittance *= (1.0 - absorb);
+                        float torusMinor = torusMinorBase * saturate(pulse);
+                        float3 p = samplePos;
+                        float2 q = float2(length(p.xz), p.y);
+                        float torusDist = length(float2(q.x - torusMajor, q.y)) - torusMinor;
+                        float torusShell = 1.0 - smoothstep(0.0, _StepSize * 3.0, torusDist);
+                        if (torusShell > 1e-4)
+                        {
+                            float warmFactor = saturate(_HaloPulseAmplitude * 0.8);
+                            float3 warmTint = float3(1.0, 0.64, 0.32);
+                            float3 haloBaseColor = lerp(_ColorOuter.rgb, warmTint, warmFactor);
+                            float haloIntensity = torusShell * pulse;
+                            float3 haloColor = haloBaseColor * haloIntensity;
+                            float haloAlpha = haloIntensity * 0.35;
+                            accum += haloColor * 0.6;
+                            torusAlphaAccum = max(torusAlphaAccum, haloAlpha);
+                        }
+                    }
+
+                    if (radius > maxBounds)
+                    {
+                        break;
                     }
 
                     t += _StepSize;
                 }
 
-                // Halo layer: view-dependent rim that pulses over time.
-                float3 entryPos = ro + rd * max(hit.x, 0.0);
-                float3 entryNormal = normalize(entryPos);
-                float viewAlignment = saturate(dot(entryNormal, -rd));
-                float rim = pow(1.0 - viewAlignment, 2.5);
-
-                float pulsePhase = _Time.y * _HaloPulseSpeed;
-                float wave = sin(pulsePhase);
-                float pulse = 1.0 + _HaloPulseAmplitude * wave;
-
-                float haloMask = rim * pulse;
-                float haloAlpha = saturate(haloMask * 0.6);
-
-                float warmFactor = saturate(_HaloPulseAmplitude * 0.8);
-                float3 warmTint = float3(1.0, 0.64, 0.32);
-                float3 haloBaseColor = lerp(_ColorOuter.rgb, warmTint, warmFactor);
-                float3 haloColor = haloBaseColor * haloMask;
-
                 float4 finalColor = float4(accum, saturate(1.0 - transmittance));
-                finalColor.rgb += haloColor * haloAlpha;
-                finalColor.a = saturate(finalColor.a + haloAlpha);
+                finalColor.a = saturate(finalColor.a + torusAlphaAccum);
                 return finalColor;
             }
             ENDCG

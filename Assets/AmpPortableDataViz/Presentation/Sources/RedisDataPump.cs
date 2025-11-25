@@ -35,7 +35,7 @@ namespace AmpPortableDataViz.Presentation.Sources
 
         [Header("Value Mapping")]
         [SerializeField]
-        private bool clampToZeroOne = true;
+        private bool clampToZeroOne = false;
 
         [SerializeField]
         private bool normalizeEmission = true;
@@ -168,6 +168,7 @@ namespace AmpPortableDataViz.Presentation.Sources
             redisChannel = channel;
             useEmotionChannelTemplate = false;
             emotionDeviceId = string.Empty;
+            clampToZeroOne = ShouldClampChannel(channel);
 
             if (isActiveAndEnabled)
             {
@@ -298,11 +299,50 @@ namespace AmpPortableDataViz.Presentation.Sources
             useEmotionChannelTemplate = true;
             emotionChannelKind = channelKind;
             emotionDeviceId = deviceId ?? string.Empty;
+            clampToZeroOne = channelKind == EmotionChannelKind.Broadcast;
 
             if (isActiveAndEnabled)
             {
                 _ = RestartConnectionAsync();
             }
+        }
+
+        private static bool IsHeartRateChannel(string? channelName)
+        {
+            if (string.IsNullOrWhiteSpace(channelName))
+            {
+                return false;
+            }
+
+            return channelName.IndexOf("hr_filtered", StringComparison.OrdinalIgnoreCase) >= 0 ||
+                   channelName.IndexOf(":hr", StringComparison.OrdinalIgnoreCase) >= 0;
+        }
+
+        private static bool IsValenceOrArousalChannel(string? channelName)
+        {
+            if (string.IsNullOrWhiteSpace(channelName))
+            {
+                return false;
+            }
+
+            return channelName.IndexOf("valence", StringComparison.OrdinalIgnoreCase) >= 0 ||
+                   channelName.IndexOf("arousal", StringComparison.OrdinalIgnoreCase) >= 0;
+        }
+
+        private static bool ShouldClampChannel(string channelName)
+        {
+            // Do not clamp valence or arousal; only clamp non-emotion channels by default.
+            if (IsHeartRateChannel(channelName))
+            {
+                return false;
+            }
+
+            if (IsValenceOrArousalChannel(channelName))
+            {
+                return false;
+            }
+
+            return true;
         }
 
         private bool TryResolveConfiguredChannel(out string channelName)

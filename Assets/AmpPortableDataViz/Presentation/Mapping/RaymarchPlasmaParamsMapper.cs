@@ -32,8 +32,9 @@ public static class RaymarchPlasmaParamsMapper
         float haloPulseAmplitude = 0f;
         if (hrNormalized > 0f)
         {
-            // Map bpm to angular speed (rad/sec) for the sine wave: speed = 2π * beatsPerSecond.
-            float beatsPerSecond = Mathf.Lerp(30f / 60f, 200f / 60f, hrNormalized);
+            // Map bpm directly to angular speed (rad/sec): speed = 2π * beatsPerSecond.
+            float clampedBpm = Mathf.Clamp(heartRateBpm, 30f, 200f);
+            float beatsPerSecond = clampedBpm / 60f;
             haloPulseSpeed = beatsPerSecond * Mathf.PI * 2f;
             haloPulseAmplitude = Mathf.Lerp(0.05f, 1f, hrNormalized);
         }

@@ -52,7 +52,7 @@ namespace AmpPortableDataViz.Presentation.Visualization
                 return new AffectLevelQuantizer
                 {
                     InputIsDiscreteLevels = false,
-                    InputRange = new Vector2(-1f, 1f),
+                    InputRange = new Vector2(0f, 2f),
                     LowThreshold = 0.35f,
                     HighThreshold = 0.65f
                 };
@@ -63,7 +63,7 @@ namespace AmpPortableDataViz.Presentation.Visualization
                 return new AffectLevelQuantizer
                 {
                     InputIsDiscreteLevels = false,
-                    InputRange = new Vector2(0f, 1f),
+                    InputRange = new Vector2(0f, 2f),
                     LowThreshold = 0.35f,
                     HighThreshold = 0.65f
                 };
@@ -224,6 +224,9 @@ namespace AmpPortableDataViz.Presentation.Visualization
             {
                 Debug.Log($"EmotionRayPlasmaBinding[{ResolveDeviceId()}] HeartRate raw={_heartRateValue:F4} seq={frame.SequenceId} ts={frame.TimestampTicksUtc}");
             }
+
+            // Push updated halo parameters as soon as new HR data arrives (as long as we already have valence/arousal).
+            TryEmit();
         }
 
         private void TryEmit()
@@ -244,7 +247,8 @@ namespace AmpPortableDataViz.Presentation.Visualization
             float hrNormalized = _hasHeartRate ? Mathf.Clamp01(Mathf.InverseLerp(30f, 200f, _heartRateValue)) : 0f;
             if (hrNormalized > 0f)
             {
-                float beatsPerSecond = Mathf.Lerp(30f / 60f, 200f / 60f, hrNormalized);
+                float clampedBpm = Mathf.Clamp(_heartRateValue, 30f, 200f);
+                float beatsPerSecond = clampedBpm / 60f;
                 parameters.HaloPulseSpeed = beatsPerSecond * Mathf.PI * 2f;
                 parameters.HaloPulseAmplitude = Mathf.Lerp(0.05f, 1f, hrNormalized);
             }

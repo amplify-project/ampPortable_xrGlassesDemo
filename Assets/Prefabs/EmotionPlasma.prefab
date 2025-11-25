@@ -159,12 +159,12 @@ MonoBehaviour:
   deviceId: 
   valenceQuantizer:
     InputIsDiscreteLevels: 0
-    InputRange: {x: -1, y: 1}
+    InputRange: {x: 0, y: 2}
     LowThreshold: 0.35
     HighThreshold: 0.65
   arousalQuantizer:
     InputIsDiscreteLevels: 0
-    InputRange: {x: 0, y: 1}
+    InputRange: {x: 0, y: 2}
     LowThreshold: 0.35
     HighThreshold: 0.65
   logResolvedSamples: 0
