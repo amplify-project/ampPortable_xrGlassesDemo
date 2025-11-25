@@ -28,7 +28,7 @@ public class EmotionRayPlasmaManualDriver : MonoBehaviour
     public void ApplyNow()
     {
         if (_viz == null) return;
-        var parms = RaymarchPlasmaParamsMapper.BuildParams(valence, arousal);
+        var parms = RaymarchPlasmaParamsMapper.BuildParams(valence, arousal, heartRateBpm);
         _viz.Apply(parms, DateTime.UtcNow.Ticks);
 
         if (emitHeartRateOnApply)

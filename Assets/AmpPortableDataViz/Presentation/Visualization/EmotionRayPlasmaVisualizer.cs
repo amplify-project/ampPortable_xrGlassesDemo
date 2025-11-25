@@ -27,6 +27,8 @@ namespace AmpPortableDataViz.Presentation.Visualization
         private static readonly int AbsorptionId = Shader.PropertyToID("_Absorption");
         private static readonly int FalloffId = Shader.PropertyToID("_Falloff");
         private static readonly int EmissionId = Shader.PropertyToID("_Emission");
+        private static readonly int HaloPulseSpeedId = Shader.PropertyToID("_HaloPulseSpeed");
+        private static readonly int HaloPulseAmplitudeId = Shader.PropertyToID("_HaloPulseAmplitude");
 
         private void Awake()
         {
@@ -63,6 +65,9 @@ namespace AmpPortableDataViz.Presentation.Visualization
             _propertyBlock.SetFloat(AbsorptionId, parameters.Absorption);
             _propertyBlock.SetFloat(FalloffId, parameters.Falloff);
             _propertyBlock.SetFloat(EmissionId, parameters.Emission);
+
+            _propertyBlock.SetFloat(HaloPulseSpeedId, parameters.HaloPulseSpeed);
+            _propertyBlock.SetFloat(HaloPulseAmplitudeId, parameters.HaloPulseAmplitude);
 
             targetRenderer.SetPropertyBlock(_propertyBlock);
         }

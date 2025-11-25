@@ -20,6 +20,8 @@ Shader "Unlit/PlasmaMass"
         _Absorption ("Absorption", Range(0.05, 2.5)) = 0.8
         _Falloff ("Edge Falloff", Range(0.25, 1.5)) = 0.8
         _Emission ("Emission Strength", Range(0.5, 6.0)) = 2.5
+        _HaloPulseSpeed ("Halo Pulse Speed", Range(0.0, 10.0)) = 0.0
+        _HaloPulseAmplitude ("Halo Pulse Amplitude", Range(0.0, 2.0)) = 0.0
     }
     SubShader
     {
@@ -68,6 +70,8 @@ Shader "Unlit/PlasmaMass"
             float _Absorption;
             float _Falloff;
             float _Emission;
+            float _HaloPulseSpeed;
+            float _HaloPulseAmplitude;
 
             float3 DomainWarp(float3 p)
             {
@@ -169,7 +173,28 @@ Shader "Unlit/PlasmaMass"
                     t += _StepSize;
                 }
 
-                return float4(accum, saturate(1.0 - transmittance));
+                // Halo layer: view-dependent rim that pulses over time.
+                float3 entryPos = ro + rd * max(hit.x, 0.0);
+                float3 entryNormal = normalize(entryPos);
+                float viewAlignment = saturate(dot(entryNormal, -rd));
+                float rim = pow(1.0 - viewAlignment, 2.5);
+
+                float pulsePhase = _Time.y * _HaloPulseSpeed;
+                float wave = sin(pulsePhase);
+                float pulse = 1.0 + _HaloPulseAmplitude * wave;
+
+                float haloMask = rim * pulse;
+                float haloAlpha = saturate(haloMask * 0.6);
+
+                float warmFactor = saturate(_HaloPulseAmplitude * 0.8);
+                float3 warmTint = float3(1.0, 0.64, 0.32);
+                float3 haloBaseColor = lerp(_ColorOuter.rgb, warmTint, warmFactor);
+                float3 haloColor = haloBaseColor * haloMask;
+
+                float4 finalColor = float4(accum, saturate(1.0 - transmittance));
+                finalColor.rgb += haloColor * haloAlpha;
+                finalColor.a = saturate(finalColor.a + haloAlpha);
+                return finalColor;
             }
             ENDCG
         }

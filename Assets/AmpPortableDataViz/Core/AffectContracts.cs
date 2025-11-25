@@ -75,5 +75,8 @@ namespace AmpPortableDataViz.Core
         public float Absorption;
         public float Falloff;
         public float Emission;
+
+        public float HaloPulseSpeed;
+        public float HaloPulseAmplitude;
     }
 }

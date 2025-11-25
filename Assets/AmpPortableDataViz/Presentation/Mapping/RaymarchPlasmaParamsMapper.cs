@@ -8,7 +8,7 @@ public static class RaymarchPlasmaParamsMapper
     /// </summary>
     public static RaymarchPlasmaParams BuildParams(int valenceLevel, int arousalLevel)
     {
-        return BuildParams((float)valenceLevel, (float)arousalLevel);
+        return BuildParams((float)valenceLevel, (float)arousalLevel, float.NaN);
     }
 
     /// <summary>
@@ -16,8 +16,27 @@ public static class RaymarchPlasmaParamsMapper
     /// </summary>
     public static RaymarchPlasmaParams BuildParams(float valenceLevel, float arousalLevel)
     {
+        return BuildParams(valenceLevel, arousalLevel, float.NaN);
+    }
+
+    /// <summary>
+    /// Builds raymarch plasma shader parameters from continuous valence/arousal inputs in the range [0, 2]
+    /// and heart rate in bpm. Heart rate is normalized from [30, 200] bpm to [0, 1] and drives halo pulse speed/amplitude.
+    /// </summary>
+    public static RaymarchPlasmaParams BuildParams(float valenceLevel, float arousalLevel, float heartRateBpm)
+    {
         float vLevel = Mathf.Clamp(valenceLevel, 0f, 2f); // 0 negative, 1 neutral, 2 positive
         float aLevel = Mathf.Clamp(arousalLevel, 0f, 2f); // 0 low, 1 medium, 2 high
+        float hrNormalized = NormalizeHeartRate(heartRateBpm);
+        float haloPulseSpeed = 0f;
+        float haloPulseAmplitude = 0f;
+        if (hrNormalized > 0f)
+        {
+            // Map bpm to angular speed (rad/sec) for the sine wave: speed = 2π * beatsPerSecond.
+            float beatsPerSecond = Mathf.Lerp(30f / 60f, 200f / 60f, hrNormalized);
+            haloPulseSpeed = beatsPerSecond * Mathf.PI * 2f;
+            haloPulseAmplitude = Mathf.Lerp(0.05f, 1f, hrNormalized);
+        }
 
         // Extract directional weights while keeping the discrete 0/1/2 inputs intact.
         float valencePos = Mathf.Clamp01(vLevel - 1f);      // >0 when above neutral
@@ -177,7 +196,10 @@ public static class RaymarchPlasmaParamsMapper
 
             Absorption = absorption,
             Falloff = falloff,
-            Emission = emission
+            Emission = emission,
+
+            HaloPulseSpeed = haloPulseSpeed,
+            HaloPulseAmplitude = haloPulseAmplitude
         };
 
         static Color BoostVibrancy(Color color, float saturationBoost, float valueBoost)
@@ -186,6 +208,16 @@ public static class RaymarchPlasmaParamsMapper
             s = Mathf.Clamp01(s + saturationBoost);
             v = Mathf.Clamp01(v + valueBoost);
             return Color.HSVToRGB(h, s, v);
+        }
+
+        static float NormalizeHeartRate(float bpm)
+        {
+            if (float.IsNaN(bpm) || float.IsInfinity(bpm))
+            {
+                return 0f;
+            }
+
+            return Mathf.Clamp01(Mathf.InverseLerp(30f, 200f, bpm));
         }
     }
 }

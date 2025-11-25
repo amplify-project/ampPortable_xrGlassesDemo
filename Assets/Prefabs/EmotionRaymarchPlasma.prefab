@@ -141,6 +141,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Amp::AmpPortableDataViz.Presentation.Visualization.EmotionRayPlasmaBinding
   valenceSource: {fileID: 0}
   arousalSource: {fileID: 0}
+  heartRateSource: {fileID: 0}
   deviceId: 
   valenceQuantizer:
     InputIsDiscreteLevels: 0
@@ -169,7 +170,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Amp::EmotionRayPlasmaManualDriver
   valence: 0
   arousal: 0
-  heartRateBpm: 187.3
+  heartRateBpm: 200
   emitHeartRateOnApply: 1
   logHeartRate: 1
   onHeartRateValue:

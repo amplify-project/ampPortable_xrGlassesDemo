@@ -73,6 +73,7 @@ namespace AmpPortableDataViz.Presentation.Visualization
         [Header("Redis Sources")]
         [SerializeField] private RedisDataPump valenceSource;
         [SerializeField] private RedisDataPump arousalSource;
+        [SerializeField] private RedisDataPump heartRateSource;
 
         [Header("Device Identity")]
         [SerializeField] private string deviceId;
@@ -91,14 +92,18 @@ namespace AmpPortableDataViz.Presentation.Visualization
 
         private Action<DataFrame<float>> _valenceHandler;
         private Action<DataFrame<float>> _arousalHandler;
+        private Action<DataFrame<float>> _heartRateHandler;
 
         private bool _hasValence;
         private bool _hasArousal;
         private float _valenceValue;
         private float _arousalValue;
+        private float _heartRateValue;
         private long _valenceTimestamp;
         private long _arousalTimestamp;
+        private long _heartRateTimestamp;
         private int _sequenceId;
+        private bool _hasHeartRate;
 
         private void Awake()
         {
@@ -118,7 +123,7 @@ namespace AmpPortableDataViz.Presentation.Visualization
             ResetState();
         }
 
-        public void ConfigureSources(RedisDataPump newValenceSource, RedisDataPump newArousalSource, string overrideDeviceId = null)
+        public void ConfigureSources(RedisDataPump newValenceSource, RedisDataPump newArousalSource, RedisDataPump newHeartRateSource = null, string overrideDeviceId = null)
         {
             bool wasEnabled = isActiveAndEnabled;
             if (wasEnabled)
@@ -128,6 +133,7 @@ namespace AmpPortableDataViz.Presentation.Visualization
 
             valenceSource = newValenceSource;
             arousalSource = newArousalSource;
+            heartRateSource = newHeartRateSource;
 
             if (!string.IsNullOrWhiteSpace(overrideDeviceId))
             {
@@ -145,12 +151,17 @@ namespace AmpPortableDataViz.Presentation.Visualization
         {
             SubscribeToPump(valenceSource, ref _valenceHandler, OnValenceFrame, EmotionChannelKind.Valence);
             SubscribeToPump(arousalSource, ref _arousalHandler, OnArousalFrame, EmotionChannelKind.Arousal);
+            if (heartRateSource != null)
+            {
+                SubscribeToPump(heartRateSource, ref _heartRateHandler, OnHeartRateFrame, EmotionChannelKind.HeartRate);
+            }
         }
 
         private void DetachSources()
         {
             UnsubscribeFromPump(valenceSource, ref _valenceHandler);
             UnsubscribeFromPump(arousalSource, ref _arousalHandler);
+            UnsubscribeFromPump(heartRateSource, ref _heartRateHandler);
         }
 
         private void SubscribeToPump(RedisDataPump pump, ref Action<DataFrame<float>> handler, Action<DataFrame<float>> callback, EmotionChannelKind channelKind)
@@ -203,6 +214,18 @@ namespace AmpPortableDataViz.Presentation.Visualization
             TryEmit();
         }
 
+        private void OnHeartRateFrame(DataFrame<float> frame)
+        {
+            _heartRateValue = frame.Payload;
+            _heartRateTimestamp = frame.TimestampTicksUtc;
+            _hasHeartRate = true;
+
+            if (logRawInputs)
+            {
+                Debug.Log($"EmotionRayPlasmaBinding[{ResolveDeviceId()}] HeartRate raw={_heartRateValue:F4} seq={frame.SequenceId} ts={frame.TimestampTicksUtc}");
+            }
+        }
+
         private void TryEmit()
         {
             if (!_hasValence || !_hasArousal || _visualizer == null || _mapper == null)
@@ -217,6 +240,20 @@ namespace AmpPortableDataViz.Presentation.Visualization
             var frame = new DataFrame<ArousalValenceSample>(timestamp, _sequenceId++, payload);
 
             RaymarchPlasmaParams parameters = _mapper.Map(in frame);
+
+            float hrNormalized = _hasHeartRate ? Mathf.Clamp01(Mathf.InverseLerp(30f, 200f, _heartRateValue)) : 0f;
+            if (hrNormalized > 0f)
+            {
+                float beatsPerSecond = Mathf.Lerp(30f / 60f, 200f / 60f, hrNormalized);
+                parameters.HaloPulseSpeed = beatsPerSecond * Mathf.PI * 2f;
+                parameters.HaloPulseAmplitude = Mathf.Lerp(0.05f, 1f, hrNormalized);
+            }
+            else
+            {
+                parameters.HaloPulseSpeed = 0f;
+                parameters.HaloPulseAmplitude = 0f;
+            }
+            timestamp = Math.Max(timestamp, _heartRateTimestamp);
             _visualizer.Apply(parameters, timestamp);
 
             if (logResolvedSamples)
@@ -230,7 +267,8 @@ namespace AmpPortableDataViz.Presentation.Visualization
                     $"ColorInner={parameters.ColorInner}, ColorOuter={parameters.ColorOuter}, " +
                     $"BoundsRadius={parameters.BoundsRadius:F3}, StepSize={parameters.StepSize:F4}, PlasmaScale={parameters.PlasmaScale:F3}, WarpStrength={parameters.WarpStrength:F3}, FlowSpeed={parameters.FlowSpeed:F3}, " +
                     $"DensityGain={parameters.DensityGain:F3}, DensityThreshold={parameters.DensityThreshold:F3}, DensityPower={parameters.DensityPower:F3}, " +
-                    $"Absorption={parameters.Absorption:F3}, Falloff={parameters.Falloff:F3}, Emission={parameters.Emission:F3}");
+                    $"Absorption={parameters.Absorption:F3}, Falloff={parameters.Falloff:F3}, Emission={parameters.Emission:F3}, " +
+                    $"HaloPulseSpeed={parameters.HaloPulseSpeed:F3}, HaloPulseAmplitude={parameters.HaloPulseAmplitude:F3}");
             }
         }
 
@@ -250,9 +288,12 @@ namespace AmpPortableDataViz.Presentation.Visualization
         {
             _hasValence = false;
             _hasArousal = false;
+            _hasHeartRate = false;
             _sequenceId = 0;
             _valenceTimestamp = 0;
             _arousalTimestamp = 0;
+            _heartRateTimestamp = 0;
+            _heartRateValue = 0f;
         }
     }
 }

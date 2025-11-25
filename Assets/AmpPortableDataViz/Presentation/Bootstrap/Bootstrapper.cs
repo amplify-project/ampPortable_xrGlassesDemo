@@ -393,7 +393,7 @@ namespace AmpPortableDataViz.Presentation.Bootstrap
                     heartRatePump = CreateRedisPumpForChannel(definition.DeviceId, EmotionChannelKind.HeartRate, definition.HeartRateChannel);
                 }
 
-                if (!TryConfigureEmotionBinding(bindingComponent, valencePump, arousalPump, definition.DeviceId))
+                if (!TryConfigureEmotionBinding(bindingComponent, valencePump, arousalPump, heartRatePump, definition.DeviceId))
                 {
                     Debug.LogWarning($"Bootstrapper: Unable to configure emotion binding on '{instance.name}', skipping visual spawn.");
                     Destroy(instance);
@@ -454,7 +454,7 @@ namespace AmpPortableDataViz.Presentation.Bootstrap
             return target.GetComponentInChildren<EmotionRayPlasmaBinding>();
         }
 
-        private static bool TryConfigureEmotionBinding(Component bindingComponent, RedisDataPump valencePump, RedisDataPump arousalPump, string deviceId)
+        private static bool TryConfigureEmotionBinding(Component bindingComponent, RedisDataPump valencePump, RedisDataPump arousalPump, RedisDataPump heartRatePump, string deviceId)
         {
             if (bindingComponent == null)
             {
@@ -469,7 +469,7 @@ namespace AmpPortableDataViz.Presentation.Bootstrap
 
             if (bindingComponent is EmotionRayPlasmaBinding rayBinding)
             {
-                rayBinding.ConfigureSources(valencePump, arousalPump, deviceId);
+                rayBinding.ConfigureSources(valencePump, arousalPump, heartRatePump, deviceId);
                 return true;
             }
 
