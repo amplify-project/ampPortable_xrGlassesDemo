@@ -10,14 +10,14 @@ namespace AmpPortableDataViz.Core
     public readonly struct ArousalValenceSample
     {
         public readonly string DeviceId;
-        public readonly int ValenceLevel;
-        public readonly int ArousalLevel;
+        public readonly float ValenceLevel;
+        public readonly float ArousalLevel;
 
-        public ArousalValenceSample(string deviceId, int valenceLevel, int arousalLevel)
+        public ArousalValenceSample(string deviceId, float valenceLevel, float arousalLevel)
         {
             DeviceId = deviceId ?? string.Empty;
-            ValenceLevel = Mathf.Clamp(valenceLevel, 0, 2);
-            ArousalLevel = Mathf.Clamp(arousalLevel, 0, 2);
+            ValenceLevel = Mathf.Clamp(valenceLevel, 0f, 2f);
+            ArousalLevel = Mathf.Clamp(arousalLevel, 0f, 2f);
         }
 
         public override string ToString()

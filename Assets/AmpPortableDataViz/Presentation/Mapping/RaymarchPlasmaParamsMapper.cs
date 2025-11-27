@@ -36,7 +36,7 @@ public static class RaymarchPlasmaParamsMapper
             float clampedBpm = Mathf.Clamp(heartRateBpm, 30f, 200f);
             float beatsPerSecond = clampedBpm / 60f;
             haloPulseSpeed = beatsPerSecond * Mathf.PI * 2f;
-            haloPulseAmplitude = Mathf.Lerp(0.05f, 1f, hrNormalized);
+            haloPulseAmplitude = Mathf.Lerp(0.05f, 1.5f, hrNormalized);
         }
 
         // Extract directional weights while keeping the discrete 0/1/2 inputs intact.

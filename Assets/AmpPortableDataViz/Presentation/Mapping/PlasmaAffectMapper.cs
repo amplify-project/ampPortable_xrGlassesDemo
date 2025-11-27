@@ -8,8 +8,16 @@ public static class PlasmaAffectMapper
     /// </summary>
     public static EmotionPlasmaParams BuildParams(int valenceLevel, int arousalLevel)
     {
-        float vNorm = Mathf.Clamp(valenceLevel - 1, -1f, 1f);
-        float aNorm = Mathf.Clamp(arousalLevel - 1, -1f, 1f);
+        return BuildParams((float)valenceLevel, (float)arousalLevel);
+    }
+
+    /// <summary>
+    /// Generates a full set of EmotionPlasma parameters for continuous affective levels in [0, 2].
+    /// </summary>
+    public static EmotionPlasmaParams BuildParams(float valenceLevel, float arousalLevel)
+    {
+        float vNorm = Mathf.Clamp(valenceLevel - 1f, -1f, 1f);
+        float aNorm = Mathf.Clamp(arousalLevel - 1f, -1f, 1f);
 
         // Push colour extremes harder so valence swings feel bolder.
         Color negCol = new Color(1.00f, 0.10f, 0.05f);

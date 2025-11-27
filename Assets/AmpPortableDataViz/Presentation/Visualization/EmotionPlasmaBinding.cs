@@ -21,7 +21,7 @@ namespace AmpPortableDataViz.Presentation.Visualization
             [Range(0f, 1f)] public float LowThreshold;
             [Range(0f, 1f)] public float HighThreshold;
 
-            public int Quantize(float value)
+            public float Map(float value)
             {
                 if (InputIsDiscreteLevels)
                 {
@@ -31,20 +31,7 @@ namespace AmpPortableDataViz.Presentation.Visualization
                 float normalized = Mathf.InverseLerp(InputRange.x, InputRange.y, value);
                 normalized = Mathf.Clamp01(normalized);
 
-                float lower = Mathf.Min(LowThreshold, HighThreshold);
-                float upper = Mathf.Max(LowThreshold, HighThreshold);
-
-                if (normalized <= lower)
-                {
-                    return 0;
-                }
-
-                if (normalized >= upper)
-                {
-                    return 2;
-                }
-
-                return 1;
+                return normalized * 2f;
             }
 
             public static AffectLevelQuantizer CreateValenceDefaults()
@@ -81,6 +68,10 @@ namespace AmpPortableDataViz.Presentation.Visualization
         [SerializeField] private AffectLevelQuantizer valenceQuantizer = AffectLevelQuantizer.CreateValenceDefaults();
         [SerializeField] private AffectLevelQuantizer arousalQuantizer = AffectLevelQuantizer.CreateArousalDefaults();
 
+        [Header("Smoothing")]
+        [SerializeField] private bool enableSmoothing = true;
+        [SerializeField, Range(0.05f, 5f)] private float smoothingDurationSeconds = 1f;
+
         [Header("Diagnostics")]
         [SerializeField] private bool logResolvedSamples;
         [SerializeField] private bool logRawInputs;
@@ -88,6 +79,7 @@ namespace AmpPortableDataViz.Presentation.Visualization
 
         private EmotionPlasmaVisualizer _visualizer;
         private IMapper<ArousalValenceSample, EmotionPlasmaParams> _mapper;
+        private FrameSmoother<EmotionPlasmaParams> _smoother;
 
         private Action<DataFrame<float>> _valenceHandler;
         private Action<DataFrame<float>> _arousalHandler;
@@ -99,17 +91,38 @@ namespace AmpPortableDataViz.Presentation.Visualization
         private long _valenceTimestamp;
         private long _arousalTimestamp;
         private int _sequenceId;
+        private bool _needsApply;
 
         private void Awake()
         {
             _visualizer = GetComponent<EmotionPlasmaVisualizer>();
             _mapper = new ArousalValenceToEmotionPlasmaMapper();
+            _smoother = new FrameSmoother<EmotionPlasmaParams>(LerpParams);
         }
 
         private void OnEnable()
         {
             ResetState();
             AttachSources();
+        }
+
+        private void Update()
+        {
+            if (_visualizer == null || _smoother == null || !_smoother.HasValue)
+            {
+                return;
+            }
+
+            float duration = enableSmoothing ? Mathf.Max(0f, smoothingDurationSeconds) : 0f;
+            _smoother.Step(Time.deltaTime, duration);
+
+            if (!_needsApply && !_smoother.IsInterpolating)
+            {
+                return;
+            }
+
+            _visualizer.Apply(_smoother.Current, _smoother.TargetTimestamp);
+            _needsApply = _smoother.IsInterpolating;
         }
 
         private void OnDisable()
@@ -210,14 +223,14 @@ namespace AmpPortableDataViz.Presentation.Visualization
                 return;
             }
 
-            int valenceLevel = valenceQuantizer.Quantize(_valenceValue);
-            int arousalLevel = arousalQuantizer.Quantize(_arousalValue);
+            float valenceLevel = valenceQuantizer.Map(_valenceValue);
+            float arousalLevel = arousalQuantizer.Map(_arousalValue);
             long timestamp = Math.Max(_valenceTimestamp, _arousalTimestamp);
             var payload = new ArousalValenceSample(ResolveDeviceId(), valenceLevel, arousalLevel);
             var frame = new DataFrame<ArousalValenceSample>(timestamp, _sequenceId++, payload);
 
             EmotionPlasmaParams parameters = _mapper.Map(in frame);
-            _visualizer.Apply(parameters, timestamp);
+            QueueParameters(parameters, timestamp);
 
             if (logResolvedSamples)
             {
@@ -254,6 +267,37 @@ namespace AmpPortableDataViz.Presentation.Visualization
             _sequenceId = 0;
             _valenceTimestamp = 0;
             _arousalTimestamp = 0;
+            _needsApply = false;
+            _smoother?.Reset();
+        }
+
+        private void QueueParameters(in EmotionPlasmaParams parameters, long timestamp)
+        {
+            _smoother ??= new FrameSmoother<EmotionPlasmaParams>(LerpParams);
+            _smoother.SetTarget(parameters, timestamp);
+            _needsApply = true;
+        }
+
+        private static EmotionPlasmaParams LerpParams(EmotionPlasmaParams from, EmotionPlasmaParams to, float t)
+        {
+            return new EmotionPlasmaParams
+            {
+                BaseColor = Color.Lerp(from.BaseColor, to.BaseColor, t),
+                InnerColor = Color.Lerp(from.InnerColor, to.InnerColor, t),
+                OuterColor = Color.Lerp(from.OuterColor, to.OuterColor, t),
+                Brightness = Mathf.Lerp(from.Brightness, to.Brightness, t),
+                Saturation = Mathf.Lerp(from.Saturation, to.Saturation, t),
+                Curvature = Mathf.Lerp(from.Curvature, to.Curvature, t),
+                Asymmetry = Mathf.Lerp(from.Asymmetry, to.Asymmetry, t),
+                SurfaceSharpness = Mathf.Lerp(from.SurfaceSharpness, to.SurfaceSharpness, t),
+                FlowSpeed = Mathf.Lerp(from.FlowSpeed, to.FlowSpeed, t),
+                Turbulence = Mathf.Lerp(from.Turbulence, to.Turbulence, t),
+                PulseFrequency = Mathf.Lerp(from.PulseFrequency, to.PulseFrequency, t),
+                PulseAmplitude = Mathf.Lerp(from.PulseAmplitude, to.PulseAmplitude, t),
+                Smoothness = Mathf.Lerp(from.Smoothness, to.Smoothness, t),
+                NoiseScale = Mathf.Lerp(from.NoiseScale, to.NoiseScale, t),
+                NoiseContrast = Mathf.Lerp(from.NoiseContrast, to.NoiseContrast, t)
+            };
         }
     }
 }

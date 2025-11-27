@@ -39,7 +39,7 @@ Shader "Unlit/PlasmaMass"
 
             #include "UnityCG.cginc"
 
-            #define MAX_STEPS 24
+            #define MAX_STEPS 16
 
             struct appdata
             {
@@ -135,7 +135,7 @@ Shader "Unlit/PlasmaMass"
                 float2 hit;
                 // Enlarge bounds to include torus halo around the sphere.
                 float torusMajor = _BoundsRadius * 1.1;
-                float torusMinorBase = _BoundsRadius * 0.08;
+                float torusMinorBase = _BoundsRadius * 0.04;
                 float pulsePhaseInit = _Time.y * _HaloPulseSpeed;
                 float pulseInit = 1.0 + _HaloPulseAmplitude * sin(pulsePhaseInit);
                 float torusMinorInit = torusMinorBase * saturate(pulseInit);

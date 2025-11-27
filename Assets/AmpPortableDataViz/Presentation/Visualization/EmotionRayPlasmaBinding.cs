@@ -21,7 +21,7 @@ namespace AmpPortableDataViz.Presentation.Visualization
             [Range(0f, 1f)] public float LowThreshold;
             [Range(0f, 1f)] public float HighThreshold;
 
-            public int Quantize(float value)
+            public float Map(float value)
             {
                 if (InputIsDiscreteLevels)
                 {
@@ -31,20 +31,7 @@ namespace AmpPortableDataViz.Presentation.Visualization
                 float normalized = Mathf.InverseLerp(InputRange.x, InputRange.y, value);
                 normalized = Mathf.Clamp01(normalized);
 
-                float lower = Mathf.Min(LowThreshold, HighThreshold);
-                float upper = Mathf.Max(LowThreshold, HighThreshold);
-
-                if (normalized <= lower)
-                {
-                    return 0;
-                }
-
-                if (normalized >= upper)
-                {
-                    return 2;
-                }
-
-                return 1;
+                return normalized * 2f;
             }
 
             public static AffectLevelQuantizer CreateValenceDefaults()
@@ -82,6 +69,10 @@ namespace AmpPortableDataViz.Presentation.Visualization
         [SerializeField] private AffectLevelQuantizer valenceQuantizer = AffectLevelQuantizer.CreateValenceDefaults();
         [SerializeField] private AffectLevelQuantizer arousalQuantizer = AffectLevelQuantizer.CreateArousalDefaults();
 
+        [Header("Smoothing")]
+        [SerializeField] private bool enableSmoothing = true;
+        [SerializeField, Range(0.05f, 5f)] private float smoothingDurationSeconds = 1f;
+
         [Header("Diagnostics")]
         [SerializeField] private bool logResolvedSamples;
         [SerializeField] private bool logRawInputs;
@@ -89,6 +80,7 @@ namespace AmpPortableDataViz.Presentation.Visualization
 
         private EmotionRayPlasmaVisualizer _visualizer;
         private IMapper<ArousalValenceSample, RaymarchPlasmaParams> _mapper;
+        private FrameSmoother<RaymarchPlasmaParams> _smoother;
 
         private Action<DataFrame<float>> _valenceHandler;
         private Action<DataFrame<float>> _arousalHandler;
@@ -104,17 +96,38 @@ namespace AmpPortableDataViz.Presentation.Visualization
         private long _heartRateTimestamp;
         private int _sequenceId;
         private bool _hasHeartRate;
+        private bool _needsApply;
 
         private void Awake()
         {
             _visualizer = GetComponent<EmotionRayPlasmaVisualizer>();
             _mapper = new ArousalValenceToRaymarchPlasmaMapper();
+            _smoother = new FrameSmoother<RaymarchPlasmaParams>(LerpParams);
         }
 
         private void OnEnable()
         {
             ResetState();
             AttachSources();
+        }
+
+        private void Update()
+        {
+            if (_visualizer == null || _smoother == null || !_smoother.HasValue)
+            {
+                return;
+            }
+
+            float duration = enableSmoothing ? Mathf.Max(0f, smoothingDurationSeconds) : 0f;
+            _smoother.Step(Time.deltaTime, duration);
+
+            if (!_needsApply && !_smoother.IsInterpolating)
+            {
+                return;
+            }
+
+            _visualizer.Apply(_smoother.Current, _smoother.TargetTimestamp);
+            _needsApply = _smoother.IsInterpolating;
         }
 
         private void OnDisable()
@@ -236,8 +249,8 @@ namespace AmpPortableDataViz.Presentation.Visualization
                 return;
             }
 
-            int valenceLevel = valenceQuantizer.Quantize(_valenceValue);
-            int arousalLevel = arousalQuantizer.Quantize(_arousalValue);
+            float valenceLevel = valenceQuantizer.Map(_valenceValue);
+            float arousalLevel = arousalQuantizer.Map(_arousalValue);
             long timestamp = Math.Max(_valenceTimestamp, _arousalTimestamp);
             var payload = new ArousalValenceSample(ResolveDeviceId(), valenceLevel, arousalLevel);
             var frame = new DataFrame<ArousalValenceSample>(timestamp, _sequenceId++, payload);
@@ -258,7 +271,7 @@ namespace AmpPortableDataViz.Presentation.Visualization
                 parameters.HaloPulseAmplitude = 0f;
             }
             timestamp = Math.Max(timestamp, _heartRateTimestamp);
-            _visualizer.Apply(parameters, timestamp);
+            QueueParameters(parameters, timestamp);
 
             if (logResolvedSamples)
             {
@@ -298,6 +311,37 @@ namespace AmpPortableDataViz.Presentation.Visualization
             _arousalTimestamp = 0;
             _heartRateTimestamp = 0;
             _heartRateValue = 0f;
+            _needsApply = false;
+            _smoother?.Reset();
+        }
+
+        private void QueueParameters(in RaymarchPlasmaParams parameters, long timestamp)
+        {
+            _smoother ??= new FrameSmoother<RaymarchPlasmaParams>(LerpParams);
+            _smoother.SetTarget(parameters, timestamp);
+            _needsApply = true;
+        }
+
+        private static RaymarchPlasmaParams LerpParams(RaymarchPlasmaParams from, RaymarchPlasmaParams to, float t)
+        {
+            return new RaymarchPlasmaParams
+            {
+                ColorInner = Color.Lerp(from.ColorInner, to.ColorInner, t),
+                ColorOuter = Color.Lerp(from.ColorOuter, to.ColorOuter, t),
+                BoundsRadius = Mathf.Lerp(from.BoundsRadius, to.BoundsRadius, t),
+                StepSize = Mathf.Lerp(from.StepSize, to.StepSize, t),
+                PlasmaScale = Mathf.Lerp(from.PlasmaScale, to.PlasmaScale, t),
+                WarpStrength = Mathf.Lerp(from.WarpStrength, to.WarpStrength, t),
+                FlowSpeed = Mathf.Lerp(from.FlowSpeed, to.FlowSpeed, t),
+                DensityGain = Mathf.Lerp(from.DensityGain, to.DensityGain, t),
+                DensityThreshold = Mathf.Lerp(from.DensityThreshold, to.DensityThreshold, t),
+                DensityPower = Mathf.Lerp(from.DensityPower, to.DensityPower, t),
+                Absorption = Mathf.Lerp(from.Absorption, to.Absorption, t),
+                Falloff = Mathf.Lerp(from.Falloff, to.Falloff, t),
+                Emission = Mathf.Lerp(from.Emission, to.Emission, t),
+                HaloPulseSpeed = Mathf.Lerp(from.HaloPulseSpeed, to.HaloPulseSpeed, t),
+                HaloPulseAmplitude = Mathf.Lerp(from.HaloPulseAmplitude, to.HaloPulseAmplitude, t)
+            };
         }
     }
 }
