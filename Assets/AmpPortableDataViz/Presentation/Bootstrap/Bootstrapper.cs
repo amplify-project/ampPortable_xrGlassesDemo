@@ -127,6 +127,27 @@ namespace AmpPortableDataViz.Presentation.Bootstrap
             _initializationRoutine = StartCoroutine(BeginSession());
         }
 
+        public void BeginAfterEndpoint()
+        {
+            var settings = RedisRuntimeSettings.Load();
+            RedisHost = settings.Host;
+            RedisPort = settings.Port;
+
+            ApplySignalConfiguration();
+
+            if (!ShouldInitializeSessionController())
+            {
+                return;
+            }
+
+            if (_initializationRoutine != null)
+            {
+                StopCoroutine(_initializationRoutine);
+            }
+
+            _initializationRoutine = StartCoroutine(BeginSession());
+        }
+
         private void OnDisable()
         {
             if (RedisSource != null)
