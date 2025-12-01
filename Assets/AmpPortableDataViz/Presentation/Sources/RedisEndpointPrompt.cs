@@ -16,10 +16,14 @@ namespace AmpPortableDataViz.Presentation.Sources
         [SerializeField] private TMP_InputField portInput;
         [SerializeField] private Button confirmButton;
         [SerializeField] private GameObject rootPanel;
+        [SerializeField] private bool useTouchScreenKeyboard = true;
 
         [Header("Events")]
         public UnityEvent OnEndpointReady = new UnityEvent();
         public UnityEvent<string> OnValidationError = new UnityEvent<string>();
+
+        private TouchScreenKeyboard _keyboard;
+        private TMP_InputField _activeInput;
 
         private void Awake()
         {
@@ -29,6 +33,16 @@ namespace AmpPortableDataViz.Presentation.Sources
             {
                 confirmButton.onClick.AddListener(HandleConfirm);
             }
+
+            if (hostInput != null)
+            {
+                hostInput.onSelect.AddListener(_ => TryOpenKeyboard(hostInput));
+            }
+
+            if (portInput != null)
+            {
+                portInput.onSelect.AddListener(_ => TryOpenKeyboard(portInput));
+            }
         }
 
         private void OnDestroy()
@@ -36,6 +50,16 @@ namespace AmpPortableDataViz.Presentation.Sources
             if (confirmButton != null)
             {
                 confirmButton.onClick.RemoveListener(HandleConfirm);
+            }
+
+            if (hostInput != null)
+            {
+                hostInput.onSelect.RemoveListener(_ => TryOpenKeyboard(hostInput));
+            }
+
+            if (portInput != null)
+            {
+                portInput.onSelect.RemoveListener(_ => TryOpenKeyboard(portInput));
             }
         }
 
@@ -78,6 +102,8 @@ namespace AmpPortableDataViz.Presentation.Sources
             {
                 gameObject.SetActive(false);
             }
+
+            CloseKeyboard();
         }
 
         private bool Validate(string hostValue, string portText, out int portValue)
@@ -103,6 +129,42 @@ namespace AmpPortableDataViz.Presentation.Sources
         {
             Debug.LogWarning($"RedisEndpointPrompt: {message}");
             OnValidationError?.Invoke(message);
+        }
+
+        private void Update()
+        {
+            if (_keyboard == null || _activeInput == null)
+            {
+                return;
+            }
+
+            if (_keyboard.status == TouchScreenKeyboard.Status.Canceled ||
+                _keyboard.status == TouchScreenKeyboard.Status.Done ||
+                !_keyboard.active)
+            {
+                CloseKeyboard();
+                return;
+            }
+
+            _activeInput.text = _keyboard.text;
+        }
+
+        private void TryOpenKeyboard(TMP_InputField target)
+        {
+            if (!useTouchScreenKeyboard || target == null)
+            {
+                return;
+            }
+
+            // Only supported on mobile platforms; on others this is a no-op.
+            _activeInput = target;
+            _keyboard = TouchScreenKeyboard.Open(target.text, TouchScreenKeyboardType.Default, false, false, false, false, target.placeholder != null ? target.placeholder.GetComponent<TMP_Text>()?.text : string.Empty);
+        }
+
+        private void CloseKeyboard()
+        {
+            _keyboard = null;
+            _activeInput = null;
         }
     }
 }

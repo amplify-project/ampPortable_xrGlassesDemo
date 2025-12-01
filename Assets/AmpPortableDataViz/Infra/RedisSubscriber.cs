@@ -148,9 +148,11 @@ public static class RedisSubscriber
         {
             EndPoints = { $"{_host}:{_port}" },
             ConnectTimeout = 5000,
-            SyncTimeout = 5000
+            SyncTimeout = 5000,
+            AbortOnConnectFail = false
         };
 
+        Debug.Log($"Connecting to Redis at {_host}:{_port}...");
         _redis = await ConnectionMultiplexer.ConnectAsync(config);
         _subscriber = _redis.GetSubscriber();
         Debug.Log("Connected to Redis.");
@@ -160,12 +162,14 @@ public static class RedisSubscriber
     {
         if (_isInitialized)
         {
-            if (!string.Equals(_host, host, StringComparison.OrdinalIgnoreCase) || _port != port)
+            bool sameEndpoint = string.Equals(_host, host, StringComparison.OrdinalIgnoreCase) && _port == port;
+            if (sameEndpoint)
             {
-                throw new InvalidOperationException($"Redis subscriber already connected to {_host}:{_port}. Requested {host}:{port}.");
+                return;
             }
 
-            return;
+            // Host changed; tear down and reconnect.
+            await CleanupInternalAsync();
         }
 
         _host = host;

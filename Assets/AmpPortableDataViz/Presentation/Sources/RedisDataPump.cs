@@ -163,6 +163,12 @@ namespace AmpPortableDataViz.Presentation.Sources
 
         public void ConfigureConnection(string host, int port, string channel)
         {
+            if (string.IsNullOrWhiteSpace(host))
+            {
+                Debug.LogWarning($"RedisDataPump[{SourceId}] cannot configure connection because host is empty.");
+                return;
+            }
+
             redisHost = host;
             redisPort = port;
             redisChannel = channel;
@@ -180,6 +186,12 @@ namespace AmpPortableDataViz.Presentation.Sources
         {
             if (_isConnected || _connectionInProgress)
             {
+                return;
+            }
+
+            if (string.IsNullOrWhiteSpace(redisHost))
+            {
+                Debug.LogWarning($"RedisDataPump[{SourceId}] cannot start because redisHost is empty.");
                 return;
             }
 
@@ -294,6 +306,12 @@ namespace AmpPortableDataViz.Presentation.Sources
 
         public void ConfigureEmotionChannel(string host, int port, EmotionChannelKind channelKind, string? deviceId = null)
         {
+            if (string.IsNullOrWhiteSpace(host))
+            {
+                Debug.LogWarning($"RedisDataPump[{SourceId}] cannot configure emotion channel because host is empty.");
+                return;
+            }
+
             redisHost = host;
             redisPort = port;
             useEmotionChannelTemplate = true;

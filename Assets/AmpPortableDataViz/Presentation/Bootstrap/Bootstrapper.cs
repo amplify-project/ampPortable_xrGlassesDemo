@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using AmpPortableDataViz.Application;
 using AmpPortableDataViz.Core;
 using AmpPortableDataViz.Infra;
@@ -135,14 +136,15 @@ namespace AmpPortableDataViz.Presentation.Bootstrap
 
             ApplySignalConfiguration();
 
-            if (!ShouldInitializeSessionController())
-            {
-                return;
-            }
-
             if (_initializationRoutine != null)
             {
                 StopCoroutine(_initializationRoutine);
+                _initializationRoutine = null;
+            }
+
+            if (!ShouldInitializeSessionController())
+            {
+                return;
             }
 
             _initializationRoutine = StartCoroutine(BeginSession());
@@ -269,11 +271,13 @@ namespace AmpPortableDataViz.Presentation.Bootstrap
                     }
                     break;
                 case SignalSourceType.Redis:
-                    if (RedisSource != null && RedisSource.enabled)
+                    // If we're auto-spawning per-device emotion visuals, skip spawning the primary Redis visual to avoid duplicates.
+                    bool shouldBindPrimaryRedis = !AutoSpawnEmotionVisualsFromChannels;
+                    if (shouldBindPrimaryRedis && RedisSource != null && RedisSource.enabled)
                     {
                         _sessionController.BindExternalSignalSource(RedisSource, _floatToParamsMapper);
                     }
-                    else
+                    else if (shouldBindPrimaryRedis)
                     {
                         Debug.LogWarning("Bootstrapper: Remote server set to Redis but RedisDataPump not found.");
                     }
@@ -295,6 +299,19 @@ namespace AmpPortableDataViz.Presentation.Bootstrap
 
         private void ApplySignalConfiguration()
         {
+            // If the inspector host is blank, fall back to the persisted runtime settings so we never configure an empty endpoint.
+            if (string.IsNullOrWhiteSpace(RedisHost))
+            {
+                var runtimeSettings = RedisRuntimeSettings.Load();
+                if (!string.IsNullOrWhiteSpace(runtimeSettings.Host))
+                {
+                    RedisHost = runtimeSettings.Host;
+                    RedisPort = runtimeSettings.Port;
+                    Debug.Log($"Bootstrapper: Loaded Redis endpoint from runtime settings -> {RedisHost}:{RedisPort}");
+                }
+            }
+
+            bool hasRedisEndpoint = !string.IsNullOrWhiteSpace(RedisHost);
             bool useSine = ActiveSignalSource == SignalSourceType.Sine;
             bool useRedis = ActiveSignalSource == SignalSourceType.Redis;
             bool useLiveKit = ActiveSignalSource == SignalSourceType.LiveKit;
@@ -307,13 +324,30 @@ namespace AmpPortableDataViz.Presentation.Bootstrap
             var redisChannels = GetRedisChannels();
             var primaryRedisChannel = redisChannels[0];
 
-            if (RedisSource != null)
+            if (useRedis && !hasRedisEndpoint)
             {
+                Debug.LogWarning("Bootstrapper: Redis host is empty; skipping Redis configuration. Enter a host via the endpoint prompt.");
+                if (RedisSource != null)
+                {
+                    RedisSource.enabled = false;
+                }
+
+                if (RedisManager != null)
+                {
+                    RedisManager.enabled = false;
+                }
+
+                ClearEmotionDeviceVisuals();
+            }
+
+            if (RedisSource != null && hasRedisEndpoint)
+            {
+                Debug.Log($"Bootstrapper: Configuring RedisSource for {RedisHost}:{RedisPort} ({primaryRedisChannel})");
                 RedisSource.ConfigureConnection(RedisHost, RedisPort, primaryRedisChannel);
                 RedisSource.enabled = useRedis;
             }
 
-            if (RedisManager != null)
+            if (RedisManager != null && hasRedisEndpoint)
             {
                 RedisManager.SetEmotionDeviceIds(EmotionDeviceIds);
                 RedisManager.Configure(RedisHost, RedisPort, redisChannels);
@@ -329,7 +363,7 @@ namespace AmpPortableDataViz.Presentation.Bootstrap
                 LiveKitSource.enabled = useLiveKit;
             }
 
-            if (useRedis && AutoSpawnEmotionVisualsFromChannels)
+            if (useRedis && hasRedisEndpoint && AutoSpawnEmotionVisualsFromChannels)
             {
                 EnsureEmotionDeviceVisuals(redisChannels);
             }
@@ -383,6 +417,7 @@ namespace AmpPortableDataViz.Presentation.Bootstrap
             }
 
             var deviceDefinitions = BuildDeviceChannelDefinitions(redisChannels);
+            deviceDefinitions = FilterToConfiguredDevices(deviceDefinitions, EmotionDeviceIds);
             ClearEmotionDeviceVisuals();
 
             if (deviceDefinitions.Count == 0)
@@ -390,6 +425,8 @@ namespace AmpPortableDataViz.Presentation.Bootstrap
                 Debug.LogWarning("Bootstrapper: No device-specific valence/arousal channels were found.");
                 return;
             }
+
+            Debug.Log($"Bootstrapper: Spawning emotion visuals for {deviceDefinitions.Count} devices: {string.Join(", ", deviceDefinitions.Select(d => d.DeviceId))}");
 
             bool hasCustomParent = EmotionVisualParent != null;
             int deviceIndex = 0;
@@ -613,6 +650,31 @@ namespace AmpPortableDataViz.Presentation.Bootstrap
             }
 
             return ordered;
+        }
+
+        private static List<DeviceChannelDefinition> FilterToConfiguredDevices(IEnumerable<DeviceChannelDefinition> definitions, IEnumerable<string> configuredDeviceIds)
+        {
+            if (configuredDeviceIds == null)
+            {
+                return new List<DeviceChannelDefinition>(definitions);
+            }
+
+            var allowed = new HashSet<string>(configuredDeviceIds.Where(id => !string.IsNullOrWhiteSpace(id)).Select(id => id.Trim()), StringComparer.OrdinalIgnoreCase);
+            if (allowed.Count == 0)
+            {
+                return new List<DeviceChannelDefinition>(definitions);
+            }
+
+            var filtered = new List<DeviceChannelDefinition>();
+            foreach (var definition in definitions)
+            {
+                if (!string.IsNullOrWhiteSpace(definition.DeviceId) && allowed.Contains(definition.DeviceId))
+                {
+                    filtered.Add(definition);
+                }
+            }
+
+            return filtered;
         }
 
         private static bool TryParseDeviceChannel(string channelName, out string deviceId, out EmotionChannelKind channelKind)
