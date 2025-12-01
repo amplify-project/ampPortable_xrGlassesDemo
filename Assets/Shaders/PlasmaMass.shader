@@ -19,7 +19,7 @@ Shader "Unlit/PlasmaMass"
         _DensityPower ("Density Power", Float) = 1.3
         _Absorption ("Absorption", Range(0.05, 2.5)) = 0.8
         _Falloff ("Edge Falloff", Range(0.25, 1.5)) = 0.8
-        _Emission ("Emission Strength", Range(0.5, 6.0)) = 2.5
+        _Emission ("Emission Strength", Range(0.5, 10.0)) = 2.5
         _HaloPulseSpeed ("Halo Pulse Speed", Range(0.0, 10.0)) = 0.0
         _HaloPulseAmplitude ("Halo Pulse Amplitude", Range(0.0, 2.0)) = 0.0
     }
@@ -95,9 +95,21 @@ Shader "Unlit/PlasmaMass"
                 return density;
             }
 
-            float3 EvaluateColor(float density)
+            float3 EvaluateColor(float density, float rim)
             {
-                return lerp(_ColorOuter.rgb, _ColorInner.rgb, saturate(density)) * _Emission;
+                // Bias inner vs outer hues with a visible gradient while forcing a very bright output.
+                float core = smoothstep(0.2, 0.9, density);
+                float edge = saturate(rim);
+                float blend = saturate(core * (1.0 - edge * 0.35) + (1.0 - edge) * 0.25);
+
+                float3 vividInner = lerp(_ColorInner.rgb, float3(1.0, 0.95, 0.9), 0.2);
+                float3 vividOuter = lerp(_ColorOuter.rgb, float3(0.9, 0.97, 1.0), 0.1);
+                float3 baseColor = lerp(vividOuter, vividInner, blend);
+
+                const float minEmission = 10.0; // Keep plasma extremely bright regardless of incoming values.
+                float brightness = max(_Emission * 3.0, minEmission);
+                float punch = 1.3 + density * 2.2 + (1.0 - rim) * 1.1;
+                return baseColor * (brightness * punch);
             }
 
             bool RaySphere(float3 ro, float3 rd, float radius, out float2 hit)
@@ -179,7 +191,7 @@ Shader "Unlit/PlasmaMass"
                         if (density > 1e-4)
                         {
                             float absorb = saturate(1.0 - exp(-density * _Absorption * _StepSize));
-                            float3 sampleColor = EvaluateColor(density);
+                            float3 sampleColor = EvaluateColor(density, rim);
                             accum += transmittance * absorb * sampleColor;
                             transmittance *= (1.0 - absorb);
                         }

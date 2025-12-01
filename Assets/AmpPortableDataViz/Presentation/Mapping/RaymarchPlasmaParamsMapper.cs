@@ -98,7 +98,7 @@ public static class RaymarchPlasmaParamsMapper
             Mathf.Lerp(3.5f, 6.0f, arousalBlend) +   // much brighter floor at low arousal
             1.2f * arousalNeg +                      // extra lift when arousal is low
             0.6f * valenceSigned;
-        emission = Mathf.Clamp(emission, 3.0f, 7.0f);
+        emission = Mathf.Clamp(emission, 3.0f, 10.0f);
 
         // ----------------------------------------------------------
         // 3. MOVEMENT & TURBULENCE

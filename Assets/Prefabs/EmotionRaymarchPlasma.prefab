@@ -156,6 +156,8 @@ MonoBehaviour:
     InputRange: {x: 0, y: 2}
     LowThreshold: 0.35
     HighThreshold: 0.65
+  enableSmoothing: 1
+  smoothingDurationSeconds: 1
   logResolvedSamples: 0
   logRawInputs: 0
   logShaderParameters: 0

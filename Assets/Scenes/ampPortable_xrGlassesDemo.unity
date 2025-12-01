@@ -4789,6 +4789,7 @@ MonoBehaviour:
   RedisPort: 6379
   RedisChannel: engagement_score
   RedisChannels: []
+  RequireRedisEndpointConfirmation: 1
   IncludeEmotionChannels: 1
   EmotionDeviceIds:
   - MD-V5-0000334
