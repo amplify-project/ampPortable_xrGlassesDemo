@@ -49,6 +49,8 @@ namespace AmpPortableDataViz.Presentation.Bootstrap
         public int RedisPort = 6379;
         public string RedisChannel = RedisEmotionChannels.BroadcastChannel;
         public string[] RedisChannels = Array.Empty<string>();
+        [Header("Redis Prompt")]
+        public bool RequireRedisEndpointConfirmation = true;
 
         [Header("Emotion Channel Settings")]
         public bool IncludeEmotionChannels = true;
@@ -95,9 +97,11 @@ namespace AmpPortableDataViz.Presentation.Bootstrap
         private FloatToSimpleParams _floatToParamsMapper;
         private Coroutine _initializationRoutine;
         private readonly List<EmotionDeviceInstance> _emotionDeviceInstances = new List<EmotionDeviceInstance>();
+        private bool _redisEndpointReady;
 
         private void Awake()
         {
+            _redisEndpointReady = !RequireRedisEndpointConfirmation;
             EnsureAnchorRegistry();
             EnsureSources();
             EnsureVisualPrefab();
@@ -133,6 +137,7 @@ namespace AmpPortableDataViz.Presentation.Bootstrap
             var settings = RedisRuntimeSettings.Load();
             RedisHost = settings.Host;
             RedisPort = settings.Port;
+            _redisEndpointReady = true;
 
             ApplySignalConfiguration();
 
@@ -327,27 +332,25 @@ namespace AmpPortableDataViz.Presentation.Bootstrap
             if (useRedis && !hasRedisEndpoint)
             {
                 Debug.LogWarning("Bootstrapper: Redis host is empty; skipping Redis configuration. Enter a host via the endpoint prompt.");
-                if (RedisSource != null)
-                {
-                    RedisSource.enabled = false;
-                }
-
-                if (RedisManager != null)
-                {
-                    RedisManager.enabled = false;
-                }
-
-                ClearEmotionDeviceVisuals();
+                DisableRedisComponents();
             }
 
-            if (RedisSource != null && hasRedisEndpoint)
+            if (useRedis && RequireRedisEndpointConfirmation && !_redisEndpointReady)
+            {
+                Debug.Log("Bootstrapper: Waiting for Redis endpoint confirmation before connecting.");
+                DisableRedisComponents();
+            }
+
+            bool redisReady = !RequireRedisEndpointConfirmation || _redisEndpointReady;
+
+            if (RedisSource != null && hasRedisEndpoint && redisReady)
             {
                 Debug.Log($"Bootstrapper: Configuring RedisSource for {RedisHost}:{RedisPort} ({primaryRedisChannel})");
                 RedisSource.ConfigureConnection(RedisHost, RedisPort, primaryRedisChannel);
                 RedisSource.enabled = useRedis;
             }
 
-            if (RedisManager != null && hasRedisEndpoint)
+            if (RedisManager != null && hasRedisEndpoint && redisReady)
             {
                 RedisManager.SetEmotionDeviceIds(EmotionDeviceIds);
                 RedisManager.Configure(RedisHost, RedisPort, redisChannels);
@@ -363,7 +366,7 @@ namespace AmpPortableDataViz.Presentation.Bootstrap
                 LiveKitSource.enabled = useLiveKit;
             }
 
-            if (useRedis && hasRedisEndpoint && AutoSpawnEmotionVisualsFromChannels)
+            if (useRedis && hasRedisEndpoint && redisReady && AutoSpawnEmotionVisualsFromChannels)
             {
                 EnsureEmotionDeviceVisuals(redisChannels);
             }
@@ -576,6 +579,21 @@ namespace AmpPortableDataViz.Presentation.Bootstrap
             }
 
             _emotionDeviceInstances.Clear();
+        }
+
+        private void DisableRedisComponents()
+        {
+            if (RedisSource != null)
+            {
+                RedisSource.enabled = false;
+            }
+
+            if (RedisManager != null)
+            {
+                RedisManager.enabled = false;
+            }
+
+            ClearEmotionDeviceVisuals();
         }
 
         private void PositionEmotionVisual(Transform target, int index, bool useLocalSpace)
