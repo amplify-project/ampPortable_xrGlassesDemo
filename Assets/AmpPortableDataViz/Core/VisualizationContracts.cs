@@ -17,13 +17,13 @@ namespace AmpPortableDataViz.Core
     /// </summary>
     public struct GraphParams
     {
-        float xMin;
-        float xMax;
-        float yMin;
-        float yMax;
-        Color lineColor;
-        float lineWidth;
-        Vector2[] dataPoints;
+        public float xMin;
+        public float xMax;
+        public float yMin;
+        public float yMax;
+        public Color lineColor;
+        public float lineWidth;
+        public Vector2[] dataPoints;
     }
 }
 
