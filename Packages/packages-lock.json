@@ -7,18 +7,6 @@
       "dependencies": {},
       "hash": "a7c6b49a0141a5bff9b1983e38137522ef61977d"
     },
-    "com.unity.ai.assistant": {
-      "version": "1.0.0-pre.12",
-      "depth": 0,
-      "source": "registry",
-      "dependencies": {
-        "com.unity.ai.toolkit": "1.0.0-pre.18",
-        "com.unity.serialization": "3.1.1",
-        "com.unity.nuget.newtonsoft-json": "3.2.1",
-        "com.unity.modules.unitywebrequest": "1.0.0"
-      },
-      "url": "https://packages.unity.com"
-    },
     "com.unity.ai.generators": {
       "version": "1.0.0-pre.20",
       "depth": 0,
@@ -219,16 +207,6 @@
       "depth": 2,
       "source": "registry",
       "dependencies": {},
-      "url": "https://packages.unity.com"
-    },
-    "com.unity.serialization": {
-      "version": "3.1.2",
-      "depth": 1,
-      "source": "registry",
-      "dependencies": {
-        "com.unity.burst": "1.7.2",
-        "com.unity.collections": "2.4.2"
-      },
       "url": "https://packages.unity.com"
     },
     "com.unity.shadergraph": {
