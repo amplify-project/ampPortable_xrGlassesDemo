@@ -8,7 +8,7 @@ using UnityEngine;
 namespace AmpPortableDataViz.Presentation.Visualization
 {
     /// <summary>
-    /// Binds Redis float streams to graph line renderers (heart rate, valence, arousal).
+    /// Binds a Redis float stream to a graph line renderer.
     /// </summary>
     [DisallowMultipleComponent]
     public sealed class GraphBinding : MonoBehaviour
@@ -35,28 +35,12 @@ namespace AmpPortableDataViz.Presentation.Visualization
             }
         }
 
-        [Header("Streams")]
-        [SerializeField] private StreamBinding heartRate = new StreamBinding
+        [Header("Stream")]
+        [SerializeField] private StreamBinding stream = new StreamBinding
         {
-            Label = "Heart Rate",
-            YRange = new Vector2(30f, 200f),
-            LineColor = new Color(1f, 0.3f, 0.6f),
-            LineWidth = 0.01f
-        };
-
-        [SerializeField] private StreamBinding valence = new StreamBinding
-        {
-            Label = "Valence",
-            YRange = new Vector2(0f, 2f),
-            LineColor = new Color(0.25f, 0.9f, 1f),
-            LineWidth = 0.01f
-        };
-
-        [SerializeField] private StreamBinding arousal = new StreamBinding
-        {
-            Label = "Arousal",
-            YRange = new Vector2(0f, 2f),
-            LineColor = new Color(1f, 0.8f, 0.2f),
+            Label = "Graph Stream",
+            YRange = new Vector2(0f, 1f),
+            LineColor = Color.white,
             LineWidth = 0.01f
         };
 
@@ -64,29 +48,20 @@ namespace AmpPortableDataViz.Presentation.Visualization
         [SerializeField] private LayoutMode layoutMode = LayoutMode.Overlay;
         [SerializeField] private Vector3 overlayLocalPosition = Vector3.zero;
         [SerializeField] private Vector3 overlayLocalScale = Vector3.one;
-        [SerializeField] private Vector3 stackedBaseLocalPosition = Vector3.zero;
-        [SerializeField] private float stackedVerticalSpacing = 0.6f;
-        [SerializeField] private Vector3 stackedLocalScale = new Vector3(1f, 0.35f, 1f);
+        [SerializeField] private Vector3 stackedLocalPosition = Vector3.zero;
+        [SerializeField] private Vector3 stackedLocalScale = Vector3.one;
 
         [Header("Window")]
         [SerializeField, Range(0f, 120f)] private float windowSeconds = 10f;
         [SerializeField, Range(16, 4096)] private int maxSamples = 512;
 
-        private readonly List<Vector2> _heartRateSamples = new List<Vector2>();
-        private readonly List<Vector2> _valenceSamples = new List<Vector2>();
-        private readonly List<Vector2> _arousalSamples = new List<Vector2>();
+        private readonly List<Vector2> _samples = new List<Vector2>();
 
-        private GraphSeriesToGraphParamsMapper _heartRateMapper;
-        private GraphSeriesToGraphParamsMapper _valenceMapper;
-        private GraphSeriesToGraphParamsMapper _arousalMapper;
+        private GraphSeriesToGraphParamsMapper _mapper;
 
-        private Action<DataFrame<float>> _heartRateHandler;
-        private Action<DataFrame<float>> _valenceHandler;
-        private Action<DataFrame<float>> _arousalHandler;
+        private Action<DataFrame<float>> _handler;
 
-        private int _heartRateSequenceId;
-        private int _valenceSequenceId;
-        private int _arousalSequenceId;
+        private int _sequenceId;
 
         private long _startTimestampTicks;
         private float _latestXSeconds;
@@ -103,7 +78,7 @@ namespace AmpPortableDataViz.Presentation.Visualization
             EnsureSampleCapacity();
             AttachSources();
             ApplyLayout();
-            WarnIfMissingVisualizers();
+            WarnIfMissingVisualizer();
         }
 
         private void OnDisable()
@@ -119,6 +94,56 @@ namespace AmpPortableDataViz.Presentation.Visualization
             ApplyLayout();
         }
 
+        public void ConfigureSource(
+            RedisDataPump source,
+            GraphVisualizer visualizer = null,
+            string label = null,
+            Vector2? yRangeOverride = null,
+            Color? lineColorOverride = null,
+            float? lineWidthOverride = null)
+        {
+            bool wasEnabled = isActiveAndEnabled;
+            if (wasEnabled)
+            {
+                DetachSources();
+            }
+
+            stream.Source = source;
+            if (visualizer != null)
+            {
+                stream.Visualizer = visualizer;
+            }
+
+            if (!string.IsNullOrWhiteSpace(label))
+            {
+                stream.Label = label.Trim();
+            }
+
+            if (yRangeOverride.HasValue)
+            {
+                stream.YRange = yRangeOverride.Value;
+            }
+
+            if (lineColorOverride.HasValue)
+            {
+                stream.LineColor = lineColorOverride.Value;
+            }
+
+            if (lineWidthOverride.HasValue)
+            {
+                stream.LineWidth = Mathf.Max(0f, lineWidthOverride.Value);
+            }
+
+            UpdateMapperSettings();
+            ApplyLayout();
+
+            if (wasEnabled)
+            {
+                ResetState();
+                AttachSources();
+            }
+        }
+
         public void SetLayoutMode(LayoutMode mode)
         {
             layoutMode = mode;
@@ -129,16 +154,11 @@ namespace AmpPortableDataViz.Presentation.Visualization
         {
             if (layoutMode == LayoutMode.Overlay)
             {
-                SetTransform(heartRate.Visualizer?.transform, overlayLocalPosition, overlayLocalScale);
-                SetTransform(valence.Visualizer?.transform, overlayLocalPosition, overlayLocalScale);
-                SetTransform(arousal.Visualizer?.transform, overlayLocalPosition, overlayLocalScale);
+                SetTransform(stream.Visualizer?.transform, overlayLocalPosition, overlayLocalScale);
                 return;
             }
 
-            var up = Vector3.up * stackedVerticalSpacing;
-            SetTransform(heartRate.Visualizer?.transform, stackedBaseLocalPosition + up, stackedLocalScale);
-            SetTransform(valence.Visualizer?.transform, stackedBaseLocalPosition, stackedLocalScale);
-            SetTransform(arousal.Visualizer?.transform, stackedBaseLocalPosition - up, stackedLocalScale);
+            SetTransform(stream.Visualizer?.transform, stackedLocalPosition, stackedLocalScale);
         }
 
         private static void SetTransform(Transform target, Vector3 localPosition, Vector3 localScale)
@@ -152,33 +172,22 @@ namespace AmpPortableDataViz.Presentation.Visualization
             target.localScale = localScale;
         }
 
-        private void WarnIfMissingVisualizers()
+        private void WarnIfMissingVisualizer()
         {
-            WarnIfMissingVisualizer(heartRate);
-            WarnIfMissingVisualizer(valence);
-            WarnIfMissingVisualizer(arousal);
-        }
-
-        private void WarnIfMissingVisualizer(StreamBinding binding)
-        {
-            if (binding.Visualizer == null)
+            if (stream.Visualizer == null)
             {
-                Debug.LogWarning($"GraphBinding[{name}] missing {binding.ResolveLabel()} GraphVisualizer reference.", this);
+                Debug.LogWarning($"GraphBinding[{name}] missing {stream.ResolveLabel()} GraphVisualizer reference.", this);
             }
         }
 
         private void AttachSources()
         {
-            SubscribeToPump(heartRate, ref _heartRateHandler, OnHeartRateFrame);
-            SubscribeToPump(valence, ref _valenceHandler, OnValenceFrame);
-            SubscribeToPump(arousal, ref _arousalHandler, OnArousalFrame);
+            SubscribeToPump(stream, ref _handler, OnFrame);
         }
 
         private void DetachSources()
         {
-            UnsubscribeFromPump(heartRate, ref _heartRateHandler);
-            UnsubscribeFromPump(valence, ref _valenceHandler);
-            UnsubscribeFromPump(arousal, ref _arousalHandler);
+            UnsubscribeFromPump(stream, ref _handler);
         }
 
         private void SubscribeToPump(StreamBinding binding, ref Action<DataFrame<float>> handler, Action<DataFrame<float>> callback)
@@ -203,22 +212,7 @@ namespace AmpPortableDataViz.Presentation.Visualization
             handler = null;
         }
 
-        private void OnHeartRateFrame(DataFrame<float> frame)
-        {
-            HandleFrame(frame, _heartRateSamples);
-        }
-
-        private void OnValenceFrame(DataFrame<float> frame)
-        {
-            HandleFrame(frame, _valenceSamples);
-        }
-
-        private void OnArousalFrame(DataFrame<float> frame)
-        {
-            HandleFrame(frame, _arousalSamples);
-        }
-
-        private void HandleFrame(DataFrame<float> frame, List<Vector2> samples)
+        private void OnFrame(DataFrame<float> frame)
         {
             if (_startTimestampTicks == 0)
             {
@@ -226,26 +220,24 @@ namespace AmpPortableDataViz.Presentation.Visualization
             }
 
             float xSeconds = (float)((frame.TimestampTicksUtc - _startTimestampTicks) / (double)TimeSpan.TicksPerSecond);
-            samples.Add(new Vector2(xSeconds, frame.Payload));
+            _samples.Add(new Vector2(xSeconds, frame.Payload));
 
             if (xSeconds > _latestXSeconds)
             {
                 _latestXSeconds = xSeconds;
             }
 
-            PruneAllStreams();
-            UpdateAllGraphs(frame.TimestampTicksUtc);
+            PruneSamples();
+            UpdateGraph(frame.TimestampTicksUtc);
         }
 
-        private void UpdateAllGraphs(long timestampTicksUtc)
+        private void UpdateGraph(long timestampTicksUtc)
         {
             float xMax = _latestXSeconds;
             float xMin = windowSeconds > 0f ? Mathf.Max(0f, xMax - windowSeconds) : 0f;
             NormalizeRange(ref xMin, ref xMax);
 
-            ApplyStream(heartRate, _heartRateSamples, _heartRateMapper, ref _heartRateSequenceId, xMin, xMax, timestampTicksUtc);
-            ApplyStream(valence, _valenceSamples, _valenceMapper, ref _valenceSequenceId, xMin, xMax, timestampTicksUtc);
-            ApplyStream(arousal, _arousalSamples, _arousalMapper, ref _arousalSequenceId, xMin, xMax, timestampTicksUtc);
+            ApplyStream(stream, _samples, _mapper, ref _sequenceId, xMin, xMax, timestampTicksUtc);
         }
 
         private void ApplyStream(
@@ -275,19 +267,15 @@ namespace AmpPortableDataViz.Presentation.Visualization
             binding.Visualizer.Apply(parameters, frame.TimestampTicksUtc);
         }
 
-        private void PruneAllStreams()
+        private void PruneSamples()
         {
             if (windowSeconds > 0f)
             {
                 float cutoff = _latestXSeconds - windowSeconds;
-                PruneSamples(_heartRateSamples, cutoff);
-                PruneSamples(_valenceSamples, cutoff);
-                PruneSamples(_arousalSamples, cutoff);
+                PruneSamples(_samples, cutoff);
             }
 
-            TrimSamples(_heartRateSamples);
-            TrimSamples(_valenceSamples);
-            TrimSamples(_arousalSamples);
+            TrimSamples(_samples);
         }
 
         private static void PruneSamples(List<Vector2> samples, float cutoff)
@@ -327,12 +315,8 @@ namespace AmpPortableDataViz.Presentation.Visualization
         {
             _startTimestampTicks = 0;
             _latestXSeconds = 0f;
-            _heartRateSequenceId = 0;
-            _valenceSequenceId = 0;
-            _arousalSequenceId = 0;
-            _heartRateSamples.Clear();
-            _valenceSamples.Clear();
-            _arousalSamples.Clear();
+            _sequenceId = 0;
+            _samples.Clear();
         }
 
         private void EnsureSampleCapacity()
@@ -342,9 +326,7 @@ namespace AmpPortableDataViz.Presentation.Visualization
                 return;
             }
 
-            EnsureCapacity(_heartRateSamples, maxSamples);
-            EnsureCapacity(_valenceSamples, maxSamples);
-            EnsureCapacity(_arousalSamples, maxSamples);
+            EnsureCapacity(_samples, maxSamples);
         }
 
         private static void EnsureCapacity(List<Vector2> samples, int capacity)
@@ -357,26 +339,14 @@ namespace AmpPortableDataViz.Presentation.Visualization
 
         private void EnsureMappers()
         {
-            _heartRateMapper ??= CreateMapper(heartRate);
-            _valenceMapper ??= CreateMapper(valence);
-            _arousalMapper ??= CreateMapper(arousal);
+            _mapper ??= CreateMapper(stream);
         }
 
         private void UpdateMapperSettings()
         {
-            if (_heartRateMapper != null)
+            if (_mapper != null)
             {
-                _heartRateMapper.CurrentSettings = MakeSettings(heartRate);
-            }
-
-            if (_valenceMapper != null)
-            {
-                _valenceMapper.CurrentSettings = MakeSettings(valence);
-            }
-
-            if (_arousalMapper != null)
-            {
-                _arousalMapper.CurrentSettings = MakeSettings(arousal);
+                _mapper.CurrentSettings = MakeSettings(stream);
             }
         }
 
