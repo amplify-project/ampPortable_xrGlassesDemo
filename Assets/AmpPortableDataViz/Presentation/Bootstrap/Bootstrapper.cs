@@ -12,6 +12,7 @@ using AmpPortableDataViz.Presentation.Utility;
 using AmpPortableDataViz.Presentation.Visualization;
 using TMPro;
 using UnityEngine;
+using UnityEngine.XR.Interaction.Toolkit.Interactables;
 
 namespace AmpPortableDataViz.Presentation.Bootstrap
 {
@@ -69,6 +70,35 @@ namespace AmpPortableDataViz.Presentation.Bootstrap
         public float DeviceLabelFontSize = 0.22f;
         public Color DeviceLabelColor = Color.white;
 
+        [Header("Graph Visual Settings")]
+        public bool AutoSpawnGraphVisualsFromChannels = true;
+        public GameObject GraphPrefab;
+        public Transform GraphGroupParent;
+        public Vector3 GraphGroupOriginOffset = Vector3.zero;
+        public Vector3 GraphGroupSpacing = new Vector3(1.6f, 0f, 0.75f);
+        [Min(1)]
+        public int GraphGroupsPerRow = 2;
+
+        [Header("Graph Channel Layout")]
+        public Vector3 GraphValenceOffset = new Vector3(-0.6f, 0f, 0f);
+        public Vector3 GraphArousalOffset = Vector3.zero;
+        public Vector3 GraphHeartRateOffset = new Vector3(0.6f, 0f, 0f);
+
+        [Header("Graph Stream Settings")]
+        public Vector2 GraphValenceRange = new Vector2(0f, 1f);
+        public Vector2 GraphArousalRange = new Vector2(0f, 1f);
+        public Vector2 GraphHeartRateRange = new Vector2(40f, 200f);
+        public Color GraphValenceColor = new Color(0.2f, 0.9f, 0.4f, 1f);
+        public Color GraphArousalColor = new Color(0.95f, 0.65f, 0.15f, 1f);
+        public Color GraphHeartRateColor = new Color(0.95f, 0.2f, 0.2f, 1f);
+        [Range(0.0001f, 0.05f)]
+        public float GraphLineWidth = 0.01f;
+
+        [Header("Graph Group Interaction")]
+        public bool GraphGroupsGrabbable = true;
+        public Vector3 GraphItemBoundsSize = new Vector3(1f, 1f, 0.02f);
+        public Vector3 GraphGroupBoundsPadding = new Vector3(0.05f, 0.05f, 0.05f);
+
         [Header("LiveKit Settings")]
         public string LiveKitTokenEndpoint = "https://cloud-api.livekit.io/api/sandbox/connection-details";
         public string LiveKitSandboxId = "amp-portable-viz-16o67i";
@@ -97,6 +127,7 @@ namespace AmpPortableDataViz.Presentation.Bootstrap
         private FloatToSimpleParams _floatToParamsMapper;
         private Coroutine _initializationRoutine;
         private readonly List<EmotionDeviceInstance> _emotionDeviceInstances = new List<EmotionDeviceInstance>();
+        private readonly List<GraphDeviceGroupInstance> _graphDeviceGroups = new List<GraphDeviceGroupInstance>();
         private bool _redisEndpointReady;
 
         private void Awake()
@@ -180,6 +211,7 @@ namespace AmpPortableDataViz.Presentation.Bootstrap
 
             _sessionController?.Shutdown();
             ClearEmotionDeviceVisuals();
+            ClearGraphDeviceVisuals();
         }
 
         private void OnDestroy()
@@ -187,6 +219,7 @@ namespace AmpPortableDataViz.Presentation.Bootstrap
             _sessionController?.Dispose();
             _sessionController = null;
             ClearEmotionDeviceVisuals();
+            ClearGraphDeviceVisuals();
         }
 
         private void EnsureAnchorRegistry()
@@ -366,13 +399,24 @@ namespace AmpPortableDataViz.Presentation.Bootstrap
                 LiveKitSource.enabled = useLiveKit;
             }
 
-            if (useRedis && hasRedisEndpoint && redisReady && AutoSpawnEmotionVisualsFromChannels)
+            bool shouldSpawnEmotionVisuals = useRedis && hasRedisEndpoint && redisReady && AutoSpawnEmotionVisualsFromChannels;
+            if (shouldSpawnEmotionVisuals)
             {
                 EnsureEmotionDeviceVisuals(redisChannels);
             }
             else
             {
                 ClearEmotionDeviceVisuals();
+            }
+
+            bool shouldSpawnGraphVisuals = useRedis && hasRedisEndpoint && redisReady && AutoSpawnGraphVisualsFromChannels;
+            if (shouldSpawnGraphVisuals)
+            {
+                EnsureGraphDeviceVisuals(redisChannels);
+            }
+            else
+            {
+                ClearGraphDeviceVisuals();
             }
         }
 
@@ -493,6 +537,151 @@ namespace AmpPortableDataViz.Presentation.Bootstrap
             }
         }
 
+        private void EnsureGraphDeviceVisuals(string[] redisChannels)
+        {
+            if (!AutoSpawnGraphVisualsFromChannels)
+            {
+                return;
+            }
+
+            if (GraphPrefab == null)
+            {
+                Debug.LogWarning("Bootstrapper: GraphPrefab is missing, cannot spawn graph instances.");
+                ClearGraphDeviceVisuals();
+                return;
+            }
+
+            if (redisChannels == null || redisChannels.Length == 0)
+            {
+                ClearGraphDeviceVisuals();
+                return;
+            }
+
+            bool hasGraphBinding = GraphPrefab.GetComponentInChildren<GraphBinding>() != null;
+            bool hasGraphVisualizer = GraphPrefab.GetComponentInChildren<GraphVisualizer>() != null;
+            if (!hasGraphBinding || !hasGraphVisualizer)
+            {
+                Debug.LogWarning("Bootstrapper: GraphPrefab must include GraphBinding and GraphVisualizer components.");
+                ClearGraphDeviceVisuals();
+                return;
+            }
+
+            var deviceDefinitions = BuildDeviceChannelDefinitions(redisChannels);
+            deviceDefinitions = FilterToConfiguredDevices(deviceDefinitions, EmotionDeviceIds);
+            ClearGraphDeviceVisuals();
+
+            if (deviceDefinitions.Count == 0)
+            {
+                Debug.LogWarning("Bootstrapper: No device-specific channels were found for graphs.");
+                return;
+            }
+
+            Debug.Log($"Bootstrapper: Spawning graph groups for {deviceDefinitions.Count} devices: {string.Join(", ", deviceDefinitions.Select(d => d.DeviceId))}");
+
+            bool hasCustomParent = GraphGroupParent != null;
+            int deviceIndex = 0;
+            foreach (var definition in deviceDefinitions)
+            {
+                if (string.IsNullOrWhiteSpace(definition.DeviceId))
+                {
+                    Debug.LogWarning("Bootstrapper: Encountered device definition with empty id, skipping graph spawn.");
+                    continue;
+                }
+
+                var groupRoot = new GameObject($"GraphGroup_{definition.DeviceId}");
+                if (hasCustomParent)
+                {
+                    groupRoot.transform.SetParent(GraphGroupParent, false);
+                }
+
+                PositionGraphGroup(groupRoot.transform, deviceIndex, hasCustomParent);
+
+                var offsetsInUse = new List<Vector3>(3);
+                var instance = new GraphDeviceGroupInstance
+                {
+                    DeviceId = definition.DeviceId,
+                    GroupRoot = groupRoot
+                };
+
+                string deviceLabel = FormatDeviceLabel(definition.DeviceId, deviceIndex);
+
+                if (!string.IsNullOrWhiteSpace(definition.ValenceChannel))
+                {
+                    instance.ValenceGraph = SpawnGraphForChannel(
+                        groupRoot.transform,
+                        definition.DeviceId,
+                        EmotionChannelKind.Valence,
+                        definition.ValenceChannel,
+                        GraphValenceOffset,
+                        GraphValenceRange,
+                        GraphValenceColor,
+                        GraphLineWidth,
+                        $"{deviceLabel} - Valence",
+                        out instance.ValencePump);
+                    if (instance.ValenceGraph != null)
+                    {
+                        offsetsInUse.Add(GraphValenceOffset);
+                    }
+                }
+
+                if (!string.IsNullOrWhiteSpace(definition.ArousalChannel))
+                {
+                    instance.ArousalGraph = SpawnGraphForChannel(
+                        groupRoot.transform,
+                        definition.DeviceId,
+                        EmotionChannelKind.Arousal,
+                        definition.ArousalChannel,
+                        GraphArousalOffset,
+                        GraphArousalRange,
+                        GraphArousalColor,
+                        GraphLineWidth,
+                        $"{deviceLabel} - Arousal",
+                        out instance.ArousalPump);
+                    if (instance.ArousalGraph != null)
+                    {
+                        offsetsInUse.Add(GraphArousalOffset);
+                    }
+                }
+
+                if (!string.IsNullOrWhiteSpace(definition.HeartRateChannel))
+                {
+                    instance.HeartRateGraph = SpawnGraphForChannel(
+                        groupRoot.transform,
+                        definition.DeviceId,
+                        EmotionChannelKind.HeartRate,
+                        definition.HeartRateChannel,
+                        GraphHeartRateOffset,
+                        GraphHeartRateRange,
+                        GraphHeartRateColor,
+                        GraphLineWidth,
+                        $"{deviceLabel} - Heart Rate",
+                        out instance.HeartRatePump);
+                    if (instance.HeartRateGraph != null)
+                    {
+                        offsetsInUse.Add(GraphHeartRateOffset);
+                    }
+                }
+
+                if (instance.ValenceGraph == null && instance.ArousalGraph == null && instance.HeartRateGraph == null)
+                {
+                    Debug.LogWarning($"Bootstrapper: No graph channels found for device '{definition.DeviceId}', skipping group spawn.");
+                    Destroy(groupRoot);
+                    if (instance.ValencePump != null) Destroy(instance.ValencePump.gameObject);
+                    if (instance.ArousalPump != null) Destroy(instance.ArousalPump.gameObject);
+                    if (instance.HeartRatePump != null) Destroy(instance.HeartRatePump.gameObject);
+                    continue;
+                }
+
+                if (GraphGroupsGrabbable)
+                {
+                    ConfigureGraphGroupGrab(groupRoot, offsetsInUse);
+                }
+
+                _graphDeviceGroups.Add(instance);
+                deviceIndex++;
+            }
+        }
+
         private RedisDataPump CreateRedisPumpForChannel(string deviceId, EmotionChannelKind channelKind, string channelName)
         {
             var pumpObject = new GameObject($"RedisPump_{deviceId}_{channelKind}");
@@ -581,6 +770,34 @@ namespace AmpPortableDataViz.Presentation.Bootstrap
             _emotionDeviceInstances.Clear();
         }
 
+        private void ClearGraphDeviceVisuals()
+        {
+            if (_graphDeviceGroups.Count == 0)
+            {
+                return;
+            }
+
+            foreach (var instance in _graphDeviceGroups)
+            {
+                if (instance.GroupRoot != null)
+                {
+                    Destroy(instance.GroupRoot);
+                }
+                else
+                {
+                    if (instance.ValenceGraph != null) Destroy(instance.ValenceGraph);
+                    if (instance.ArousalGraph != null) Destroy(instance.ArousalGraph);
+                    if (instance.HeartRateGraph != null) Destroy(instance.HeartRateGraph);
+                }
+
+                if (instance.ValencePump != null) Destroy(instance.ValencePump.gameObject);
+                if (instance.ArousalPump != null) Destroy(instance.ArousalPump.gameObject);
+                if (instance.HeartRatePump != null) Destroy(instance.HeartRatePump.gameObject);
+            }
+
+            _graphDeviceGroups.Clear();
+        }
+
         private void DisableRedisComponents()
         {
             if (RedisSource != null)
@@ -594,6 +811,7 @@ namespace AmpPortableDataViz.Presentation.Bootstrap
             }
 
             ClearEmotionDeviceVisuals();
+            ClearGraphDeviceVisuals();
         }
 
         private void PositionEmotionVisual(Transform target, int index, bool useLocalSpace)
@@ -622,6 +840,155 @@ namespace AmpPortableDataViz.Presentation.Bootstrap
                 target.position = AnchorPosition + offset;
                 target.rotation = Quaternion.Euler(AnchorRotationEuler);
             }
+        }
+
+        private void PositionGraphGroup(Transform target, int index, bool useLocalSpace)
+        {
+            if (target == null)
+            {
+                return;
+            }
+
+            int perRow = Mathf.Max(1, GraphGroupsPerRow);
+            int row = index / perRow;
+            int column = index % perRow;
+
+            Vector3 offset = GraphGroupOriginOffset + new Vector3(
+                column * GraphGroupSpacing.x,
+                row * GraphGroupSpacing.y,
+                row * GraphGroupSpacing.z);
+
+            if (useLocalSpace)
+            {
+                target.localPosition = offset;
+                target.localRotation = Quaternion.identity;
+            }
+            else
+            {
+                target.position = AnchorPosition + offset;
+                target.rotation = Quaternion.Euler(AnchorRotationEuler);
+            }
+        }
+
+        private GameObject SpawnGraphForChannel(
+            Transform parent,
+            string deviceId,
+            EmotionChannelKind channelKind,
+            string channelName,
+            Vector3 localOffset,
+            Vector2 yRange,
+            Color lineColor,
+            float lineWidth,
+            string label,
+            out RedisDataPump pump)
+        {
+            pump = null;
+
+            if (GraphPrefab == null || parent == null || string.IsNullOrWhiteSpace(channelName))
+            {
+                return null;
+            }
+
+            var instance = Instantiate(GraphPrefab, parent);
+            instance.name = $"{GraphPrefab.name}_{deviceId}_{channelKind}";
+            instance.transform.localPosition = localOffset;
+            instance.transform.localRotation = Quaternion.identity;
+            instance.transform.localScale = Vector3.one;
+
+            var binding = instance.GetComponentInChildren<GraphBinding>();
+            var visualizer = instance.GetComponentInChildren<GraphVisualizer>();
+
+            if (binding == null || visualizer == null)
+            {
+                Debug.LogWarning($"Bootstrapper: GraphPrefab instance missing GraphBinding or GraphVisualizer for {deviceId} {channelKind}.");
+                Destroy(instance);
+                return null;
+            }
+
+            var manualDriver = instance.GetComponentInChildren<GraphManualDriver>();
+            if (manualDriver != null)
+            {
+                manualDriver.enabled = false;
+            }
+
+            pump = CreateRedisPumpForChannel(deviceId, channelKind, channelName);
+            binding.enabled = true;
+            binding.ConfigureSource(pump, visualizer, label, yRange, lineColor, lineWidth);
+            return instance;
+        }
+
+        private void ConfigureGraphGroupGrab(GameObject groupRoot, IReadOnlyList<Vector3> channelOffsets)
+        {
+            if (groupRoot == null)
+            {
+                return;
+            }
+
+            var rigidbody = groupRoot.GetComponent<Rigidbody>();
+            if (rigidbody == null)
+            {
+                rigidbody = groupRoot.AddComponent<Rigidbody>();
+            }
+
+            rigidbody.useGravity = false;
+            rigidbody.isKinematic = true;
+
+            var collider = groupRoot.GetComponent<BoxCollider>();
+            if (collider == null)
+            {
+                collider = groupRoot.AddComponent<BoxCollider>();
+            }
+
+            if (TryCalculateGraphGroupBounds(channelOffsets, out var center, out var size))
+            {
+                collider.center = center;
+                collider.size = size;
+            }
+
+            var grab = groupRoot.GetComponent<XRGrabInteractable>();
+            if (grab == null)
+            {
+                grab = groupRoot.AddComponent<XRGrabInteractable>();
+            }
+
+            if (grab.colliders != null)
+            {
+                grab.colliders.Clear();
+                grab.colliders.Add(collider);
+            }
+        }
+
+        private bool TryCalculateGraphGroupBounds(IReadOnlyList<Vector3> channelOffsets, out Vector3 center, out Vector3 size)
+        {
+            center = Vector3.zero;
+            size = GraphItemBoundsSize;
+
+            if (GraphItemBoundsSize.sqrMagnitude < 1e-6f)
+            {
+                return false;
+            }
+
+            if (channelOffsets == null || channelOffsets.Count == 0)
+            {
+                size += GraphGroupBoundsPadding * 2f;
+                return true;
+            }
+
+            Vector3 halfSize = GraphItemBoundsSize * 0.5f;
+            Vector3 min = new Vector3(float.PositiveInfinity, float.PositiveInfinity, float.PositiveInfinity);
+            Vector3 max = new Vector3(float.NegativeInfinity, float.NegativeInfinity, float.NegativeInfinity);
+
+            foreach (var offset in channelOffsets)
+            {
+                Vector3 localMin = offset - halfSize;
+                Vector3 localMax = offset + halfSize;
+                min = Vector3.Min(min, localMin);
+                max = Vector3.Max(max, localMax);
+            }
+
+            size = (max - min) + GraphGroupBoundsPadding * 2f;
+            center = (min + max) * 0.5f;
+            return true;
         }
 
         private static List<DeviceChannelDefinition> BuildDeviceChannelDefinitions(IEnumerable<string> redisChannels)
@@ -885,6 +1252,18 @@ namespace AmpPortableDataViz.Presentation.Bootstrap
             public string DeviceId;
             public GameObject VisualInstance;
             public Component BindingComponent;
+            public RedisDataPump ValencePump;
+            public RedisDataPump ArousalPump;
+            public RedisDataPump HeartRatePump;
+        }
+
+        private sealed class GraphDeviceGroupInstance
+        {
+            public string DeviceId;
+            public GameObject GroupRoot;
+            public GameObject ValenceGraph;
+            public GameObject ArousalGraph;
+            public GameObject HeartRateGraph;
             public RedisDataPump ValencePump;
             public RedisDataPump ArousalPump;
             public RedisDataPump HeartRatePump;

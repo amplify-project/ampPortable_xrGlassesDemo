@@ -4861,6 +4861,25 @@ MonoBehaviour:
   DeviceLabelOffset: {x: 0, y: -0.35, z: 0}
   DeviceLabelFontSize: 0.22
   DeviceLabelColor: {r: 1, g: 1, b: 1, a: 1}
+  AutoSpawnGraphVisualsFromChannels: 1
+  GraphPrefab: {fileID: 7697534865005704293, guid: 26cef2dfd1a2c0f4f9f66af976b00fca, type: 3}
+  GraphGroupParent: {fileID: 645856977}
+  GraphGroupOriginOffset: {x: 0, y: 0, z: 0}
+  GraphGroupSpacing: {x: 1.6, y: 0, z: 0.75}
+  GraphGroupsPerRow: 2
+  GraphValenceOffset: {x: -0.6, y: 0, z: 0}
+  GraphArousalOffset: {x: 0, y: 0, z: 0}
+  GraphHeartRateOffset: {x: 0.6, y: 0, z: 0}
+  GraphValenceRange: {x: 0, y: 1}
+  GraphArousalRange: {x: 0, y: 1}
+  GraphHeartRateRange: {x: 40, y: 200}
+  GraphValenceColor: {r: 0.2, g: 0.9, b: 0.4, a: 1}
+  GraphArousalColor: {r: 0.95, g: 0.65, b: 0.15, a: 1}
+  GraphHeartRateColor: {r: 0.95, g: 0.2, b: 0.2, a: 1}
+  GraphLineWidth: 0.01
+  GraphGroupsGrabbable: 1
+  GraphItemBoundsSize: {x: 1, y: 1, z: 0.02}
+  GraphGroupBoundsPadding: {x: 0.05, y: 0.05, z: 0.05}
   LiveKitTokenEndpoint: https://cloud-api.livekit.io/api/sandbox/connection-details
   LiveKitSandboxId: amp-portable-viz-16o67i
   LiveKitRoomName: xr-room
@@ -6453,63 +6472,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3b671ecf33b607443a4d3cb9254a01a8, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Amp::XRHandsPoseProvider
---- !u!1001 &6777744537687913935
-PrefabInstance:
-  m_ObjectHideFlags: 0
-  serializedVersion: 2
-  m_Modification:
-    serializedVersion: 3
-    m_TransformParent: {fileID: 0}
-    m_Modifications:
-    - target: {fileID: 1145868257498196005, guid: 26cef2dfd1a2c0f4f9f66af976b00fca, type: 3}
-      propertyPath: m_LocalPosition.x
-      value: -0.231
-      objectReference: {fileID: 0}
-    - target: {fileID: 1145868257498196005, guid: 26cef2dfd1a2c0f4f9f66af976b00fca, type: 3}
-      propertyPath: m_LocalPosition.y
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 1145868257498196005, guid: 26cef2dfd1a2c0f4f9f66af976b00fca, type: 3}
-      propertyPath: m_LocalPosition.z
-      value: -0.19289
-      objectReference: {fileID: 0}
-    - target: {fileID: 1145868257498196005, guid: 26cef2dfd1a2c0f4f9f66af976b00fca, type: 3}
-      propertyPath: m_LocalRotation.w
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 1145868257498196005, guid: 26cef2dfd1a2c0f4f9f66af976b00fca, type: 3}
-      propertyPath: m_LocalRotation.x
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 1145868257498196005, guid: 26cef2dfd1a2c0f4f9f66af976b00fca, type: 3}
-      propertyPath: m_LocalRotation.y
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 1145868257498196005, guid: 26cef2dfd1a2c0f4f9f66af976b00fca, type: 3}
-      propertyPath: m_LocalRotation.z
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 1145868257498196005, guid: 26cef2dfd1a2c0f4f9f66af976b00fca, type: 3}
-      propertyPath: m_LocalEulerAnglesHint.x
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 1145868257498196005, guid: 26cef2dfd1a2c0f4f9f66af976b00fca, type: 3}
-      propertyPath: m_LocalEulerAnglesHint.y
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 1145868257498196005, guid: 26cef2dfd1a2c0f4f9f66af976b00fca, type: 3}
-      propertyPath: m_LocalEulerAnglesHint.z
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 7697534865005704293, guid: 26cef2dfd1a2c0f4f9f66af976b00fca, type: 3}
-      propertyPath: m_Name
-      value: GraphPrefab
-      objectReference: {fileID: 0}
-    m_RemovedComponents: []
-    m_RemovedGameObjects: []
-    m_AddedGameObjects: []
-    m_AddedComponents: []
-  m_SourcePrefab: {fileID: 100100000, guid: 26cef2dfd1a2c0f4f9f66af976b00fca, type: 3}
 --- !u!1660057539 &9223372036854775807
 SceneRoots:
   m_ObjectHideFlags: 0
@@ -6526,4 +6488,3 @@ SceneRoots:
   - {fileID: 898437719}
   - {fileID: 171230033}
   - {fileID: 645856977}
-  - {fileID: 6777744537687913935}
