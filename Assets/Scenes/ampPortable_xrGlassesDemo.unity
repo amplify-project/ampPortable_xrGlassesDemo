@@ -525,7 +525,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!114 &171230029
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2078,7 +2078,7 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 645856976}
-  m_Enabled: 1
+  m_Enabled: 0
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 36c9f222d0b09484a85e71cc40cc79bd, type: 3}
   m_Name: 
@@ -4843,7 +4843,7 @@ MonoBehaviour:
   ProfileId: Default
   Seed: 12345
   ActiveSignalSource: 1
-  RedisHost: 
+  RedisHost: 10.215.55.160
   RedisPort: 6379
   RedisChannel: engagement_score
   RedisChannels: []
@@ -4851,7 +4851,6 @@ MonoBehaviour:
   IncludeEmotionChannels: 1
   EmotionDeviceIds:
   - MD-V5-0000334
-  - MD-V5-0000448
   AutoSpawnEmotionVisualsFromChannels: 1
   EmotionVisualParent: {fileID: 1165166120}
   EmotionVisualOriginOffset: {x: 0, y: 0, z: 1}
@@ -4867,15 +4866,21 @@ MonoBehaviour:
   GraphGroupOriginOffset: {x: 0, y: 0, z: 0}
   GraphGroupSpacing: {x: 1.6, y: 0, z: 0.75}
   GraphGroupsPerRow: 2
+  GraphChannelLayout: 1
+  GraphStackedOriginOffset: {x: 0, y: 0, z: 0}
+  GraphStackedVerticalSpacing: 0.4
   GraphValenceOffset: {x: -0.6, y: 0, z: 0}
   GraphArousalOffset: {x: 0, y: 0, z: 0}
   GraphHeartRateOffset: {x: 0.6, y: 0, z: 0}
-  GraphValenceRange: {x: 0, y: 1}
-  GraphArousalRange: {x: 0, y: 1}
+  GraphEdaOffset: {x: 0.6, y: -0.6, z: 0}
+  GraphValenceRange: {x: 0, y: 2}
+  GraphArousalRange: {x: 0, y: 2}
   GraphHeartRateRange: {x: 40, y: 200}
+  GraphEdaRange: {x: 0.03, y: 10}
   GraphValenceColor: {r: 0.2, g: 0.9, b: 0.4, a: 1}
   GraphArousalColor: {r: 0.95, g: 0.65, b: 0.15, a: 1}
   GraphHeartRateColor: {r: 0.95, g: 0.2, b: 0.2, a: 1}
+  GraphEdaColor: {r: 0.2, g: 0.8, b: 0.95, a: 1}
   GraphLineWidth: 0.01
   GraphGroupsGrabbable: 1
   GraphItemBoundsSize: {x: 1, y: 1, z: 0.02}

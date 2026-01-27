@@ -232,7 +232,13 @@ public static class RedisSubscriber
             var parsedMessage = ParseRedisMessage(channelName, root);
             targetQueue.Enqueue(parsedMessage);
 
-            if (channelName.EndsWith(":hr_filtered", StringComparison.OrdinalIgnoreCase))
+            bool isHeartRateChannel = channelName.EndsWith(":hr_filtered", StringComparison.OrdinalIgnoreCase);
+            bool isArousalChannel =
+                channelName.EndsWith(":arousal_cont", StringComparison.OrdinalIgnoreCase) ||
+                channelName.EndsWith(":arousal", StringComparison.OrdinalIgnoreCase);
+            bool isEdaChannel = channelName.EndsWith(":eda_filtered", StringComparison.OrdinalIgnoreCase);
+
+            if (isHeartRateChannel || isArousalChannel || isEdaChannel)
             {
                 Debug.Log($"RedisSubscriber[{channelName}] value={parsedMessage.Value:F4} seq={parsedMessage.Sequence} ts={parsedMessage.Timestamp}");
             }
@@ -420,7 +426,8 @@ public enum EmotionChannelKind
     Broadcast,
     Valence,
     Arousal,
-    HeartRate
+    HeartRate,
+    EdaFiltered
 }
 
 public static class RedisEmotionChannels
@@ -429,6 +436,7 @@ public static class RedisEmotionChannels
     public const string ValenceTemplate = "device:{0}:valence_cont";
     public const string ArousalTemplate = "device:{0}:arousal_cont";
     public const string HeartRateTemplate = "device:{0}:hr_filtered";
+    public const string EdaFilteredTemplate = "device:{0}:eda_filtered";
 
     private static readonly string[] _defaultDeviceIds =
     {
@@ -488,6 +496,11 @@ public static class RedisEmotionChannels
             {
                 AddChannel(heartRateChannel);
             }
+
+            if (TryFormatChannel(EmotionChannelKind.EdaFiltered, deviceId, out var edaFilteredChannel))
+            {
+                AddChannel(edaFilteredChannel);
+            }
         }
 
         return orderedChannels;
@@ -508,6 +521,9 @@ public static class RedisEmotionChannels
                 return !string.IsNullOrWhiteSpace(channelName);
             case EmotionChannelKind.HeartRate:
                 channelName = FormatDeviceChannel(HeartRateTemplate, deviceId);
+                return !string.IsNullOrWhiteSpace(channelName);
+            case EmotionChannelKind.EdaFiltered:
+                channelName = FormatDeviceChannel(EdaFilteredTemplate, deviceId);
                 return !string.IsNullOrWhiteSpace(channelName);
             default:
                 channelName = string.Empty;

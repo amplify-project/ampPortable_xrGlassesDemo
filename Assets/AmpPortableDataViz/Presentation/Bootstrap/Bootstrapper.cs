@@ -79,18 +79,33 @@ namespace AmpPortableDataViz.Presentation.Bootstrap
         [Min(1)]
         public int GraphGroupsPerRow = 2;
 
-        [Header("Graph Channel Layout")]
+        public enum GraphChannelLayoutMode
+        {
+            InlineOffsets,
+            Stacked
+        }
+
+        [Header("Graph Channel Stacking")]
+        public GraphChannelLayoutMode GraphChannelLayout = GraphChannelLayoutMode.InlineOffsets;
+        public Vector3 GraphStackedOriginOffset = Vector3.zero;
+        [Min(0.01f)]
+        public float GraphStackedVerticalSpacing = 0.6f;
+
+        [Header("Graph Channel Offsets")]
         public Vector3 GraphValenceOffset = new Vector3(-0.6f, 0f, 0f);
         public Vector3 GraphArousalOffset = Vector3.zero;
         public Vector3 GraphHeartRateOffset = new Vector3(0.6f, 0f, 0f);
+        public Vector3 GraphEdaOffset = new Vector3(0.6f, -0.6f, 0f);
 
         [Header("Graph Stream Settings")]
         public Vector2 GraphValenceRange = new Vector2(0f, 1f);
         public Vector2 GraphArousalRange = new Vector2(0f, 1f);
         public Vector2 GraphHeartRateRange = new Vector2(40f, 200f);
+        public Vector2 GraphEdaRange = new Vector2(0f, 10f);
         public Color GraphValenceColor = new Color(0.2f, 0.9f, 0.4f, 1f);
         public Color GraphArousalColor = new Color(0.95f, 0.65f, 0.15f, 1f);
         public Color GraphHeartRateColor = new Color(0.95f, 0.2f, 0.2f, 1f);
+        public Color GraphEdaColor = new Color(0.2f, 0.8f, 0.95f, 1f);
         [Range(0.0001f, 0.05f)]
         public float GraphLineWidth = 0.01f;
 
@@ -128,6 +143,7 @@ namespace AmpPortableDataViz.Presentation.Bootstrap
         private Coroutine _initializationRoutine;
         private readonly List<EmotionDeviceInstance> _emotionDeviceInstances = new List<EmotionDeviceInstance>();
         private readonly List<GraphDeviceGroupInstance> _graphDeviceGroups = new List<GraphDeviceGroupInstance>();
+        private readonly Dictionary<string, SharedPumpHandle> _sharedPumpsByChannel = new Dictionary<string, SharedPumpHandle>(StringComparer.Ordinal);
         private bool _redisEndpointReady;
 
         private void Awake()
@@ -496,24 +512,25 @@ namespace AmpPortableDataViz.Presentation.Bootstrap
 
                 var bindingComponent = FindEmotionBindingComponent(instance) ?? instance.AddComponent<EmotionPlasmaBinding>();
 
-                var valencePump = CreateRedisPumpForChannel(definition.DeviceId, EmotionChannelKind.Valence, definition.ValenceChannel);
-                var arousalPump = CreateRedisPumpForChannel(definition.DeviceId, EmotionChannelKind.Arousal, definition.ArousalChannel);
+                string valenceChannel = definition.ValenceChannel;
+                string arousalChannel = definition.ArousalChannel;
+                string heartRateChannel = definition.HeartRateChannel;
+
+                var valencePump = AcquireRedisPumpForChannel(definition.DeviceId, EmotionChannelKind.Valence, valenceChannel);
+                var arousalPump = AcquireRedisPumpForChannel(definition.DeviceId, EmotionChannelKind.Arousal, arousalChannel);
                 RedisDataPump heartRatePump = null;
-                if (!string.IsNullOrWhiteSpace(definition.HeartRateChannel))
+                if (!string.IsNullOrWhiteSpace(heartRateChannel))
                 {
-                    heartRatePump = CreateRedisPumpForChannel(definition.DeviceId, EmotionChannelKind.HeartRate, definition.HeartRateChannel);
+                    heartRatePump = AcquireRedisPumpForChannel(definition.DeviceId, EmotionChannelKind.HeartRate, heartRateChannel);
                 }
 
                 if (!TryConfigureEmotionBinding(bindingComponent, valencePump, arousalPump, heartRatePump, definition.DeviceId))
                 {
                     Debug.LogWarning($"Bootstrapper: Unable to configure emotion binding on '{instance.name}', skipping visual spawn.");
                     Destroy(instance);
-                    Destroy(valencePump.gameObject);
-                    Destroy(arousalPump.gameObject);
-                    if (heartRatePump != null)
-                    {
-                        Destroy(heartRatePump.gameObject);
-                    }
+                    ReleaseRedisPump(valenceChannel);
+                    ReleaseRedisPump(arousalChannel);
+                    ReleaseRedisPump(heartRateChannel);
                     continue;
                 }
 
@@ -522,6 +539,9 @@ namespace AmpPortableDataViz.Presentation.Bootstrap
                     DeviceId = definition.DeviceId,
                     VisualInstance = instance,
                     BindingComponent = bindingComponent,
+                    ValenceChannel = valenceChannel,
+                    ArousalChannel = arousalChannel,
+                    HeartRateChannel = heartRateChannel,
                     ValencePump = valencePump,
                     ArousalPump = arousalPump,
                     HeartRatePump = heartRatePump
@@ -596,7 +616,7 @@ namespace AmpPortableDataViz.Presentation.Bootstrap
 
                 PositionGraphGroup(groupRoot.transform, deviceIndex, hasCustomParent);
 
-                var offsetsInUse = new List<Vector3>(3);
+                var offsetsInUse = new List<Vector3>(4);
                 var instance = new GraphDeviceGroupInstance
                 {
                     DeviceId = definition.DeviceId,
@@ -604,15 +624,20 @@ namespace AmpPortableDataViz.Presentation.Bootstrap
                 };
 
                 string deviceLabel = FormatDeviceLabel(definition.DeviceId, deviceIndex);
+                Vector3 valenceOffset = ResolveGraphChannelOffset(EmotionChannelKind.Valence);
+                Vector3 arousalOffset = ResolveGraphChannelOffset(EmotionChannelKind.Arousal);
+                Vector3 heartRateOffset = ResolveGraphChannelOffset(EmotionChannelKind.HeartRate);
+                Vector3 edaOffset = ResolveGraphChannelOffset(EmotionChannelKind.EdaFiltered);
 
                 if (!string.IsNullOrWhiteSpace(definition.ValenceChannel))
                 {
+                    string valenceChannel = definition.ValenceChannel;
                     instance.ValenceGraph = SpawnGraphForChannel(
                         groupRoot.transform,
                         definition.DeviceId,
                         EmotionChannelKind.Valence,
-                        definition.ValenceChannel,
-                        GraphValenceOffset,
+                        valenceChannel,
+                        valenceOffset,
                         GraphValenceRange,
                         GraphValenceColor,
                         GraphLineWidth,
@@ -620,18 +645,20 @@ namespace AmpPortableDataViz.Presentation.Bootstrap
                         out instance.ValencePump);
                     if (instance.ValenceGraph != null)
                     {
-                        offsetsInUse.Add(GraphValenceOffset);
+                        instance.ValenceChannel = valenceChannel;
+                        offsetsInUse.Add(valenceOffset);
                     }
                 }
 
                 if (!string.IsNullOrWhiteSpace(definition.ArousalChannel))
                 {
+                    string arousalChannel = definition.ArousalChannel;
                     instance.ArousalGraph = SpawnGraphForChannel(
                         groupRoot.transform,
                         definition.DeviceId,
                         EmotionChannelKind.Arousal,
-                        definition.ArousalChannel,
-                        GraphArousalOffset,
+                        arousalChannel,
+                        arousalOffset,
                         GraphArousalRange,
                         GraphArousalColor,
                         GraphLineWidth,
@@ -639,18 +666,20 @@ namespace AmpPortableDataViz.Presentation.Bootstrap
                         out instance.ArousalPump);
                     if (instance.ArousalGraph != null)
                     {
-                        offsetsInUse.Add(GraphArousalOffset);
+                        instance.ArousalChannel = arousalChannel;
+                        offsetsInUse.Add(arousalOffset);
                     }
                 }
 
                 if (!string.IsNullOrWhiteSpace(definition.HeartRateChannel))
                 {
+                    string heartRateChannel = definition.HeartRateChannel;
                     instance.HeartRateGraph = SpawnGraphForChannel(
                         groupRoot.transform,
                         definition.DeviceId,
                         EmotionChannelKind.HeartRate,
-                        definition.HeartRateChannel,
-                        GraphHeartRateOffset,
+                        heartRateChannel,
+                        heartRateOffset,
                         GraphHeartRateRange,
                         GraphHeartRateColor,
                         GraphLineWidth,
@@ -658,17 +687,40 @@ namespace AmpPortableDataViz.Presentation.Bootstrap
                         out instance.HeartRatePump);
                     if (instance.HeartRateGraph != null)
                     {
-                        offsetsInUse.Add(GraphHeartRateOffset);
+                        instance.HeartRateChannel = heartRateChannel;
+                        offsetsInUse.Add(heartRateOffset);
                     }
                 }
 
-                if (instance.ValenceGraph == null && instance.ArousalGraph == null && instance.HeartRateGraph == null)
+                if (!string.IsNullOrWhiteSpace(definition.EdaChannel))
+                {
+                    string edaChannel = definition.EdaChannel;
+                    instance.EdaGraph = SpawnGraphForChannel(
+                        groupRoot.transform,
+                        definition.DeviceId,
+                        EmotionChannelKind.EdaFiltered,
+                        edaChannel,
+                        edaOffset,
+                        GraphEdaRange,
+                        GraphEdaColor,
+                        GraphLineWidth,
+                        $"{deviceLabel} - EDA",
+                        out instance.EdaPump);
+                    if (instance.EdaGraph != null)
+                    {
+                        instance.EdaChannel = edaChannel;
+                        offsetsInUse.Add(edaOffset);
+                    }
+                }
+
+                if (instance.ValenceGraph == null && instance.ArousalGraph == null && instance.HeartRateGraph == null && instance.EdaGraph == null)
                 {
                     Debug.LogWarning($"Bootstrapper: No graph channels found for device '{definition.DeviceId}', skipping group spawn.");
                     Destroy(groupRoot);
-                    if (instance.ValencePump != null) Destroy(instance.ValencePump.gameObject);
-                    if (instance.ArousalPump != null) Destroy(instance.ArousalPump.gameObject);
-                    if (instance.HeartRatePump != null) Destroy(instance.HeartRatePump.gameObject);
+                    ReleaseRedisPump(instance.ValenceChannel);
+                    ReleaseRedisPump(instance.ArousalChannel);
+                    ReleaseRedisPump(instance.HeartRateChannel);
+                    ReleaseRedisPump(instance.EdaChannel);
                     continue;
                 }
 
@@ -682,8 +734,25 @@ namespace AmpPortableDataViz.Presentation.Bootstrap
             }
         }
 
-        private RedisDataPump CreateRedisPumpForChannel(string deviceId, EmotionChannelKind channelKind, string channelName)
+        private RedisDataPump AcquireRedisPumpForChannel(string deviceId, EmotionChannelKind channelKind, string channelName)
         {
+            if (string.IsNullOrWhiteSpace(channelName))
+            {
+                return null;
+            }
+
+            if (_sharedPumpsByChannel.TryGetValue(channelName, out var handle) && handle.Pump != null)
+            {
+                handle.ReferenceCount++;
+                if (!string.Equals(handle.Host, RedisHost, StringComparison.Ordinal) || handle.Port != RedisPort)
+                {
+                    handle.Pump.ConfigureConnection(RedisHost, RedisPort, channelName);
+                    handle.Host = RedisHost;
+                    handle.Port = RedisPort;
+                }
+                return handle.Pump;
+            }
+
             var pumpObject = new GameObject($"RedisPump_{deviceId}_{channelKind}");
             pumpObject.transform.SetParent(transform, false);
             pumpObject.SetActive(false);
@@ -692,7 +761,43 @@ namespace AmpPortableDataViz.Presentation.Bootstrap
             pump.ConfigureConnection(RedisHost, RedisPort, channelName);
 
             pumpObject.SetActive(true);
+
+            _sharedPumpsByChannel[channelName] = new SharedPumpHandle
+            {
+                ChannelName = channelName,
+                Host = RedisHost,
+                Port = RedisPort,
+                Pump = pump,
+                ReferenceCount = 1
+            };
+
             return pump;
+        }
+
+        private void ReleaseRedisPump(string channelName)
+        {
+            if (string.IsNullOrWhiteSpace(channelName))
+            {
+                return;
+            }
+
+            if (!_sharedPumpsByChannel.TryGetValue(channelName, out var handle))
+            {
+                return;
+            }
+
+            handle.ReferenceCount--;
+            if (handle.ReferenceCount > 0)
+            {
+                return;
+            }
+
+            if (handle.Pump != null)
+            {
+                Destroy(handle.Pump.gameObject);
+            }
+
+            _sharedPumpsByChannel.Remove(channelName);
         }
 
         private Component FindEmotionBindingComponent(GameObject target)
@@ -751,20 +856,9 @@ namespace AmpPortableDataViz.Presentation.Bootstrap
                     Destroy(instance.BindingComponent.gameObject);
                 }
 
-                if (instance.ValencePump != null)
-                {
-                    Destroy(instance.ValencePump.gameObject);
-                }
-
-                if (instance.ArousalPump != null)
-                {
-                    Destroy(instance.ArousalPump.gameObject);
-                }
-
-                if (instance.HeartRatePump != null)
-                {
-                    Destroy(instance.HeartRatePump.gameObject);
-                }
+                ReleaseRedisPump(instance.ValenceChannel);
+                ReleaseRedisPump(instance.ArousalChannel);
+                ReleaseRedisPump(instance.HeartRateChannel);
             }
 
             _emotionDeviceInstances.Clear();
@@ -788,11 +882,13 @@ namespace AmpPortableDataViz.Presentation.Bootstrap
                     if (instance.ValenceGraph != null) Destroy(instance.ValenceGraph);
                     if (instance.ArousalGraph != null) Destroy(instance.ArousalGraph);
                     if (instance.HeartRateGraph != null) Destroy(instance.HeartRateGraph);
+                    if (instance.EdaGraph != null) Destroy(instance.EdaGraph);
                 }
 
-                if (instance.ValencePump != null) Destroy(instance.ValencePump.gameObject);
-                if (instance.ArousalPump != null) Destroy(instance.ArousalPump.gameObject);
-                if (instance.HeartRatePump != null) Destroy(instance.HeartRatePump.gameObject);
+                ReleaseRedisPump(instance.ValenceChannel);
+                ReleaseRedisPump(instance.ArousalChannel);
+                ReleaseRedisPump(instance.HeartRateChannel);
+                ReleaseRedisPump(instance.EdaChannel);
             }
 
             _graphDeviceGroups.Clear();
@@ -870,6 +966,33 @@ namespace AmpPortableDataViz.Presentation.Bootstrap
             }
         }
 
+        private Vector3 ResolveGraphChannelOffset(EmotionChannelKind channelKind)
+        {
+            if (GraphChannelLayout != GraphChannelLayoutMode.Stacked)
+            {
+                return channelKind switch
+                {
+                    EmotionChannelKind.Valence => GraphValenceOffset,
+                    EmotionChannelKind.Arousal => GraphArousalOffset,
+                    EmotionChannelKind.HeartRate => GraphHeartRateOffset,
+                    EmotionChannelKind.EdaFiltered => GraphEdaOffset,
+                    _ => Vector3.zero
+                };
+            }
+
+            float spacing = Mathf.Max(0.01f, GraphStackedVerticalSpacing);
+            float yOffset = channelKind switch
+            {
+                EmotionChannelKind.Valence => spacing,
+                EmotionChannelKind.Arousal => 0f,
+                EmotionChannelKind.HeartRate => -spacing,
+                EmotionChannelKind.EdaFiltered => -spacing * 2f,
+                _ => 0f
+            };
+
+            return GraphStackedOriginOffset + new Vector3(0f, yOffset, 0f);
+        }
+
         private GameObject SpawnGraphForChannel(
             Transform parent,
             string deviceId,
@@ -911,9 +1034,18 @@ namespace AmpPortableDataViz.Presentation.Bootstrap
                 manualDriver.enabled = false;
             }
 
-            pump = CreateRedisPumpForChannel(deviceId, channelKind, channelName);
+            pump = AcquireRedisPumpForChannel(deviceId, channelKind, channelName);
+            if (pump == null)
+            {
+                Destroy(instance);
+                return null;
+            }
             binding.enabled = true;
             binding.ConfigureSource(pump, visualizer, label, yRange, lineColor, lineWidth);
+
+            // GraphBinding.ApplyLayout() can reset the transform to its internal layout positions.
+            // Re-apply the channel offset so Bootstrapper-controlled layouts remain in effect.
+            instance.transform.localPosition = localOffset;
             return instance;
         }
 
@@ -1021,6 +1153,10 @@ namespace AmpPortableDataViz.Presentation.Bootstrap
                 {
                     definition.HeartRateChannel = channel;
                 }
+                else if (kind == EmotionChannelKind.EdaFiltered)
+                {
+                    definition.EdaChannel = channel;
+                }
 
                 map[deviceId] = definition;
             }
@@ -1099,6 +1235,11 @@ namespace AmpPortableDataViz.Presentation.Bootstrap
                      suffix.Equals("hr", StringComparison.OrdinalIgnoreCase))
             {
                 channelKind = EmotionChannelKind.HeartRate;
+            }
+            else if (suffix.Equals("eda_filtered", StringComparison.OrdinalIgnoreCase) ||
+                     suffix.Equals("eda", StringComparison.OrdinalIgnoreCase))
+            {
+                channelKind = EmotionChannelKind.EdaFiltered;
             }
             else
             {
@@ -1252,6 +1393,9 @@ namespace AmpPortableDataViz.Presentation.Bootstrap
             public string DeviceId;
             public GameObject VisualInstance;
             public Component BindingComponent;
+            public string ValenceChannel;
+            public string ArousalChannel;
+            public string HeartRateChannel;
             public RedisDataPump ValencePump;
             public RedisDataPump ArousalPump;
             public RedisDataPump HeartRatePump;
@@ -1264,9 +1408,24 @@ namespace AmpPortableDataViz.Presentation.Bootstrap
             public GameObject ValenceGraph;
             public GameObject ArousalGraph;
             public GameObject HeartRateGraph;
+            public GameObject EdaGraph;
+            public string ValenceChannel;
+            public string ArousalChannel;
+            public string HeartRateChannel;
+            public string EdaChannel;
             public RedisDataPump ValencePump;
             public RedisDataPump ArousalPump;
             public RedisDataPump HeartRatePump;
+            public RedisDataPump EdaPump;
+        }
+
+        private sealed class SharedPumpHandle
+        {
+            public string ChannelName;
+            public string Host;
+            public int Port;
+            public RedisDataPump Pump;
+            public int ReferenceCount;
         }
 
         private struct DeviceChannelDefinition
@@ -1275,6 +1434,7 @@ namespace AmpPortableDataViz.Presentation.Bootstrap
             public string ValenceChannel;
             public string ArousalChannel;
             public string HeartRateChannel;
+            public string EdaChannel;
         }
 
         private bool ShouldInitializeSessionController()

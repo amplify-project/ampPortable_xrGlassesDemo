@@ -347,6 +347,16 @@ namespace AmpPortableDataViz.Presentation.Sources
                    channelName.IndexOf("arousal", StringComparison.OrdinalIgnoreCase) >= 0;
         }
 
+        private static bool IsEdaChannel(string? channelName)
+        {
+            if (string.IsNullOrWhiteSpace(channelName))
+            {
+                return false;
+            }
+
+            return channelName.IndexOf("eda_filtered", StringComparison.OrdinalIgnoreCase) >= 0;
+        }
+
         private static bool ShouldClampChannel(string channelName)
         {
             // Do not clamp valence or arousal; only clamp non-emotion channels by default.
@@ -356,6 +366,11 @@ namespace AmpPortableDataViz.Presentation.Sources
             }
 
             if (IsValenceOrArousalChannel(channelName))
+            {
+                return false;
+            }
+
+            if (IsEdaChannel(channelName))
             {
                 return false;
             }

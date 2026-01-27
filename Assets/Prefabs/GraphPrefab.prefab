@@ -209,7 +209,7 @@ MonoBehaviour:
     YRange: {x: 0, y: 1}
     LineColor: {r: 1, g: 1, b: 1, a: 1}
     LineWidth: 0.01
-  layoutMode: 0
+  layoutMode: 1
   overlayLocalPosition: {x: 0, y: 0, z: 0}
   overlayLocalScale: {x: 1, y: 1, z: 1}
   stackedLocalPosition: {x: 0, y: 0, z: 0}
