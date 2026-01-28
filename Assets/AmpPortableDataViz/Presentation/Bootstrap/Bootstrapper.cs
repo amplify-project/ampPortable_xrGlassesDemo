@@ -1083,6 +1083,21 @@ namespace AmpPortableDataViz.Presentation.Bootstrap
                 grab = groupRoot.AddComponent<XRGrabInteractable>();
             }
 
+            grab.distanceCalculationMode = XRBaseInteractable.DistanceCalculationMode.ColliderPosition;
+            grab.selectMode = InteractableSelectMode.Multiple;
+            grab.focusMode = InteractableFocusMode.Multiple;
+            grab.movementType = XRBaseInteractable.MovementType.Kinematic;
+            grab.trackPosition = true;
+            grab.smoothPosition = true;
+            grab.smoothPositionAmount = 14f;
+            grab.tightenPosition = 0.1f;
+            grab.useDynamicAttach = true;
+            grab.matchAttachPosition = true;
+            grab.matchAttachRotation = true;
+            grab.snapToColliderVolume = true;
+            grab.reinitializeDynamicAttachEverySingleGrab = true;
+            grab.attachEaseInTime = 0.15f;
+
             if (grab.colliders != null)
             {
                 grab.colliders.Clear();

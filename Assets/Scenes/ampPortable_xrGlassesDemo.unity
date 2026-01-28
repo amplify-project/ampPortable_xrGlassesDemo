@@ -2048,7 +2048,6 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 645856977}
-  - component: {fileID: 645856978}
   m_Layer: 0
   m_Name: GraphVizParent
   m_TagString: Untagged
@@ -2071,32 +2070,6 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &645856978
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 645856976}
-  m_Enabled: 0
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 36c9f222d0b09484a85e71cc40cc79bd, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Amp::AmpPortableDataViz.Presentation.Visualization.GraphBinding
-  stream:
-    Label: Graph Stream
-    Source: {fileID: 0}
-    Visualizer: {fileID: 0}
-    YRange: {x: 0, y: 1}
-    LineColor: {r: 1, g: 1, b: 1, a: 1}
-    LineWidth: 0.01
-  layoutMode: 1
-  overlayLocalPosition: {x: 0, y: 0, z: 0}
-  overlayLocalScale: {x: 1, y: 1, z: 1}
-  stackedLocalPosition: {x: 0, y: 0, z: 0}
-  stackedLocalScale: {x: 1, y: 0.35, z: 1}
-  windowSeconds: 10
-  maxSamples: 512
 --- !u!1 &698791613
 GameObject:
   m_ObjectHideFlags: 0
