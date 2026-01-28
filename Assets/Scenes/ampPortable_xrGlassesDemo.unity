@@ -4786,6 +4786,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1639454966}
   - component: {fileID: 1639454965}
+  - component: {fileID: 1639454967}
   m_Layer: 0
   m_Name: AppRoot
   m_TagString: Untagged
@@ -4887,6 +4888,23 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1639454967
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1639454964}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d63d1e6a561f42c42966395b78127c78, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Amp::AmpPortableDataViz.Presentation.Interaction.VisualizationCycler
+  cycleAction: {fileID: 4461450580726437832, guid: 052faaac586de48259a63d0c4782560b, type: 3}
+  imageBoardParent: {fileID: 2056354646}
+  emotionVisualParent: {fileID: 1165166119}
+  graphVizParent: {fileID: 645856976}
+  startIndex: 0
 --- !u!1 &1640867884
 GameObject:
   m_ObjectHideFlags: 0
