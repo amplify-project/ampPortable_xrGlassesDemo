@@ -1,13 +1,8 @@
 using UnityEngine;
-using UnityEngine.InputSystem;
-
 namespace AmpPortableDataViz.Presentation.Interaction
 {
     public sealed class VisualizationCycler : MonoBehaviour
     {
-        [Header("Input")]
-        [SerializeField] private InputActionReference cycleAction;
-
         [Header("Visual Parents (exactly one active at a time)")]
         [SerializeField] private GameObject imageBoardParent;
         [SerializeField] private GameObject emotionVisualParent;
@@ -16,40 +11,27 @@ namespace AmpPortableDataViz.Presentation.Interaction
         [Header("Startup")]
         [SerializeField] private int startIndex = 0; // 0=ImageBoard, 1=Emotion, 2=Graph
 
-        private InputAction _boundAction;
         private int _currentIndex;
 
         private void Awake()
         {
             _currentIndex = Mathf.Clamp(startIndex, 0, 2);
+            if (imageBoardParent == null)
+            {
+                Debug.LogWarning("VisualizationCycler: ImageBoardParent is not assigned.");
+            }
+            if (emotionVisualParent == null)
+            {
+                Debug.LogWarning("VisualizationCycler: EmotionVisualParent is not assigned.");
+            }
+            if (graphVizParent == null)
+            {
+                Debug.LogWarning("VisualizationCycler: GraphVizParent is not assigned.");
+            }
             ApplyState(_currentIndex);
         }
 
-        private void OnEnable()
-        {
-            if (cycleAction == null || cycleAction.action == null)
-            {
-                Debug.LogWarning("VisualizationCycler: No cycle action assigned.");
-                return;
-            }
-
-            _boundAction = cycleAction.action;
-            _boundAction.performed += OnCyclePerformed;
-
-            if (!_boundAction.enabled)
-            {
-                _boundAction.Enable();
-            }
-        }
-
-        private void OnDisable()
-        {
-            if (_boundAction == null) return;
-
-            _boundAction.performed -= OnCyclePerformed;
-        }
-
-        private void OnCyclePerformed(InputAction.CallbackContext context)
+        public void CycleVisualization()
         {
             _currentIndex = (_currentIndex + 1) % 3;
             ApplyState(_currentIndex);

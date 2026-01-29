@@ -486,8 +486,8 @@
                 {
                     "name": "",
                     "id": "ef3cc949-7905-4fc4-9d08-8c8dde58dcd3",
-                    "path": "<XREALController>/MenuButton",
-                    "interactions": "Tap",
+                    "path": "<XREALController>/TriggerButton",
+                    "interactions": "",
                     "processors": "",
                     "groups": "",
                     "action": "VizCycle",
