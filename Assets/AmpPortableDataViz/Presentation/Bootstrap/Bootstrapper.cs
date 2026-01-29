@@ -56,6 +56,8 @@ namespace AmpPortableDataViz.Presentation.Bootstrap
         [Header("Emotion Channel Settings")]
         public bool IncludeEmotionChannels = true;
         public string[] EmotionDeviceIds = RedisEmotionChannels.GetDefaultDeviceIds();
+        public bool AutoDetectEmotionDeviceIds = true;
+        public int RedisDiscoveryTimeoutMs = 2000;
 
         [Header("Emotion Visual Settings")]
         public bool AutoSpawnEmotionVisualsFromChannels = true;
@@ -78,6 +80,20 @@ namespace AmpPortableDataViz.Presentation.Bootstrap
         public Vector3 GraphGroupSpacing = new Vector3(1.6f, 0f, 0.75f);
         [Min(1)]
         public int GraphGroupsPerRow = 2;
+
+        [Header("Graph Labels")]
+        public bool ShowGraphLabels = true;
+        public Vector3 GraphLabelOffset = new Vector3(0f, 0.6f, 0f);
+        public float GraphLabelFontSize = 0.18f;
+        public Color GraphLabelColor = Color.white;
+
+        [Header("Graph Group Labels")]
+        public bool ShowGraphGroupLabels = true;
+        public Vector3 GraphGroupLabelOffset = Vector3.zero;
+        [Min(0f)]
+        public float GraphGroupLabelVerticalOffset = 0.2f;
+        public float GraphGroupLabelFontSize = 0.24f;
+        public Color GraphGroupLabelColor = Color.white;
 
         public enum GraphChannelLayoutMode
         {
@@ -141,6 +157,7 @@ namespace AmpPortableDataViz.Presentation.Bootstrap
         private VisualizationSessionController _sessionController;
         private FloatToSimpleParams _floatToParamsMapper;
         private Coroutine _initializationRoutine;
+        private Coroutine _deviceDiscoveryRoutine;
         private readonly List<EmotionDeviceInstance> _emotionDeviceInstances = new List<EmotionDeviceInstance>();
         private readonly List<GraphDeviceGroupInstance> _graphDeviceGroups = new List<GraphDeviceGroupInstance>();
         private readonly Dictionary<string, SharedPumpHandle> _sharedPumpsByChannel = new Dictionary<string, SharedPumpHandle>(StringComparer.Ordinal);
@@ -170,13 +187,14 @@ namespace AmpPortableDataViz.Presentation.Bootstrap
 
         private void OnEnable()
         {
-            ApplySignalConfiguration();
-            if (!ShouldInitializeSessionController())
+            if (ShouldAutoDetectEmotionDeviceIds())
             {
+                StartDeviceDiscovery();
                 return;
             }
 
-            _initializationRoutine = StartCoroutine(BeginSession());
+            ApplySignalConfiguration();
+            BeginSessionIfReady();
         }
 
         public void BeginAfterEndpoint()
@@ -186,20 +204,26 @@ namespace AmpPortableDataViz.Presentation.Bootstrap
             RedisPort = settings.Port;
             _redisEndpointReady = true;
 
-            ApplySignalConfiguration();
-
             if (_initializationRoutine != null)
             {
                 StopCoroutine(_initializationRoutine);
                 _initializationRoutine = null;
             }
 
-            if (!ShouldInitializeSessionController())
+            if (_deviceDiscoveryRoutine != null)
             {
+                StopCoroutine(_deviceDiscoveryRoutine);
+                _deviceDiscoveryRoutine = null;
+            }
+
+            if (ShouldAutoDetectEmotionDeviceIds())
+            {
+                StartDeviceDiscovery();
                 return;
             }
 
-            _initializationRoutine = StartCoroutine(BeginSession());
+            ApplySignalConfiguration();
+            BeginSessionIfReady();
         }
 
         private void OnDisable()
@@ -223,6 +247,12 @@ namespace AmpPortableDataViz.Presentation.Bootstrap
             {
                 StopCoroutine(_initializationRoutine);
                 _initializationRoutine = null;
+            }
+
+            if (_deviceDiscoveryRoutine != null)
+            {
+                StopCoroutine(_deviceDiscoveryRoutine);
+                _deviceDiscoveryRoutine = null;
             }
 
             _sessionController?.Shutdown();
@@ -353,17 +383,7 @@ namespace AmpPortableDataViz.Presentation.Bootstrap
 
         private void ApplySignalConfiguration()
         {
-            // If the inspector host is blank, fall back to the persisted runtime settings so we never configure an empty endpoint.
-            if (string.IsNullOrWhiteSpace(RedisHost))
-            {
-                var runtimeSettings = RedisRuntimeSettings.Load();
-                if (!string.IsNullOrWhiteSpace(runtimeSettings.Host))
-                {
-                    RedisHost = runtimeSettings.Host;
-                    RedisPort = runtimeSettings.Port;
-                    Debug.Log($"Bootstrapper: Loaded Redis endpoint from runtime settings -> {RedisHost}:{RedisPort}");
-                }
-            }
+            EnsureRedisEndpointFromRuntime();
 
             bool hasRedisEndpoint = !string.IsNullOrWhiteSpace(RedisHost);
             bool useSine = ActiveSignalSource == SignalSourceType.Sine;
@@ -434,6 +454,105 @@ namespace AmpPortableDataViz.Presentation.Bootstrap
             {
                 ClearGraphDeviceVisuals();
             }
+        }
+
+        private void EnsureRedisEndpointFromRuntime()
+        {
+            if (!string.IsNullOrWhiteSpace(RedisHost))
+            {
+                return;
+            }
+
+            var runtimeSettings = RedisRuntimeSettings.Load();
+            if (!string.IsNullOrWhiteSpace(runtimeSettings.Host))
+            {
+                RedisHost = runtimeSettings.Host;
+                RedisPort = runtimeSettings.Port;
+                Debug.Log($"Bootstrapper: Loaded Redis endpoint from runtime settings -> {RedisHost}:{RedisPort}");
+            }
+        }
+
+        private bool ShouldAutoDetectEmotionDeviceIds()
+        {
+            if (!AutoDetectEmotionDeviceIds || !IncludeEmotionChannels)
+            {
+                return false;
+            }
+
+            if (ActiveSignalSource != SignalSourceType.Redis)
+            {
+                return false;
+            }
+
+            EnsureRedisEndpointFromRuntime();
+
+            if (string.IsNullOrWhiteSpace(RedisHost))
+            {
+                return false;
+            }
+
+            if (RequireRedisEndpointConfirmation && !_redisEndpointReady)
+            {
+                return false;
+            }
+
+            return true;
+        }
+
+        private void StartDeviceDiscovery()
+        {
+            if (_deviceDiscoveryRoutine != null)
+            {
+                StopCoroutine(_deviceDiscoveryRoutine);
+                _deviceDiscoveryRoutine = null;
+            }
+
+            _deviceDiscoveryRoutine = StartCoroutine(DiscoverEmotionDevicesThenApply());
+        }
+
+        private IEnumerator DiscoverEmotionDevicesThenApply()
+        {
+            EnsureRedisEndpointFromRuntime();
+
+            var discoveryTask = RedisDeviceDiscovery.DiscoverDeviceIdsAsync(RedisHost, RedisPort, RedisDiscoveryTimeoutMs);
+            while (!discoveryTask.IsCompleted)
+            {
+                yield return null;
+            }
+
+            if (discoveryTask.IsFaulted)
+            {
+                Debug.LogWarning($"Bootstrapper: Device discovery failed for {RedisHost}:{RedisPort} ({discoveryTask.Exception?.GetBaseException().Message})");
+            }
+            else if (!discoveryTask.IsCanceled)
+            {
+                var discovered = discoveryTask.Result;
+                if (discovered != null && discovered.Count > 0)
+                {
+                    EmotionDeviceIds = discovered.ToArray();
+                    Debug.Log($"Bootstrapper: Discovered {discovered.Count} emotion devices from Redis.");
+                }
+            }
+
+            ApplySignalConfiguration();
+            BeginSessionIfReady();
+            _deviceDiscoveryRoutine = null;
+        }
+
+        private void BeginSessionIfReady()
+        {
+            if (!ShouldInitializeSessionController())
+            {
+                return;
+            }
+
+            if (_initializationRoutine != null)
+            {
+                StopCoroutine(_initializationRoutine);
+                _initializationRoutine = null;
+            }
+
+            _initializationRoutine = StartCoroutine(BeginSession());
         }
 
 #if UNITY_EDITOR
@@ -647,6 +766,7 @@ namespace AmpPortableDataViz.Presentation.Bootstrap
                     {
                         instance.ValenceChannel = valenceChannel;
                         offsetsInUse.Add(valenceOffset);
+                        AttachGraphLabel(instance.ValenceGraph, ResolveGraphChannelLabel(EmotionChannelKind.Valence));
                     }
                 }
 
@@ -668,6 +788,7 @@ namespace AmpPortableDataViz.Presentation.Bootstrap
                     {
                         instance.ArousalChannel = arousalChannel;
                         offsetsInUse.Add(arousalOffset);
+                        AttachGraphLabel(instance.ArousalGraph, ResolveGraphChannelLabel(EmotionChannelKind.Arousal));
                     }
                 }
 
@@ -689,6 +810,7 @@ namespace AmpPortableDataViz.Presentation.Bootstrap
                     {
                         instance.HeartRateChannel = heartRateChannel;
                         offsetsInUse.Add(heartRateOffset);
+                        AttachGraphLabel(instance.HeartRateGraph, ResolveGraphChannelLabel(EmotionChannelKind.HeartRate));
                     }
                 }
 
@@ -710,6 +832,7 @@ namespace AmpPortableDataViz.Presentation.Bootstrap
                     {
                         instance.EdaChannel = edaChannel;
                         offsetsInUse.Add(edaOffset);
+                        AttachGraphLabel(instance.EdaGraph, ResolveGraphChannelLabel(EmotionChannelKind.EdaFiltered));
                     }
                 }
 
@@ -729,6 +852,7 @@ namespace AmpPortableDataViz.Presentation.Bootstrap
                     ConfigureGraphGroupGrab(groupRoot, offsetsInUse);
                 }
 
+                AttachGraphGroupLabel(groupRoot, definition.DeviceId, deviceIndex, offsetsInUse);
                 _graphDeviceGroups.Add(instance);
                 deviceIndex++;
             }
@@ -1145,7 +1269,7 @@ namespace AmpPortableDataViz.Presentation.Bootstrap
 
             foreach (var channel in redisChannels)
             {
-                if (!TryParseDeviceChannel(channel, out var deviceId, out var kind))
+                if (!RedisEmotionChannels.TryParseDeviceChannel(channel, out var deviceId, out var kind))
                 {
                     continue;
                 }
@@ -1211,58 +1335,6 @@ namespace AmpPortableDataViz.Presentation.Bootstrap
             }
 
             return filtered;
-        }
-
-        private static bool TryParseDeviceChannel(string channelName, out string deviceId, out EmotionChannelKind channelKind)
-        {
-            deviceId = string.Empty;
-            channelKind = EmotionChannelKind.Broadcast;
-
-            if (string.IsNullOrWhiteSpace(channelName))
-            {
-                return false;
-            }
-
-            const string prefix = "device:";
-            if (!channelName.StartsWith(prefix, StringComparison.OrdinalIgnoreCase))
-            {
-                return false;
-            }
-
-            int finalColon = channelName.LastIndexOf(':');
-            if (finalColon <= prefix.Length || finalColon >= channelName.Length - 1)
-            {
-                return false;
-            }
-
-            string suffix = channelName.Substring(finalColon + 1);
-            if (suffix.Equals("valence_cont", StringComparison.OrdinalIgnoreCase) ||
-                suffix.Equals("valence", StringComparison.OrdinalIgnoreCase)) // allow legacy channel names
-            {
-                channelKind = EmotionChannelKind.Valence;
-            }
-            else if (suffix.Equals("arousal_cont", StringComparison.OrdinalIgnoreCase) ||
-                     suffix.Equals("arousal", StringComparison.OrdinalIgnoreCase)) // allow legacy channel names
-            {
-                channelKind = EmotionChannelKind.Arousal;
-            }
-            else if (suffix.Equals("hr_filtered", StringComparison.OrdinalIgnoreCase) ||
-                     suffix.Equals("hr", StringComparison.OrdinalIgnoreCase))
-            {
-                channelKind = EmotionChannelKind.HeartRate;
-            }
-            else if (suffix.Equals("eda_filtered", StringComparison.OrdinalIgnoreCase) ||
-                     suffix.Equals("eda", StringComparison.OrdinalIgnoreCase))
-            {
-                channelKind = EmotionChannelKind.EdaFiltered;
-            }
-            else
-            {
-                return false;
-            }
-
-            deviceId = channelName.Substring(prefix.Length, finalColon - prefix.Length).Trim();
-            return deviceId.Length > 0;
         }
 
         private string[] GetRedisChannels()
@@ -1341,6 +1413,93 @@ namespace AmpPortableDataViz.Presentation.Bootstrap
             text.richText = false;
 
             labelObject.AddComponent<BillboardLabel>();
+        }
+
+        private void AttachGraphLabel(GameObject graphInstance, string labelText)
+        {
+            if (!ShowGraphLabels || graphInstance == null || string.IsNullOrWhiteSpace(labelText))
+            {
+                return;
+            }
+
+            var labelObject = new GameObject("GraphLabel");
+            labelObject.transform.SetParent(graphInstance.transform, false);
+            labelObject.transform.localPosition = GraphLabelOffset;
+            labelObject.transform.localRotation = Quaternion.identity;
+            labelObject.transform.localScale = Vector3.one;
+            labelObject.layer = graphInstance.layer;
+
+            var text = labelObject.AddComponent<TextMeshPro>();
+            text.text = labelText.Trim();
+            text.fontSize = Mathf.Max(0.01f, GraphLabelFontSize);
+            text.color = GraphLabelColor;
+            text.alignment = TextAlignmentOptions.Center;
+            text.enableWordWrapping = false;
+            text.richText = false;
+
+            labelObject.AddComponent<BillboardLabel>();
+        }
+
+        private void AttachGraphGroupLabel(GameObject groupRoot, string deviceId, int deviceIndex, IReadOnlyList<Vector3> channelOffsets)
+        {
+            if (!ShowGraphGroupLabels || groupRoot == null)
+            {
+                return;
+            }
+
+            string labelText = FormatGraphGroupLabel(deviceId, deviceIndex);
+            if (string.IsNullOrWhiteSpace(labelText))
+            {
+                return;
+            }
+
+            var labelObject = new GameObject("GraphGroupLabel");
+            labelObject.transform.SetParent(groupRoot.transform, false);
+            labelObject.transform.localRotation = Quaternion.identity;
+            labelObject.transform.localScale = Vector3.one;
+            labelObject.layer = groupRoot.layer;
+
+            float extraYOffset = Mathf.Max(0f, GraphGroupLabelVerticalOffset);
+            Vector3 localPosition = GraphGroupLabelOffset + new Vector3(0f, extraYOffset, 0f);
+            if (TryCalculateGraphGroupBounds(channelOffsets, out var center, out var size))
+            {
+                float yOffset = center.y + size.y * 0.5f + extraYOffset;
+                localPosition = new Vector3(center.x, yOffset, center.z) + GraphGroupLabelOffset;
+            }
+
+            labelObject.transform.localPosition = localPosition;
+
+            var text = labelObject.AddComponent<TextMeshPro>();
+            text.text = labelText;
+            text.fontSize = Mathf.Max(0.01f, GraphGroupLabelFontSize);
+            text.color = GraphGroupLabelColor;
+            text.alignment = TextAlignmentOptions.Center;
+            text.enableWordWrapping = false;
+            text.richText = false;
+
+            labelObject.AddComponent<BillboardLabel>();
+        }
+
+        private static string ResolveGraphChannelLabel(EmotionChannelKind channelKind)
+        {
+            return channelKind switch
+            {
+                EmotionChannelKind.Valence => "Valence",
+                EmotionChannelKind.Arousal => "Arousal",
+                EmotionChannelKind.HeartRate => "Heart Rate",
+                EmotionChannelKind.EdaFiltered => "EDA",
+                _ => channelKind.ToString()
+            };
+        }
+
+        private static string FormatGraphGroupLabel(string deviceId, int deviceIndex)
+        {
+            if (!string.IsNullOrWhiteSpace(deviceId))
+            {
+                return deviceId.Trim();
+            }
+
+            return $"Device {deviceIndex + 1}";
         }
 
         private static string FormatDeviceLabel(string deviceId, int deviceIndex)

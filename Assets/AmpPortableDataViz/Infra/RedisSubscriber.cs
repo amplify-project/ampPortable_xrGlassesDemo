@@ -531,6 +531,58 @@ public static class RedisEmotionChannels
         }
     }
 
+    public static bool TryParseDeviceChannel(string channelName, out string deviceId, out EmotionChannelKind channelKind)
+    {
+        deviceId = string.Empty;
+        channelKind = EmotionChannelKind.Broadcast;
+
+        if (string.IsNullOrWhiteSpace(channelName))
+        {
+            return false;
+        }
+
+        const string prefix = "device:";
+        if (!channelName.StartsWith(prefix, StringComparison.OrdinalIgnoreCase))
+        {
+            return false;
+        }
+
+        int finalColon = channelName.LastIndexOf(':');
+        if (finalColon <= prefix.Length || finalColon >= channelName.Length - 1)
+        {
+            return false;
+        }
+
+        string suffix = channelName.Substring(finalColon + 1);
+        if (suffix.Equals("valence_cont", StringComparison.OrdinalIgnoreCase) ||
+            suffix.Equals("valence", StringComparison.OrdinalIgnoreCase))
+        {
+            channelKind = EmotionChannelKind.Valence;
+        }
+        else if (suffix.Equals("arousal_cont", StringComparison.OrdinalIgnoreCase) ||
+                 suffix.Equals("arousal", StringComparison.OrdinalIgnoreCase))
+        {
+            channelKind = EmotionChannelKind.Arousal;
+        }
+        else if (suffix.Equals("hr_filtered", StringComparison.OrdinalIgnoreCase) ||
+                 suffix.Equals("hr", StringComparison.OrdinalIgnoreCase))
+        {
+            channelKind = EmotionChannelKind.HeartRate;
+        }
+        else if (suffix.Equals("eda_filtered", StringComparison.OrdinalIgnoreCase) ||
+                 suffix.Equals("eda", StringComparison.OrdinalIgnoreCase))
+        {
+            channelKind = EmotionChannelKind.EdaFiltered;
+        }
+        else
+        {
+            return false;
+        }
+
+        deviceId = channelName.Substring(prefix.Length, finalColon - prefix.Length).Trim();
+        return deviceId.Length > 0;
+    }
+
     private static string FormatDeviceChannel(string template, string? deviceId)
     {
         if (string.IsNullOrWhiteSpace(deviceId))

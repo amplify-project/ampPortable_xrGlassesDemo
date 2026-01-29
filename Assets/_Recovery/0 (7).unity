@@ -5040,6 +5040,15 @@ MonoBehaviour:
   GraphGroupOriginOffset: {x: 0, y: 0, z: 0}
   GraphGroupSpacing: {x: 1.6, y: 0, z: 0.75}
   GraphGroupsPerRow: 2
+  ShowGraphLabels: 1
+  GraphLabelOffset: {x: 0, y: 0.6, z: 0}
+  GraphLabelFontSize: 0.18
+  GraphLabelColor: {r: 1, g: 1, b: 1, a: 1}
+  ShowGraphGroupLabels: 1
+  GraphGroupLabelOffset: {x: 0, y: 0, z: 0}
+  GraphGroupLabelVerticalOffset: 0.2
+  GraphGroupLabelFontSize: 0.24
+  GraphGroupLabelColor: {r: 1, g: 1, b: 1, a: 1}
   GraphChannelLayout: 1
   GraphStackedOriginOffset: {x: 0, y: 0, z: 0}
   GraphStackedVerticalSpacing: 0.4
