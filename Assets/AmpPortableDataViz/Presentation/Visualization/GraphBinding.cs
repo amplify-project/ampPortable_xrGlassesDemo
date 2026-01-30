@@ -152,13 +152,8 @@ namespace AmpPortableDataViz.Presentation.Visualization
 
         public void ApplyLayout()
         {
-            if (layoutMode == LayoutMode.Overlay)
-            {
-                SetTransform(stream.Visualizer?.transform, overlayLocalPosition, overlayLocalScale);
-                return;
-            }
-
-            SetTransform(stream.Visualizer?.transform, stackedLocalPosition, stackedLocalScale);
+            // Intentionally no-op: graph layout is controlled externally (e.g., Bootstrapper offsets).
+            return;
         }
 
         private static void SetTransform(Transform target, Vector3 localPosition, Vector3 localScale)

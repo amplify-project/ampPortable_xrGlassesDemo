@@ -5040,16 +5040,6 @@ MonoBehaviour:
   GraphGroupOriginOffset: {x: 0, y: 0, z: 0}
   GraphGroupSpacing: {x: 1.6, y: 0, z: 0.75}
   GraphGroupsPerRow: 2
-  ShowGraphPanels: 1
-  GraphPanelColor: {r: 0.8490566, g: 0.8490566, b: 0.8490566, a: 0.2}
-  GraphPanelPadding: {x: 0.08, y: 0.08}
-  GraphPanelDepthOffset: 0.01
-  GraphPanelOffset: {x: 0, y: 0, z: 0}
-  ShowGraphGroupPanels: 1
-  GraphGroupPanelColor: {r: 0.6415094, g: 0.6415094, b: 0.6415094, a: 0.12}
-  GraphGroupPanelPadding: {x: 0.12, y: 0.12}
-  GraphGroupPanelDepthOffset: 0.02
-  GraphGroupPanelOffset: {x: 0, y: 0, z: 0}
   ShowGraphLabels: 1
   GraphLabelHorizontalPadding: 0.08
   GraphLabelVerticalOffset: 0
@@ -5062,9 +5052,9 @@ MonoBehaviour:
   GraphGroupLabelVerticalOffset: 0.2
   GraphGroupLabelFontSize: 0.24
   GraphGroupLabelColor: {r: 1, g: 1, b: 1, a: 1}
-  GraphChannelLayout: 1
-  GraphStackedOriginOffset: {x: 0, y: 0.1, z: 0}
-  GraphStackedVerticalSpacing: 1.2
+  GraphChannelLayout: 0
+  GraphStackedOriginOffset: {x: 0, y: 0, z: 0}
+  GraphStackedVerticalSpacing: 0.6
   GraphValenceOffset: {x: 0, y: 0, z: 0}
   GraphArousalOffset: {x: 0, y: -0.6, z: 0}
   GraphHeartRateOffset: {x: 0, y: -0.12, z: 0}

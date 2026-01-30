@@ -81,6 +81,20 @@ namespace AmpPortableDataViz.Presentation.Bootstrap
         [Min(1)]
         public int GraphGroupsPerRow = 2;
 
+        [Header("Graph Panels")]
+        public bool ShowGraphPanels = true;
+        public Color GraphPanelColor = new Color(0f, 0f, 0f, 0.2f);
+        public Vector2 GraphPanelPadding = new Vector2(0.08f, 0.08f);
+        public float GraphPanelDepthOffset = 0.01f;
+        public Vector3 GraphPanelOffset = Vector3.zero;
+
+        [Header("Graph Group Panels")]
+        public bool ShowGraphGroupPanels = true;
+        public Color GraphGroupPanelColor = new Color(0f, 0f, 0f, 0.12f);
+        public Vector2 GraphGroupPanelPadding = new Vector2(0.12f, 0.12f);
+        public float GraphGroupPanelDepthOffset = 0.02f;
+        public Vector3 GraphGroupPanelOffset = Vector3.zero;
+
         [Header("Graph Labels")]
         public bool ShowGraphLabels = true;
         [Min(0f)]
@@ -162,10 +176,13 @@ namespace AmpPortableDataViz.Presentation.Bootstrap
         private FloatToSimpleParams _floatToParamsMapper;
         private Coroutine _initializationRoutine;
         private Coroutine _deviceDiscoveryRoutine;
+        private Coroutine _graphLayoutRefreshRoutine;
         private readonly List<EmotionDeviceInstance> _emotionDeviceInstances = new List<EmotionDeviceInstance>();
         private readonly List<GraphDeviceGroupInstance> _graphDeviceGroups = new List<GraphDeviceGroupInstance>();
         private readonly Dictionary<string, SharedPumpHandle> _sharedPumpsByChannel = new Dictionary<string, SharedPumpHandle>(StringComparer.Ordinal);
         private bool _redisEndpointReady;
+        private Material _graphPanelMaterial;
+        private Material _graphGroupPanelMaterial;
 
         private void Awake()
         {
@@ -259,6 +276,12 @@ namespace AmpPortableDataViz.Presentation.Bootstrap
                 _deviceDiscoveryRoutine = null;
             }
 
+            if (_graphLayoutRefreshRoutine != null)
+            {
+                StopCoroutine(_graphLayoutRefreshRoutine);
+                _graphLayoutRefreshRoutine = null;
+            }
+
             _sessionController?.Shutdown();
             ClearEmotionDeviceVisuals();
             ClearGraphDeviceVisuals();
@@ -266,6 +289,12 @@ namespace AmpPortableDataViz.Presentation.Bootstrap
 
         private void OnDestroy()
         {
+            if (_graphLayoutRefreshRoutine != null)
+            {
+                StopCoroutine(_graphLayoutRefreshRoutine);
+                _graphLayoutRefreshRoutine = null;
+            }
+
             _sessionController?.Dispose();
             _sessionController = null;
             ClearEmotionDeviceVisuals();
@@ -743,6 +772,7 @@ namespace AmpPortableDataViz.Presentation.Bootstrap
                 var instance = new GraphDeviceGroupInstance
                 {
                     DeviceId = definition.DeviceId,
+                    DeviceIndex = deviceIndex,
                     GroupRoot = groupRoot
                 };
 
@@ -770,7 +800,8 @@ namespace AmpPortableDataViz.Presentation.Bootstrap
                     {
                         instance.ValenceChannel = valenceChannel;
                         offsetsInUse.Add(valenceOffset);
-                        AttachGraphLabel(instance.ValenceGraph, ResolveGraphChannelLabel(EmotionChannelKind.Valence));
+                        AttachGraphPanel(instance.ValenceGraph);
+                        AttachGraphLabel(groupRoot, instance.ValenceGraph, valenceOffset, ResolveGraphChannelLabel(EmotionChannelKind.Valence));
                     }
                 }
 
@@ -792,7 +823,8 @@ namespace AmpPortableDataViz.Presentation.Bootstrap
                     {
                         instance.ArousalChannel = arousalChannel;
                         offsetsInUse.Add(arousalOffset);
-                        AttachGraphLabel(instance.ArousalGraph, ResolveGraphChannelLabel(EmotionChannelKind.Arousal));
+                        AttachGraphPanel(instance.ArousalGraph);
+                        AttachGraphLabel(groupRoot, instance.ArousalGraph, arousalOffset, ResolveGraphChannelLabel(EmotionChannelKind.Arousal));
                     }
                 }
 
@@ -814,7 +846,8 @@ namespace AmpPortableDataViz.Presentation.Bootstrap
                     {
                         instance.HeartRateChannel = heartRateChannel;
                         offsetsInUse.Add(heartRateOffset);
-                        AttachGraphLabel(instance.HeartRateGraph, ResolveGraphChannelLabel(EmotionChannelKind.HeartRate));
+                        AttachGraphPanel(instance.HeartRateGraph);
+                        AttachGraphLabel(groupRoot, instance.HeartRateGraph, heartRateOffset, ResolveGraphChannelLabel(EmotionChannelKind.HeartRate));
                     }
                 }
 
@@ -836,7 +869,8 @@ namespace AmpPortableDataViz.Presentation.Bootstrap
                     {
                         instance.EdaChannel = edaChannel;
                         offsetsInUse.Add(edaOffset);
-                        AttachGraphLabel(instance.EdaGraph, ResolveGraphChannelLabel(EmotionChannelKind.EdaFiltered));
+                        AttachGraphPanel(instance.EdaGraph);
+                        AttachGraphLabel(groupRoot, instance.EdaGraph, edaOffset, ResolveGraphChannelLabel(EmotionChannelKind.EdaFiltered));
                     }
                 }
 
@@ -856,10 +890,13 @@ namespace AmpPortableDataViz.Presentation.Bootstrap
                     ConfigureGraphGroupGrab(groupRoot, offsetsInUse);
                 }
 
+                AttachGraphGroupPanel(groupRoot, offsetsInUse);
                 AttachGraphGroupLabel(groupRoot, definition.DeviceId, deviceIndex, offsetsInUse);
                 _graphDeviceGroups.Add(instance);
                 deviceIndex++;
             }
+
+            RequestGraphLayoutRefresh();
         }
 
         private RedisDataPump AcquireRedisPumpForChannel(string deviceId, EmotionChannelKind channelKind, string channelName)
@@ -1419,7 +1456,7 @@ namespace AmpPortableDataViz.Presentation.Bootstrap
             labelObject.AddComponent<BillboardLabel>();
         }
 
-        private void AttachGraphLabel(GameObject graphInstance, string labelText)
+        private void AttachGraphLabel(GameObject groupRoot, GameObject graphInstance, Vector3 channelOffset, string labelText)
         {
             if (!ShowGraphLabels || graphInstance == null || string.IsNullOrWhiteSpace(labelText))
             {
@@ -1437,8 +1474,9 @@ namespace AmpPortableDataViz.Presentation.Bootstrap
             Vector3 baseOffset = new Vector3(xOffset, GraphLabelVerticalOffset, GraphLabelDepthOffset);
 
             var labelObject = new GameObject("GraphLabel");
-            labelObject.transform.SetParent(graphInstance.transform, false);
-            labelObject.transform.localPosition = baseOffset + GraphLabelOffset;
+            var parent = groupRoot != null ? groupRoot.transform : graphInstance.transform;
+            labelObject.transform.SetParent(parent, false);
+            labelObject.transform.localPosition = channelOffset + baseOffset + GraphLabelOffset;
             labelObject.transform.localRotation = Quaternion.identity;
             labelObject.transform.localScale = Vector3.one;
             labelObject.layer = graphInstance.layer;
@@ -1452,6 +1490,178 @@ namespace AmpPortableDataViz.Presentation.Bootstrap
             text.richText = false;
 
             labelObject.AddComponent<BillboardLabel>();
+        }
+
+        private void RequestGraphLayoutRefresh()
+        {
+            if (_graphLayoutRefreshRoutine != null)
+            {
+                StopCoroutine(_graphLayoutRefreshRoutine);
+            }
+
+            _graphLayoutRefreshRoutine = StartCoroutine(RefreshGraphLayoutForFrames(3));
+        }
+
+        private IEnumerator RefreshGraphLayoutForFrames(int frameCount)
+        {
+            int remaining = Mathf.Max(1, frameCount);
+            while (remaining-- > 0)
+            {
+                yield return null;
+                ApplyGraphLayoutToGroups();
+            }
+            _graphLayoutRefreshRoutine = null;
+        }
+
+        private void ApplyGraphLayoutToGroups()
+        {
+            if (_graphDeviceGroups.Count == 0)
+            {
+                return;
+            }
+
+            foreach (var instance in _graphDeviceGroups)
+            {
+                if (instance == null || instance.GroupRoot == null)
+                {
+                    continue;
+                }
+
+                Vector3 valenceOffset = ResolveGraphChannelOffset(EmotionChannelKind.Valence);
+                Vector3 arousalOffset = ResolveGraphChannelOffset(EmotionChannelKind.Arousal);
+                Vector3 heartRateOffset = ResolveGraphChannelOffset(EmotionChannelKind.HeartRate);
+                Vector3 edaOffset = ResolveGraphChannelOffset(EmotionChannelKind.EdaFiltered);
+
+                var offsetsInUse = new List<Vector3>(4);
+
+                if (instance.ValenceGraph != null)
+                {
+                    instance.ValenceGraph.transform.localPosition = valenceOffset;
+                    offsetsInUse.Add(valenceOffset);
+                }
+
+                if (instance.ArousalGraph != null)
+                {
+                    instance.ArousalGraph.transform.localPosition = arousalOffset;
+                    offsetsInUse.Add(arousalOffset);
+                }
+
+                if (instance.HeartRateGraph != null)
+                {
+                    instance.HeartRateGraph.transform.localPosition = heartRateOffset;
+                    offsetsInUse.Add(heartRateOffset);
+                }
+
+                if (instance.EdaGraph != null)
+                {
+                    instance.EdaGraph.transform.localPosition = edaOffset;
+                    offsetsInUse.Add(edaOffset);
+                }
+
+                ClearGraphGroupDecorations(instance.GroupRoot.transform);
+
+                if (instance.ValenceGraph != null)
+                {
+                    AttachGraphLabel(instance.GroupRoot, instance.ValenceGraph, valenceOffset, ResolveGraphChannelLabel(EmotionChannelKind.Valence));
+                }
+
+                if (instance.ArousalGraph != null)
+                {
+                    AttachGraphLabel(instance.GroupRoot, instance.ArousalGraph, arousalOffset, ResolveGraphChannelLabel(EmotionChannelKind.Arousal));
+                }
+
+                if (instance.HeartRateGraph != null)
+                {
+                    AttachGraphLabel(instance.GroupRoot, instance.HeartRateGraph, heartRateOffset, ResolveGraphChannelLabel(EmotionChannelKind.HeartRate));
+                }
+
+                if (instance.EdaGraph != null)
+                {
+                    AttachGraphLabel(instance.GroupRoot, instance.EdaGraph, edaOffset, ResolveGraphChannelLabel(EmotionChannelKind.EdaFiltered));
+                }
+
+                AttachGraphGroupPanel(instance.GroupRoot, offsetsInUse);
+                AttachGraphGroupLabel(instance.GroupRoot, instance.DeviceId, instance.DeviceIndex, offsetsInUse);
+            }
+        }
+
+        private static void ClearGraphGroupDecorations(Transform groupRoot)
+        {
+            if (groupRoot == null)
+            {
+                return;
+            }
+
+            var toRemove = new List<GameObject>();
+            for (int i = 0; i < groupRoot.childCount; i++)
+            {
+                var child = groupRoot.GetChild(i);
+                if (child == null)
+                {
+                    continue;
+                }
+
+                string name = child.name;
+                if (name == "GraphLabel" || name == "GraphGroupLabel" || name == "GraphGroupPanel")
+                {
+                    toRemove.Add(child.gameObject);
+                }
+            }
+
+            foreach (var child in toRemove)
+            {
+                if (child != null)
+                {
+                    Destroy(child);
+                }
+            }
+        }
+
+        private void AttachGraphPanel(GameObject graphInstance)
+        {
+            if (!ShowGraphPanels || graphInstance == null)
+            {
+                return;
+            }
+
+            Vector2 panelSize = new Vector2(GraphItemBoundsSize.x, GraphItemBoundsSize.y);
+            var graphVisualizer = graphInstance.GetComponentInChildren<GraphVisualizer>();
+            if (graphVisualizer != null)
+            {
+                panelSize = graphVisualizer.GraphSize;
+            }
+
+            panelSize += GraphPanelPadding;
+            Vector3 localPosition = new Vector3(0f, 0f, GraphPanelDepthOffset) + GraphPanelOffset;
+            var panel = CreatePanelQuad("GraphPanel", graphInstance.transform, panelSize, localPosition, GetGraphPanelMaterial());
+            if (panel != null)
+            {
+                panel.layer = graphInstance.layer;
+            }
+        }
+
+        private void AttachGraphGroupPanel(GameObject groupRoot, IReadOnlyList<Vector3> channelOffsets)
+        {
+            if (!ShowGraphGroupPanels || groupRoot == null)
+            {
+                return;
+            }
+
+            Vector3 center = Vector3.zero;
+            Vector3 size = GraphItemBoundsSize;
+            if (TryCalculateGraphGroupBounds(channelOffsets, out var boundsCenter, out var boundsSize))
+            {
+                center = boundsCenter;
+                size = boundsSize;
+            }
+
+            Vector2 panelSize = new Vector2(size.x, size.y) + GraphGroupPanelPadding;
+            Vector3 localPosition = center + new Vector3(0f, 0f, GraphGroupPanelDepthOffset) + GraphGroupPanelOffset;
+            var panel = CreatePanelQuad("GraphGroupPanel", groupRoot.transform, panelSize, localPosition, GetGraphGroupPanelMaterial());
+            if (panel != null)
+            {
+                panel.layer = groupRoot.layer;
+            }
         }
 
         private void AttachGraphGroupLabel(GameObject groupRoot, string deviceId, int deviceIndex, IReadOnlyList<Vector3> channelOffsets)
@@ -1492,6 +1702,77 @@ namespace AmpPortableDataViz.Presentation.Bootstrap
             text.richText = false;
 
             labelObject.AddComponent<BillboardLabel>();
+        }
+
+        private Material GetGraphPanelMaterial()
+        {
+            return GetOrCreatePanelMaterial(ref _graphPanelMaterial, GraphPanelColor);
+        }
+
+        private Material GetGraphGroupPanelMaterial()
+        {
+            return GetOrCreatePanelMaterial(ref _graphGroupPanelMaterial, GraphGroupPanelColor);
+        }
+
+        private static Material GetOrCreatePanelMaterial(ref Material material, Color color)
+        {
+            if (material == null)
+            {
+                Shader shader = Shader.Find("Sprites/Default");
+                if (shader == null)
+                {
+                    shader = Shader.Find("Unlit/Color");
+                }
+
+                if (shader == null)
+                {
+                    return null;
+                }
+
+                material = new Material(shader);
+            }
+
+            if (material.HasProperty("_Color"))
+            {
+                material.SetColor("_Color", color);
+            }
+            if (material.HasProperty("_BaseColor"))
+            {
+                material.SetColor("_BaseColor", color);
+            }
+
+            return material;
+        }
+
+        private static GameObject CreatePanelQuad(string name, Transform parent, Vector2 size, Vector3 localPosition, Material material)
+        {
+            if (parent == null || material == null)
+            {
+                return null;
+            }
+
+            var panel = GameObject.CreatePrimitive(PrimitiveType.Quad);
+            panel.name = name;
+            panel.transform.SetParent(parent, false);
+            panel.transform.localPosition = localPosition;
+            panel.transform.localRotation = Quaternion.identity;
+            panel.transform.localScale = new Vector3(size.x, size.y, 1f);
+
+            var collider = panel.GetComponent<Collider>();
+            if (collider != null)
+            {
+                Destroy(collider);
+            }
+
+            var renderer = panel.GetComponent<MeshRenderer>();
+            if (renderer != null)
+            {
+                renderer.sharedMaterial = material;
+                renderer.shadowCastingMode = UnityEngine.Rendering.ShadowCastingMode.Off;
+                renderer.receiveShadows = false;
+            }
+
+            return panel;
         }
 
         private static string ResolveGraphChannelLabel(EmotionChannelKind channelKind)
@@ -1592,6 +1873,7 @@ namespace AmpPortableDataViz.Presentation.Bootstrap
         private sealed class GraphDeviceGroupInstance
         {
             public string DeviceId;
+            public int DeviceIndex;
             public GameObject GroupRoot;
             public GameObject ValenceGraph;
             public GameObject ArousalGraph;
