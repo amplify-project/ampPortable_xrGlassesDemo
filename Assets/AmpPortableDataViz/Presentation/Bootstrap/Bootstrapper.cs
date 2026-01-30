@@ -124,6 +124,8 @@ namespace AmpPortableDataViz.Presentation.Bootstrap
         public Vector3 GraphStackedOriginOffset = Vector3.zero;
         [Min(0.01f)]
         public float GraphStackedVerticalSpacing = 0.6f;
+        [Range(0.1f, 1f)]
+        public float GraphStackedHeightScale = 0.6f;
 
         [Header("Graph Channel Offsets")]
         public Vector3 GraphValenceOffset = new Vector3(-0.6f, 0f, 0f);
@@ -800,6 +802,7 @@ namespace AmpPortableDataViz.Presentation.Bootstrap
                     {
                         instance.ValenceChannel = valenceChannel;
                         offsetsInUse.Add(valenceOffset);
+                        ApplyGraphHeightScale(instance.ValenceGraph);
                         AttachGraphPanel(instance.ValenceGraph);
                         AttachGraphLabel(groupRoot, instance.ValenceGraph, valenceOffset, ResolveGraphChannelLabel(EmotionChannelKind.Valence));
                     }
@@ -823,6 +826,7 @@ namespace AmpPortableDataViz.Presentation.Bootstrap
                     {
                         instance.ArousalChannel = arousalChannel;
                         offsetsInUse.Add(arousalOffset);
+                        ApplyGraphHeightScale(instance.ArousalGraph);
                         AttachGraphPanel(instance.ArousalGraph);
                         AttachGraphLabel(groupRoot, instance.ArousalGraph, arousalOffset, ResolveGraphChannelLabel(EmotionChannelKind.Arousal));
                     }
@@ -846,6 +850,7 @@ namespace AmpPortableDataViz.Presentation.Bootstrap
                     {
                         instance.HeartRateChannel = heartRateChannel;
                         offsetsInUse.Add(heartRateOffset);
+                        ApplyGraphHeightScale(instance.HeartRateGraph);
                         AttachGraphPanel(instance.HeartRateGraph);
                         AttachGraphLabel(groupRoot, instance.HeartRateGraph, heartRateOffset, ResolveGraphChannelLabel(EmotionChannelKind.HeartRate));
                     }
@@ -869,6 +874,7 @@ namespace AmpPortableDataViz.Presentation.Bootstrap
                     {
                         instance.EdaChannel = edaChannel;
                         offsetsInUse.Add(edaOffset);
+                        ApplyGraphHeightScale(instance.EdaGraph);
                         AttachGraphPanel(instance.EdaGraph);
                         AttachGraphLabel(groupRoot, instance.EdaGraph, edaOffset, ResolveGraphChannelLabel(EmotionChannelKind.EdaFiltered));
                     }
@@ -1538,24 +1544,32 @@ namespace AmpPortableDataViz.Presentation.Bootstrap
                 {
                     instance.ValenceGraph.transform.localPosition = valenceOffset;
                     offsetsInUse.Add(valenceOffset);
+                    ApplyGraphHeightScale(instance.ValenceGraph);
+                    UpdateGraphPanelSize(instance.ValenceGraph);
                 }
 
                 if (instance.ArousalGraph != null)
                 {
                     instance.ArousalGraph.transform.localPosition = arousalOffset;
                     offsetsInUse.Add(arousalOffset);
+                    ApplyGraphHeightScale(instance.ArousalGraph);
+                    UpdateGraphPanelSize(instance.ArousalGraph);
                 }
 
                 if (instance.HeartRateGraph != null)
                 {
                     instance.HeartRateGraph.transform.localPosition = heartRateOffset;
                     offsetsInUse.Add(heartRateOffset);
+                    ApplyGraphHeightScale(instance.HeartRateGraph);
+                    UpdateGraphPanelSize(instance.HeartRateGraph);
                 }
 
                 if (instance.EdaGraph != null)
                 {
                     instance.EdaGraph.transform.localPosition = edaOffset;
                     offsetsInUse.Add(edaOffset);
+                    ApplyGraphHeightScale(instance.EdaGraph);
+                    UpdateGraphPanelSize(instance.EdaGraph);
                 }
 
                 ClearGraphGroupDecorations(instance.GroupRoot.transform);
@@ -1638,6 +1652,61 @@ namespace AmpPortableDataViz.Presentation.Bootstrap
             {
                 panel.layer = graphInstance.layer;
             }
+            UpdateGraphPanelSize(graphInstance);
+        }
+
+        private void UpdateGraphPanelSize(GameObject graphInstance)
+        {
+            if (graphInstance == null)
+            {
+                return;
+            }
+
+            Transform panelTransform = graphInstance.transform.Find("GraphPanel");
+            if (panelTransform == null)
+            {
+                return;
+            }
+
+            Vector2 panelSize = new Vector2(GraphItemBoundsSize.x, GraphItemBoundsSize.y);
+            var graphVisualizer = graphInstance.GetComponentInChildren<GraphVisualizer>();
+            if (graphVisualizer != null)
+            {
+                panelSize = graphVisualizer.GraphSize;
+            }
+
+            float fallbackY = GraphItemBoundsSize.y * (GraphChannelLayout == GraphChannelLayoutMode.Stacked ? GraphStackedHeightScale : 1f);
+            if (panelSize.x < 0.01f)
+            {
+                panelSize.x = GraphItemBoundsSize.x;
+            }
+            if (panelSize.y < 0.01f)
+            {
+                panelSize.y = fallbackY;
+            }
+
+            panelSize += GraphPanelPadding;
+            panelTransform.localScale = new Vector3(panelSize.x, panelSize.y, 1f);
+        }
+
+        private void ApplyGraphHeightScale(GameObject graphInstance)
+        {
+            if (graphInstance == null)
+            {
+                return;
+            }
+
+            var graphVisualizer = graphInstance.GetComponentInChildren<GraphVisualizer>();
+            if (graphVisualizer == null)
+            {
+                return;
+            }
+
+            float scale = GraphChannelLayout == GraphChannelLayoutMode.Stacked
+                ? GraphStackedHeightScale
+                : 1f;
+
+            graphVisualizer.SetGraphSizeYScale(scale);
         }
 
         private void AttachGraphGroupPanel(GameObject groupRoot, IReadOnlyList<Vector3> channelOffsets)
@@ -1654,6 +1723,30 @@ namespace AmpPortableDataViz.Presentation.Bootstrap
                 center = boundsCenter;
                 size = boundsSize;
             }
+
+            float heightScale = GraphChannelLayout == GraphChannelLayoutMode.Stacked
+                ? GraphStackedHeightScale
+                : 1f;
+            float graphHeight = GraphItemBoundsSize.y * heightScale;
+            float minY = center.y - graphHeight * 0.5f;
+            float maxY = center.y + graphHeight * 0.5f;
+            if (channelOffsets != null && channelOffsets.Count > 0)
+            {
+                minY = float.PositiveInfinity;
+                maxY = float.NegativeInfinity;
+                float halfHeight = graphHeight * 0.5f;
+                foreach (var offset in channelOffsets)
+                {
+                    float localMin = offset.y - halfHeight;
+                    float localMax = offset.y + halfHeight;
+                    if (localMin < minY) minY = localMin;
+                    if (localMax > maxY) maxY = localMax;
+                }
+            }
+
+            float totalHeight = Mathf.Max(graphHeight, maxY - minY);
+            size.y = totalHeight;
+            center.y = (minY + maxY) * 0.5f;
 
             Vector2 panelSize = new Vector2(size.x, size.y) + GraphGroupPanelPadding;
             Vector3 localPosition = center + new Vector3(0f, 0f, GraphGroupPanelDepthOffset) + GraphGroupPanelOffset;

@@ -14,6 +14,7 @@ namespace AmpPortableDataViz.Presentation.Visualization
 
         private Vector3[] _positions;
         public Vector2 GraphSize => graphSize;
+        private Vector2 _baseGraphSize;
 
         private void Awake()
         {
@@ -26,6 +27,24 @@ namespace AmpPortableDataViz.Presentation.Visualization
             {
                 lineRenderer.useWorldSpace = false;
             }
+
+            _baseGraphSize = graphSize;
+        }
+
+        private void OnValidate()
+        {
+            _baseGraphSize = graphSize;
+        }
+
+        public void SetGraphSizeYScale(float scale)
+        {
+            if (_baseGraphSize.sqrMagnitude < 1e-6f)
+            {
+                _baseGraphSize = graphSize;
+            }
+
+            float clamped = Mathf.Max(0.01f, scale);
+            graphSize = new Vector2(_baseGraphSize.x, _baseGraphSize.y * clamped);
         }
 
         public void Apply(in GraphParams parameters, long timestampTicksUtc)

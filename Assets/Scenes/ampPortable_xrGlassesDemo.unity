@@ -5051,20 +5051,21 @@ MonoBehaviour:
   GraphGroupPanelDepthOffset: 0.02
   GraphGroupPanelOffset: {x: 0, y: 0, z: 0}
   ShowGraphLabels: 1
-  GraphLabelHorizontalPadding: 0.08
+  GraphLabelHorizontalPadding: 0.15
   GraphLabelVerticalOffset: 0
   GraphLabelDepthOffset: 0
-  GraphLabelOffset: {x: 0, y: -0.6, z: 0}
-  GraphLabelFontSize: 0.18
+  GraphLabelOffset: {x: 0, y: 0, z: 0}
+  GraphLabelFontSize: 0.5
   GraphLabelColor: {r: 1, g: 1, b: 1, a: 1}
   ShowGraphGroupLabels: 1
-  GraphGroupLabelOffset: {x: 0, y: 0, z: 0}
-  GraphGroupLabelVerticalOffset: 0.2
-  GraphGroupLabelFontSize: 0.24
+  GraphGroupLabelOffset: {x: 0, y: -0.35, z: 0}
+  GraphGroupLabelVerticalOffset: 0
+  GraphGroupLabelFontSize: 0.5
   GraphGroupLabelColor: {r: 1, g: 1, b: 1, a: 1}
   GraphChannelLayout: 1
   GraphStackedOriginOffset: {x: 0, y: 0.1, z: 0}
-  GraphStackedVerticalSpacing: 1.2
+  GraphStackedVerticalSpacing: 0.3
+  GraphStackedHeightScale: 0.15
   GraphValenceOffset: {x: 0, y: 0, z: 0}
   GraphArousalOffset: {x: 0, y: -0.6, z: 0}
   GraphHeartRateOffset: {x: 0, y: -0.12, z: 0}
