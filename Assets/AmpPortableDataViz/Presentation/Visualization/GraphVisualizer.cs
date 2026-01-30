@@ -13,6 +13,7 @@ namespace AmpPortableDataViz.Presentation.Visualization
         [SerializeField] private bool clampToBounds = true;
 
         private Vector3[] _positions;
+        public Vector2 GraphSize => graphSize;
 
         private void Awake()
         {

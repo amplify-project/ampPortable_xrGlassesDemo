@@ -83,7 +83,11 @@ namespace AmpPortableDataViz.Presentation.Bootstrap
 
         [Header("Graph Labels")]
         public bool ShowGraphLabels = true;
-        public Vector3 GraphLabelOffset = new Vector3(0f, 0.6f, 0f);
+        [Min(0f)]
+        public float GraphLabelHorizontalPadding = 0.08f;
+        public float GraphLabelVerticalOffset = 0f;
+        public float GraphLabelDepthOffset = 0f;
+        public Vector3 GraphLabelOffset = Vector3.zero;
         public float GraphLabelFontSize = 0.18f;
         public Color GraphLabelColor = Color.white;
 
@@ -1422,9 +1426,19 @@ namespace AmpPortableDataViz.Presentation.Bootstrap
                 return;
             }
 
+            float halfWidth = GraphItemBoundsSize.x * 0.5f;
+            var graphVisualizer = graphInstance.GetComponentInChildren<GraphVisualizer>();
+            if (graphVisualizer != null)
+            {
+                halfWidth = graphVisualizer.GraphSize.x * 0.5f;
+            }
+
+            float xOffset = -halfWidth - Mathf.Max(0f, GraphLabelHorizontalPadding);
+            Vector3 baseOffset = new Vector3(xOffset, GraphLabelVerticalOffset, GraphLabelDepthOffset);
+
             var labelObject = new GameObject("GraphLabel");
             labelObject.transform.SetParent(graphInstance.transform, false);
-            labelObject.transform.localPosition = GraphLabelOffset;
+            labelObject.transform.localPosition = baseOffset + GraphLabelOffset;
             labelObject.transform.localRotation = Quaternion.identity;
             labelObject.transform.localScale = Vector3.one;
             labelObject.layer = graphInstance.layer;
