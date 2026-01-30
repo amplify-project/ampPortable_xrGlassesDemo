@@ -160,6 +160,14 @@ MonoBehaviour:
   lineRenderer: {fileID: 0}
   graphSize: {x: 1, y: 1}
   clampToBounds: 1
+  showValueLabel: 1
+  valueLabel: {fileID: 0}
+  valueLabelOffset: {x: 0.05, y: 0, z: 0}
+  valueLabelFontSize: 0.4
+  valueLabelColor: {r: 1, g: 1, b: 1, a: 1}
+  valueLabelUseLineColor: 1
+  valueLabelFormat: 0.00
+  valueLabelBillboard: 1
 --- !u!114 &8828575574408559041
 MonoBehaviour:
   m_ObjectHideFlags: 0
