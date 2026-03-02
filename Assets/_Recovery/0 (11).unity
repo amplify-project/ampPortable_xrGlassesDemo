@@ -6675,7 +6675,7 @@ MonoBehaviour:
   m_MatchAttachRotation: 1
   m_SnapToColliderVolume: 0
   m_ReinitializeDynamicAttachEverySingleGrab: 0
-  m_AttachEaseInTime: 0.3
+  m_AttachEaseInTime: 0.15
   m_MovementType: 1
   m_PredictedVisualsTransform: {fileID: 0}
   m_VelocityDamping: 1
@@ -6684,8 +6684,8 @@ MonoBehaviour:
   m_AngularVelocityScale: 1
   m_TrackPosition: 1
   m_SmoothPosition: 1
-  m_SmoothPositionAmount: 4.5
-  m_TightenPosition: 0.014
+  m_SmoothPositionAmount: 14.3
+  m_TightenPosition: 0.1
   m_TrackRotation: 0
   m_SmoothRotation: 1
   m_SmoothRotationAmount: 14
