@@ -31,14 +31,16 @@ namespace AmpPortableDataViz.Presentation.Interaction
             ApplyState(_currentIndex);
         }
 
-        public void CycleVisualization()
-        {
-            _currentIndex = (_currentIndex + 1) % 3;
-            ApplyState(_currentIndex);
-        }
+        // public void CycleVisualization()
+        // {
+        //     _currentIndex = (_currentIndex + 1) % 3;
+        //     ApplyState(_currentIndex);
+        // }
 
-        private void ApplyState(int index)
+        public void ApplyState(int index)
         {
+            Debug.Log($"VisualizationCycler: Applying visualization index {index}.");
+            
             if (imageBoardParent != null)
             {
                 imageBoardParent.SetActive(index == 0);
