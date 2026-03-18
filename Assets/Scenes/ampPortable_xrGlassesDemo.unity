@@ -2505,6 +2505,7 @@ GameObject:
   m_Component:
   - component: {fileID: 611389438}
   - component: {fileID: 611389439}
+  - component: {fileID: 611389440}
   m_Layer: 0
   m_Name: Lock Position
   m_TagString: Untagged
@@ -2580,7 +2581,7 @@ MonoBehaviour:
   onValueChanged:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 2056354657}
+      - m_Target: {fileID: 611389440}
         m_TargetAssemblyTypeName: GrabManager, Amp
         m_MethodName: OnLockPositionClicked
         m_Mode: 0
@@ -2593,6 +2594,21 @@ MonoBehaviour:
           m_BoolArgument: 0
         m_CallState: 2
   m_IsOn: 0
+--- !u!114 &611389440
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 611389437}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6791d4b6081754d4bb46d0715eadce8a, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Amp::GrabManager
+  imageBoardParent: {fileID: 2056354646}
+  emtionVisualParent: {fileID: 1165166119}
+  graphVizParent: {fileID: 645856976}
 --- !u!1 &645856976
 GameObject:
   m_ObjectHideFlags: 0
@@ -7431,7 +7447,6 @@ GameObject:
   - component: {fileID: 2056354654}
   - component: {fileID: 2056354655}
   - component: {fileID: 2056354656}
-  - component: {fileID: 2056354657}
   m_Layer: 0
   m_Name: ImageBoardParent
   m_TagString: Untagged
@@ -7711,19 +7726,6 @@ MonoBehaviour:
   m_MinimumScaleRatio: 0.25
   m_MaximumScaleRatio: 2
   m_ScaleMultiplier: 0.25
---- !u!114 &2056354657
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2056354646}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 6791d4b6081754d4bb46d0715eadce8a, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: '::'
-  grabInteractable: {fileID: 2056354650}
 --- !u!1 &2067017693
 GameObject:
   m_ObjectHideFlags: 0
