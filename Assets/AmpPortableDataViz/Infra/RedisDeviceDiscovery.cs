@@ -9,6 +9,38 @@ namespace AmpPortableDataViz.Infra
 {
     public static class RedisDeviceDiscovery
     {
+        public static async Task<bool> CanConnectAsync(string host, int port, int timeoutMs = 2000)
+        {
+            if (string.IsNullOrWhiteSpace(host))
+            {
+                return false;
+            }
+
+            ConnectionMultiplexer redis = null;
+            try
+            {
+                redis = await ConnectionMultiplexer.ConnectAsync(CreateConfigurationOptions(host, port, timeoutMs));
+                if (redis == null)
+                {
+                    Debug.LogWarning($"RedisDeviceDiscovery: Connection multiplexer was null for Redis at {host}:{port}.");
+                    return false;
+                }
+
+                await redis.GetDatabase().PingAsync();
+                Debug.Log($"RedisDeviceDiscovery: Verified Redis connection at {host}:{port}.");
+                return true;
+            }
+            catch (Exception ex)
+            {
+                Debug.LogWarning($"RedisDeviceDiscovery: Failed to verify Redis at {host}:{port} ({ex.Message})");
+                return false;
+            }
+            finally
+            {
+                await CloseConnectionAsync(redis);
+            }
+        }
+
         public static async Task<IReadOnlyList<string>> DiscoverDeviceIdsAsync(string host, int port, int timeoutMs = 2000)
         {
             if (string.IsNullOrWhiteSpace(host))
@@ -16,18 +48,10 @@ namespace AmpPortableDataViz.Infra
                 return Array.Empty<string>();
             }
 
-            var config = new ConfigurationOptions
-            {
-                EndPoints = { $"{host}:{port}" },
-                ConnectTimeout = timeoutMs,
-                SyncTimeout = timeoutMs,
-                AbortOnConnectFail = false
-            };
-
             ConnectionMultiplexer redis = null;
             try
             {
-                redis = await ConnectionMultiplexer.ConnectAsync(config);
+                redis = await ConnectionMultiplexer.ConnectAsync(CreateConfigurationOptions(host, port, timeoutMs));
             }
             catch (Exception ex)
             {
@@ -64,18 +88,35 @@ namespace AmpPortableDataViz.Infra
             }
             finally
             {
-                try
+                await CloseConnectionAsync(redis);
+            }
+        }
+
+        private static ConfigurationOptions CreateConfigurationOptions(string host, int port, int timeoutMs)
+        {
+            int effectiveTimeoutMs = Mathf.Max(1, timeoutMs);
+            return new ConfigurationOptions
+            {
+                EndPoints = { $"{host}:{port}" },
+                ConnectTimeout = effectiveTimeoutMs,
+                SyncTimeout = effectiveTimeoutMs,
+                AbortOnConnectFail = false
+            };
+        }
+
+        private static async Task CloseConnectionAsync(ConnectionMultiplexer redis)
+        {
+            try
+            {
+                if (redis != null)
                 {
-                    if (redis != null)
-                    {
-                        await redis.CloseAsync();
-                        redis.Dispose();
-                    }
+                    await redis.CloseAsync();
+                    redis.Dispose();
                 }
-                catch
-                {
-                    // ignored on purpose
-                }
+            }
+            catch
+            {
+                // ignored on purpose
             }
         }
 

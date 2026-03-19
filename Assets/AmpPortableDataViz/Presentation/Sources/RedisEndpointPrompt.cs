@@ -1,4 +1,6 @@
 using System;
+using System.Threading.Tasks;
+using AmpPortableDataViz.Infra;
 using TMPro;
 using UnityEngine;
 using UnityEngine.Events;
@@ -11,6 +13,8 @@ namespace AmpPortableDataViz.Presentation.Sources
     /// </summary>
     public sealed class RedisEndpointPrompt : MonoBehaviour
     {
+        private const string ConnectionFailedMessage = "Could not connect to the server. Please check IP address and port numbers are correct and try again.";
+
         [Header("UI References")]
         [SerializeField] private TMP_InputField hostInput;
         [SerializeField] private TMP_InputField portInput;
@@ -20,6 +24,7 @@ namespace AmpPortableDataViz.Presentation.Sources
         [SerializeField] private bool useTouchScreenKeyboard = true;
         [SerializeField] private bool autoCreateValidationLabel = true;
         [SerializeField] private Color validationLabelColor = new Color(0.9f, 0.3f, 0.3f, 1f);
+        [SerializeField] private int connectionTimeoutMs = 2000;
 
         [Header("Events")]
         public UnityEvent OnEndpointReady = new UnityEvent();
@@ -27,6 +32,7 @@ namespace AmpPortableDataViz.Presentation.Sources
 
         private TouchScreenKeyboard _keyboard;
         private TMP_InputField _activeInput;
+        private bool _confirmInProgress;
 
         private void Awake()
         {
@@ -82,12 +88,18 @@ namespace AmpPortableDataViz.Presentation.Sources
             }
         }
 
-        private void HandleConfirm()
+        private async void HandleConfirm()
         {
+            if (_confirmInProgress)
+            {
+                return;
+            }
+
             string hostValue = hostInput != null ? hostInput.text.Trim() : string.Empty;
             string portText = portInput != null ? portInput.text.Trim() : string.Empty;
 
             ClearValidationError();
+            CloseKeyboard();
             Debug.Log($"RedisEndpointPrompt: Confirm pressed with host '{hostValue}' and port '{portText}'.");
 
             if (!Validate(hostValue, portText, out var portValue))
@@ -95,26 +107,43 @@ namespace AmpPortableDataViz.Presentation.Sources
                 return;
             }
 
-            var settings = RedisRuntimeSettings.Instance;
-            settings.Apply(hostValue, portValue);
-            settings.Save();
-            RedisRuntimeSettings.SetInstance(settings);
-            Debug.Log($"RedisEndpointPrompt: Saved Redis endpoint {hostValue}:{portValue}.");
+            _confirmInProgress = true;
+            SetConfirmInteractable(false);
 
             try
             {
-                Debug.Log("RedisEndpointPrompt: Invoking OnEndpointReady.");
-                OnEndpointReady?.Invoke();
-            }
-            catch (Exception ex)
-            {
-                Debug.LogException(ex, this);
+                bool canConnect = await VerifyRedisConnectionAsync(hostValue, portValue);
+                if (!canConnect)
+                {
+                    RaiseValidationError(ConnectionFailedMessage);
+                    return;
+                }
+
+                var settings = RedisRuntimeSettings.Instance;
+                settings.Apply(hostValue, portValue);
+                settings.Save();
+                RedisRuntimeSettings.SetInstance(settings);
+                Debug.Log($"RedisEndpointPrompt: Saved Redis endpoint {hostValue}:{portValue}.");
+
+                try
+                {
+                    Debug.Log("RedisEndpointPrompt: Invoking OnEndpointReady.");
+                    OnEndpointReady?.Invoke();
+                }
+                catch (Exception ex)
+                {
+                    Debug.LogException(ex, this);
+                }
+                finally
+                {
+                    HidePanel();
+                    Debug.Log("RedisEndpointPrompt: Startup panel hidden.");
+                }
             }
             finally
             {
-                HidePanel();
-                CloseKeyboard();
-                Debug.Log("RedisEndpointPrompt: Startup panel hidden.");
+                _confirmInProgress = false;
+                SetConfirmInteractable(true);
             }
         }
 
@@ -206,6 +235,20 @@ namespace AmpPortableDataViz.Presentation.Sources
             _activeInput = null;
         }
 
+        private async Task<bool> VerifyRedisConnectionAsync(string hostValue, int portValue)
+        {
+            Debug.Log($"RedisEndpointPrompt: Verifying Redis connection to {hostValue}:{portValue}.");
+            bool canConnect = await RedisDeviceDiscovery.CanConnectAsync(hostValue, portValue, connectionTimeoutMs);
+            if (!canConnect)
+            {
+                Debug.LogWarning($"RedisEndpointPrompt: Could not verify Redis connection to {hostValue}:{portValue}.");
+                return false;
+            }
+
+            Debug.Log($"RedisEndpointPrompt: Redis connection verified for {hostValue}:{portValue}.");
+            return true;
+        }
+
         private void HidePanel()
         {
             if (rootPanel != null)
@@ -215,6 +258,14 @@ namespace AmpPortableDataViz.Presentation.Sources
             else
             {
                 gameObject.SetActive(false);
+            }
+        }
+
+        private void SetConfirmInteractable(bool isInteractable)
+        {
+            if (confirmButton != null)
+            {
+                confirmButton.interactable = isInteractable;
             }
         }
 
@@ -248,8 +299,8 @@ namespace AmpPortableDataViz.Presentation.Sources
             rectTransform.anchorMin = new Vector2(0.5f, 0.5f);
             rectTransform.anchorMax = new Vector2(0.5f, 0.5f);
             rectTransform.pivot = new Vector2(0.5f, 0.5f);
-            rectTransform.anchoredPosition = new Vector2(0f, -72f);
-            rectTransform.sizeDelta = new Vector2(220f, 40f);
+            rectTransform.anchoredPosition = new Vector2(0f, -92f);
+            rectTransform.sizeDelta = new Vector2(280f, 64f);
 
             validationLabel = labelObject.GetComponent<TextMeshProUGUI>();
             validationLabel.font = hostInput?.textComponent?.font ??
