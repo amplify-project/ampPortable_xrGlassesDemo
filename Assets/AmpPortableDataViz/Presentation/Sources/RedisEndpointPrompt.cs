@@ -16,7 +16,10 @@ namespace AmpPortableDataViz.Presentation.Sources
         [SerializeField] private TMP_InputField portInput;
         [SerializeField] private Button confirmButton;
         [SerializeField] private GameObject rootPanel;
+        [SerializeField] private TMP_Text validationLabel;
         [SerializeField] private bool useTouchScreenKeyboard = true;
+        [SerializeField] private bool autoCreateValidationLabel = true;
+        [SerializeField] private Color validationLabelColor = new Color(0.9f, 0.3f, 0.3f, 1f);
 
         [Header("Events")]
         public UnityEvent OnEndpointReady = new UnityEvent();
@@ -28,6 +31,8 @@ namespace AmpPortableDataViz.Presentation.Sources
         private void Awake()
         {
             PrefillFromSettings();
+            EnsureValidationLabel();
+            ClearValidationError();
 
             if (confirmButton != null)
             {
@@ -36,12 +41,12 @@ namespace AmpPortableDataViz.Presentation.Sources
 
             if (hostInput != null)
             {
-                hostInput.onSelect.AddListener(_ => TryOpenKeyboard(hostInput));
+                hostInput.onSelect.AddListener(HandleHostSelected);
             }
 
             if (portInput != null)
             {
-                portInput.onSelect.AddListener(_ => TryOpenKeyboard(portInput));
+                portInput.onSelect.AddListener(HandlePortSelected);
             }
         }
 
@@ -54,12 +59,12 @@ namespace AmpPortableDataViz.Presentation.Sources
 
             if (hostInput != null)
             {
-                hostInput.onSelect.RemoveListener(_ => TryOpenKeyboard(hostInput));
+                hostInput.onSelect.RemoveListener(HandleHostSelected);
             }
 
             if (portInput != null)
             {
-                portInput.onSelect.RemoveListener(_ => TryOpenKeyboard(portInput));
+                portInput.onSelect.RemoveListener(HandlePortSelected);
             }
         }
 
@@ -82,6 +87,9 @@ namespace AmpPortableDataViz.Presentation.Sources
             string hostValue = hostInput != null ? hostInput.text.Trim() : string.Empty;
             string portText = portInput != null ? portInput.text.Trim() : string.Empty;
 
+            ClearValidationError();
+            Debug.Log($"RedisEndpointPrompt: Confirm pressed with host '{hostValue}' and port '{portText}'.");
+
             if (!Validate(hostValue, portText, out var portValue))
             {
                 return;
@@ -91,19 +99,23 @@ namespace AmpPortableDataViz.Presentation.Sources
             settings.Apply(hostValue, portValue);
             settings.Save();
             RedisRuntimeSettings.SetInstance(settings);
+            Debug.Log($"RedisEndpointPrompt: Saved Redis endpoint {hostValue}:{portValue}.");
 
-            OnEndpointReady?.Invoke();
-
-            if (rootPanel != null)
+            try
             {
-                rootPanel.SetActive(false);
+                Debug.Log("RedisEndpointPrompt: Invoking OnEndpointReady.");
+                OnEndpointReady?.Invoke();
             }
-            else
+            catch (Exception ex)
             {
-                gameObject.SetActive(false);
+                Debug.LogException(ex, this);
             }
-
-            CloseKeyboard();
+            finally
+            {
+                HidePanel();
+                CloseKeyboard();
+                Debug.Log("RedisEndpointPrompt: Startup panel hidden.");
+            }
         }
 
         private bool Validate(string hostValue, string portText, out int portValue)
@@ -127,8 +139,25 @@ namespace AmpPortableDataViz.Presentation.Sources
 
         private void RaiseValidationError(string message)
         {
+            if (validationLabel != null)
+            {
+                validationLabel.text = message;
+                validationLabel.gameObject.SetActive(true);
+            }
+
             Debug.LogWarning($"RedisEndpointPrompt: {message}");
             OnValidationError?.Invoke(message);
+        }
+
+        private void ClearValidationError()
+        {
+            if (validationLabel == null)
+            {
+                return;
+            }
+
+            validationLabel.text = string.Empty;
+            validationLabel.gameObject.SetActive(false);
         }
 
         private void Update()
@@ -149,6 +178,16 @@ namespace AmpPortableDataViz.Presentation.Sources
             _activeInput.text = _keyboard.text;
         }
 
+        private void HandleHostSelected(string _)
+        {
+            TryOpenKeyboard(hostInput);
+        }
+
+        private void HandlePortSelected(string _)
+        {
+            TryOpenKeyboard(portInput);
+        }
+
         private void TryOpenKeyboard(TMP_InputField target)
         {
             if (!useTouchScreenKeyboard || target == null)
@@ -165,6 +204,64 @@ namespace AmpPortableDataViz.Presentation.Sources
         {
             _keyboard = null;
             _activeInput = null;
+        }
+
+        private void HidePanel()
+        {
+            if (rootPanel != null)
+            {
+                rootPanel.SetActive(false);
+            }
+            else
+            {
+                gameObject.SetActive(false);
+            }
+        }
+
+        private void EnsureValidationLabel()
+        {
+            if (validationLabel != null)
+            {
+                return;
+            }
+
+            var existingLabel = transform.Find("ValidationMessage");
+            if (existingLabel != null)
+            {
+                validationLabel = existingLabel.GetComponent<TMP_Text>();
+            }
+
+            if (validationLabel != null || !autoCreateValidationLabel)
+            {
+                return;
+            }
+
+            var parentRect = transform as RectTransform;
+            if (parentRect == null)
+            {
+                return;
+            }
+
+            var labelObject = new GameObject("ValidationMessage", typeof(RectTransform), typeof(TextMeshProUGUI));
+            var rectTransform = labelObject.GetComponent<RectTransform>();
+            rectTransform.SetParent(parentRect, false);
+            rectTransform.anchorMin = new Vector2(0.5f, 0.5f);
+            rectTransform.anchorMax = new Vector2(0.5f, 0.5f);
+            rectTransform.pivot = new Vector2(0.5f, 0.5f);
+            rectTransform.anchoredPosition = new Vector2(0f, -72f);
+            rectTransform.sizeDelta = new Vector2(220f, 40f);
+
+            validationLabel = labelObject.GetComponent<TextMeshProUGUI>();
+            validationLabel.font = hostInput?.textComponent?.font ??
+                                   portInput?.textComponent?.font ??
+                                   TMP_Settings.defaultFontAsset;
+            validationLabel.fontSize = 12f;
+            validationLabel.alignment = TextAlignmentOptions.Center;
+            validationLabel.enableWordWrapping = true;
+            validationLabel.color = validationLabelColor;
+            validationLabel.raycastTarget = false;
+            validationLabel.text = string.Empty;
+            validationLabel.gameObject.SetActive(false);
         }
     }
 }

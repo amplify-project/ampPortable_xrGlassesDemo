@@ -222,10 +222,14 @@ namespace AmpPortableDataViz.Presentation.Bootstrap
 
         public void BeginAfterEndpoint()
         {
+            Debug.Log("Bootstrapper: BeginAfterEndpoint invoked from Redis endpoint prompt.");
+
             var settings = RedisRuntimeSettings.Load();
             RedisHost = settings.Host;
             RedisPort = settings.Port;
             _redisEndpointReady = true;
+
+            Debug.Log($"Bootstrapper: Redis endpoint confirmed -> {RedisHost}:{RedisPort}");
 
             if (_initializationRoutine != null)
             {
@@ -241,11 +245,14 @@ namespace AmpPortableDataViz.Presentation.Bootstrap
 
             if (ShouldAutoDetectEmotionDeviceIds())
             {
+                Debug.Log("Bootstrapper: Auto-detecting Redis emotion device ids after endpoint confirmation.");
                 StartDeviceDiscovery();
                 return;
             }
 
+            Debug.Log("Bootstrapper: Applying signal configuration after endpoint confirmation.");
             ApplySignalConfiguration();
+            Debug.Log("Bootstrapper: Beginning session after endpoint confirmation.");
             BeginSessionIfReady();
         }
 
