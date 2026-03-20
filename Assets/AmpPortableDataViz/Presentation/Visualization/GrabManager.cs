@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 using UnityEngine.XR.Interaction.Toolkit.Interactables;
 
 public class GrabManager : MonoBehaviour
@@ -7,6 +8,7 @@ public class GrabManager : MonoBehaviour
     public GameObject imageBoardParent;
     public GameObject emtionVisualParent;
     public GameObject graphVizParent;
+    public Toggle toggle;
 
 
     private List<XRGrabInteractable> CheckVizParent()
@@ -61,6 +63,19 @@ public class GrabManager : MonoBehaviour
         else
         {
             Debug.LogError("Invalid input for lock state. Expected a boolean value.");
+        }
+    }
+
+    public void ResetToggle()
+    {
+        if (toggle != null && toggle.isOn)
+        {
+            Debug.Log("Resetting lock toggle state to off.");
+            toggle.isOn = false;
+        }
+        else
+        {
+            Debug.LogWarning("GrabManager: Toggle reference is not assigned. Cannot reset toggle state.");
         }
     }
 }
