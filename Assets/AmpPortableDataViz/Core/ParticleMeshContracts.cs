@@ -15,9 +15,9 @@ namespace AmpPortableDataViz.Core
         public readonly float SkinConductanceResponseFrequencyStdDev;
         public readonly float HeartRateStdDev;
         public readonly float InterBeatIntervalStdDev;
-        public readonly float FacialEmotion;
-        public readonly float EngagementArousal;
-        public readonly float EngagementValence;
+        public readonly float FacialEmotionArousal;
+        public readonly float FacialEmotionValence;
+        public readonly float Engagement;
 
         public ParticleMeshSignalSample(
             string deviceId,
@@ -26,9 +26,9 @@ namespace AmpPortableDataViz.Core
             float skinConductanceResponseFrequencyStdDev,
             float heartRateStdDev,
             float interBeatIntervalStdDev,
-            float facialEmotion,
-            float engagementArousal,
-            float engagementValence)
+            float facialEmotionArousal,
+            float facialEmotionValence,
+            float engagement)
         {
             DeviceId = deviceId ?? string.Empty;
             TonicElectrodermalActivityStdDev = Mathf.Clamp01(tonicElectrodermalActivityStdDev);
@@ -36,9 +36,9 @@ namespace AmpPortableDataViz.Core
             SkinConductanceResponseFrequencyStdDev = Mathf.Clamp01(skinConductanceResponseFrequencyStdDev);
             HeartRateStdDev = Mathf.Clamp01(heartRateStdDev);
             InterBeatIntervalStdDev = Mathf.Clamp01(interBeatIntervalStdDev);
-            FacialEmotion = Mathf.Clamp01(facialEmotion);
-            EngagementArousal = Mathf.Clamp01(engagementArousal);
-            EngagementValence = Mathf.Clamp01(engagementValence);
+            FacialEmotionArousal = Mathf.Clamp01(facialEmotionArousal);
+            FacialEmotionValence = Mathf.Clamp01(facialEmotionValence);
+            Engagement = Mathf.Clamp01(engagement);
         }
 
         public override string ToString()
@@ -49,9 +49,9 @@ namespace AmpPortableDataViz.Core
                 $"SCRFreq={SkinConductanceResponseFrequencyStdDev:F3}, " +
                 $"HeartRate={HeartRateStdDev:F3}, " +
                 $"IBI={InterBeatIntervalStdDev:F3}, " +
-                $"FacialEmotion={FacialEmotion:F3}, " +
-                $"EngagementArousal={EngagementArousal:F3}, " +
-                $"EngagementValence={EngagementValence:F3}";
+                $"FacialEmotionArousal={FacialEmotionArousal:F3}, " +
+                $"FacialEmotionValence={FacialEmotionValence:F3}, " +
+                $"Engagement={Engagement:F3}";
         }
     }
 }
