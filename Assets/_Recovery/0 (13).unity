@@ -363,10 +363,6 @@ PrefabInstance:
       propertyPath: m_Name
       value: EmotionPlasma
       objectReference: {fileID: 0}
-    - target: {fileID: 4820931441542737784, guid: 80e7ad267774ae148acddd79d82dadd2, type: 3}
-      propertyPath: m_IsActive
-      value: 0
-      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -513,108 +509,6 @@ MonoBehaviour:
     m_VarianceClampScale: 0.9
     m_ContrastAdaptiveSharpening: 0
   m_Version: 2
---- !u!1 &2085234595
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 2085234596}
-  - component: {fileID: 2085234598}
-  - component: {fileID: 2085234597}
-  m_Layer: 0
-  m_Name: ParticleMesh
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!4 &2085234596
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2085234595}
-  serializedVersion: 2
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 3.3848, y: 3.94175, z: 5.99047}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 0
-  m_Children: []
-  m_Father: {fileID: 0}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &2085234597
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2085234595}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: d0bcbbab2940487c804471b35203e1f0, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Amp::AmpPortableDataViz.Presentation.Visualization.ParticleMeshVisualizer
-  manualDriver: {fileID: 2085234598}
-  logReceivedSamples: 1
-  minimumLogIntervalSeconds: 0.5
---- !u!114 &2085234598
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2085234595}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 81fe5631a3ac4dfdb89dacdca10129cd, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Amp::AmpPortableDataViz.Presentation.Visualization.ParticleMeshManualDriver
-  sourceId: particle-mesh-manual
-  deviceId: 
-  tonicElectrodermalActivityStdDev: 0.5
-  temperatureRateOfChangeStdDev: 0.5
-  skinConductanceResponseFrequencyStdDev: 0.5
-  heartRateStdDev: 0.5
-  interBeatIntervalStdDev: 0.5
-  facialEmotion: 0.5
-  engagementArousal: 0.5
-  engagementValence: 0.5
-  sourceMode: 0
-  autoEmit: 1
-  animateProceduralNoise: 1
-  timeScale: 0.35
-  noiseFrequency: 0.75
-  noiseSeed: 0.1234
-  noiseOffset: 0
-  onSampleEmitted:
-    m_PersistentCalls:
-      m_Calls: []
-  onTonicElectrodermalActivity:
-    m_PersistentCalls:
-      m_Calls: []
-  onTemperatureRateOfChange:
-    m_PersistentCalls:
-      m_Calls: []
-  onSkinConductanceResponseFrequency:
-    m_PersistentCalls:
-      m_Calls: []
-  onHeartRate:
-    m_PersistentCalls:
-      m_Calls: []
-  onInterBeatInterval:
-    m_PersistentCalls:
-      m_Calls: []
-  onFacialEmotion:
-    m_PersistentCalls:
-      m_Calls: []
-  onEngagementArousalValence:
-    m_PersistentCalls:
-      m_Calls: []
-  logEmittedSample: 0
 --- !u!1001 &2124659500
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -697,4 +591,3 @@ SceneRoots:
   - {fileID: 2124659500}
   - {fileID: 555750211}
   - {fileID: 613129019}
-  - {fileID: 2085234596}
