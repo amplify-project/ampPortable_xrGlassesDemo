@@ -229,7 +229,7 @@ public static class RedisSubscriber
             using var jsonDoc = JsonDocument.Parse(messageText);
             var root = jsonDoc.RootElement;
 
-            var parsedMessage = ParseRedisMessage(channelName, root);
+            var parsedMessage = ParseRedisMessage(channelName, root, messageText);
             targetQueue.Enqueue(parsedMessage);
 
             bool isHeartRateChannel = channelName.EndsWith(":hr_filtered", StringComparison.OrdinalIgnoreCase);
@@ -249,7 +249,7 @@ public static class RedisSubscriber
         }
     }
 
-    private static RedisMessage ParseRedisMessage(string channelName, JsonElement rootElement)
+    private static RedisMessage ParseRedisMessage(string channelName, JsonElement rootElement, string rawPayload)
     {
         if (rootElement.ValueKind == JsonValueKind.Object)
         {
@@ -265,12 +265,12 @@ public static class RedisSubscriber
                 ? ReadAsString(timestampProp)
                 : string.Empty;
 
-            return new RedisMessage(channelName, value, sequence, timestamp);
+            return new RedisMessage(channelName, value, sequence, timestamp, rawPayload);
         }
 
         // Support payloads that are just a primitive (e.g., raw numbers or numeric strings)
         var primitiveValue = ReadAsDouble(rootElement);
-        return new RedisMessage(channelName, primitiveValue, -1, string.Empty);
+        return new RedisMessage(channelName, primitiveValue, -1, string.Empty, rawPayload);
     }
 
     private static double ExtractFirstNumericValue(JsonElement rootElement)
@@ -406,18 +406,20 @@ public static class RedisSubscriber
 
     public readonly struct RedisMessage
     {
-        public RedisMessage(string channel, double value, int sequence, string timestamp)
+        public RedisMessage(string channel, double value, int sequence, string timestamp, string rawPayload = "")
         {
             Channel = channel;
             Value = value;
             Sequence = sequence;
             Timestamp = timestamp;
+            RawPayload = rawPayload ?? string.Empty;
         }
 
         public string Channel { get; }
         public double Value { get; }
         public int Sequence { get; }
         public string Timestamp { get; }
+        public string RawPayload { get; }
     }
 }
 
