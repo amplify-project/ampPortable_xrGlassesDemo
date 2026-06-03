@@ -5941,7 +5941,7 @@ MonoBehaviour:
   RedisSource: {fileID: 0}
   LiveKitSource: {fileID: 0}
   RedisManager: {fileID: 0}
-  VisualPrefab: {fileID: 4820931441542737784, guid: 80e7ad267774ae148acddd79d82dadd2, type: 3}
+  VisualPrefab: {fileID: 5539086002200411015, guid: ed2e2f5bc2c99764e8b09beb23ebab55, type: 3}
   IsHost: 1
   VisualId: SimpleDemo
   ProfileId: Default
@@ -5965,8 +5965,9 @@ MonoBehaviour:
   DeviceLabelOffset: {x: 0, y: -0.35, z: 0}
   DeviceLabelFontSize: 0.22
   DeviceLabelColor: {r: 1, g: 1, b: 1, a: 1}
+  AutoSpawnAudienceVisualsFromChannels: 1
   AutoSpawnGraphVisualsFromChannels: 1
-  GraphPrefab: {fileID: 7697534865005704293, guid: 26cef2dfd1a2c0f4f9f66af976b00fca, type: 3}
+  GraphPrefab: {fileID: 606551006109817003, guid: 18e200549b404964dad1a4e38759b118, type: 3}
   GraphGroupParent: {fileID: 645856977}
   GraphGroupOriginOffset: {x: 0, y: 0, z: 0}
   GraphGroupSpacing: {x: 1.6, y: 0, z: 0.75}

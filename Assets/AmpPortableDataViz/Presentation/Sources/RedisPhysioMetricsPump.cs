@@ -14,8 +14,6 @@ namespace AmpPortableDataViz.Presentation.Sources
     [DisallowMultipleComponent]
     public sealed class RedisPhysioMetricsPump : MonoBehaviour, IDataSource<PhysioMetricsSample>
     {
-        public const string PhysioMetricsTemplate = "device:{0}:physio_metrics";
-
         [Header("Source Identity")]
         [SerializeField] private string sourceId;
 
@@ -427,37 +425,12 @@ namespace AmpPortableDataViz.Presentation.Sources
 
         private static string FormatDeviceChannel(string value)
         {
-            return string.IsNullOrWhiteSpace(value)
-                ? string.Empty
-                : string.Format(CultureInfo.InvariantCulture, PhysioMetricsTemplate, value.Trim());
+            return RedisAudienceChannels.FormatPhysioMetricsChannel(value);
         }
 
         private static bool TryParseDeviceId(string channelName, out string parsedDeviceId)
         {
-            parsedDeviceId = string.Empty;
-
-            if (string.IsNullOrWhiteSpace(channelName))
-            {
-                return false;
-            }
-
-            const string prefix = "device:";
-            const string suffix = ":physio_metrics";
-            if (!channelName.StartsWith(prefix, StringComparison.OrdinalIgnoreCase) ||
-                !channelName.EndsWith(suffix, StringComparison.OrdinalIgnoreCase))
-            {
-                return false;
-            }
-
-            int start = prefix.Length;
-            int length = channelName.Length - prefix.Length - suffix.Length;
-            if (length <= 0)
-            {
-                return false;
-            }
-
-            parsedDeviceId = channelName.Substring(start, length).Trim();
-            return parsedDeviceId.Length > 0;
+            return RedisAudienceChannels.TryParsePhysioMetricsDeviceChannel(channelName, out parsedDeviceId);
         }
 
         private string TryResolveGameObjectName()

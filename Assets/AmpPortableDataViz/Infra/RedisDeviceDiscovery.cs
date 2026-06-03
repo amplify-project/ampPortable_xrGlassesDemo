@@ -67,9 +67,15 @@ namespace AmpPortableDataViz.Infra
                     return Array.Empty<string>();
                 }
 
-                const string channelPattern = "device:*:hr_filtered";
-                Debug.Log($"RedisDeviceDiscovery: Listening for device IDs on '{channelPattern}' at {host}:{port} for {timeoutMs}ms");
-                var deviceIds = await DiscoverDeviceIdsFromPatternAsync(subscriber, channelPattern, timeoutMs);
+                var channelPatterns = new[]
+                {
+                    "device:*:physio_metrics",
+                    "device:*:valence_cont",
+                    "device:*:arousal_cont",
+                    "device:*:hr_filtered"
+                };
+                Debug.Log($"RedisDeviceDiscovery: Listening for device IDs on '{string.Join(", ", channelPatterns)}' at {host}:{port} for {timeoutMs}ms");
+                var deviceIds = await DiscoverDeviceIdsFromPatternsAsync(subscriber, channelPatterns, timeoutMs);
                 if (deviceIds.Count > 0)
                 {
                     Debug.Log($"RedisDeviceDiscovery: Discovered device IDs: {string.Join(", ", deviceIds)}");
@@ -120,37 +126,49 @@ namespace AmpPortableDataViz.Infra
             }
         }
 
-        private static async Task<IReadOnlyList<string>> DiscoverDeviceIdsFromPatternAsync(ISubscriber subscriber, string channelPattern, int timeoutMs)
+        private static async Task<IReadOnlyList<string>> DiscoverDeviceIdsFromPatternsAsync(ISubscriber subscriber, IReadOnlyList<string> channelPatterns, int timeoutMs)
         {
             var ordered = new List<string>();
             var seen = new HashSet<string>(StringComparer.OrdinalIgnoreCase);
             var gate = new object();
 
-            if (subscriber == null || string.IsNullOrWhiteSpace(channelPattern))
+            if (subscriber == null || channelPatterns == null || channelPatterns.Count == 0)
             {
                 return ordered;
             }
 
+            var subscribedPatterns = new List<RedisChannel>();
             try
             {
-                var patternChannel = RedisChannel.Pattern(channelPattern);
-                await subscriber.SubscribeAsync(patternChannel, (redisChannel, message) =>
+                foreach (var channelPattern in channelPatterns)
                 {
-                    var payload = message.ToString();
-                    if (RedisEmotionChannels.TryParseDeviceChannel(redisChannel.ToString(), out var deviceId, out _))
+                    if (string.IsNullOrWhiteSpace(channelPattern))
                     {
-                        AddDeviceId(deviceId, ordered, seen, gate, requireHeuristic: false);
+                        continue;
                     }
 
-                    if (!string.IsNullOrWhiteSpace(payload))
+                    var patternChannel = RedisChannel.Pattern(channelPattern);
+                    subscribedPatterns.Add(patternChannel);
+                    await subscriber.SubscribeAsync(patternChannel, (redisChannel, message) =>
                     {
-                        ExtractDeviceIdsFromPayload(payload, ordered, seen, gate);
-                    }
-                });
+                        var payload = message.ToString();
+                        string channelName = redisChannel.ToString();
+                        if (RedisEmotionChannels.TryParseDeviceChannel(channelName, out var deviceId, out _) ||
+                            RedisAudienceChannels.TryParsePhysioMetricsDeviceChannel(channelName, out deviceId))
+                        {
+                            AddDeviceId(deviceId, ordered, seen, gate, requireHeuristic: false);
+                        }
+
+                        if (!string.IsNullOrWhiteSpace(payload))
+                        {
+                            ExtractDeviceIdsFromPayload(payload, ordered, seen, gate);
+                        }
+                    });
+                }
             }
             catch (Exception ex)
             {
-                Debug.LogWarning($"RedisDeviceDiscovery: Failed to subscribe to '{channelPattern}' ({ex.Message})");
+                Debug.LogWarning($"RedisDeviceDiscovery: Failed to subscribe to device channel patterns ({ex.Message})");
                 return ordered;
             }
 
@@ -162,7 +180,10 @@ namespace AmpPortableDataViz.Infra
 
             try
             {
-                await subscriber.UnsubscribeAsync(RedisChannel.Pattern(channelPattern));
+                foreach (var patternChannel in subscribedPatterns)
+                {
+                    await subscriber.UnsubscribeAsync(patternChannel);
+                }
             }
             catch
             {

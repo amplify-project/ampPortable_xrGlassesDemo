@@ -72,6 +72,9 @@ namespace AmpPortableDataViz.Presentation.Bootstrap
         public float DeviceLabelFontSize = 0.22f;
         public Color DeviceLabelColor = Color.white;
 
+        [Header("Audience Signal Visual Settings")]
+        public bool AutoSpawnAudienceVisualsFromChannels = true;
+
         [Header("Graph Visual Settings")]
         public bool AutoSpawnGraphVisualsFromChannels = true;
         public GameObject GraphPrefab;
@@ -180,8 +183,11 @@ namespace AmpPortableDataViz.Presentation.Bootstrap
         private Coroutine _deviceDiscoveryRoutine;
         private Coroutine _graphLayoutRefreshRoutine;
         private readonly List<EmotionDeviceInstance> _emotionDeviceInstances = new List<EmotionDeviceInstance>();
+        private readonly List<AudienceDeviceInstance> _audienceDeviceInstances = new List<AudienceDeviceInstance>();
         private readonly List<GraphDeviceGroupInstance> _graphDeviceGroups = new List<GraphDeviceGroupInstance>();
+        private readonly List<AudienceGraphDeviceGroupInstance> _audienceGraphDeviceGroups = new List<AudienceGraphDeviceGroupInstance>();
         private readonly Dictionary<string, SharedPumpHandle> _sharedPumpsByChannel = new Dictionary<string, SharedPumpHandle>(StringComparer.Ordinal);
+        private readonly Dictionary<string, SharedPhysioPumpHandle> _sharedPhysioPumpsByChannel = new Dictionary<string, SharedPhysioPumpHandle>(StringComparer.Ordinal);
         private bool _redisEndpointReady;
         private Material _graphPanelMaterial;
         private Material _graphGroupPanelMaterial;
@@ -293,7 +299,9 @@ namespace AmpPortableDataViz.Presentation.Bootstrap
 
             _sessionController?.Shutdown();
             ClearEmotionDeviceVisuals();
+            ClearAudienceDeviceVisuals();
             ClearGraphDeviceVisuals();
+            ClearAudienceGraphDeviceVisuals();
         }
 
         private void OnDestroy()
@@ -307,7 +315,9 @@ namespace AmpPortableDataViz.Presentation.Bootstrap
             _sessionController?.Dispose();
             _sessionController = null;
             ClearEmotionDeviceVisuals();
+            ClearAudienceDeviceVisuals();
             ClearGraphDeviceVisuals();
+            ClearAudienceGraphDeviceVisuals();
         }
 
         private void EnsureAnchorRegistry()
@@ -477,7 +487,19 @@ namespace AmpPortableDataViz.Presentation.Bootstrap
                 LiveKitSource.enabled = useLiveKit;
             }
 
-            bool shouldSpawnEmotionVisuals = useRedis && hasRedisEndpoint && redisReady && AutoSpawnEmotionVisualsFromChannels;
+            bool visualPrefabHasAudienceBinding = VisualPrefab != null && VisualPrefab.GetComponentInChildren<AudienceSignalBinding>() != null;
+            bool shouldSpawnAudienceVisuals = useRedis && hasRedisEndpoint && redisReady && AutoSpawnAudienceVisualsFromChannels && visualPrefabHasAudienceBinding;
+            if (shouldSpawnAudienceVisuals)
+            {
+                EnsureAudienceDeviceVisuals(redisChannels);
+                ClearEmotionDeviceVisuals();
+            }
+            else
+            {
+                ClearAudienceDeviceVisuals();
+            }
+
+            bool shouldSpawnEmotionVisuals = useRedis && hasRedisEndpoint && redisReady && AutoSpawnEmotionVisualsFromChannels && !shouldSpawnAudienceVisuals;
             if (shouldSpawnEmotionVisuals)
             {
                 EnsureEmotionDeviceVisuals(redisChannels);
@@ -487,7 +509,19 @@ namespace AmpPortableDataViz.Presentation.Bootstrap
                 ClearEmotionDeviceVisuals();
             }
 
-            bool shouldSpawnGraphVisuals = useRedis && hasRedisEndpoint && redisReady && AutoSpawnGraphVisualsFromChannels;
+            bool graphPrefabHasAudienceBinding = GraphPrefab != null && GraphPrefab.GetComponentInChildren<AudienceSignalBinding>() != null;
+            bool shouldSpawnAudienceGraphVisuals = useRedis && hasRedisEndpoint && redisReady && AutoSpawnGraphVisualsFromChannels && graphPrefabHasAudienceBinding;
+            if (shouldSpawnAudienceGraphVisuals)
+            {
+                EnsureAudienceGraphDeviceVisuals(redisChannels);
+                ClearGraphDeviceVisuals();
+            }
+            else
+            {
+                ClearAudienceGraphDeviceVisuals();
+            }
+
+            bool shouldSpawnGraphVisuals = useRedis && hasRedisEndpoint && redisReady && AutoSpawnGraphVisualsFromChannels && !shouldSpawnAudienceGraphVisuals;
             if (shouldSpawnGraphVisuals)
             {
                 EnsureGraphDeviceVisuals(redisChannels);
@@ -718,6 +752,114 @@ namespace AmpPortableDataViz.Presentation.Bootstrap
             }
         }
 
+        private void EnsureAudienceDeviceVisuals(string[] redisChannels)
+        {
+            if (!AutoSpawnAudienceVisualsFromChannels)
+            {
+                return;
+            }
+
+            if (VisualPrefab == null)
+            {
+                Debug.LogWarning("Bootstrapper: VisualPrefab is missing, cannot spawn audience signal instances.");
+                ClearAudienceDeviceVisuals();
+                return;
+            }
+
+            if (redisChannels == null || redisChannels.Length == 0)
+            {
+                ClearAudienceDeviceVisuals();
+                return;
+            }
+
+            bool hasAudienceBinding = VisualPrefab.GetComponentInChildren<AudienceSignalBinding>() != null;
+            if (!hasAudienceBinding)
+            {
+                ClearAudienceDeviceVisuals();
+                return;
+            }
+
+            var deviceDefinitions = BuildAudienceDeviceChannelDefinitions(redisChannels);
+            deviceDefinitions = FilterAudienceToConfiguredDevices(deviceDefinitions, EmotionDeviceIds);
+            ClearAudienceDeviceVisuals();
+
+            if (deviceDefinitions.Count == 0)
+            {
+                Debug.LogWarning("Bootstrapper: No device-specific audience signal channels were found.");
+                return;
+            }
+
+            Debug.Log($"Bootstrapper: Spawning audience visuals for {deviceDefinitions.Count} devices: {string.Join(", ", deviceDefinitions.Select(d => d.DeviceId))}");
+
+            bool hasCustomParent = EmotionVisualParent != null;
+            int deviceIndex = 0;
+            foreach (var definition in deviceDefinitions)
+            {
+                if (!definition.HasRequiredChannels)
+                {
+                    Debug.LogWarning($"Bootstrapper: Incomplete audience channel set for device '{definition.DeviceId}', skipping visual spawn.");
+                    continue;
+                }
+
+                var instance = hasCustomParent
+                    ? Instantiate(VisualPrefab, EmotionVisualParent)
+                    : Instantiate(VisualPrefab);
+
+                instance.name = $"{VisualPrefab.name}_{definition.DeviceId}";
+                PositionEmotionVisual(instance.transform, deviceIndex, hasCustomParent);
+
+                DisableManualDrivers(instance);
+
+                var binding = instance.GetComponentInChildren<AudienceSignalBinding>();
+                if (binding == null)
+                {
+                    Debug.LogWarning($"Bootstrapper: Audience visual '{instance.name}' is missing AudienceSignalBinding, skipping visual spawn.");
+                    Destroy(instance);
+                    continue;
+                }
+
+                var particleMeshVisualizer = instance.GetComponentInChildren<ParticleMeshVisualizer>();
+                var physioPump = AcquirePhysioPumpForChannel(definition.DeviceId, definition.PhysioMetricsChannel);
+                var valencePump = AcquireRedisPumpForChannel(definition.DeviceId, EmotionChannelKind.Valence, definition.ValenceChannel);
+                var arousalPump = AcquireRedisPumpForChannel(definition.DeviceId, EmotionChannelKind.Arousal, definition.ArousalChannel);
+                var engagementPump = AcquireRedisPumpForChannel("global", EmotionChannelKind.Broadcast, definition.EngagementChannel);
+
+                if (!TryConfigureAudienceBinding(binding, physioPump, valencePump, arousalPump, engagementPump, particleMeshVisualizer, definition.DeviceId))
+                {
+                    Debug.LogWarning($"Bootstrapper: Unable to configure audience binding on '{instance.name}', skipping visual spawn.");
+                    Destroy(instance);
+                    ReleasePhysioPump(definition.PhysioMetricsChannel);
+                    ReleaseRedisPump(definition.ValenceChannel);
+                    ReleaseRedisPump(definition.ArousalChannel);
+                    ReleaseRedisPump(definition.EngagementChannel);
+                    continue;
+                }
+
+                _audienceDeviceInstances.Add(new AudienceDeviceInstance
+                {
+                    DeviceId = definition.DeviceId,
+                    VisualInstance = instance,
+                    Binding = binding,
+                    PhysioMetricsChannel = definition.PhysioMetricsChannel,
+                    ValenceChannel = definition.ValenceChannel,
+                    ArousalChannel = definition.ArousalChannel,
+                    EngagementChannel = definition.EngagementChannel,
+                    PhysioPump = physioPump,
+                    ValencePump = valencePump,
+                    ArousalPump = arousalPump,
+                    EngagementPump = engagementPump
+                });
+
+                AttachDeviceLabel(instance, definition.DeviceId, deviceIndex);
+                deviceIndex++;
+            }
+
+            if (deviceIndex == 0)
+            {
+                Debug.LogWarning("Bootstrapper: Unable to spawn audience visuals because no device had the required channels.");
+            }
+        }
+
         private void EnsureGraphDeviceVisuals(string[] redisChannels)
         {
             if (!AutoSpawnGraphVisualsFromChannels)
@@ -912,6 +1054,121 @@ namespace AmpPortableDataViz.Presentation.Bootstrap
             RequestGraphLayoutRefresh();
         }
 
+        private void EnsureAudienceGraphDeviceVisuals(string[] redisChannels)
+        {
+            if (!AutoSpawnGraphVisualsFromChannels)
+            {
+                return;
+            }
+
+            if (GraphPrefab == null)
+            {
+                Debug.LogWarning("Bootstrapper: GraphPrefab is missing, cannot spawn audience graph instances.");
+                ClearAudienceGraphDeviceVisuals();
+                return;
+            }
+
+            if (redisChannels == null || redisChannels.Length == 0)
+            {
+                ClearAudienceGraphDeviceVisuals();
+                return;
+            }
+
+            bool hasAudienceBinding = GraphPrefab.GetComponentInChildren<AudienceSignalBinding>() != null;
+            bool hasGraphVisualizer = GraphPrefab.GetComponentInChildren<GraphVisualizer>() != null;
+            if (!hasAudienceBinding || !hasGraphVisualizer)
+            {
+                Debug.LogWarning("Bootstrapper: Audience GraphPrefab must include AudienceSignalBinding and at least one GraphVisualizer component.");
+                ClearAudienceGraphDeviceVisuals();
+                return;
+            }
+
+            var deviceDefinitions = BuildAudienceDeviceChannelDefinitions(redisChannels);
+            deviceDefinitions = FilterAudienceToConfiguredDevices(deviceDefinitions, EmotionDeviceIds);
+            ClearAudienceGraphDeviceVisuals();
+
+            if (deviceDefinitions.Count == 0)
+            {
+                Debug.LogWarning("Bootstrapper: No device-specific audience channels were found for graphs.");
+                return;
+            }
+
+            Debug.Log($"Bootstrapper: Spawning audience graph groups for {deviceDefinitions.Count} devices: {string.Join(", ", deviceDefinitions.Select(d => d.DeviceId))}");
+
+            bool hasCustomParent = GraphGroupParent != null;
+            int deviceIndex = 0;
+            foreach (var definition in deviceDefinitions)
+            {
+                if (!definition.HasRequiredChannels)
+                {
+                    Debug.LogWarning($"Bootstrapper: Incomplete audience channel set for device '{definition.DeviceId}', skipping graph spawn.");
+                    continue;
+                }
+
+                var instance = hasCustomParent
+                    ? Instantiate(GraphPrefab, GraphGroupParent)
+                    : Instantiate(GraphPrefab);
+
+                instance.name = $"{GraphPrefab.name}_{definition.DeviceId}";
+                PositionGraphGroup(instance.transform, deviceIndex, hasCustomParent);
+                DisableManualDrivers(instance);
+
+                var legacyGraphBindings = instance.GetComponentsInChildren<GraphBinding>(true);
+                foreach (var legacyBinding in legacyGraphBindings)
+                {
+                    legacyBinding.enabled = false;
+                }
+
+                var binding = instance.GetComponentInChildren<AudienceSignalBinding>();
+                if (binding == null)
+                {
+                    Debug.LogWarning($"Bootstrapper: Audience graph '{instance.name}' is missing AudienceSignalBinding, skipping graph spawn.");
+                    Destroy(instance);
+                    continue;
+                }
+
+                var physioPump = AcquirePhysioPumpForChannel(definition.DeviceId, definition.PhysioMetricsChannel);
+                var valencePump = AcquireRedisPumpForChannel(definition.DeviceId, EmotionChannelKind.Valence, definition.ValenceChannel);
+                var arousalPump = AcquireRedisPumpForChannel(definition.DeviceId, EmotionChannelKind.Arousal, definition.ArousalChannel);
+                var engagementPump = AcquireRedisPumpForChannel("global", EmotionChannelKind.Broadcast, definition.EngagementChannel);
+
+                if (!TryConfigureAudienceBinding(binding, physioPump, valencePump, arousalPump, engagementPump, null, definition.DeviceId))
+                {
+                    Debug.LogWarning($"Bootstrapper: Unable to configure audience graph binding on '{instance.name}', skipping graph spawn.");
+                    Destroy(instance);
+                    ReleasePhysioPump(definition.PhysioMetricsChannel);
+                    ReleaseRedisPump(definition.ValenceChannel);
+                    ReleaseRedisPump(definition.ArousalChannel);
+                    ReleaseRedisPump(definition.EngagementChannel);
+                    continue;
+                }
+
+                _audienceGraphDeviceGroups.Add(new AudienceGraphDeviceGroupInstance
+                {
+                    DeviceId = definition.DeviceId,
+                    DeviceIndex = deviceIndex,
+                    GroupRoot = instance,
+                    Binding = binding,
+                    PhysioMetricsChannel = definition.PhysioMetricsChannel,
+                    ValenceChannel = definition.ValenceChannel,
+                    ArousalChannel = definition.ArousalChannel,
+                    EngagementChannel = definition.EngagementChannel,
+                    PhysioPump = physioPump,
+                    ValencePump = valencePump,
+                    ArousalPump = arousalPump,
+                    EngagementPump = engagementPump
+                });
+
+                if (GraphGroupsGrabbable)
+                {
+                    ConfigureGraphGroupGrab(instance, Array.Empty<Vector3>());
+                }
+
+                AttachGraphGroupLabel(instance, definition.DeviceId, deviceIndex, Array.Empty<Vector3>());
+                deviceIndex++;
+            }
+        }
+
         private RedisDataPump AcquireRedisPumpForChannel(string deviceId, EmotionChannelKind channelKind, string channelName)
         {
             if (string.IsNullOrWhiteSpace(channelName))
@@ -952,6 +1209,46 @@ namespace AmpPortableDataViz.Presentation.Bootstrap
             return pump;
         }
 
+        private RedisPhysioMetricsPump AcquirePhysioPumpForChannel(string deviceId, string channelName)
+        {
+            if (string.IsNullOrWhiteSpace(channelName))
+            {
+                return null;
+            }
+
+            if (_sharedPhysioPumpsByChannel.TryGetValue(channelName, out var handle) && handle.Pump != null)
+            {
+                handle.ReferenceCount++;
+                if (!string.Equals(handle.Host, RedisHost, StringComparison.Ordinal) || handle.Port != RedisPort)
+                {
+                    handle.Pump.ConfigureConnection(RedisHost, RedisPort, channelName);
+                    handle.Host = RedisHost;
+                    handle.Port = RedisPort;
+                }
+                return handle.Pump;
+            }
+
+            var pumpObject = new GameObject($"RedisPump_{deviceId}_PhysioMetrics");
+            pumpObject.transform.SetParent(transform, false);
+            pumpObject.SetActive(false);
+
+            var pump = pumpObject.AddComponent<RedisPhysioMetricsPump>();
+            pump.ConfigureConnection(RedisHost, RedisPort, channelName);
+
+            pumpObject.SetActive(true);
+
+            _sharedPhysioPumpsByChannel[channelName] = new SharedPhysioPumpHandle
+            {
+                ChannelName = channelName,
+                Host = RedisHost,
+                Port = RedisPort,
+                Pump = pump,
+                ReferenceCount = 1
+            };
+
+            return pump;
+        }
+
         private void ReleaseRedisPump(string channelName)
         {
             if (string.IsNullOrWhiteSpace(channelName))
@@ -976,6 +1273,32 @@ namespace AmpPortableDataViz.Presentation.Bootstrap
             }
 
             _sharedPumpsByChannel.Remove(channelName);
+        }
+
+        private void ReleasePhysioPump(string channelName)
+        {
+            if (string.IsNullOrWhiteSpace(channelName))
+            {
+                return;
+            }
+
+            if (!_sharedPhysioPumpsByChannel.TryGetValue(channelName, out var handle))
+            {
+                return;
+            }
+
+            handle.ReferenceCount--;
+            if (handle.ReferenceCount > 0)
+            {
+                return;
+            }
+
+            if (handle.Pump != null)
+            {
+                Destroy(handle.Pump.gameObject);
+            }
+
+            _sharedPhysioPumpsByChannel.Remove(channelName);
         }
 
         private Component FindEmotionBindingComponent(GameObject target)
@@ -1016,6 +1339,50 @@ namespace AmpPortableDataViz.Presentation.Bootstrap
             return false;
         }
 
+        private static bool TryConfigureAudienceBinding(
+            AudienceSignalBinding binding,
+            RedisPhysioMetricsPump physioPump,
+            RedisDataPump valencePump,
+            RedisDataPump arousalPump,
+            RedisDataPump engagementPump,
+            ParticleMeshVisualizer particleMeshVisualizer,
+            string deviceId)
+        {
+            if (binding == null || physioPump == null || valencePump == null || arousalPump == null || engagementPump == null)
+            {
+                return false;
+            }
+
+            binding.ConfigureSources(physioPump, valencePump, arousalPump, engagementPump, deviceId);
+            if (particleMeshVisualizer != null)
+            {
+                binding.ConfigureParticleTarget(particleMeshVisualizer);
+            }
+
+            binding.enabled = true;
+            return true;
+        }
+
+        private static void DisableManualDrivers(GameObject instance)
+        {
+            if (instance == null)
+            {
+                return;
+            }
+
+            var particleManualDrivers = instance.GetComponentsInChildren<ParticleMeshManualDriver>(true);
+            foreach (var manualDriver in particleManualDrivers)
+            {
+                manualDriver.enabled = false;
+            }
+
+            var graphManualDrivers = instance.GetComponentsInChildren<GraphManualDriver>(true);
+            foreach (var manualDriver in graphManualDrivers)
+            {
+                manualDriver.enabled = false;
+            }
+        }
+
         private void ClearEmotionDeviceVisuals()
         {
             if (_emotionDeviceInstances.Count == 0)
@@ -1040,6 +1407,33 @@ namespace AmpPortableDataViz.Presentation.Bootstrap
             }
 
             _emotionDeviceInstances.Clear();
+        }
+
+        private void ClearAudienceDeviceVisuals()
+        {
+            if (_audienceDeviceInstances.Count == 0)
+            {
+                return;
+            }
+
+            foreach (var instance in _audienceDeviceInstances)
+            {
+                if (instance.VisualInstance != null)
+                {
+                    Destroy(instance.VisualInstance);
+                }
+                else if (instance.Binding != null)
+                {
+                    Destroy(instance.Binding.gameObject);
+                }
+
+                ReleasePhysioPump(instance.PhysioMetricsChannel);
+                ReleaseRedisPump(instance.ValenceChannel);
+                ReleaseRedisPump(instance.ArousalChannel);
+                ReleaseRedisPump(instance.EngagementChannel);
+            }
+
+            _audienceDeviceInstances.Clear();
         }
 
         private void ClearGraphDeviceVisuals()
@@ -1072,6 +1466,33 @@ namespace AmpPortableDataViz.Presentation.Bootstrap
             _graphDeviceGroups.Clear();
         }
 
+        private void ClearAudienceGraphDeviceVisuals()
+        {
+            if (_audienceGraphDeviceGroups.Count == 0)
+            {
+                return;
+            }
+
+            foreach (var instance in _audienceGraphDeviceGroups)
+            {
+                if (instance.GroupRoot != null)
+                {
+                    Destroy(instance.GroupRoot);
+                }
+                else if (instance.Binding != null)
+                {
+                    Destroy(instance.Binding.gameObject);
+                }
+
+                ReleasePhysioPump(instance.PhysioMetricsChannel);
+                ReleaseRedisPump(instance.ValenceChannel);
+                ReleaseRedisPump(instance.ArousalChannel);
+                ReleaseRedisPump(instance.EngagementChannel);
+            }
+
+            _audienceGraphDeviceGroups.Clear();
+        }
+
         private void DisableRedisComponents()
         {
             if (RedisSource != null)
@@ -1085,7 +1506,9 @@ namespace AmpPortableDataViz.Presentation.Bootstrap
             }
 
             ClearEmotionDeviceVisuals();
+            ClearAudienceDeviceVisuals();
             ClearGraphDeviceVisuals();
+            ClearAudienceGraphDeviceVisuals();
         }
 
         private void PositionEmotionVisual(Transform target, int index, bool useLocalSpace)
@@ -1391,6 +1814,126 @@ namespace AmpPortableDataViz.Presentation.Bootstrap
             return filtered;
         }
 
+        private static List<AudienceDeviceChannelDefinition> BuildAudienceDeviceChannelDefinitions(IEnumerable<string> redisChannels)
+        {
+            var orderedDeviceIds = new List<string>();
+            var map = new Dictionary<string, AudienceDeviceChannelDefinition>(StringComparer.OrdinalIgnoreCase);
+
+            foreach (var channel in redisChannels)
+            {
+                if (string.IsNullOrWhiteSpace(channel))
+                {
+                    continue;
+                }
+
+                string deviceId = string.Empty;
+                AudienceDeviceChannelDefinition definition;
+                bool hasDeviceChannel = false;
+
+                if (RedisAudienceChannels.TryParsePhysioMetricsDeviceChannel(channel, out deviceId))
+                {
+                    hasDeviceChannel = true;
+                    definition = GetOrCreateAudienceDefinition(deviceId, orderedDeviceIds, map);
+                    definition.PhysioMetricsChannel = channel;
+                    map[deviceId] = definition;
+                }
+                else if (RedisEmotionChannels.TryParseDeviceChannel(channel, out deviceId, out var kind))
+                {
+                    hasDeviceChannel = true;
+                    definition = GetOrCreateAudienceDefinition(deviceId, orderedDeviceIds, map);
+
+                    if (kind == EmotionChannelKind.Valence)
+                    {
+                        definition.ValenceChannel = channel;
+                    }
+                    else if (kind == EmotionChannelKind.Arousal)
+                    {
+                        definition.ArousalChannel = channel;
+                    }
+
+                    map[deviceId] = definition;
+                }
+
+                if (!hasDeviceChannel)
+                {
+                    continue;
+                }
+            }
+
+            var ordered = new List<AudienceDeviceChannelDefinition>();
+            foreach (var deviceId in orderedDeviceIds)
+            {
+                if (!map.TryGetValue(deviceId, out var definition))
+                {
+                    continue;
+                }
+
+                FillAudienceChannelDefaults(ref definition);
+                ordered.Add(definition);
+            }
+
+            return ordered;
+        }
+
+        private static AudienceDeviceChannelDefinition GetOrCreateAudienceDefinition(
+            string deviceId,
+            List<string> orderedDeviceIds,
+            Dictionary<string, AudienceDeviceChannelDefinition> map)
+        {
+            if (!map.TryGetValue(deviceId, out var definition))
+            {
+                definition = new AudienceDeviceChannelDefinition { DeviceId = deviceId };
+                orderedDeviceIds.Add(deviceId);
+            }
+
+            return definition;
+        }
+
+        private static void FillAudienceChannelDefaults(ref AudienceDeviceChannelDefinition definition)
+        {
+            if (string.IsNullOrWhiteSpace(definition.PhysioMetricsChannel))
+            {
+                definition.PhysioMetricsChannel = RedisAudienceChannels.FormatPhysioMetricsChannel(definition.DeviceId);
+            }
+
+            if (string.IsNullOrWhiteSpace(definition.ValenceChannel))
+            {
+                RedisEmotionChannels.TryFormatChannel(EmotionChannelKind.Valence, definition.DeviceId, out definition.ValenceChannel);
+            }
+
+            if (string.IsNullOrWhiteSpace(definition.ArousalChannel))
+            {
+                RedisEmotionChannels.TryFormatChannel(EmotionChannelKind.Arousal, definition.DeviceId, out definition.ArousalChannel);
+            }
+
+            definition.EngagementChannel = RedisAudienceChannels.EngagementScoresChannel;
+        }
+
+        private static List<AudienceDeviceChannelDefinition> FilterAudienceToConfiguredDevices(IEnumerable<AudienceDeviceChannelDefinition> definitions, IEnumerable<string> configuredDeviceIds)
+        {
+            if (configuredDeviceIds == null)
+            {
+                return new List<AudienceDeviceChannelDefinition>(definitions);
+            }
+
+            var allowed = new HashSet<string>(configuredDeviceIds.Where(id => !string.IsNullOrWhiteSpace(id)).Select(id => id.Trim()), StringComparer.OrdinalIgnoreCase);
+            if (allowed.Count == 0)
+            {
+                return new List<AudienceDeviceChannelDefinition>(definitions);
+            }
+
+            var filtered = new List<AudienceDeviceChannelDefinition>();
+            foreach (var definition in definitions)
+            {
+                if (!string.IsNullOrWhiteSpace(definition.DeviceId) && allowed.Contains(definition.DeviceId))
+                {
+                    filtered.Add(definition);
+                }
+            }
+
+            return filtered;
+        }
+
         private string[] GetRedisChannels()
         {
             var channels = new List<string>();
@@ -1428,7 +1971,17 @@ namespace AmpPortableDataViz.Presentation.Bootstrap
                 {
                     AddChannel(channel);
                 }
+
+                if (EmotionDeviceIds != null)
+                {
+                    foreach (var deviceId in EmotionDeviceIds)
+                    {
+                        AddChannel(RedisAudienceChannels.FormatPhysioMetricsChannel(deviceId));
+                    }
+                }
             }
+
+            AddChannel(RedisAudienceChannels.EngagementScoresChannel);
 
             if (channels.Count == 0)
             {
@@ -1970,6 +2523,21 @@ namespace AmpPortableDataViz.Presentation.Bootstrap
             public RedisDataPump HeartRatePump;
         }
 
+        private sealed class AudienceDeviceInstance
+        {
+            public string DeviceId;
+            public GameObject VisualInstance;
+            public AudienceSignalBinding Binding;
+            public string PhysioMetricsChannel;
+            public string ValenceChannel;
+            public string ArousalChannel;
+            public string EngagementChannel;
+            public RedisPhysioMetricsPump PhysioPump;
+            public RedisDataPump ValencePump;
+            public RedisDataPump ArousalPump;
+            public RedisDataPump EngagementPump;
+        }
+
         private sealed class GraphDeviceGroupInstance
         {
             public string DeviceId;
@@ -1989,12 +2557,37 @@ namespace AmpPortableDataViz.Presentation.Bootstrap
             public RedisDataPump EdaPump;
         }
 
+        private sealed class AudienceGraphDeviceGroupInstance
+        {
+            public string DeviceId;
+            public int DeviceIndex;
+            public GameObject GroupRoot;
+            public AudienceSignalBinding Binding;
+            public string PhysioMetricsChannel;
+            public string ValenceChannel;
+            public string ArousalChannel;
+            public string EngagementChannel;
+            public RedisPhysioMetricsPump PhysioPump;
+            public RedisDataPump ValencePump;
+            public RedisDataPump ArousalPump;
+            public RedisDataPump EngagementPump;
+        }
+
         private sealed class SharedPumpHandle
         {
             public string ChannelName;
             public string Host;
             public int Port;
             public RedisDataPump Pump;
+            public int ReferenceCount;
+        }
+
+        private sealed class SharedPhysioPumpHandle
+        {
+            public string ChannelName;
+            public string Host;
+            public int Port;
+            public RedisPhysioMetricsPump Pump;
             public int ReferenceCount;
         }
 
@@ -2007,6 +2600,22 @@ namespace AmpPortableDataViz.Presentation.Bootstrap
             public string EdaChannel;
         }
 
+        private struct AudienceDeviceChannelDefinition
+        {
+            public string DeviceId;
+            public string PhysioMetricsChannel;
+            public string ValenceChannel;
+            public string ArousalChannel;
+            public string EngagementChannel;
+
+            public bool HasRequiredChannels =>
+                !string.IsNullOrWhiteSpace(DeviceId) &&
+                !string.IsNullOrWhiteSpace(PhysioMetricsChannel) &&
+                !string.IsNullOrWhiteSpace(ValenceChannel) &&
+                !string.IsNullOrWhiteSpace(ArousalChannel) &&
+                !string.IsNullOrWhiteSpace(EngagementChannel);
+        }
+
         private bool ShouldInitializeSessionController()
         {
             if (_sessionController == null)
@@ -2014,8 +2623,9 @@ namespace AmpPortableDataViz.Presentation.Bootstrap
                 return false;
             }
 
-            bool redisEmotionOnly = AutoSpawnEmotionVisualsFromChannels && ActiveSignalSource == SignalSourceType.Redis;
-            return !redisEmotionOnly;
+            bool redisAutoSpawnOnly = ActiveSignalSource == SignalSourceType.Redis &&
+                (AutoSpawnEmotionVisualsFromChannels || AutoSpawnAudienceVisualsFromChannels);
+            return !redisAutoSpawnOnly;
         }
     }
 }

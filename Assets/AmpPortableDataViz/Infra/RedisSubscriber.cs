@@ -429,7 +429,52 @@ public enum EmotionChannelKind
     Valence,
     Arousal,
     HeartRate,
-    EdaFiltered
+    EdaFiltered,
+    PhysioMetrics
+}
+
+public static class RedisAudienceChannels
+{
+    public const string EngagementScoresChannel = "engagement:scores";
+    public const string PhysioMetricsTemplate = "device:{0}:physio_metrics";
+
+    public static string FormatPhysioMetricsChannel(string? deviceId)
+    {
+        if (string.IsNullOrWhiteSpace(deviceId))
+        {
+            return string.Empty;
+        }
+
+        return string.Format(CultureInfo.InvariantCulture, PhysioMetricsTemplate, deviceId.Trim());
+    }
+
+    public static bool TryParsePhysioMetricsDeviceChannel(string channelName, out string deviceId)
+    {
+        deviceId = string.Empty;
+
+        if (string.IsNullOrWhiteSpace(channelName))
+        {
+            return false;
+        }
+
+        const string prefix = "device:";
+        const string suffix = ":physio_metrics";
+        if (!channelName.StartsWith(prefix, StringComparison.OrdinalIgnoreCase) ||
+            !channelName.EndsWith(suffix, StringComparison.OrdinalIgnoreCase))
+        {
+            return false;
+        }
+
+        int start = prefix.Length;
+        int length = channelName.Length - prefix.Length - suffix.Length;
+        if (length <= 0)
+        {
+            return false;
+        }
+
+        deviceId = channelName.Substring(start, length).Trim();
+        return deviceId.Length > 0;
+    }
 }
 
 public static class RedisEmotionChannels
