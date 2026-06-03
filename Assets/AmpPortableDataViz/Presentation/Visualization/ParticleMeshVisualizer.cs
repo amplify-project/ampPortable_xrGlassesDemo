@@ -8,7 +8,6 @@ namespace AmpPortableDataViz.Presentation.Visualization
     /// </summary>
     [ExecuteAlways]
     [DisallowMultipleComponent]
-    [RequireComponent(typeof(ParticleMeshManualDriver))]
     [RequireComponent(typeof(MeshFilter))]
     [RequireComponent(typeof(MeshRenderer))]
     [RequireComponent(typeof(ParticleSystem))]
@@ -17,7 +16,7 @@ namespace AmpPortableDataViz.Presentation.Visualization
     {
         private const float Tau = Mathf.PI * 2f;
 
-        [Header("Source")]
+        [Header("Legacy Manual Source (optional)")]
         [SerializeField] private ParticleMeshManualDriver manualDriver;
 
         [Header("Mesh")]
@@ -97,7 +96,6 @@ namespace AmpPortableDataViz.Presentation.Visualization
 
             if (manualDriver == null)
             {
-                Debug.LogWarning($"{nameof(ParticleMeshVisualizer)} requires a {nameof(ParticleMeshManualDriver)} on the same GameObject.", this);
                 return;
             }
 

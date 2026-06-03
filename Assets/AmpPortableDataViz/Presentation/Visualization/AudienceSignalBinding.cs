@@ -12,7 +12,7 @@ namespace AmpPortableDataViz.Presentation.Visualization
     /// </summary>
     [DisallowMultipleComponent]
     [AddComponentMenu("Amp Portable Data Viz/Visualization/Audience Signal Binding")]
-    public sealed class AudienceSignalBinding : MonoBehaviour
+    public sealed class AudienceSignalBinding : MonoBehaviour, IDataSource<AudienceSignalSample>
     {
         [Serializable]
         private struct GraphMetricBinding
@@ -79,6 +79,14 @@ namespace AmpPortableDataViz.Presentation.Visualization
         private long _latestArousalTimestamp;
         private long _latestEngagementTimestamp;
         private int _particleSequenceId;
+
+        public string SourceId => ResolveDeviceId();
+
+        public bool HasLatestFrame { get; private set; }
+
+        public DataFrame<AudienceSignalSample> LatestFrame { get; private set; }
+
+        public event Action<DataFrame<AudienceSignalSample>> OnFrame;
 
         private void Awake()
         {
@@ -277,11 +285,6 @@ namespace AmpPortableDataViz.Presentation.Visualization
 
         private void TryApplyParticleMesh()
         {
-            if (particleMeshVisualizer == null || _particleMapper == null)
-            {
-                return;
-            }
-
             if (requireAllSignalsBeforeParticleApply && (!_hasPhysio || !_hasValence || !_hasArousal || !_hasEngagement))
             {
                 return;
@@ -290,8 +293,15 @@ namespace AmpPortableDataViz.Presentation.Visualization
             var sample = BuildAudienceSample();
             long timestamp = ResolveLatestTimestamp();
             var frame = new DataFrame<AudienceSignalSample>(timestamp, _particleSequenceId++, sample);
-            ParticleMeshSignalSample parameters = _particleMapper.Map(in frame);
-            particleMeshVisualizer.Apply(parameters, frame.TimestampTicksUtc);
+            LatestFrame = frame;
+            HasLatestFrame = true;
+            OnFrame?.Invoke(frame);
+
+            if (particleMeshVisualizer != null && _particleMapper != null)
+            {
+                ParticleMeshSignalSample parameters = _particleMapper.Map(in frame);
+                particleMeshVisualizer.Apply(parameters, frame.TimestampTicksUtc);
+            }
 
             if (logResolvedSamples)
             {
@@ -521,6 +531,8 @@ namespace AmpPortableDataViz.Presentation.Visualization
             _latestArousalTimestamp = 0;
             _latestEngagementTimestamp = 0;
             _particleSequenceId = 0;
+            HasLatestFrame = false;
+            LatestFrame = default;
 
             if (_graphSamples != null)
             {
@@ -548,7 +560,8 @@ namespace AmpPortableDataViz.Presentation.Visualization
 
         private void WarnIfUnconfigured()
         {
-            if (particleMeshVisualizer == null && (graphStreams == null || graphStreams.Length == 0))
+            bool hasExternalVisualizerBinding = GetComponentInChildren<AudienceSignalVisualizerBinding>() != null;
+            if (!hasExternalVisualizerBinding && particleMeshVisualizer == null && (graphStreams == null || graphStreams.Length == 0))
             {
                 Debug.LogWarning($"AudienceSignalBinding[{ResolveDeviceId()}] has no particle mesh or graph targets configured.", this);
             }

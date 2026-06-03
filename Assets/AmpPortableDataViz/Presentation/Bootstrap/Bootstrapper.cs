@@ -45,6 +45,9 @@ namespace AmpPortableDataViz.Presentation.Bootstrap
         [Header("Signal Source Selection")]
         public SignalSourceType ActiveSignalSource = SignalSourceType.Sine;
 
+        [Header("Manual Visualization Testing")]
+        public bool UseManualVisualizationDrivers;
+
         [Header("Redis Settings")]
         public string RedisHost = "192.168.0.6";
         public int RedisPort = 6379;
@@ -186,6 +189,7 @@ namespace AmpPortableDataViz.Presentation.Bootstrap
         private readonly List<AudienceDeviceInstance> _audienceDeviceInstances = new List<AudienceDeviceInstance>();
         private readonly List<GraphDeviceGroupInstance> _graphDeviceGroups = new List<GraphDeviceGroupInstance>();
         private readonly List<AudienceGraphDeviceGroupInstance> _audienceGraphDeviceGroups = new List<AudienceGraphDeviceGroupInstance>();
+        private readonly List<GameObject> _manualDriverInstances = new List<GameObject>();
         private readonly Dictionary<string, SharedPumpHandle> _sharedPumpsByChannel = new Dictionary<string, SharedPumpHandle>(StringComparer.Ordinal);
         private readonly Dictionary<string, SharedPhysioPumpHandle> _sharedPhysioPumpsByChannel = new Dictionary<string, SharedPhysioPumpHandle>(StringComparer.Ordinal);
         private bool _redisEndpointReady;
@@ -302,6 +306,7 @@ namespace AmpPortableDataViz.Presentation.Bootstrap
             ClearAudienceDeviceVisuals();
             ClearGraphDeviceVisuals();
             ClearAudienceGraphDeviceVisuals();
+            ClearManualDriverVisuals();
         }
 
         private void OnDestroy()
@@ -318,6 +323,7 @@ namespace AmpPortableDataViz.Presentation.Bootstrap
             ClearAudienceDeviceVisuals();
             ClearGraphDeviceVisuals();
             ClearAudienceGraphDeviceVisuals();
+            ClearManualDriverVisuals();
         }
 
         private void EnsureAnchorRegistry()
@@ -435,6 +441,13 @@ namespace AmpPortableDataViz.Presentation.Bootstrap
 
         private void ApplySignalConfiguration()
         {
+            if (UseManualVisualizationDrivers)
+            {
+                ApplyManualDriverConfiguration();
+                return;
+            }
+
+            ClearManualDriverVisuals();
             EnsureRedisEndpointFromRuntime();
 
             bool hasRedisEndpoint = !string.IsNullOrWhiteSpace(RedisHost);
@@ -550,6 +563,11 @@ namespace AmpPortableDataViz.Presentation.Bootstrap
 
         private bool ShouldAutoDetectEmotionDeviceIds()
         {
+            if (UseManualVisualizationDrivers)
+            {
+                return false;
+            }
+
             if (!AutoDetectEmotionDeviceIds || !IncludeEmotionChannels)
             {
                 return false;
@@ -629,6 +647,155 @@ namespace AmpPortableDataViz.Presentation.Bootstrap
             }
 
             _initializationRoutine = StartCoroutine(BeginSession());
+        }
+
+        private void ApplyManualDriverConfiguration()
+        {
+            if (SineSource != null)
+            {
+                SineSource.enabled = false;
+            }
+
+            if (RedisSource != null)
+            {
+                RedisSource.enabled = false;
+            }
+
+            if (RedisManager != null)
+            {
+                RedisManager.enabled = false;
+            }
+
+            if (LiveKitSource != null)
+            {
+                LiveKitSource.enabled = false;
+            }
+
+            ClearEmotionDeviceVisuals();
+            ClearAudienceDeviceVisuals();
+            ClearGraphDeviceVisuals();
+            ClearAudienceGraphDeviceVisuals();
+            EnsureManualDriverVisuals();
+        }
+
+        private void EnsureManualDriverVisuals()
+        {
+            if (_manualDriverInstances.Count > 0)
+            {
+                return;
+            }
+
+            SpawnManualDriverPrefab(VisualPrefab, EmotionVisualParent, "ManualVisual", 0, isGraphPrefab: false);
+            SpawnManualDriverPrefab(GraphPrefab, GraphGroupParent, "ManualGraph", 0, isGraphPrefab: true);
+        }
+
+        private void SpawnManualDriverPrefab(GameObject prefab, Transform parent, string suffix, int index, bool isGraphPrefab)
+        {
+            if (prefab == null)
+            {
+                return;
+            }
+
+            bool hasManualDriver =
+                prefab.GetComponentInChildren<AudienceDataManualDriver>(true) != null ||
+                prefab.GetComponentInChildren<ParticleMeshManualDriver>(true) != null ||
+                prefab.GetComponentInChildren<GraphManualDriver>(true) != null;
+
+            if (!hasManualDriver)
+            {
+                return;
+            }
+
+            bool hasCustomParent = parent != null;
+            var instance = hasCustomParent
+                ? Instantiate(prefab, parent)
+                : Instantiate(prefab);
+
+            instance.name = $"{prefab.name}_{suffix}";
+            if (isGraphPrefab)
+            {
+                PositionGraphGroup(instance.transform, index, hasCustomParent);
+            }
+            else
+            {
+                PositionEmotionVisual(instance.transform, index, hasCustomParent);
+            }
+
+            ConfigureManualDriverInstance(instance);
+            _manualDriverInstances.Add(instance);
+        }
+
+        private static void ConfigureManualDriverInstance(GameObject instance)
+        {
+            if (instance == null)
+            {
+                return;
+            }
+
+            var audienceBindings = instance.GetComponentsInChildren<AudienceSignalBinding>(true);
+            foreach (var binding in audienceBindings)
+            {
+                binding.enabled = false;
+            }
+
+            var audienceManualDrivers = instance.GetComponentsInChildren<AudienceDataManualDriver>(true);
+            bool hasAudienceManualDriver = audienceManualDrivers.Length > 0;
+            foreach (var manualDriver in audienceManualDrivers)
+            {
+                manualDriver.enabled = true;
+            }
+
+            var audienceVisualizerBindings = instance.GetComponentsInChildren<AudienceSignalVisualizerBinding>(true);
+            foreach (var visualizerBinding in audienceVisualizerBindings)
+            {
+                if (hasAudienceManualDriver)
+                {
+                    visualizerBinding.ConfigureManualSource(audienceManualDrivers[0]);
+                }
+
+                var particleMeshVisualizer = visualizerBinding.GetComponentInChildren<ParticleMeshVisualizer>();
+                if (particleMeshVisualizer == null)
+                {
+                    particleMeshVisualizer = instance.GetComponentInChildren<ParticleMeshVisualizer>(true);
+                }
+
+                if (particleMeshVisualizer != null)
+                {
+                    visualizerBinding.ConfigureParticleTarget(particleMeshVisualizer);
+                }
+
+                visualizerBinding.enabled = true;
+            }
+
+            var graphBindings = instance.GetComponentsInChildren<GraphBinding>(true);
+            foreach (var binding in graphBindings)
+            {
+                binding.enabled = false;
+            }
+
+            var emotionPlasmaBindings = instance.GetComponentsInChildren<EmotionPlasmaBinding>(true);
+            foreach (var binding in emotionPlasmaBindings)
+            {
+                binding.enabled = false;
+            }
+
+            var emotionRayBindings = instance.GetComponentsInChildren<EmotionRayPlasmaBinding>(true);
+            foreach (var binding in emotionRayBindings)
+            {
+                binding.enabled = false;
+            }
+
+            var particleManualDrivers = instance.GetComponentsInChildren<ParticleMeshManualDriver>(true);
+            foreach (var manualDriver in particleManualDrivers)
+            {
+                manualDriver.enabled = !hasAudienceManualDriver;
+            }
+
+            var graphManualDrivers = instance.GetComponentsInChildren<GraphManualDriver>(true);
+            foreach (var manualDriver in graphManualDrivers)
+            {
+                manualDriver.enabled = !hasAudienceManualDriver;
+            }
         }
 
 #if UNITY_EDITOR
@@ -1359,6 +1526,23 @@ namespace AmpPortableDataViz.Presentation.Bootstrap
                 binding.ConfigureParticleTarget(particleMeshVisualizer);
             }
 
+            var visualizerBinding = binding.GetComponentInChildren<AudienceSignalVisualizerBinding>();
+            if (visualizerBinding == null && binding.gameObject != null)
+            {
+                visualizerBinding = binding.gameObject.GetComponentInParent<AudienceSignalVisualizerBinding>();
+            }
+
+            if (visualizerBinding != null)
+            {
+                visualizerBinding.ConfigureLiveSource(binding, deviceId);
+                if (particleMeshVisualizer != null)
+                {
+                    visualizerBinding.ConfigureParticleTarget(particleMeshVisualizer);
+                }
+
+                visualizerBinding.enabled = true;
+            }
+
             binding.enabled = true;
             return true;
         }
@@ -1493,6 +1677,24 @@ namespace AmpPortableDataViz.Presentation.Bootstrap
             _audienceGraphDeviceGroups.Clear();
         }
 
+        private void ClearManualDriverVisuals()
+        {
+            if (_manualDriverInstances.Count == 0)
+            {
+                return;
+            }
+
+            foreach (var instance in _manualDriverInstances)
+            {
+                if (instance != null)
+                {
+                    Destroy(instance);
+                }
+            }
+
+            _manualDriverInstances.Clear();
+        }
+
         private void DisableRedisComponents()
         {
             if (RedisSource != null)
@@ -1509,6 +1711,7 @@ namespace AmpPortableDataViz.Presentation.Bootstrap
             ClearAudienceDeviceVisuals();
             ClearGraphDeviceVisuals();
             ClearAudienceGraphDeviceVisuals();
+            ClearManualDriverVisuals();
         }
 
         private void PositionEmotionVisual(Transform target, int index, bool useLocalSpace)
@@ -2619,6 +2822,11 @@ namespace AmpPortableDataViz.Presentation.Bootstrap
         private bool ShouldInitializeSessionController()
         {
             if (_sessionController == null)
+            {
+                return false;
+            }
+
+            if (UseManualVisualizationDrivers)
             {
                 return false;
             }

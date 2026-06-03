@@ -10,6 +10,8 @@ GameObject:
   m_Component:
   - component: {fileID: 4262065910023820684}
   - component: {fileID: 9171372730100571172}
+  - component: {fileID: 481934060280776417}
+  - component: {fileID: 1829037997221100804}
   m_Layer: 0
   m_Name: AudienceGraphPrefab
   m_TagString: Untagged
@@ -111,6 +113,130 @@ MonoBehaviour:
   graphMaxSamples: 512
   logRawInputs: 0
   logResolvedSamples: 0
+--- !u!114 &481934060280776417
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 606551006109817003}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4fca7e35d651470b96c88ea31139fb69, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Amp::AmpPortableDataViz.Presentation.Visualization.AudienceDataManualDriver
+  sourceId: audience-manual
+  deviceId: 
+  tonicElectrodermalActivityStdDev: 1
+  temperatureRateOfChangeStdDev: 1
+  skinConductanceResponseFrequencyStdDev: 1
+  heartRateStdDev: 1
+  interBeatIntervalStdDev: 1
+  arousal: 1
+  valence: 1
+  engagement: 0.5
+  sourceMode: 0
+  autoEmit: 1
+  animateProceduralNoise: 1
+  timeScale: 0.35
+  noiseFrequency: 0.75
+  noiseSeed: 0.1234
+  noiseOffset: 0
+  onSampleEmitted:
+    m_PersistentCalls:
+      m_Calls: []
+  onTonicElectrodermalActivity:
+    m_PersistentCalls:
+      m_Calls: []
+  onTemperatureRateOfChange:
+    m_PersistentCalls:
+      m_Calls: []
+  onSkinConductanceResponseFrequency:
+    m_PersistentCalls:
+      m_Calls: []
+  onHeartRate:
+    m_PersistentCalls:
+      m_Calls: []
+  onInterBeatInterval:
+    m_PersistentCalls:
+      m_Calls: []
+  onArousal:
+    m_PersistentCalls:
+      m_Calls: []
+  onValence:
+    m_PersistentCalls:
+      m_Calls: []
+  onEngagement:
+    m_PersistentCalls:
+      m_Calls: []
+  logEmittedSample: 0
+--- !u!114 &1829037997221100804
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 606551006109817003}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 46a6202ad8a64b2db7b22f6d0f6a9ab8, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Amp::AmpPortableDataViz.Presentation.Visualization.AudienceSignalVisualizerBinding
+  sourceMode: 0
+  liveSource: {fileID: 9171372730100571172}
+  manualSource: {fileID: 481934060280776417}
+  particleMeshVisualizer: {fileID: 0}
+  particleMapperSettings:
+    TonicElectrodermalActivityRange: {x: 0, y: 3}
+    TemperatureRateOfChangeRange: {x: 0, y: 3}
+    SkinConductanceResponseFrequencyRange: {x: 0, y: 3}
+    HeartRateRange: {x: 0, y: 3}
+    InterBeatIntervalRange: {x: 0, y: 3}
+    EmotionRange: {x: 0, y: 2}
+  graphStreams:
+  - Metric: 0
+    Visualizer: {fileID: 5610035945543791327}
+    YRange: {x: 0, y: 3}
+    LineColor: {r: 1, g: 0, b: 0, a: 1}
+    LineWidth: 0.01
+  - Metric: 1
+    Visualizer: {fileID: 7872482145564960264}
+    YRange: {x: 0, y: 3}
+    LineColor: {r: 0, g: 1, b: 0, a: 1}
+    LineWidth: 0.01
+  - Metric: 2
+    Visualizer: {fileID: 1863523893060289597}
+    YRange: {x: 0, y: 3}
+    LineColor: {r: 0, g: 0, b: 1, a: 1}
+    LineWidth: 0.01
+  - Metric: 3
+    Visualizer: {fileID: 799524844568015476}
+    YRange: {x: 0, y: 3}
+    LineColor: {r: 1, g: 0.92156863, b: 0.015686275, a: 1}
+    LineWidth: 0.01
+  - Metric: 4
+    Visualizer: {fileID: 2123477700110127702}
+    YRange: {x: 0, y: 3}
+    LineColor: {r: 0, g: 1, b: 1, a: 1}
+    LineWidth: 0.01
+  - Metric: 5
+    Visualizer: {fileID: 7920079459635710226}
+    YRange: {x: 0, y: 1}
+    LineColor: {r: 1, g: 0, b: 1, a: 1}
+    LineWidth: 0.01
+  - Metric: 6
+    Visualizer: {fileID: 865910107358244075}
+    YRange: {x: 0, y: 2}
+    LineColor: {r: 1, g: 0.5490196, b: 0, a: 1}
+    LineWidth: 0.01
+  - Metric: 7
+    Visualizer: {fileID: 4745189833809727224}
+    YRange: {x: 0, y: 2}
+    LineColor: {r: 0.282353, g: 0.8196079, b: 0.8000001, a: 1}
+    LineWidth: 0.01
+  graphWindowSeconds: 10
+  graphMaxSamples: 512
+  logReceivedSamples: 0
 --- !u!1 &1282703349679845587
 GameObject:
   m_ObjectHideFlags: 0

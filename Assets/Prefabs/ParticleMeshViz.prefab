@@ -9,13 +9,14 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 6054457549625767287}
-  - component: {fileID: 8903220904037349000}
   - component: {fileID: 6272721971528999805}
   - component: {fileID: 1767133749855020390}
   - component: {fileID: 6412563784824855904}
   - component: {fileID: 6223196464921050830}
   - component: {fileID: 3118001866504251448}
   - component: {fileID: 4827462142832796194}
+  - component: {fileID: 1752101364371564078}
+  - component: {fileID: 3883295264005065401}
   m_Layer: 0
   m_Name: ParticleMeshViz
   m_TagString: Untagged
@@ -38,60 +39,6 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &8903220904037349000
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 5539086002200411015}
-  m_Enabled: 0
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 81fe5631a3ac4dfdb89dacdca10129cd, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Amp::AmpPortableDataViz.Presentation.Visualization.ParticleMeshManualDriver
-  sourceId: particle-mesh-manual
-  deviceId: 
-  tonicElectrodermalActivityStdDev: 0.103
-  temperatureRateOfChangeStdDev: 0.186
-  skinConductanceResponseFrequencyStdDev: 0.129
-  heartRateStdDev: 0.072
-  interBeatIntervalStdDev: 0.041
-  facialEmotionArousal: 0
-  facialEmotionValence: 0
-  engagement: 1
-  sourceMode: 0
-  autoEmit: 1
-  animateProceduralNoise: 1
-  timeScale: 0.35
-  noiseFrequency: 0.75
-  noiseSeed: 0.1234
-  noiseOffset: 0
-  onSampleEmitted:
-    m_PersistentCalls:
-      m_Calls: []
-  onTonicElectrodermalActivity:
-    m_PersistentCalls:
-      m_Calls: []
-  onTemperatureRateOfChange:
-    m_PersistentCalls:
-      m_Calls: []
-  onSkinConductanceResponseFrequency:
-    m_PersistentCalls:
-      m_Calls: []
-  onHeartRate:
-    m_PersistentCalls:
-      m_Calls: []
-  onInterBeatInterval:
-    m_PersistentCalls:
-      m_Calls: []
-  onFacialEmotionArousalValence:
-    m_PersistentCalls:
-      m_Calls: []
-  onEngagement:
-    m_PersistentCalls:
-      m_Calls: []
-  logEmittedSample: 0
 --- !u!33 &6272721971528999805
 MeshFilter:
   m_ObjectHideFlags: 0
@@ -4964,7 +4911,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d0bcbbab2940487c804471b35203e1f0, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Amp::AmpPortableDataViz.Presentation.Visualization.ParticleMeshVisualizer
-  manualDriver: {fileID: 8903220904037349000}
+  manualDriver: {fileID: 0}
   gridWidth: 32
   gridHeight: 32
   visualScale: 1.25
@@ -5012,3 +4959,87 @@ MonoBehaviour:
   graphMaxSamples: 512
   logRawInputs: 0
   logResolvedSamples: 0
+--- !u!114 &1752101364371564078
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5539086002200411015}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4fca7e35d651470b96c88ea31139fb69, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Amp::AmpPortableDataViz.Presentation.Visualization.AudienceDataManualDriver
+  sourceId: audience-manual
+  deviceId: 
+  tonicElectrodermalActivityStdDev: 1
+  temperatureRateOfChangeStdDev: 1
+  skinConductanceResponseFrequencyStdDev: 1
+  heartRateStdDev: 1
+  interBeatIntervalStdDev: 1
+  arousal: 1
+  valence: 1
+  engagement: 0.5
+  sourceMode: 0
+  autoEmit: 1
+  animateProceduralNoise: 1
+  timeScale: 0.35
+  noiseFrequency: 0.75
+  noiseSeed: 0.1234
+  noiseOffset: 0
+  onSampleEmitted:
+    m_PersistentCalls:
+      m_Calls: []
+  onTonicElectrodermalActivity:
+    m_PersistentCalls:
+      m_Calls: []
+  onTemperatureRateOfChange:
+    m_PersistentCalls:
+      m_Calls: []
+  onSkinConductanceResponseFrequency:
+    m_PersistentCalls:
+      m_Calls: []
+  onHeartRate:
+    m_PersistentCalls:
+      m_Calls: []
+  onInterBeatInterval:
+    m_PersistentCalls:
+      m_Calls: []
+  onArousal:
+    m_PersistentCalls:
+      m_Calls: []
+  onValence:
+    m_PersistentCalls:
+      m_Calls: []
+  onEngagement:
+    m_PersistentCalls:
+      m_Calls: []
+  logEmittedSample: 0
+--- !u!114 &3883295264005065401
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5539086002200411015}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 46a6202ad8a64b2db7b22f6d0f6a9ab8, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Amp::AmpPortableDataViz.Presentation.Visualization.AudienceSignalVisualizerBinding
+  sourceMode: 0
+  liveSource: {fileID: 4827462142832796194}
+  manualSource: {fileID: 1752101364371564078}
+  particleMeshVisualizer: {fileID: 3118001866504251448}
+  particleMapperSettings:
+    TonicElectrodermalActivityRange: {x: 0, y: 3}
+    TemperatureRateOfChangeRange: {x: 0, y: 3}
+    SkinConductanceResponseFrequencyRange: {x: 0, y: 3}
+    HeartRateRange: {x: 0, y: 3}
+    InterBeatIntervalRange: {x: 0, y: 3}
+    EmotionRange: {x: 0, y: 2}
+  graphStreams: []
+  graphWindowSeconds: 10
+  graphMaxSamples: 512
+  logReceivedSamples: 0
