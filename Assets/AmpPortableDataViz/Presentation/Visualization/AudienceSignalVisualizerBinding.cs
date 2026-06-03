@@ -21,7 +21,7 @@ namespace AmpPortableDataViz.Presentation.Visualization
         }
 
         [Serializable]
-        private struct GraphMetricBinding
+        public struct GraphMetricBinding
         {
             public AudienceMetricKind Metric;
             public GraphVisualizer Visualizer;

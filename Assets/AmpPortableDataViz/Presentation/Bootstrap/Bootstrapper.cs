@@ -125,7 +125,7 @@ namespace AmpPortableDataViz.Presentation.Bootstrap
             Stacked
         }
 
-        [Header("Graph Channel Stacking")]
+        [Header("Legacy Graph Channel Stacking")]
         public GraphChannelLayoutMode GraphChannelLayout = GraphChannelLayoutMode.InlineOffsets;
         public Vector3 GraphStackedOriginOffset = Vector3.zero;
         [Min(0.01f)]
@@ -133,13 +133,13 @@ namespace AmpPortableDataViz.Presentation.Bootstrap
         [Range(0.1f, 1f)]
         public float GraphStackedHeightScale = 0.6f;
 
-        [Header("Graph Channel Offsets")]
+        [Header("Legacy Graph Channel Offsets")]
         public Vector3 GraphValenceOffset = new Vector3(-0.6f, 0f, 0f);
         public Vector3 GraphArousalOffset = Vector3.zero;
         public Vector3 GraphHeartRateOffset = new Vector3(0.6f, 0f, 0f);
         public Vector3 GraphEdaOffset = new Vector3(0.6f, -0.6f, 0f);
 
-        [Header("Graph Stream Settings")]
+        [Header("Legacy Graph Stream Settings")]
         public Vector2 GraphValenceRange = new Vector2(0f, 1f);
         public Vector2 GraphArousalRange = new Vector2(0f, 1f);
         public Vector2 GraphHeartRateRange = new Vector2(40f, 200f);
@@ -1242,10 +1242,11 @@ namespace AmpPortableDataViz.Presentation.Bootstrap
             }
 
             bool hasAudienceBinding = GraphPrefab.GetComponentInChildren<AudienceSignalBinding>() != null;
+            bool hasAudienceVisualizerBinding = GraphPrefab.GetComponentInChildren<AudienceSignalVisualizerBinding>() != null;
             bool hasGraphVisualizer = GraphPrefab.GetComponentInChildren<GraphVisualizer>() != null;
-            if (!hasAudienceBinding || !hasGraphVisualizer)
+            if (!hasAudienceBinding || !hasAudienceVisualizerBinding || !hasGraphVisualizer)
             {
-                Debug.LogWarning("Bootstrapper: Audience GraphPrefab must include AudienceSignalBinding and at least one GraphVisualizer component.");
+                Debug.LogWarning("Bootstrapper: Audience GraphPrefab must include AudienceSignalBinding, AudienceSignalVisualizerBinding, and at least one GraphVisualizer component. Audience graph metrics are configured on the prefab's AudienceSignalVisualizerBinding.");
                 ClearAudienceGraphDeviceVisuals();
                 return;
             }
