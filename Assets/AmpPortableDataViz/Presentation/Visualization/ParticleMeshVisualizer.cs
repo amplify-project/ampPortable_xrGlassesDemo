@@ -27,6 +27,7 @@ namespace AmpPortableDataViz.Presentation.Visualization
 
         [Header("Motion")]
         [SerializeField, Range(0.05f, 20f)] private float signalSmoothing = 6f;
+        [SerializeField, Range(0.01f, 5f)] private float slowFormSmoothing = 0.35f;
         [SerializeField, Range(0.01f, 5f)] private float baseMorphSmoothTime = 0.45f;
         [SerializeField, Range(0f, 3f)] private float turbulenceStrength = 0.35f;
         [SerializeField, Range(0f, 3f)] private float pulseStrength = 0.2f;
@@ -327,8 +328,9 @@ namespace AmpPortableDataViz.Presentation.Visualization
         private void SmoothSignals(float deltaTime)
         {
             float t = 1f - Mathf.Exp(-Mathf.Max(0.01f, signalSmoothing) * Mathf.Max(0f, deltaTime));
-            _tonicEda = Mathf.Lerp(_tonicEda, _targetTonicEda, t);
-            _temperatureRate = Mathf.Lerp(_temperatureRate, _targetTemperatureRate, t);
+            float slowFormT = 1f - Mathf.Exp(-Mathf.Max(0.01f, slowFormSmoothing) * Mathf.Max(0f, deltaTime));
+            _tonicEda = Mathf.Lerp(_tonicEda, _targetTonicEda, slowFormT);
+            _temperatureRate = Mathf.Lerp(_temperatureRate, _targetTemperatureRate, slowFormT);
             _scrFrequency = Mathf.Lerp(_scrFrequency, _targetScrFrequency, t);
             _heartRate = Mathf.Lerp(_heartRate, _targetHeartRate, t);
             _interBeatInterval = Mathf.Lerp(_interBeatInterval, _targetInterBeatInterval, t);
@@ -345,33 +347,27 @@ namespace AmpPortableDataViz.Presentation.Visualization
             }
 
             float heartPulse = Mathf.Sin(_localTime * Mathf.Lerp(1.5f, 8f, _heartRate));
-            float pulse = 1f + heartPulse * pulseStrength * Mathf.Lerp(0.1f, 1f, _heartRate);
-            float expansion = Mathf.Lerp(0.75f, 1.65f, _tonicEda) * pulse;
-            float waveFrequency = Mathf.Lerp(1.5f, 7f, _scrFrequency);
-            float waveAmplitude = Mathf.Lerp(0.04f, 0.45f, _temperatureRate);
+            float pulse = heartPulse * pulseStrength * Mathf.Lerp(0.03f, 0.25f, _heartRate);
+            float formCompression = Mathf.Lerp(1.2f, 0.62f, _tonicEda);
+            float formLift = Mathf.Lerp(0.02f, 0.2f, _tonicEda);
+            float contourAmplitude = Mathf.Lerp(0.025f, 0.38f, _temperatureRate);
+            float contourFrequency = Mathf.Lerp(0.35f, 1.25f, _temperatureRate);
+            float contourDrift = _localTime * Mathf.Lerp(0.015f, 0.12f, _temperatureRate);
             float coherence = Mathf.Clamp01((_engagement * meshCoherence) + 0.15f);
-            float noiseAmount = turbulenceStrength * (Mathf.Lerp(0.75f, 0.08f, coherence) + _interBeatInterval * 0.35f);
+            float noiseAmount = turbulenceStrength * (Mathf.Lerp(0.04f, 0.4f, _facialArousal) + _interBeatInterval * 0.08f) * Mathf.Lerp(1f, 0.65f, coherence);
             float morphSmoothTime = Mathf.Lerp(baseMorphSmoothTime * 1.8f, baseMorphSmoothTime * 0.3f, _facialArousal);
             Color baseColor = ResolveBaseColor(_facialValence);
-
-            float waveWeight = Mathf.Lerp(1.2f, 0.35f, _engagement) + _temperatureRate * 0.5f;
-            float sphereWeight = 0.2f + _engagement * 1.5f + _tonicEda * 0.25f;
-            float spiralWeight = 0.2f + _facialArousal * 1.1f + _scrFrequency * 0.5f;
-            float weightTotal = Mathf.Max(0.0001f, waveWeight + sphereWeight + spiralWeight);
-            waveWeight /= weightTotal;
-            sphereWeight /= weightTotal;
-            spiralWeight /= weightTotal;
 
             for (int i = 0; i < _vertices.Length; i++)
             {
                 float u = _uValues[i];
                 float v = _vValues[i];
-                Vector3 wave = BuildWaveTarget(u, v, waveFrequency, waveAmplitude);
-                Vector3 sphere = BuildSphereTarget(u, v);
-                Vector3 spiral = BuildSpiralTarget(u, v);
+                Vector3 slowForm = BuildSlowFormTarget(u, v, formCompression, formLift, contourAmplitude, contourFrequency, contourDrift);
+                Vector3 scrTexture = BuildScrTextureOffset(u, v);
+                Vector3 rhythm = BuildRhythmOffset(u, v, pulse);
                 Vector3 turbulence = BuildTurbulence(i, u, v, noiseAmount);
 
-                Vector3 target = ((wave * waveWeight) + (sphere * sphereWeight) + (spiral * spiralWeight)) * visualScale * expansion;
+                Vector3 target = (slowForm + scrTexture + rhythm) * visualScale;
                 target += turbulence;
 
                 _vertices[i] = Vector3.SmoothDamp(_vertices[i], target, ref _velocities[i], Mathf.Max(0.01f, morphSmoothTime), Mathf.Infinity, deltaTime);
@@ -406,37 +402,41 @@ namespace AmpPortableDataViz.Presentation.Visualization
             }
         }
 
-        private Vector3 BuildWaveTarget(float u, float v, float waveFrequency, float waveAmplitude)
+        private Vector3 BuildSlowFormTarget(
+            float u,
+            float v,
+            float formCompression,
+            float formLift,
+            float contourAmplitude,
+            float contourFrequency,
+            float contourDrift)
+        {
+            float x = (u - 0.5f) * 2f;
+            float z = (v - 0.5f) * 2f;
+            float firstContour = Mathf.Sin((x * contourFrequency + contourDrift) * Tau);
+            float secondContour = Mathf.Cos((z * contourFrequency * 0.7f - contourDrift * 0.6f) * Tau);
+            float edgeDistance = Mathf.Clamp01(Mathf.Max(Mathf.Abs(x), Mathf.Abs(z)));
+            float pressureLift = formLift * (1f - edgeDistance);
+            float y = ((firstContour * 0.65f) + (secondContour * 0.35f)) * contourAmplitude + pressureLift;
+            return new Vector3(x * formCompression, y, z * formCompression);
+        }
+
+        private Vector3 BuildScrTextureOffset(float u, float v)
         {
             float x = u - 0.5f;
             float z = v - 0.5f;
-            float firstWave = Mathf.Sin((x * waveFrequency + _localTime * Mathf.Lerp(0.2f, 2.5f, _temperatureRate)) * Tau);
-            float secondWave = Mathf.Cos((z * waveFrequency * 0.7f - _localTime * Mathf.Lerp(0.1f, 1.8f, _scrFrequency)) * Tau);
-            float y = (firstWave + secondWave * 0.45f) * waveAmplitude;
-            return new Vector3(x * 2f, y, z * 2f);
+            float textureFrequency = Mathf.Lerp(2f, 7f, _scrFrequency);
+            float textureAmplitude = Mathf.Lerp(0.004f, 0.04f, _scrFrequency);
+            float texture = Mathf.Sin((x * textureFrequency + _localTime * 0.25f) * Tau) *
+                Mathf.Cos((z * textureFrequency - _localTime * 0.18f) * Tau);
+            return Vector3.up * texture * textureAmplitude;
         }
 
-        private Vector3 BuildSphereTarget(float u, float v)
+        private Vector3 BuildRhythmOffset(float u, float v, float pulse)
         {
-            float theta = (u + _localTime * 0.025f * Mathf.Lerp(0.25f, 1.5f, _facialArousal)) * Tau;
-            float phi = Mathf.Lerp(0.08f, Mathf.PI - 0.08f, v);
-            float sinPhi = Mathf.Sin(phi);
-            return new Vector3(
-                sinPhi * Mathf.Cos(theta),
-                Mathf.Cos(phi),
-                sinPhi * Mathf.Sin(theta));
-        }
-
-        private Vector3 BuildSpiralTarget(float u, float v)
-        {
-            float centeredV = v - 0.5f;
-            float angle = (u * Mathf.Lerp(2.5f, 6f, _scrFrequency) + _localTime * Mathf.Lerp(0.05f, 0.45f, _facialArousal)) * Tau;
-            float radius = Mathf.Lerp(0.2f, 1.05f, v);
-            float strandOffset = centeredV * Mathf.Lerp(0.05f, 0.4f, _interBeatInterval);
-            return new Vector3(
-                Mathf.Cos(angle) * (radius + strandOffset),
-                (u - 0.5f) * 2f,
-                Mathf.Sin(angle) * (radius - strandOffset));
+            float phaseOffset = Mathf.Sin(((u - v) * 2f) * Tau) * _interBeatInterval * 0.35f;
+            float localPulse = pulse * (1f + phaseOffset);
+            return Vector3.up * localPulse;
         }
 
         private Vector3 BuildTurbulence(int index, float u, float v, float amount)
@@ -446,7 +446,7 @@ namespace AmpPortableDataViz.Presentation.Visualization
                 return Vector3.zero;
             }
 
-            float time = _localTime * Mathf.Lerp(0.25f, 2.5f, _temperatureRate);
+            float time = _localTime * Mathf.Lerp(0.2f, 2.5f, _facialArousal);
             float x = Mathf.PerlinNoise(u * 3.7f + time, v * 3.7f + index * 0.0031f) - 0.5f;
             float y = Mathf.PerlinNoise(u * 5.3f + 17.13f, v * 5.3f + time) - 0.5f;
             float z = Mathf.PerlinNoise(u * 4.1f - time, v * 4.1f + 29.77f) - 0.5f;
