@@ -33,7 +33,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: -0.6, y: 0}
+  m_AnchoredPosition: {x: -0.75, y: 0}
   m_SizeDelta: {x: 100, y: 100}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!1 &606551006109817003
@@ -151,7 +151,7 @@ MonoBehaviour:
     LineColor: {r: 0.9725491, g: 0.9725491, b: 1, a: 1}
     LineWidth: 0.01
   graphWindowSeconds: 10
-  graphMaxSamples: 512
+  graphMaxSamples: 2048
   logRawInputs: 0
   logResolvedSamples: 0
 --- !u!114 &481934060280776417
@@ -276,7 +276,7 @@ MonoBehaviour:
     LineColor: {r: 0.282353, g: 0.8196079, b: 0.8000001, a: 1}
     LineWidth: 0.02
   graphWindowSeconds: 10
-  graphMaxSamples: 512
+  graphMaxSamples: 2048
   logReceivedSamples: 0
 --- !u!1 &864122512060381559
 GameObject:
@@ -411,8 +411,8 @@ MonoBehaviour:
   m_faceColor:
     serializedVersion: 2
     rgba: 4294967295
-  m_fontSize: 1.5
-  m_fontSizeBase: 1.5
+  m_fontSize: 0.8
+  m_fontSizeBase: 0.8
   m_fontWeight: 400
   m_enableAutoSizing: 0
   m_fontSizeMin: 18
@@ -486,7 +486,7 @@ Transform:
   m_GameObject: {fileID: 1282703349679845587}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -0.65, y: -0.3, z: 0}
+  m_LocalPosition: {x: -0.9, y: -0.3, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -621,7 +621,7 @@ MonoBehaviour:
   showValueLabel: 1
   valueLabel: {fileID: 0}
   valueLabelOffset: {x: 0.08, y: 0, z: 0}
-  valueLabelFontSize: 1.5
+  valueLabelFontSize: 0.8
   valueLabelColor: {r: 1, g: 1, b: 1, a: 1}
   valueLabelUseLineColor: 1
   valueLabelFormat: 0.00
@@ -653,7 +653,7 @@ Transform:
   m_GameObject: {fileID: 1940358690162304821}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0.65, y: 0.9, z: 0}
+  m_LocalPosition: {x: 0.9, y: 0.9, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -788,7 +788,7 @@ MonoBehaviour:
   showValueLabel: 1
   valueLabel: {fileID: 0}
   valueLabelOffset: {x: 0.08, y: 0, z: 0}
-  valueLabelFontSize: 1.5
+  valueLabelFontSize: 0.8
   valueLabelColor: {r: 1, g: 1, b: 1, a: 1}
   valueLabelUseLineColor: 1
   valueLabelFormat: 0.00
@@ -926,8 +926,8 @@ MonoBehaviour:
   m_faceColor:
     serializedVersion: 2
     rgba: 4294967295
-  m_fontSize: 1.5
-  m_fontSizeBase: 1.5
+  m_fontSize: 0.8
+  m_fontSizeBase: 0.8
   m_fontWeight: 400
   m_enableAutoSizing: 0
   m_fontSizeMin: 18
@@ -1007,7 +1007,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: -0.6, y: 0}
+  m_AnchoredPosition: {x: -0.75, y: 0}
   m_SizeDelta: {x: 100, y: 100}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!1 &2329233101446990190
@@ -1043,7 +1043,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: -0.6, y: 0}
+  m_AnchoredPosition: {x: -0.75, y: 0}
   m_SizeDelta: {x: 100, y: 100}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!1 &3158857074658316180
@@ -1079,7 +1079,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: -0.6, y: 0}
+  m_AnchoredPosition: {x: -0.75, y: 0}
   m_SizeDelta: {x: 100, y: 100}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!1 &4297755023439660360
@@ -1109,7 +1109,7 @@ Transform:
   m_GameObject: {fileID: 4297755023439660360}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -0.65, y: -0.9, z: 0}
+  m_LocalPosition: {x: -0.9, y: -0.9, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -1244,7 +1244,7 @@ MonoBehaviour:
   showValueLabel: 1
   valueLabel: {fileID: 0}
   valueLabelOffset: {x: 0.08, y: 0, z: 0}
-  valueLabelFontSize: 1.5
+  valueLabelFontSize: 0.8
   valueLabelColor: {r: 1, g: 1, b: 1, a: 1}
   valueLabelUseLineColor: 1
   valueLabelFormat: 0.00
@@ -1282,7 +1282,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: -0.6, y: 0}
+  m_AnchoredPosition: {x: -0.75, y: 0}
   m_SizeDelta: {x: 100, y: 100}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!1 &4431521855428116420
@@ -1418,8 +1418,8 @@ MonoBehaviour:
   m_faceColor:
     serializedVersion: 2
     rgba: 4294967295
-  m_fontSize: 1.5
-  m_fontSizeBase: 1.5
+  m_fontSize: 0.8
+  m_fontSizeBase: 0.8
   m_fontWeight: 400
   m_enableAutoSizing: 0
   m_fontSizeMin: 18
@@ -1493,7 +1493,7 @@ Transform:
   m_GameObject: {fileID: 4542571341987990343}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0.65, y: -0.9, z: 0}
+  m_LocalPosition: {x: 0.9, y: -0.9, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -1628,7 +1628,7 @@ MonoBehaviour:
   showValueLabel: 1
   valueLabel: {fileID: 0}
   valueLabelOffset: {x: 0.08, y: 0, z: 0}
-  valueLabelFontSize: 1.5
+  valueLabelFontSize: 0.8
   valueLabelColor: {r: 1, g: 1, b: 1, a: 1}
   valueLabelUseLineColor: 1
   valueLabelFormat: 0.00
@@ -1766,8 +1766,8 @@ MonoBehaviour:
   m_faceColor:
     serializedVersion: 2
     rgba: 4294967295
-  m_fontSize: 1.5
-  m_fontSizeBase: 1.5
+  m_fontSize: 0.8
+  m_fontSizeBase: 0.8
   m_fontWeight: 400
   m_enableAutoSizing: 0
   m_fontSizeMin: 18
@@ -1947,8 +1947,8 @@ MonoBehaviour:
   m_faceColor:
     serializedVersion: 2
     rgba: 4294967295
-  m_fontSize: 1.5
-  m_fontSizeBase: 1.5
+  m_fontSize: 0.8
+  m_fontSizeBase: 0.8
   m_fontWeight: 400
   m_enableAutoSizing: 0
   m_fontSizeMin: 18
@@ -2022,7 +2022,7 @@ Transform:
   m_GameObject: {fileID: 5091193690882446360}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -0.65, y: 0.3, z: 0}
+  m_LocalPosition: {x: -0.9, y: 0.3, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -2157,7 +2157,7 @@ MonoBehaviour:
   showValueLabel: 1
   valueLabel: {fileID: 0}
   valueLabelOffset: {x: 0.08, y: 0, z: 0}
-  valueLabelFontSize: 1.5
+  valueLabelFontSize: 0.8
   valueLabelColor: {r: 1, g: 1, b: 1, a: 1}
   valueLabelUseLineColor: 1
   valueLabelFormat: 0.00
@@ -2268,7 +2268,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: Inter Beat Interval
+  m_text: IBI
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
   m_sharedMaterial: {fileID: 2180264, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
@@ -2295,8 +2295,8 @@ MonoBehaviour:
   m_faceColor:
     serializedVersion: 2
     rgba: 4294967295
-  m_fontSize: 1.5
-  m_fontSizeBase: 1.5
+  m_fontSize: 0.8
+  m_fontSizeBase: 0.8
   m_fontWeight: 400
   m_enableAutoSizing: 0
   m_fontSizeMin: 18
@@ -2370,7 +2370,7 @@ Transform:
   m_GameObject: {fileID: 5684096445106434220}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0.65, y: 0.3, z: 0}
+  m_LocalPosition: {x: 0.9, y: 0.3, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -2505,7 +2505,7 @@ MonoBehaviour:
   showValueLabel: 1
   valueLabel: {fileID: 0}
   valueLabelOffset: {x: 0.08, y: 0, z: 0}
-  valueLabelFontSize: 1.5
+  valueLabelFontSize: 0.8
   valueLabelColor: {r: 1, g: 1, b: 1, a: 1}
   valueLabelUseLineColor: 1
   valueLabelFormat: 0.00
@@ -2537,7 +2537,7 @@ Transform:
   m_GameObject: {fileID: 5725179001120752599}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0.65, y: -0.3, z: 0}
+  m_LocalPosition: {x: 0.9, y: -0.3, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -2672,7 +2672,7 @@ MonoBehaviour:
   showValueLabel: 1
   valueLabel: {fileID: 0}
   valueLabelOffset: {x: 0.08, y: 0, z: 0}
-  valueLabelFontSize: 1.5
+  valueLabelFontSize: 0.8
   valueLabelColor: {r: 1, g: 1, b: 1, a: 1}
   valueLabelUseLineColor: 1
   valueLabelFormat: 0.00
@@ -2810,8 +2810,8 @@ MonoBehaviour:
   m_faceColor:
     serializedVersion: 2
     rgba: 4294967295
-  m_fontSize: 1.5
-  m_fontSizeBase: 1.5
+  m_fontSize: 0.8
+  m_fontSizeBase: 0.8
   m_fontWeight: 400
   m_enableAutoSizing: 0
   m_fontSizeMin: 18
@@ -2891,7 +2891,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: -0.6, y: 0}
+  m_AnchoredPosition: {x: -0.75, y: 0}
   m_SizeDelta: {x: 100, y: 100}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!1 &6391667432746667968
@@ -3027,8 +3027,8 @@ MonoBehaviour:
   m_faceColor:
     serializedVersion: 2
     rgba: 4294967295
-  m_fontSize: 1.5
-  m_fontSizeBase: 1.5
+  m_fontSize: 0.8
+  m_fontSizeBase: 0.8
   m_fontWeight: 400
   m_enableAutoSizing: 0
   m_fontSizeMin: 18
@@ -3108,7 +3108,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: -0.6, y: 0}
+  m_AnchoredPosition: {x: -0.75, y: 0}
   m_SizeDelta: {x: 100, y: 100}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!1 &7267221538598767518
@@ -3146,7 +3146,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: -0.65, y: 0.9}
+  m_AnchoredPosition: {x: -0.9, y: 0.9}
   m_SizeDelta: {x: 200, y: 50}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!120 &2386650290023487949
@@ -3277,7 +3277,7 @@ MonoBehaviour:
   showValueLabel: 1
   valueLabel: {fileID: 0}
   valueLabelOffset: {x: 0.08, y: 0, z: 0}
-  valueLabelFontSize: 1.5
+  valueLabelFontSize: 0.8
   valueLabelColor: {r: 1, g: 1, b: 1, a: 1}
   valueLabelUseLineColor: 1
   valueLabelFormat: 0.00
@@ -3315,7 +3315,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: -0.6, y: 0}
+  m_AnchoredPosition: {x: -0.75, y: 0}
   m_SizeDelta: {x: 100, y: 100}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!1 &8811641111325110952
@@ -3346,7 +3346,7 @@ RectTransform:
   m_GameObject: {fileID: 8811641111325110952}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0.5}
-  m_LocalScale: {x: 2.8, y: 2.4, z: 1}
+  m_LocalScale: {x: 4.2, y: 2.4, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 4262065910023820684}
