@@ -44,11 +44,11 @@ namespace AmpPortableDataViz.Presentation.Mapping
         {
             return new Settings
             {
-                TonicElectrodermalActivityRange = new Vector2(0f, 3f),
-                TemperatureRateOfChangeRange = new Vector2(0f, 3f),
-                SkinConductanceResponseFrequencyRange = new Vector2(0f, 3f),
-                HeartRateRange = new Vector2(0f, 3f),
-                InterBeatIntervalRange = new Vector2(0f, 3f),
+                TonicElectrodermalActivityRange = new Vector2(0.01f, 0.5f),
+                TemperatureRateOfChangeRange = new Vector2(0.001f, 0.1f),
+                SkinConductanceResponseFrequencyRange = new Vector2(0.5f, 5f),
+                HeartRateRange = new Vector2(1f, 10f),
+                InterBeatIntervalRange = new Vector2(10f, 100f),
                 EmotionRange = new Vector2(0f, 2f)
             };
         }

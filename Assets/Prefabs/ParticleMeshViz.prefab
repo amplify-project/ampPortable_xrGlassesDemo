@@ -73,6 +73,7 @@ MeshRenderer:
   m_RendererPriority: 0
   m_Materials:
   - {fileID: 2100000, guid: 14d714b2c18ef3349b51e0504fdfa4fe, type: 2}
+  - {fileID: 2100000, guid: 7f2e1b39a2606b440a50552d10142341, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -4948,15 +4949,19 @@ MonoBehaviour:
   particleMeshVisualizer: {fileID: 3118001866504251448}
   requireAllSignalsBeforeParticleApply: 1
   particleMapperSettings:
-    TonicElectrodermalActivityRange: {x: 0, y: 3}
-    TemperatureRateOfChangeRange: {x: 0, y: 3}
-    SkinConductanceResponseFrequencyRange: {x: 0, y: 3}
-    HeartRateRange: {x: 0, y: 3}
-    InterBeatIntervalRange: {x: 0, y: 3}
+    TonicElectrodermalActivityRange: {x: 0.01, y: 0.5}
+    TemperatureRateOfChangeRange: {x: 0.001, y: 0.1}
+    SkinConductanceResponseFrequencyRange: {x: 0.5, y: 5}
+    HeartRateRange: {x: 1, y: 10}
+    InterBeatIntervalRange: {x: 10, y: 100}
     EmotionRange: {x: 0, y: 2}
   graphStreams: []
   graphWindowSeconds: 10
   graphMaxSamples: 512
+  useDynamicYRange: 1
+  dynamicYRangeStdDevMultiplier: 2.5
+  dynamicYRangeMinRangeFraction: 0.1
+  dynamicYRangeSmoothing: 0.15
   logRawInputs: 0
   logResolvedSamples: 0
 --- !u!114 &1752101364371564078
@@ -4973,11 +4978,11 @@ MonoBehaviour:
   m_EditorClassIdentifier: Amp::AmpPortableDataViz.Presentation.Visualization.AudienceDataManualDriver
   sourceId: audience-manual
   deviceId: 
-  tonicElectrodermalActivityStdDev: 1
-  temperatureRateOfChangeStdDev: 1
+  tonicElectrodermalActivityStdDev: 0.5
+  temperatureRateOfChangeStdDev: 0.1
   skinConductanceResponseFrequencyStdDev: 1
   heartRateStdDev: 1
-  interBeatIntervalStdDev: 1
+  interBeatIntervalStdDev: 10
   arousal: 1
   valence: 1
   engagement: 0.5
@@ -5033,13 +5038,17 @@ MonoBehaviour:
   manualSource: {fileID: 1752101364371564078}
   particleMeshVisualizer: {fileID: 3118001866504251448}
   particleMapperSettings:
-    TonicElectrodermalActivityRange: {x: 0, y: 3}
-    TemperatureRateOfChangeRange: {x: 0, y: 3}
-    SkinConductanceResponseFrequencyRange: {x: 0, y: 3}
-    HeartRateRange: {x: 0, y: 3}
-    InterBeatIntervalRange: {x: 0, y: 3}
+    TonicElectrodermalActivityRange: {x: 0.01, y: 0.5}
+    TemperatureRateOfChangeRange: {x: 0.001, y: 0.1}
+    SkinConductanceResponseFrequencyRange: {x: 0.5, y: 5}
+    HeartRateRange: {x: 1, y: 10}
+    InterBeatIntervalRange: {x: 10, y: 100}
     EmotionRange: {x: 0, y: 2}
   graphStreams: []
   graphWindowSeconds: 10
   graphMaxSamples: 512
+  useDynamicYRange: 1
+  dynamicYRangeStdDevMultiplier: 2.5
+  dynamicYRangeMinRangeFraction: 0.1
+  dynamicYRangeSmoothing: 0.15
   logReceivedSamples: 0
