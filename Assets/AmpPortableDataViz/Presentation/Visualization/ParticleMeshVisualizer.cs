@@ -33,6 +33,15 @@ namespace AmpPortableDataViz.Presentation.Visualization
         [SerializeField, Range(0f, 3f)] private float pulseStrength = 0.2f;
         [SerializeField, Range(0f, 5f)] private float internalTimeScale = 1f;
 
+        [Header("SCR Events")]
+        [SerializeField, Range(1, 32)] private int maxScrEvents = 12;
+        [SerializeField, Range(0.1f, 5f)] private float scrEventLifetime = 1.4f;
+        [SerializeField, Range(0.01f, 1f)] private float scrEventRadius = 0.22f;
+        [SerializeField, Range(0f, 1f)] private float scrEventThreshold = 0.55f;
+        [SerializeField, Range(0f, 10f)] private float scrEventsPerSecondAtMax = 3f;
+        [SerializeField, Range(0f, 10f)] private float scrRiseEventGain = 4f;
+        [SerializeField, Range(0f, 1f)] private float scrEventDisplacement = 0.16f;
+
         [Header("Particles")]
         [SerializeField] private bool renderParticles = true;
         [SerializeField, Range(0.001f, 0.12f)] private float particleSize = 0.025f;
@@ -56,6 +65,21 @@ namespace AmpPortableDataViz.Presentation.Visualization
         private ParticleSystem.Particle[] _particles;
         private float[] _uValues;
         private float[] _vValues;
+
+        private struct ScrEvent
+        {
+            public bool Active;
+            public Vector2 CenterUv;
+            public float Age;
+            public float Lifetime;
+            public float Radius;
+            public float Intensity;
+        }
+
+        private ScrEvent[] _scrEvents;
+        private float _scrEventAccumulator;
+        private int _nextScrEventIndex;
+        private float _previousScrFrequency = 0.5f;
 
         private int _builtGridWidth;
         private int _builtGridHeight;
@@ -111,11 +135,13 @@ namespace AmpPortableDataViz.Presentation.Visualization
         private void Update()
         {
             EnsureInitialized();
+            EnsureScrEventCapacity();
 
             float deltaTime = ResolveDeltaTime();
             _localTime += deltaTime * internalTimeScale;
 
             SmoothSignals(deltaTime);
+            UpdateScrEvents(deltaTime);
             UpdateGeometry(deltaTime);
         }
 
@@ -154,6 +180,7 @@ namespace AmpPortableDataViz.Presentation.Visualization
             {
                 ResolveComponents();
                 EnsureInitialized();
+                EnsureScrEventCapacity();
             }
         }
 
@@ -245,9 +272,90 @@ namespace AmpPortableDataViz.Presentation.Visualization
             }
 
             ConfigureParticleSystem(vertexCount);
+            EnsureScrEventCapacity();
             _builtGridWidth = width;
             _builtGridHeight = height;
             _needsRebuild = false;
+        }
+
+        private void EnsureScrEventCapacity()
+        {
+            int eventCount = Mathf.Max(1, maxScrEvents);
+            if (_scrEvents != null && _scrEvents.Length == eventCount)
+            {
+                return;
+            }
+
+            _scrEvents = new ScrEvent[eventCount];
+            _scrEventAccumulator = 0f;
+            _nextScrEventIndex = 0;
+            _previousScrFrequency = _scrFrequency;
+        }
+
+        private void UpdateScrEvents(float deltaTime)
+        {
+            EnsureScrEventCapacity();
+
+            float safeDeltaTime = Mathf.Max(0f, deltaTime);
+            for (int i = 0; i < _scrEvents.Length; i++)
+            {
+                if (!_scrEvents[i].Active)
+                {
+                    continue;
+                }
+
+                _scrEvents[i].Age += safeDeltaTime;
+                if (_scrEvents[i].Age >= _scrEvents[i].Lifetime)
+                {
+                    _scrEvents[i].Active = false;
+                }
+            }
+
+            float sustainedDrive = Mathf.InverseLerp(scrEventThreshold, 1f, _scrFrequency);
+            float riseDrive = Mathf.Max(0f, _scrFrequency - _previousScrFrequency) * Mathf.Max(0f, scrRiseEventGain);
+            _scrEventAccumulator += sustainedDrive * Mathf.Max(0f, scrEventsPerSecondAtMax) * safeDeltaTime;
+            _scrEventAccumulator += riseDrive;
+
+            int spawnedThisFrame = 0;
+            while (_scrEventAccumulator >= 1f && spawnedThisFrame < 4)
+            {
+                SpawnScrEvent(Mathf.Clamp01(Mathf.Max(_scrFrequency, sustainedDrive)));
+                _scrEventAccumulator -= 1f;
+                spawnedThisFrame++;
+            }
+
+            if (_scrEventAccumulator > 4f)
+            {
+                _scrEventAccumulator = 4f;
+            }
+
+            _previousScrFrequency = _scrFrequency;
+        }
+
+        private void SpawnScrEvent(float intensity)
+        {
+            if (_scrEvents == null || _scrEvents.Length == 0)
+            {
+                return;
+            }
+
+            int eventIndex = _nextScrEventIndex % _scrEvents.Length;
+            float placementIndex = _nextScrEventIndex;
+            _nextScrEventIndex++;
+
+            float u = Mathf.Repeat(placementIndex * 0.6180339f + _localTime * 0.037f, 1f);
+            float v = Mathf.Repeat(placementIndex * 0.381966f + Mathf.Sin(_localTime * 0.11f + placementIndex) * 0.17f, 1f);
+            float clampedIntensity = Mathf.Clamp01(intensity);
+
+            _scrEvents[eventIndex] = new ScrEvent
+            {
+                Active = true,
+                CenterUv = new Vector2(u, v),
+                Age = 0f,
+                Lifetime = Mathf.Max(0.1f, scrEventLifetime) * Mathf.Lerp(0.75f, 1.35f, clampedIntensity),
+                Radius = Mathf.Max(0.01f, scrEventRadius) * Mathf.Lerp(0.75f, 1.4f, clampedIntensity),
+                Intensity = Mathf.Lerp(0.35f, 1f, clampedIntensity)
+            };
         }
 
         private static int[] BuildGridTriangles(int width, int height)
@@ -363,23 +471,23 @@ namespace AmpPortableDataViz.Presentation.Visualization
                 float u = _uValues[i];
                 float v = _vValues[i];
                 Vector3 slowForm = BuildSlowFormTarget(u, v, formCompression, formLift, contourAmplitude, contourFrequency, contourDrift);
-                Vector3 scrTexture = BuildScrTextureOffset(u, v);
+                Vector3 scrEventOffset = BuildScrEventOffset(u, v, out float scrEventEnergy);
                 Vector3 rhythm = BuildRhythmOffset(u, v, pulse);
                 Vector3 turbulence = BuildTurbulence(i, u, v, noiseAmount);
 
-                Vector3 target = (slowForm + scrTexture + rhythm) * visualScale;
+                Vector3 target = (slowForm + scrEventOffset + rhythm) * visualScale;
                 target += turbulence;
 
                 _vertices[i] = Vector3.SmoothDamp(_vertices[i], target, ref _velocities[i], Mathf.Max(0.01f, morphSmoothTime), Mathf.Infinity, deltaTime);
 
                 float localEnergy = Mathf.Clamp01(_facialArousal * 0.5f + _heartRate * 0.25f + _scrFrequency * 0.25f);
-                Color vertexColor = Color.Lerp(baseColor, Color.white, localEnergy * 0.25f + Mathf.Abs(heartPulse) * 0.12f);
+                Color vertexColor = Color.Lerp(baseColor, Color.white, Mathf.Clamp01(localEnergy * 0.25f + Mathf.Abs(heartPulse) * 0.12f + scrEventEnergy * 0.65f));
                 vertexColor.a = Mathf.Lerp(0.35f, 1f, coherence);
                 _colors[i] = vertexColor;
 
                 _particles[i].position = _vertices[i];
                 _particles[i].startColor = vertexColor;
-                _particles[i].startSize = particleSize * Mathf.Lerp(0.75f, 1.8f, localEnergy);
+                _particles[i].startSize = particleSize * Mathf.Lerp(0.75f, 1.8f, localEnergy) * Mathf.Lerp(1f, 2.4f, scrEventEnergy);
                 _particles[i].startLifetime = float.MaxValue;
                 _particles[i].remainingLifetime = float.MaxValue;
             }
@@ -421,15 +529,40 @@ namespace AmpPortableDataViz.Presentation.Visualization
             return new Vector3(x * formCompression, y, z * formCompression);
         }
 
-        private Vector3 BuildScrTextureOffset(float u, float v)
+        private Vector3 BuildScrEventOffset(float u, float v, out float eventEnergy)
         {
-            float x = u - 0.5f;
-            float z = v - 0.5f;
-            float textureFrequency = Mathf.Lerp(2f, 7f, _scrFrequency);
-            float textureAmplitude = Mathf.Lerp(0.004f, 0.04f, _scrFrequency);
-            float texture = Mathf.Sin((x * textureFrequency + _localTime * 0.25f) * Tau) *
-                Mathf.Cos((z * textureFrequency - _localTime * 0.18f) * Tau);
-            return Vector3.up * texture * textureAmplitude;
+            eventEnergy = 0f;
+            if (_scrEvents == null || _scrEvents.Length == 0)
+            {
+                return Vector3.zero;
+            }
+
+            Vector2 uv = new Vector2(u, v);
+            Vector3 offset = Vector3.zero;
+            for (int i = 0; i < _scrEvents.Length; i++)
+            {
+                if (!_scrEvents[i].Active)
+                {
+                    continue;
+                }
+
+                float normalizedAge = Mathf.Clamp01(_scrEvents[i].Age / Mathf.Max(0.0001f, _scrEvents[i].Lifetime));
+                float ringRadius = _scrEvents[i].Radius * normalizedAge;
+                float ringWidth = Mathf.Lerp(0.025f, 0.07f, _scrEvents[i].Intensity);
+                float distance = Vector2.Distance(uv, _scrEvents[i].CenterUv);
+                float ring = 1f - Mathf.Clamp01(Mathf.Abs(distance - ringRadius) / ringWidth);
+                float envelope = Mathf.Sin(normalizedAge * Mathf.PI) * (1f - normalizedAge * 0.35f);
+                float energy = ring * envelope * _scrEvents[i].Intensity;
+
+                offset += Vector3.up * energy * scrEventDisplacement;
+                if (energy > eventEnergy)
+                {
+                    eventEnergy = energy;
+                }
+            }
+
+            eventEnergy = Mathf.Clamp01(eventEnergy);
+            return offset;
         }
 
         private Vector3 BuildRhythmOffset(float u, float v, float pulse)
