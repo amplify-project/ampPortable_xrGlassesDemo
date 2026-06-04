@@ -112,27 +112,27 @@ MonoBehaviour:
   graphStreams:
   - Metric: 0
     Visualizer: {fileID: 5610035945543791327}
-    YRange: {x: 0, y: 3}
+    YRange: {x: 0.01, y: 0.5}
     LineColor: {r: 1, g: 0, b: 0, a: 1}
     LineWidth: 0.01
   - Metric: 1
     Visualizer: {fileID: 7872482145564960264}
-    YRange: {x: 0, y: 3}
+    YRange: {x: 0.001, y: 0.1}
     LineColor: {r: 0, g: 1, b: 0, a: 1}
     LineWidth: 0.01
   - Metric: 2
     Visualizer: {fileID: 1863523893060289597}
-    YRange: {x: 0, y: 3}
+    YRange: {x: 0.5, y: 5}
     LineColor: {r: 0, g: 0, b: 1, a: 1}
     LineWidth: 0.01
   - Metric: 3
     Visualizer: {fileID: 799524844568015476}
-    YRange: {x: 0, y: 3}
+    YRange: {x: 1, y: 10}
     LineColor: {r: 1, g: 0.92156863, b: 0.015686275, a: 1}
     LineWidth: 0.01
   - Metric: 4
     Visualizer: {fileID: 799524844568015476}
-    YRange: {x: 0, y: 3}
+    YRange: {x: 10, y: 100}
     LineColor: {r: 0, g: 1, b: 1, a: 1}
     LineWidth: 0.01
   - Metric: 5
@@ -152,6 +152,10 @@ MonoBehaviour:
     LineWidth: 0.01
   graphWindowSeconds: 10
   graphMaxSamples: 2048
+  useDynamicYRange: 1
+  dynamicYRangeStdDevMultiplier: 2.5
+  dynamicYRangeMinRangeFraction: 0.02
+  dynamicYRangeSmoothing: 0.15
   logRawInputs: 0
   logResolvedSamples: 0
 --- !u!114 &481934060280776417
@@ -168,11 +172,11 @@ MonoBehaviour:
   m_EditorClassIdentifier: Amp::AmpPortableDataViz.Presentation.Visualization.AudienceDataManualDriver
   sourceId: audience-manual
   deviceId: 
-  tonicElectrodermalActivityStdDev: 1
-  temperatureRateOfChangeStdDev: 1
+  tonicElectrodermalActivityStdDev: 0.5
+  temperatureRateOfChangeStdDev: 0.1
   skinConductanceResponseFrequencyStdDev: 1
   heartRateStdDev: 1
-  interBeatIntervalStdDev: 1
+  interBeatIntervalStdDev: 10
   arousal: 1
   valence: 1
   engagement: 0.5
@@ -237,27 +241,27 @@ MonoBehaviour:
   graphStreams:
   - Metric: 0
     Visualizer: {fileID: 5610035945543791327}
-    YRange: {x: 0, y: 3}
+    YRange: {x: 0.01, y: 0.5}
     LineColor: {r: 1, g: 0, b: 0, a: 1}
     LineWidth: 0.02
   - Metric: 1
     Visualizer: {fileID: 7872482145564960264}
-    YRange: {x: 0, y: 3}
+    YRange: {x: 0.001, y: 0.1}
     LineColor: {r: 0, g: 1, b: 0, a: 1}
     LineWidth: 0.02
   - Metric: 2
     Visualizer: {fileID: 1863523893060289597}
-    YRange: {x: 0, y: 3}
+    YRange: {x: 0.5, y: 5}
     LineColor: {r: 0, g: 0, b: 1, a: 1}
     LineWidth: 0.02
   - Metric: 3
     Visualizer: {fileID: 799524844568015476}
-    YRange: {x: 0, y: 3}
+    YRange: {x: 1, y: 10}
     LineColor: {r: 1, g: 0.92156863, b: 0.015686275, a: 1}
     LineWidth: 0.02
   - Metric: 4
     Visualizer: {fileID: 2123477700110127702}
-    YRange: {x: 0, y: 3}
+    YRange: {x: 10, y: 100}
     LineColor: {r: 0, g: 1, b: 1, a: 1}
     LineWidth: 0.02
   - Metric: 5
@@ -277,6 +281,10 @@ MonoBehaviour:
     LineWidth: 0.02
   graphWindowSeconds: 10
   graphMaxSamples: 2048
+  useDynamicYRange: 1
+  dynamicYRangeStdDevMultiplier: 2.5
+  dynamicYRangeMinRangeFraction: 0.02
+  dynamicYRangeSmoothing: 0.15
   logReceivedSamples: 0
 --- !u!1 &864122512060381559
 GameObject:
@@ -3336,7 +3344,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &8113092573254593537
 RectTransform:
   m_ObjectHideFlags: 0
