@@ -4918,10 +4918,27 @@ MonoBehaviour:
   visualScale: 1.25
   meshCoherence: 0.75
   signalSmoothing: 6
+  slowFormSmoothing: 0.35
   baseMorphSmoothTime: 0.45
   turbulenceStrength: 0.35
   pulseStrength: 0.2
   internalTimeScale: 1
+  maxScrEvents: 12
+  scrEventLifetime: 1.4
+  scrEventRadius: 0.22
+  scrEventThreshold: 0.55
+  scrEventsPerSecondAtMax: 3
+  scrRiseEventGain: 4
+  scrEventDisplacement: 0.16
+  rhythmBaseBpm: 60.6
+  rhythmRateStdDevBoost: 0.6
+  maxRhythmPulses: 8
+  rhythmPulseLifetime: 1.2
+  rhythmPulseRadius: 0.65
+  rhythmPulseDisplacement: 0.104
+  rhythmBreathDisplacement: 0.025
+  ibiPhaseSpread: 0.18
+  ibiBreakAmount: 0.7
   renderParticles: 1
   particleSize: 0.0145
   lowValenceColor: {r: 0.08, g: 0.35, b: 1, a: 0.9}
