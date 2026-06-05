@@ -172,21 +172,21 @@ MonoBehaviour:
   m_EditorClassIdentifier: Amp::AmpPortableDataViz.Presentation.Visualization.AudienceDataManualDriver
   sourceId: audience-manual
   deviceId: 
-  tonicElectrodermalActivityStdDev: 0.5
-  temperatureRateOfChangeStdDev: 0.1
-  skinConductanceResponseFrequencyStdDev: 1
-  heartRateStdDev: 1
-  interBeatIntervalStdDev: 10
-  arousal: 1
-  valence: 1
-  engagement: 0.5
-  sourceMode: 0
+  tonicElectrodermalActivityStdDev: 0.23088664
+  temperatureRateOfChangeStdDev: 0.06404396
+  skinConductanceResponseFrequencyStdDev: 2.8194046
+  heartRateStdDev: 5.2560916
+  interBeatIntervalStdDev: 39.91255
+  arousal: 0.8214832
+  valence: 0.5926339
+  engagement: 0.81239516
+  sourceMode: 1
   autoEmit: 1
   animateProceduralNoise: 1
   timeScale: 0.35
   noiseFrequency: 0.75
   noiseSeed: 0.1234
-  noiseOffset: 0
+  noiseOffset: 1.0743425
   onSampleEmitted:
     m_PersistentCalls:
       m_Calls: []
