@@ -87,6 +87,19 @@ namespace AmpPortableDataViz.Presentation.Visualization
         [SerializeField, Range(0f, 1f)] private float engagementLatticeMaxAlpha = 0.55f;
         [SerializeField, Range(0f, 1f)] private float engagementLatticeValenceTint = 0.35f;
 
+        [Header("Arousal Trails")]
+        [SerializeField] private Transform arousalTrailRoot;
+        [SerializeField] private Material arousalTrailMaterial;
+        [SerializeField, Range(0f, 1f)] private float arousalTrailThreshold = 0.55f;
+        [SerializeField, Range(0.01f, 1f)] private float arousalTrailFadeRange = 0.25f;
+        [SerializeField, Range(1, 12)] private int arousalTrailStride = 4;
+        [SerializeField, Range(4, 96)] private int maxArousalTrails = 64;
+        [SerializeField, Range(3, 48)] private int arousalTrailHistoryLength = 18;
+        [SerializeField, Range(0.001f, 0.08f)] private float arousalTrailLineWidth = 0.014f;
+        [SerializeField, Range(0f, 0.1f)] private float arousalTrailLift = 0.018f;
+        [SerializeField, Range(0f, 1f)] private float arousalTrailMaxAlpha = 0.42f;
+        [SerializeField, Range(0f, 1f)] private float arousalTrailValenceTint = 0.15f;
+
         [Header("Particles")]
         [SerializeField] private bool renderParticles = true;
         [SerializeField, Range(0.001f, 0.12f)] private float particleSize = 0.025f;
@@ -163,6 +176,18 @@ namespace AmpPortableDataViz.Presentation.Visualization
         private int _builtLatticeGridHeight;
         private int _builtLatticeStride;
 
+        private LineRenderer[] _arousalTrailLines;
+        private int[] _arousalTrailVertexIndices;
+        private Vector3[][] _arousalTrailHistory;
+        private Material _arousalTrailMaterialInstance;
+        private int _arousalTrailHead;
+        private bool _arousalTrailHistoryFilled;
+        private int _builtArousalTrailGridWidth;
+        private int _builtArousalTrailGridHeight;
+        private int _builtArousalTrailStride;
+        private int _builtArousalTrailMaxCount;
+        private int _builtArousalTrailHistoryLength;
+
         private int _builtGridWidth;
         private int _builtGridHeight;
         private bool _needsRebuild = true;
@@ -231,6 +256,7 @@ namespace AmpPortableDataViz.Presentation.Visualization
             UpdateScrSparks(deltaTime);
             UpdateGeometry(deltaTime);
             UpdateEngagementLattice();
+            UpdateArousalTrails();
             ApplyScrSparkParticles();
         }
 
@@ -243,6 +269,7 @@ namespace AmpPortableDataViz.Presentation.Visualization
 
             ClearScrSparks();
             ClearEngagementLattice();
+            ClearArousalTrails(true);
         }
 
         private void OnDestroy()
@@ -270,6 +297,18 @@ namespace AmpPortableDataViz.Presentation.Visualization
                     DestroyImmediate(_engagementLatticeMaterialInstance);
                 }
             }
+
+            if (_arousalTrailMaterialInstance != null)
+            {
+                if (UnityEngine.Application.isPlaying)
+                {
+                    Destroy(_arousalTrailMaterialInstance);
+                }
+                else
+                {
+                    DestroyImmediate(_arousalTrailMaterialInstance);
+                }
+            }
         }
 
         private void OnValidate()
@@ -287,6 +326,7 @@ namespace AmpPortableDataViz.Presentation.Visualization
                 EnsureScrSparkParticleSystem();
                 EnsureRhythmPulseCapacity();
                 EnsureEngagementLatticeCapacity();
+                EnsureArousalTrailCapacity();
             }
         }
 
@@ -336,6 +376,15 @@ namespace AmpPortableDataViz.Presentation.Visualization
                 if (existingLattice != null)
                 {
                     engagementLatticeRoot = existingLattice;
+                }
+            }
+
+            if (arousalTrailRoot == null)
+            {
+                Transform existingTrails = transform.Find("Arousal Trails");
+                if (existingTrails != null)
+                {
+                    arousalTrailRoot = existingTrails;
                 }
             }
         }
@@ -417,6 +466,7 @@ namespace AmpPortableDataViz.Presentation.Visualization
             EnsureScrSparkParticleSystem();
             EnsureRhythmPulseCapacity();
             EnsureEngagementLatticeCapacity();
+            EnsureArousalTrailCapacity();
             _builtGridWidth = width;
             _builtGridHeight = height;
             _needsRebuild = false;
@@ -999,6 +1049,269 @@ namespace AmpPortableDataViz.Presentation.Visualization
                     _engagementLatticeLines[i].enabled = false;
                 }
             }
+        }
+
+        private void EnsureArousalTrailCapacity()
+        {
+            int width = Mathf.Max(4, gridWidth);
+            int height = Mathf.Max(4, gridHeight);
+            int stride = Mathf.Max(1, arousalTrailStride);
+            int maxTrailCount = Mathf.Max(1, maxArousalTrails);
+            int historyLength = Mathf.Max(3, arousalTrailHistoryLength);
+
+            if (arousalTrailRoot == null)
+            {
+                if (!UnityEngine.Application.isPlaying)
+                {
+                    return;
+                }
+
+                var trailObject = new GameObject("Arousal Trails");
+                trailObject.transform.SetParent(transform, false);
+                arousalTrailRoot = trailObject.transform;
+            }
+
+            if (_arousalTrailLines != null
+                && _arousalTrailVertexIndices != null
+                && _arousalTrailHistory != null
+                && _builtArousalTrailGridWidth == width
+                && _builtArousalTrailGridHeight == height
+                && _builtArousalTrailStride == stride
+                && _builtArousalTrailMaxCount == maxTrailCount
+                && _builtArousalTrailHistoryLength == historyLength)
+            {
+                return;
+            }
+
+            _arousalTrailVertexIndices = BuildArousalTrailVertexIndices(width, height, stride, maxTrailCount);
+            _arousalTrailHistory = new Vector3[_arousalTrailVertexIndices.Length][];
+            _arousalTrailLines = new LineRenderer[_arousalTrailVertexIndices.Length];
+            _arousalTrailHead = 0;
+            _arousalTrailHistoryFilled = false;
+
+            LineRenderer[] existingLines = arousalTrailRoot.GetComponentsInChildren<LineRenderer>(true);
+            for (int i = 0; i < _arousalTrailVertexIndices.Length; i++)
+            {
+                _arousalTrailHistory[i] = new Vector3[historyLength];
+                LineRenderer line = i < existingLines.Length
+                    ? existingLines[i]
+                    : CreateArousalTrailLine(i);
+                ConfigureArousalTrailLine(line, historyLength);
+                _arousalTrailLines[i] = line;
+            }
+
+            for (int i = _arousalTrailVertexIndices.Length; i < existingLines.Length; i++)
+            {
+                if (existingLines[i] != null)
+                {
+                    existingLines[i].enabled = false;
+                    existingLines[i].positionCount = 0;
+                }
+            }
+
+            _builtArousalTrailGridWidth = width;
+            _builtArousalTrailGridHeight = height;
+            _builtArousalTrailStride = stride;
+            _builtArousalTrailMaxCount = maxTrailCount;
+            _builtArousalTrailHistoryLength = historyLength;
+        }
+
+        private LineRenderer CreateArousalTrailLine(int lineIndex)
+        {
+            var lineObject = new GameObject($"Arousal Trail {lineIndex:00}");
+            lineObject.transform.SetParent(arousalTrailRoot, false);
+            return lineObject.AddComponent<LineRenderer>();
+        }
+
+        private void ConfigureArousalTrailLine(LineRenderer line, int positionCount)
+        {
+            if (line == null)
+            {
+                return;
+            }
+
+            line.useWorldSpace = false;
+            line.loop = false;
+            line.positionCount = positionCount;
+            line.widthMultiplier = 1f;
+            line.startWidth = arousalTrailLineWidth;
+            line.endWidth = arousalTrailLineWidth;
+            line.numCapVertices = 0;
+            line.numCornerVertices = 1;
+            Material material = ResolveArousalTrailMaterial();
+            if (material != null)
+            {
+                line.sharedMaterial = material;
+            }
+        }
+
+        private Material ResolveArousalTrailMaterial()
+        {
+            if (arousalTrailMaterial != null)
+            {
+                return arousalTrailMaterial;
+            }
+
+            if (_arousalTrailMaterialInstance != null)
+            {
+                return _arousalTrailMaterialInstance;
+            }
+
+            Shader shader = Shader.Find("Sprites/Default");
+            if (shader == null)
+            {
+                shader = Shader.Find("Universal Render Pipeline/Particles/Unlit");
+            }
+
+            if (shader == null)
+            {
+                shader = Shader.Find("Legacy Shaders/Particles/Alpha Blended");
+            }
+
+            if (shader == null)
+            {
+                return null;
+            }
+
+            _arousalTrailMaterialInstance = new Material(shader)
+            {
+                name = "Arousal Trail Runtime Material",
+                hideFlags = HideFlags.DontSave
+            };
+            return _arousalTrailMaterialInstance;
+        }
+
+        private void UpdateArousalTrails()
+        {
+            EnsureArousalTrailCapacity();
+            if (_vertices == null
+                || _arousalTrailLines == null
+                || _arousalTrailVertexIndices == null
+                || _arousalTrailHistory == null)
+            {
+                return;
+            }
+
+            float fadeRange = Mathf.Max(0.01f, arousalTrailFadeRange);
+            float arousalStrength = Mathf.InverseLerp(
+                arousalTrailThreshold,
+                Mathf.Min(1f, arousalTrailThreshold + fadeRange),
+                Mathf.Clamp01(_facialArousal));
+            if (arousalStrength <= 0.001f || arousalTrailMaxAlpha <= 0f)
+            {
+                ClearArousalTrails(true);
+                return;
+            }
+
+            Vector3 lift = Vector3.up * arousalTrailLift;
+            for (int i = 0; i < _arousalTrailVertexIndices.Length; i++)
+            {
+                int vertexIndex = _arousalTrailVertexIndices[i];
+                if (vertexIndex < 0 || vertexIndex >= _vertices.Length || _arousalTrailHistory[i] == null)
+                {
+                    continue;
+                }
+
+                _arousalTrailHistory[i][_arousalTrailHead] = _vertices[vertexIndex] + lift;
+            }
+
+            _arousalTrailHead++;
+            if (_arousalTrailHead >= _builtArousalTrailHistoryLength)
+            {
+                _arousalTrailHead = 0;
+                _arousalTrailHistoryFilled = true;
+            }
+
+            int availableHistory = _arousalTrailHistoryFilled ? _builtArousalTrailHistoryLength : _arousalTrailHead;
+            int activeHistory = Mathf.Clamp(
+                Mathf.RoundToInt(Mathf.Lerp(2f, _builtArousalTrailHistoryLength, arousalStrength)),
+                2,
+                Mathf.Max(2, availableHistory));
+            Color headColor = Color.Lerp(ResolveBaseColor(_facialValence), highValenceColor, arousalTrailValenceTint);
+            headColor.a = arousalTrailMaxAlpha * arousalStrength;
+            Color tailColor = headColor;
+            tailColor.a = 0f;
+            float lineWidth = arousalTrailLineWidth * Mathf.Lerp(0.65f, 1.6f, arousalStrength);
+
+            for (int lineIndex = 0; lineIndex < _arousalTrailLines.Length; lineIndex++)
+            {
+                LineRenderer line = _arousalTrailLines[lineIndex];
+                Vector3[] history = _arousalTrailHistory[lineIndex];
+                if (line == null || history == null || availableHistory < 2)
+                {
+                    continue;
+                }
+
+                line.enabled = true;
+                line.positionCount = activeHistory;
+                line.startColor = tailColor;
+                line.endColor = headColor;
+                line.startWidth = lineWidth * 0.25f;
+                line.endWidth = lineWidth;
+
+                int oldest = _arousalTrailHead - activeHistory;
+                if (oldest < 0)
+                {
+                    oldest += _builtArousalTrailHistoryLength;
+                }
+
+                for (int pointIndex = 0; pointIndex < activeHistory; pointIndex++)
+                {
+                    int historyIndex = (oldest + pointIndex) % _builtArousalTrailHistoryLength;
+                    line.SetPosition(pointIndex, history[historyIndex]);
+                }
+            }
+        }
+
+        private void ClearArousalTrails(bool resetHistory)
+        {
+            if (_arousalTrailLines != null)
+            {
+                for (int i = 0; i < _arousalTrailLines.Length; i++)
+                {
+                    if (_arousalTrailLines[i] != null)
+                    {
+                        _arousalTrailLines[i].enabled = false;
+                    }
+                }
+            }
+
+            if (!resetHistory)
+            {
+                return;
+            }
+
+            _arousalTrailHead = 0;
+            _arousalTrailHistoryFilled = false;
+        }
+
+        private static int[] BuildArousalTrailVertexIndices(int width, int height, int stride, int maxTrailCount)
+        {
+            int safeWidth = Mathf.Max(1, width);
+            int safeHeight = Mathf.Max(1, height);
+            int safeStride = Mathf.Max(1, stride);
+            int capacity = Mathf.Max(1, maxTrailCount);
+            int[] indices = new int[capacity];
+            int count = 0;
+
+            for (int y = 0; y < safeHeight && count < capacity; y += safeStride)
+            {
+                int rowOffset = (y / safeStride) % 2 == 0 ? 0 : safeStride / 2;
+                for (int x = rowOffset; x < safeWidth && count < capacity; x += safeStride)
+                {
+                    indices[count] = y * safeWidth + x;
+                    count++;
+                }
+            }
+
+            if (count == capacity)
+            {
+                return indices;
+            }
+
+            int[] trimmedIndices = new int[count];
+            System.Array.Copy(indices, trimmedIndices, count);
+            return trimmedIndices;
         }
 
         private static int[] BuildLatticeCoordinates(int size, int stride)
