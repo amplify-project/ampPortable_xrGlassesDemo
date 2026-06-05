@@ -76,6 +76,17 @@ namespace AmpPortableDataViz.Presentation.Visualization
         [SerializeField, Range(0f, 3f)] private float highEngagementParticleScale = 1.35f;
         [SerializeField, Range(0f, 1f)] private float engagementMeshSurfaceStrength = 1f;
 
+        [Header("Engagement Lattice")]
+        [SerializeField] private Transform engagementLatticeRoot;
+        [SerializeField] private Material engagementLatticeMaterial;
+        [SerializeField, Range(0f, 1f)] private float engagementLatticeThreshold = 0.55f;
+        [SerializeField, Range(0.01f, 1f)] private float engagementLatticeFadeRange = 0.25f;
+        [SerializeField, Range(1, 12)] private int engagementLatticeStride = 2;
+        [SerializeField, Range(0.001f, 0.08f)] private float engagementLatticeLineWidth = 0.01f;
+        [SerializeField, Range(0f, 0.08f)] private float engagementLatticeLift = 0.01f;
+        [SerializeField, Range(0f, 1f)] private float engagementLatticeMaxAlpha = 0.55f;
+        [SerializeField, Range(0f, 1f)] private float engagementLatticeValenceTint = 0.35f;
+
         [Header("Particles")]
         [SerializeField] private bool renderParticles = true;
         [SerializeField, Range(0.001f, 0.12f)] private float particleSize = 0.025f;
@@ -144,6 +155,14 @@ namespace AmpPortableDataViz.Presentation.Visualization
         private float _rhythmPhase;
         private int _nextRhythmPulseIndex;
 
+        private LineRenderer[] _engagementLatticeLines;
+        private int[] _engagementLatticeXCoordinates;
+        private int[] _engagementLatticeYCoordinates;
+        private Material _engagementLatticeMaterialInstance;
+        private int _builtLatticeGridWidth;
+        private int _builtLatticeGridHeight;
+        private int _builtLatticeStride;
+
         private int _builtGridWidth;
         private int _builtGridHeight;
         private bool _needsRebuild = true;
@@ -211,6 +230,7 @@ namespace AmpPortableDataViz.Presentation.Visualization
             UpdateRhythmPulses(deltaTime);
             UpdateScrSparks(deltaTime);
             UpdateGeometry(deltaTime);
+            UpdateEngagementLattice();
             ApplyScrSparkParticles();
         }
 
@@ -222,22 +242,33 @@ namespace AmpPortableDataViz.Presentation.Visualization
             }
 
             ClearScrSparks();
+            ClearEngagementLattice();
         }
 
         private void OnDestroy()
         {
-            if (_mesh == null)
+            if (_mesh != null)
             {
-                return;
+                if (UnityEngine.Application.isPlaying)
+                {
+                    Destroy(_mesh);
+                }
+                else
+                {
+                    DestroyImmediate(_mesh);
+                }
             }
 
-            if (UnityEngine.Application.isPlaying)
+            if (_engagementLatticeMaterialInstance != null)
             {
-                Destroy(_mesh);
-            }
-            else
-            {
-                DestroyImmediate(_mesh);
+                if (UnityEngine.Application.isPlaying)
+                {
+                    Destroy(_engagementLatticeMaterialInstance);
+                }
+                else
+                {
+                    DestroyImmediate(_engagementLatticeMaterialInstance);
+                }
             }
         }
 
@@ -255,6 +286,7 @@ namespace AmpPortableDataViz.Presentation.Visualization
                 EnsureScrSparkCapacity();
                 EnsureScrSparkParticleSystem();
                 EnsureRhythmPulseCapacity();
+                EnsureEngagementLatticeCapacity();
             }
         }
 
@@ -273,32 +305,39 @@ namespace AmpPortableDataViz.Presentation.Visualization
             _meshFilter = GetComponent<MeshFilter>();
             _particleSystem = GetComponent<ParticleSystem>();
 
-            if (scrSparkParticleSystem != null)
+            if (scrSparkParticleSystem == null)
             {
-                return;
-            }
-
-            ParticleSystem fallbackParticleSystem = null;
-            ParticleSystem[] particleSystems = GetComponentsInChildren<ParticleSystem>(true);
-            for (int i = 0; i < particleSystems.Length; i++)
-            {
-                ParticleSystem candidate = particleSystems[i];
-                if (candidate == null || candidate == _particleSystem)
+                ParticleSystem fallbackParticleSystem = null;
+                ParticleSystem[] particleSystems = GetComponentsInChildren<ParticleSystem>(true);
+                for (int i = 0; i < particleSystems.Length; i++)
                 {
-                    continue;
+                    ParticleSystem candidate = particleSystems[i];
+                    if (candidate == null || candidate == _particleSystem)
+                    {
+                        continue;
+                    }
+
+                    fallbackParticleSystem ??= candidate;
+                    string candidateName = candidate.name;
+                    if (candidateName.IndexOf("scr", System.StringComparison.OrdinalIgnoreCase) >= 0
+                        && candidateName.IndexOf("spark", System.StringComparison.OrdinalIgnoreCase) >= 0)
+                    {
+                        scrSparkParticleSystem = candidate;
+                        break;
+                    }
                 }
 
-                fallbackParticleSystem ??= candidate;
-                string candidateName = candidate.name;
-                if (candidateName.IndexOf("scr", System.StringComparison.OrdinalIgnoreCase) >= 0
-                    && candidateName.IndexOf("spark", System.StringComparison.OrdinalIgnoreCase) >= 0)
-                {
-                    scrSparkParticleSystem = candidate;
-                    return;
-                }
+                scrSparkParticleSystem ??= fallbackParticleSystem;
             }
 
-            scrSparkParticleSystem = fallbackParticleSystem;
+            if (engagementLatticeRoot == null)
+            {
+                Transform existingLattice = transform.Find("Engagement Lattice");
+                if (existingLattice != null)
+                {
+                    engagementLatticeRoot = existingLattice;
+                }
+            }
         }
 
         private void ResolveManualDriver()
@@ -377,6 +416,7 @@ namespace AmpPortableDataViz.Presentation.Visualization
             EnsureScrSparkCapacity();
             EnsureScrSparkParticleSystem();
             EnsureRhythmPulseCapacity();
+            EnsureEngagementLatticeCapacity();
             _builtGridWidth = width;
             _builtGridHeight = height;
             _needsRebuild = false;
@@ -742,6 +782,255 @@ namespace AmpPortableDataViz.Presentation.Visualization
                 Intensity = Mathf.Lerp(0.35f, 1f, clampedIntensity),
                 PhaseSeed = placementIndex * 1.6180339f
             };
+        }
+
+        private void EnsureEngagementLatticeCapacity()
+        {
+            int width = Mathf.Max(4, gridWidth);
+            int height = Mathf.Max(4, gridHeight);
+            int stride = Mathf.Max(1, engagementLatticeStride);
+
+            if (engagementLatticeRoot == null)
+            {
+                if (!UnityEngine.Application.isPlaying)
+                {
+                    return;
+                }
+
+                var latticeObject = new GameObject("Engagement Lattice");
+                latticeObject.transform.SetParent(transform, false);
+                engagementLatticeRoot = latticeObject.transform;
+            }
+
+            if (_engagementLatticeLines != null
+                && _engagementLatticeXCoordinates != null
+                && _engagementLatticeYCoordinates != null
+                && _builtLatticeGridWidth == width
+                && _builtLatticeGridHeight == height
+                && _builtLatticeStride == stride)
+            {
+                return;
+            }
+
+            _engagementLatticeXCoordinates = BuildLatticeCoordinates(width, stride);
+            _engagementLatticeYCoordinates = BuildLatticeCoordinates(height, stride);
+            int lineCount = _engagementLatticeXCoordinates.Length + _engagementLatticeYCoordinates.Length;
+            _engagementLatticeLines = new LineRenderer[lineCount];
+
+            LineRenderer[] existingLines = engagementLatticeRoot.GetComponentsInChildren<LineRenderer>(true);
+            for (int i = 0; i < lineCount; i++)
+            {
+                LineRenderer line = i < existingLines.Length
+                    ? existingLines[i]
+                    : CreateEngagementLatticeLine(i);
+
+                int positionCount = i < _engagementLatticeYCoordinates.Length
+                    ? _engagementLatticeXCoordinates.Length
+                    : _engagementLatticeYCoordinates.Length;
+                ConfigureEngagementLatticeLine(line, positionCount);
+                _engagementLatticeLines[i] = line;
+            }
+
+            for (int i = lineCount; i < existingLines.Length; i++)
+            {
+                if (existingLines[i] != null)
+                {
+                    existingLines[i].enabled = false;
+                    existingLines[i].positionCount = 0;
+                }
+            }
+
+            _builtLatticeGridWidth = width;
+            _builtLatticeGridHeight = height;
+            _builtLatticeStride = stride;
+        }
+
+        private LineRenderer CreateEngagementLatticeLine(int lineIndex)
+        {
+            var lineObject = new GameObject($"Lattice Line {lineIndex:00}");
+            lineObject.transform.SetParent(engagementLatticeRoot, false);
+            return lineObject.AddComponent<LineRenderer>();
+        }
+
+        private void ConfigureEngagementLatticeLine(LineRenderer line, int positionCount)
+        {
+            if (line == null)
+            {
+                return;
+            }
+
+            line.useWorldSpace = false;
+            line.loop = false;
+            line.positionCount = positionCount;
+            line.widthMultiplier = 1f;
+            line.startWidth = engagementLatticeLineWidth;
+            line.endWidth = engagementLatticeLineWidth;
+            line.numCapVertices = 0;
+            line.numCornerVertices = 0;
+            Material material = ResolveEngagementLatticeMaterial();
+            if (material != null)
+            {
+                line.sharedMaterial = material;
+            }
+        }
+
+        private Material ResolveEngagementLatticeMaterial()
+        {
+            if (engagementLatticeMaterial != null)
+            {
+                return engagementLatticeMaterial;
+            }
+
+            if (_engagementLatticeMaterialInstance != null)
+            {
+                return _engagementLatticeMaterialInstance;
+            }
+
+            Shader shader = Shader.Find("Sprites/Default");
+            if (shader == null)
+            {
+                shader = Shader.Find("Universal Render Pipeline/Particles/Unlit");
+            }
+
+            if (shader == null)
+            {
+                shader = Shader.Find("Legacy Shaders/Particles/Alpha Blended");
+            }
+
+            if (shader == null)
+            {
+                return null;
+            }
+
+            _engagementLatticeMaterialInstance = new Material(shader)
+            {
+                name = "Engagement Lattice Runtime Material",
+                hideFlags = HideFlags.DontSave
+            };
+            return _engagementLatticeMaterialInstance;
+        }
+
+        private void UpdateEngagementLattice()
+        {
+            EnsureEngagementLatticeCapacity();
+            if (_vertices == null
+                || _engagementLatticeLines == null
+                || _engagementLatticeXCoordinates == null
+                || _engagementLatticeYCoordinates == null)
+            {
+                return;
+            }
+
+            float fadeRange = Mathf.Max(0.01f, engagementLatticeFadeRange);
+            float engagementStrength = Mathf.InverseLerp(
+                engagementLatticeThreshold,
+                Mathf.Min(1f, engagementLatticeThreshold + fadeRange),
+                Mathf.Clamp01(_engagement));
+            if (engagementStrength <= 0.001f || engagementLatticeMaxAlpha <= 0f)
+            {
+                ClearEngagementLattice();
+                return;
+            }
+
+            Color latticeColor = Color.Lerp(ResolveBaseColor(_facialValence), Color.white, engagementLatticeValenceTint);
+            latticeColor.a = engagementLatticeMaxAlpha * engagementStrength;
+            float lineWidth = engagementLatticeLineWidth * Mathf.Lerp(0.65f, 1.35f, engagementStrength);
+            Vector3 lift = Vector3.up * engagementLatticeLift;
+
+            int lineIndex = 0;
+            for (int yIndex = 0; yIndex < _engagementLatticeYCoordinates.Length; yIndex++)
+            {
+                LineRenderer line = _engagementLatticeLines[lineIndex];
+                if (line != null)
+                {
+                    line.enabled = true;
+                    line.startColor = latticeColor;
+                    line.endColor = latticeColor;
+                    line.startWidth = lineWidth;
+                    line.endWidth = lineWidth;
+                    line.positionCount = _engagementLatticeXCoordinates.Length;
+
+                    int y = _engagementLatticeYCoordinates[yIndex];
+                    for (int xIndex = 0; xIndex < _engagementLatticeXCoordinates.Length; xIndex++)
+                    {
+                        int x = _engagementLatticeXCoordinates[xIndex];
+                        line.SetPosition(xIndex, _vertices[y * _builtGridWidth + x] + lift);
+                    }
+                }
+
+                lineIndex++;
+            }
+
+            for (int xIndex = 0; xIndex < _engagementLatticeXCoordinates.Length; xIndex++)
+            {
+                LineRenderer line = _engagementLatticeLines[lineIndex];
+                if (line != null)
+                {
+                    line.enabled = true;
+                    line.startColor = latticeColor;
+                    line.endColor = latticeColor;
+                    line.startWidth = lineWidth;
+                    line.endWidth = lineWidth;
+                    line.positionCount = _engagementLatticeYCoordinates.Length;
+
+                    int x = _engagementLatticeXCoordinates[xIndex];
+                    for (int yIndex = 0; yIndex < _engagementLatticeYCoordinates.Length; yIndex++)
+                    {
+                        int y = _engagementLatticeYCoordinates[yIndex];
+                        line.SetPosition(yIndex, _vertices[y * _builtGridWidth + x] + lift);
+                    }
+                }
+
+                lineIndex++;
+            }
+        }
+
+        private void ClearEngagementLattice()
+        {
+            if (_engagementLatticeLines == null)
+            {
+                return;
+            }
+
+            for (int i = 0; i < _engagementLatticeLines.Length; i++)
+            {
+                if (_engagementLatticeLines[i] != null)
+                {
+                    _engagementLatticeLines[i].enabled = false;
+                }
+            }
+        }
+
+        private static int[] BuildLatticeCoordinates(int size, int stride)
+        {
+            if (size <= 0)
+            {
+                return System.Array.Empty<int>();
+            }
+
+            int safeStride = Mathf.Max(1, stride);
+            int count = 0;
+            int coordinate = 0;
+            while (true)
+            {
+                count++;
+                if (coordinate >= size - 1)
+                {
+                    break;
+                }
+
+                coordinate = Mathf.Min(coordinate + safeStride, size - 1);
+            }
+
+            int[] coordinates = new int[count];
+            coordinate = 0;
+            for (int i = 0; i < count; i++)
+            {
+                coordinates[i] = coordinate;
+                coordinate = Mathf.Min(coordinate + safeStride, size - 1);
+            }
+
+            return coordinates;
         }
 
         private static int[] BuildGridTriangles(int width, int height)

@@ -71,9 +71,7 @@ MeshRenderer:
   m_MeshLodSelectionBias: 0
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
-  m_Materials:
-  - {fileID: 2100000, guid: 14d714b2c18ef3349b51e0504fdfa4fe, type: 2}
-  - {fileID: 2100000, guid: 7f2e1b39a2606b440a50552d10142341, type: 2}
+  m_Materials: []
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -4930,6 +4928,14 @@ MonoBehaviour:
   scrEventsPerSecondAtMax: 3
   scrRiseEventGain: 4
   scrEventDisplacement: 0.16
+  scrSparkParticleSystem: {fileID: 0}
+  maxScrSparks: 96
+  scrSparksPerEventAtMax: 8
+  scrSparkLifetime: 0.45
+  scrSparkSize: 0.025
+  scrSparkSpread: 0.08
+  scrSparkLift: 0.28
+  scrSparkColor: {r: 1, g: 1, b: 1, a: 1}
   rhythmBaseBpm: 60.6
   rhythmRateStdDevBoost: 0.6
   maxRhythmPulses: 8
@@ -4939,6 +4945,17 @@ MonoBehaviour:
   rhythmBreathDisplacement: 0.025
   ibiPhaseSpread: 0.18
   ibiBreakAmount: 0.7
+  arousalTurbulenceMin: 0.04
+  arousalTurbulenceMax: 0.4
+  arousalMotionSpeedMin: 0.2
+  arousalMotionSpeedMax: 2.5
+  arousalMorphSmoothMin: 0.3
+  arousalMorphSmoothMax: 1.8
+  lowEngagementAlpha: 0.28
+  highEngagementAlpha: 1
+  lowEngagementParticleScale: 0.7
+  highEngagementParticleScale: 1.35
+  engagementMeshSurfaceStrength: 1
   renderParticles: 1
   particleSize: 0.0145
   lowValenceColor: {r: 0.08, g: 0.35, b: 1, a: 0.9}
