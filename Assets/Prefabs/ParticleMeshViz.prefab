@@ -4963,10 +4963,12 @@ MonoBehaviour:
   engagementMeshSurfaceStrength: 1
   engagementLatticeRoot: {fileID: 0}
   engagementLatticeMaterial: {fileID: 2100000, guid: 505131eaa95e71c4796959a3a9e7cddc, type: 2}
-  engagementLatticeThreshold: 0.55
+  engagementLatticeThreshold: 0.05
   engagementLatticeFadeRange: 0.25
   engagementLatticeStride: 2
-  engagementLatticeLineWidth: 0.01
+  engagementLatticeLineWidth: 0.006
+  engagementLatticeMinimumWidthFactor: 0.25
+  engagementLatticeResponsePower: 1.75
   engagementLatticeLift: 0.01
   engagementLatticeMaxAlpha: 0.55
   engagementLatticeValenceTint: 0.35
@@ -5037,21 +5039,21 @@ MonoBehaviour:
   m_EditorClassIdentifier: Amp::AmpPortableDataViz.Presentation.Visualization.AudienceDataManualDriver
   sourceId: audience-manual
   deviceId: 
-  tonicElectrodermalActivityStdDev: 0.171
-  temperatureRateOfChangeStdDev: 0.0522
-  skinConductanceResponseFrequencyStdDev: 3.04
-  heartRateStdDev: 4.99
-  interBeatIntervalStdDev: 33
-  arousal: 1.3
-  valence: 0.93
-  engagement: 0.664
-  sourceMode: 0
+  tonicElectrodermalActivityStdDev: 0.19920336
+  temperatureRateOfChangeStdDev: 0.047675505
+  skinConductanceResponseFrequencyStdDev: 2.0336027
+  heartRateStdDev: 3.0891693
+  interBeatIntervalStdDev: 71.55777
+  arousal: 0.82747716
+  valence: 0.9825918
+  engagement: 0.55796003
+  sourceMode: 1
   autoEmit: 1
   animateProceduralNoise: 1
   timeScale: 0.35
   noiseFrequency: 0.75
   noiseSeed: 0.1234
-  noiseOffset: 0
+  noiseOffset: 58.150272
   onSampleEmitted:
     m_PersistentCalls:
       m_Calls: []
@@ -5231,7 +5233,7 @@ MonoBehaviour:
   m_SmoothPosition: 1
   m_SmoothPositionAmount: 10
   m_TightenPosition: 0.7
-  m_TrackRotation: 1
+  m_TrackRotation: 0
   m_SmoothRotation: 1
   m_SmoothRotationAmount: 10
   m_TightenRotation: 0.7

@@ -82,7 +82,9 @@ namespace AmpPortableDataViz.Presentation.Visualization
         [SerializeField, Range(0f, 1f)] private float engagementLatticeThreshold = 0.55f;
         [SerializeField, Range(0.01f, 1f)] private float engagementLatticeFadeRange = 0.25f;
         [SerializeField, Range(1, 12)] private int engagementLatticeStride = 2;
-        [SerializeField, Range(0.001f, 0.08f)] private float engagementLatticeLineWidth = 0.01f;
+        [SerializeField, Range(0.0005f, 0.02f)] private float engagementLatticeLineWidth = 0.006f;
+        [SerializeField, Range(0f, 1f)] private float engagementLatticeMinimumWidthFactor = 0.25f;
+        [SerializeField, Range(0.25f, 4f)] private float engagementLatticeResponsePower = 1.75f;
         [SerializeField, Range(0f, 0.08f)] private float engagementLatticeLift = 0.01f;
         [SerializeField, Range(0f, 1f)] private float engagementLatticeMaxAlpha = 0.55f;
         [SerializeField, Range(0f, 1f)] private float engagementLatticeValenceTint = 0.35f;
@@ -315,6 +317,9 @@ namespace AmpPortableDataViz.Presentation.Visualization
         {
             gridWidth = Mathf.Max(4, gridWidth);
             gridHeight = Mathf.Max(4, gridHeight);
+            engagementLatticeLineWidth = Mathf.Clamp(engagementLatticeLineWidth, 0.0005f, 0.02f);
+            engagementLatticeMinimumWidthFactor = Mathf.Clamp01(engagementLatticeMinimumWidthFactor);
+            engagementLatticeResponsePower = Mathf.Clamp(engagementLatticeResponsePower, 0.25f, 4f);
             _needsRebuild = true;
 
             if (isActiveAndEnabled)
@@ -983,8 +988,9 @@ namespace AmpPortableDataViz.Presentation.Visualization
             }
 
             Color latticeColor = Color.Lerp(ResolveBaseColor(_facialValence), Color.white, engagementLatticeValenceTint);
-            latticeColor.a = engagementLatticeMaxAlpha * engagementStrength;
-            float lineWidth = engagementLatticeLineWidth * Mathf.Lerp(0.65f, 1.35f, engagementStrength);
+            float reactiveStrength = Mathf.Pow(engagementStrength, Mathf.Max(0.25f, engagementLatticeResponsePower));
+            latticeColor.a = engagementLatticeMaxAlpha * reactiveStrength;
+            float lineWidth = engagementLatticeLineWidth * Mathf.Lerp(engagementLatticeMinimumWidthFactor, 1f, reactiveStrength);
             Vector3 lift = Vector3.up * engagementLatticeLift;
 
             int lineIndex = 0;
