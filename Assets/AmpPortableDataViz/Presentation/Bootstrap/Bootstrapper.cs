@@ -192,6 +192,8 @@ namespace AmpPortableDataViz.Presentation.Bootstrap
         private readonly List<GameObject> _manualDriverInstances = new List<GameObject>();
         private readonly Dictionary<string, SharedPumpHandle> _sharedPumpsByChannel = new Dictionary<string, SharedPumpHandle>(StringComparer.Ordinal);
         private readonly Dictionary<string, SharedPhysioPumpHandle> _sharedPhysioPumpsByChannel = new Dictionary<string, SharedPhysioPumpHandle>(StringComparer.Ordinal);
+        private RedisDataPump _engagementHudPump;
+        private string _engagementHudChannel = string.Empty;
         private bool _redisEndpointReady;
         private Material _graphPanelMaterial;
         private Material _graphGroupPanelMaterial;
@@ -302,6 +304,7 @@ namespace AmpPortableDataViz.Presentation.Bootstrap
             }
 
             _sessionController?.Shutdown();
+            ClearEngagementHudBindings();
             ClearEmotionDeviceVisuals();
             ClearAudienceDeviceVisuals();
             ClearGraphDeviceVisuals();
@@ -319,6 +322,7 @@ namespace AmpPortableDataViz.Presentation.Bootstrap
 
             _sessionController?.Dispose();
             _sessionController = null;
+            ClearEngagementHudBindings();
             ClearEmotionDeviceVisuals();
             ClearAudienceDeviceVisuals();
             ClearGraphDeviceVisuals();
@@ -490,6 +494,8 @@ namespace AmpPortableDataViz.Presentation.Bootstrap
                 RedisManager.Configure(RedisHost, RedisPort, redisChannels);
                 RedisManager.enabled = useRedis;
             }
+
+            ConfigureEngagementHudBindings(useRedis, hasRedisEndpoint, redisReady);
 
             if (LiveKitSource != null)
             {
@@ -671,6 +677,7 @@ namespace AmpPortableDataViz.Presentation.Bootstrap
                 LiveKitSource.enabled = false;
             }
 
+            ClearEngagementHudBindings();
             ClearEmotionDeviceVisuals();
             ClearAudienceDeviceVisuals();
             ClearGraphDeviceVisuals();
@@ -1715,6 +1722,62 @@ namespace AmpPortableDataViz.Presentation.Bootstrap
             ClearManualDriverVisuals();
         }
 
+        private void ConfigureEngagementHudBindings(bool useRedis, bool hasRedisEndpoint, bool redisReady)
+        {
+            if (!useRedis || !hasRedisEndpoint || !redisReady)
+            {
+                ClearEngagementHudBindings();
+                return;
+            }
+
+            string channel = RedisAudienceChannels.EngagementScoresChannel;
+            if (_engagementHudPump == null || !string.Equals(_engagementHudChannel, channel, StringComparison.Ordinal))
+            {
+                ClearEngagementHudBindings();
+                _engagementHudPump = AcquireRedisPumpForChannel("global", EmotionChannelKind.Broadcast, channel);
+                _engagementHudChannel = channel;
+            }
+            else
+            {
+                _engagementHudPump.ConfigureConnection(RedisHost, RedisPort, channel);
+            }
+
+            if (_engagementHudPump == null)
+            {
+                return;
+            }
+
+            var hudBindings = FindObjectsByType<EngagementHudBinding>(FindObjectsInactive.Include, FindObjectsSortMode.None);
+            foreach (var binding in hudBindings)
+            {
+                if (binding != null)
+                {
+                    binding.ConfigureSource(_engagementHudPump);
+                }
+            }
+        }
+
+        private void ClearEngagementHudBindings()
+        {
+            if (_engagementHudPump == null)
+            {
+                return;
+            }
+
+            var hudBindings = FindObjectsByType<EngagementHudBinding>(FindObjectsInactive.Include, FindObjectsSortMode.None);
+            foreach (var binding in hudBindings)
+            {
+                if (binding != null)
+                {
+                    binding.ConfigureSource(null);
+                }
+            }
+
+            ReleaseRedisPump(_engagementHudChannel);
+            _engagementHudPump = null;
+            _engagementHudChannel = string.Empty;
+        }
+
         private void PositionEmotionVisual(Transform target, int index, bool useLocalSpace)
         {
             if (target == null)
@@ -2202,7 +2265,7 @@ namespace AmpPortableDataViz.Presentation.Bootstrap
                 return;
             }
 
-            Transform labelParent = ResolveVisualRoot(visualInstance);
+            Transform labelParent = ResolveDeviceLabelParent(visualInstance);
             if (labelParent == null)
             {
                 return;
@@ -2696,6 +2759,34 @@ namespace AmpPortableDataViz.Presentation.Bootstrap
 
             int length = end - start;
             return length > 0 ? value.Substring(start + 1, length) : string.Empty;
+        }
+
+        private static Transform ResolveDeviceLabelParent(GameObject instance)
+        {
+            if (instance == null)
+            {
+                return null;
+            }
+
+            var particleMeshVisualizer = instance.GetComponentInChildren<ParticleMeshVisualizer>(true);
+            if (particleMeshVisualizer != null)
+            {
+                var grab = particleMeshVisualizer.GetComponentInParent<XRGrabInteractable>();
+                if (grab != null && grab.transform.IsChildOf(instance.transform))
+                {
+                    return grab.transform;
+                }
+
+                grab = instance.GetComponentInChildren<XRGrabInteractable>(true);
+                if (grab != null)
+                {
+                    return grab.transform;
+                }
+
+                return particleMeshVisualizer.transform;
+            }
+
+            return ResolveVisualRoot(instance);
         }
 
         private static Transform ResolveVisualRoot(GameObject instance)

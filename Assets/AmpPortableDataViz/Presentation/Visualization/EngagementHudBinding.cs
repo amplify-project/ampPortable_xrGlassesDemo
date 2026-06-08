@@ -24,6 +24,32 @@ public sealed class EngagementHudBinding : MonoBehaviour
 
     private void OnEnable()
     {
+        AttachSource();
+    }
+
+    private void OnDisable()
+    {
+        DetachSource();
+    }
+
+    public void ConfigureSource(RedisDataPump source)
+    {
+        bool wasEnabled = isActiveAndEnabled;
+        if (wasEnabled)
+        {
+            DetachSource();
+        }
+
+        engagementSource = source;
+
+        if (wasEnabled && engagementSource != null)
+        {
+            AttachSource();
+        }
+    }
+
+    private void AttachSource()
+    {
         if (engagementSource == null)
         {
             Debug.LogWarning($"{nameof(EngagementHudBinding)} requires a RedisDataPump reference.", this);
@@ -34,12 +60,14 @@ public sealed class EngagementHudBinding : MonoBehaviour
         engagementSource.OnFrame += _handler;
     }
 
-    private void OnDisable()
+    private void DetachSource()
     {
         if (engagementSource != null && _handler != null)
         {
             engagementSource.OnFrame -= _handler;
         }
+
+        _handler = null;
     }
 
     private void OnFrame(DataFrame<float> frame)
