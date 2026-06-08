@@ -175,21 +175,21 @@ MonoBehaviour:
   m_EditorClassIdentifier: Amp::AmpPortableDataViz.Presentation.Visualization.AudienceDataManualDriver
   sourceId: audience-manual
   deviceId: 
-  tonicElectrodermalActivityStdDev: 0.24995473
-  temperatureRateOfChangeStdDev: 0.04677294
-  skinConductanceResponseFrequencyStdDev: 1.7044604
-  heartRateStdDev: 5.982152
-  interBeatIntervalStdDev: 54.127476
-  arousal: 1.2165442
-  valence: 0.6413167
-  engagement: 0.45999286
+  tonicElectrodermalActivityStdDev: 0.06816573
+  temperatureRateOfChangeStdDev: 0.076056235
+  skinConductanceResponseFrequencyStdDev: 1.2992707
+  heartRateStdDev: 5.336015
+  interBeatIntervalStdDev: 49.06826
+  arousal: 0.97424716
+  valence: 1.1929466
+  engagement: 0.37376308
   sourceMode: 1
   autoEmit: 1
   animateProceduralNoise: 1
   timeScale: 0.35
   noiseFrequency: 0.75
   noiseSeed: 0.1234
-  noiseOffset: 75.28832
+  noiseOffset: 76.45083
   onSampleEmitted:
     m_PersistentCalls:
       m_Calls: []
@@ -3525,7 +3525,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &8113092573254593537
 RectTransform:
   m_ObjectHideFlags: 0

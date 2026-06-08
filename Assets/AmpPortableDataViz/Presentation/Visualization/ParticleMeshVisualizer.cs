@@ -76,7 +76,16 @@ namespace AmpPortableDataViz.Presentation.Visualization
         [SerializeField, Range(0f, 3f)] private float highEngagementParticleScale = 1.35f;
         [SerializeField, Range(0f, 1f)] private float engagementMeshSurfaceStrength = 1f;
 
+        [Header("Engagement Rigidity")]
+        [SerializeField, Range(0f, 1f)] private float lowEngagementDriftRadius = 0.28f;
+        [SerializeField, Range(0f, 5f)] private float lowEngagementDriftSpeed = 0.65f;
+        [SerializeField, Range(0.1f, 12f)] private float lowEngagementDriftNoiseScale = 3.2f;
+        [SerializeField, Range(0f, 1f)] private float lowEngagementVerticalDrift = 0.14f;
+        [SerializeField, Range(0f, 1f)] private float lowEngagementRadialDrift = 0.35f;
+        [SerializeField, Range(0.25f, 4f)] private float engagementRigidityPower = 1.6f;
+
         [Header("Engagement Lattice")]
+        [SerializeField] private bool renderEngagementLattice;
         [SerializeField] private Transform engagementLatticeRoot;
         [SerializeField] private Material engagementLatticeMaterial;
         [SerializeField, Range(0f, 1f)] private float engagementLatticeThreshold = 0.55f;
@@ -107,9 +116,9 @@ namespace AmpPortableDataViz.Presentation.Visualization
         [SerializeField, Range(0.001f, 0.12f)] private float particleSize = 0.025f;
 
         [Header("Colour")]
-        [SerializeField] private Color lowValenceColor = new Color(0.08f, 0.35f, 1f, 0.9f);
+        [SerializeField] private Color lowValenceColor = new Color(1f, 0.12f, 0.08f, 0.9f);
         [SerializeField] private Color neutralColor = new Color(0.2f, 1f, 0.75f, 0.9f);
-        [SerializeField] private Color highValenceColor = new Color(1f, 0.22f, 0.14f, 0.9f);
+        [SerializeField] private Color highValenceColor = new Color(1f, 0.82f, 0.16f, 0.9f);
 
         [Header("Diagnostics")]
         [SerializeField] private bool logReceivedSamples = true;
@@ -125,6 +134,8 @@ namespace AmpPortableDataViz.Presentation.Visualization
         private ParticleSystem.Particle[] _particles;
         private float[] _uValues;
         private float[] _vValues;
+        private Vector3[] _engagementDriftDirections;
+        private Vector2[] _engagementDriftSeeds;
 
         private struct ScrEvent
         {
@@ -257,7 +268,14 @@ namespace AmpPortableDataViz.Presentation.Visualization
             UpdateRhythmPulses(deltaTime);
             UpdateScrSparks(deltaTime);
             UpdateGeometry(deltaTime);
-            UpdateEngagementLattice();
+            if (renderEngagementLattice)
+            {
+                UpdateEngagementLattice();
+            }
+            else
+            {
+                ClearEngagementLattice();
+            }
             UpdateArousalTrails();
             ApplyScrSparkParticles();
         }
@@ -320,6 +338,10 @@ namespace AmpPortableDataViz.Presentation.Visualization
             engagementLatticeLineWidth = Mathf.Clamp(engagementLatticeLineWidth, 0.0005f, 0.02f);
             engagementLatticeMinimumWidthFactor = Mathf.Clamp01(engagementLatticeMinimumWidthFactor);
             engagementLatticeResponsePower = Mathf.Clamp(engagementLatticeResponsePower, 0.25f, 4f);
+            lowEngagementDriftRadius = Mathf.Clamp01(lowEngagementDriftRadius);
+            lowEngagementDriftNoiseScale = Mathf.Clamp(lowEngagementDriftNoiseScale, 0.1f, 12f);
+            lowEngagementRadialDrift = Mathf.Clamp01(lowEngagementRadialDrift);
+            engagementRigidityPower = Mathf.Clamp(engagementRigidityPower, 0.25f, 4f);
             _needsRebuild = true;
 
             if (isActiveAndEnabled)
@@ -433,6 +455,8 @@ namespace AmpPortableDataViz.Presentation.Visualization
             _particles = new ParticleSystem.Particle[vertexCount];
             _uValues = new float[vertexCount];
             _vValues = new float[vertexCount];
+            _engagementDriftDirections = new Vector3[vertexCount];
+            _engagementDriftSeeds = new Vector2[vertexCount];
             _triangles = BuildGridTriangles(width, height);
 
             for (int y = 0; y < height; y++)
@@ -444,6 +468,10 @@ namespace AmpPortableDataViz.Presentation.Visualization
                     float u = width == 1 ? 0f : (float)x / (width - 1);
                     _uValues[index] = u;
                     _vValues[index] = v;
+                    _engagementDriftDirections[index] = BuildEngagementDriftDirection(index, u, v);
+                    _engagementDriftSeeds[index] = new Vector2(
+                        BuildStableUnit(index, 23.17f) * 19.31f,
+                        BuildStableUnit(index, 61.83f) * 29.47f);
                     _vertices[index] = new Vector3((u - 0.5f) * visualScale, 0f, (v - 0.5f) * visualScale);
                     _colors[index] = neutralColor;
                     _particles[index].position = _vertices[index];
@@ -976,20 +1004,21 @@ namespace AmpPortableDataViz.Presentation.Visualization
                 return;
             }
 
-            float fadeRange = Mathf.Max(0.01f, engagementLatticeFadeRange);
-            float engagementStrength = Mathf.InverseLerp(
-                engagementLatticeThreshold,
-                Mathf.Min(1f, engagementLatticeThreshold + fadeRange),
-                Mathf.Clamp01(_engagement));
-            if (engagementStrength <= 0.001f || engagementLatticeMaxAlpha <= 0f)
+            if (engagementLatticeMaxAlpha <= 0f)
             {
                 ClearEngagementLattice();
                 return;
             }
 
+            float fadeRange = Mathf.Max(0.01f, engagementLatticeFadeRange);
+            float engagementStrength = Mathf.InverseLerp(
+                engagementLatticeThreshold,
+                Mathf.Min(1f, engagementLatticeThreshold + fadeRange),
+                Mathf.Clamp01(_engagement));
+
             Color latticeColor = Color.Lerp(ResolveBaseColor(_facialValence), Color.white, engagementLatticeValenceTint);
             float reactiveStrength = Mathf.Pow(engagementStrength, Mathf.Max(0.25f, engagementLatticeResponsePower));
-            latticeColor.a = engagementLatticeMaxAlpha * reactiveStrength;
+            latticeColor.a = engagementLatticeMaxAlpha * Mathf.Lerp(0.18f, 1f, reactiveStrength);
             float lineWidth = engagementLatticeLineWidth * Mathf.Lerp(engagementLatticeMinimumWidthFactor, 1f, reactiveStrength);
             Vector3 lift = Vector3.up * engagementLatticeLift;
 
@@ -1443,7 +1472,7 @@ namespace AmpPortableDataViz.Presentation.Visualization
 
         private void UpdateGeometry(float deltaTime)
         {
-            if (_mesh == null || _vertices == null || _particles == null)
+            if (_mesh == null || _vertices == null || _particles == null || _engagementDriftDirections == null || _engagementDriftSeeds == null)
             {
                 return;
             }
@@ -1455,6 +1484,8 @@ namespace AmpPortableDataViz.Presentation.Visualization
             float contourDrift = _localTime * Mathf.Lerp(0.015f, 0.12f, _temperatureRate);
             float arousalMotion = Mathf.Clamp01(_facialArousal);
             float engagementSolidity = Mathf.Clamp01(_engagement);
+            float engagementLooseness = 1f - engagementSolidity;
+            float loosenessResponse = Mathf.Pow(engagementLooseness, Mathf.Max(0.25f, engagementRigidityPower));
             float coherence = Mathf.Clamp01((engagementSolidity * meshCoherence * engagementMeshSurfaceStrength) + 0.15f);
             float arousalTurbulence = Mathf.Lerp(arousalTurbulenceMin, arousalTurbulenceMax, arousalMotion);
             float affectMotionSpeed = Mathf.Lerp(arousalMotionSpeedMin, arousalMotionSpeedMax, arousalMotion);
@@ -1472,9 +1503,10 @@ namespace AmpPortableDataViz.Presentation.Visualization
                 Vector3 scrEventOffset = BuildScrEventOffset(u, v, out float scrEventEnergy);
                 Vector3 rhythm = BuildRhythmPulseOffset(u, v, out float rhythmEnergy);
                 Vector3 turbulence = BuildTurbulence(i, u, v, noiseAmount, affectMotionSpeed);
+                Vector3 loosenessDrift = BuildEngagementDriftOffset(i, u, v, loosenessResponse, arousalMotion);
 
-                Vector3 target = (slowForm + scrEventOffset + rhythm) * visualScale;
-                target += turbulence;
+                Vector3 lockedTarget = (slowForm + scrEventOffset + rhythm) * visualScale;
+                Vector3 target = lockedTarget + turbulence + loosenessDrift;
 
                 _vertices[i] = Vector3.SmoothDamp(_vertices[i], target, ref _velocities[i], Mathf.Max(0.01f, morphSmoothTime), Mathf.Infinity, deltaTime);
 
@@ -1618,6 +1650,32 @@ namespace AmpPortableDataViz.Presentation.Visualization
             return offset;
         }
 
+        private Vector3 BuildEngagementDriftOffset(int index, float u, float v, float loosenessResponse, float arousalMotion)
+        {
+            if (loosenessResponse <= 0.0001f
+                || lowEngagementDriftRadius <= 0f
+                || _engagementDriftDirections == null
+                || _engagementDriftSeeds == null
+                || index < 0
+                || index >= _engagementDriftDirections.Length
+                || index >= _engagementDriftSeeds.Length)
+            {
+                return Vector3.zero;
+            }
+
+            Vector2 seed = _engagementDriftSeeds[index];
+            float noiseScale = Mathf.Max(0.1f, lowEngagementDriftNoiseScale);
+            float time = _localTime * Mathf.Max(0f, lowEngagementDriftSpeed);
+            float xNoise = (Mathf.PerlinNoise(seed.x + u * noiseScale + time, seed.y + v * noiseScale) - 0.5f) * 2f;
+            float yNoise = (Mathf.PerlinNoise(seed.x + 13.7f + u * noiseScale, seed.y + 3.1f + time) - 0.5f) * 2f;
+            float zNoise = (Mathf.PerlinNoise(seed.x + 5.9f - time, seed.y + v * noiseScale + 17.3f) - 0.5f) * 2f;
+            var wandering = new Vector3(xNoise, yNoise * lowEngagementVerticalDrift, zNoise);
+
+            float arousalDrift = Mathf.Lerp(0.75f, 1.3f, Mathf.Clamp01(arousalMotion));
+            Vector3 drift = _engagementDriftDirections[index] + wandering * 0.55f;
+            return drift * lowEngagementDriftRadius * loosenessResponse * arousalDrift;
+        }
+
         private Vector3 BuildTurbulence(int index, float u, float v, float amount, float motionSpeed)
         {
             if (amount <= 0f)
@@ -1630,6 +1688,31 @@ namespace AmpPortableDataViz.Presentation.Visualization
             float y = Mathf.PerlinNoise(u * 5.3f + 17.13f, v * 5.3f + time) - 0.5f;
             float z = Mathf.PerlinNoise(u * 4.1f - time, v * 4.1f + 29.77f) - 0.5f;
             return new Vector3(x, y, z) * amount;
+        }
+
+        private Vector3 BuildEngagementDriftDirection(int index, float u, float v)
+        {
+            float angle = BuildStableUnit(index, 7.13f) * Tau;
+            float vertical = (BuildStableUnit(index, 11.91f) - 0.5f) * 2f * lowEngagementVerticalDrift;
+            var randomDirection = new Vector3(Mathf.Cos(angle), vertical, Mathf.Sin(angle));
+            var radialDirection = new Vector3(u - 0.5f, 0f, v - 0.5f);
+            if (radialDirection.sqrMagnitude > 0.0001f)
+            {
+                radialDirection.Normalize();
+            }
+            else
+            {
+                radialDirection = randomDirection;
+            }
+
+            Vector3 direction = Vector3.Lerp(randomDirection, radialDirection, lowEngagementRadialDrift);
+            return direction.sqrMagnitude > 0.0001f ? direction.normalized : Vector3.right;
+        }
+
+        private static float BuildStableUnit(int index, float salt)
+        {
+            float value = Mathf.Sin((index + 1) * 12.9898f + salt * 78.233f) * 43758.5453f;
+            return value - Mathf.Floor(value);
         }
 
         private Color ResolveBaseColor(float valence)

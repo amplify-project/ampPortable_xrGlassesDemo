@@ -42,39 +42,43 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: 1752101364371564078, guid: ed2e2f5bc2c99764e8b09beb23ebab55, type: 3}
       propertyPath: arousal
-      value: 0.7592608
+      value: 0.72917056
       objectReference: {fileID: 0}
     - target: {fileID: 1752101364371564078, guid: ed2e2f5bc2c99764e8b09beb23ebab55, type: 3}
       propertyPath: valence
-      value: 0.92517006
+      value: 0.9648226
       objectReference: {fileID: 0}
     - target: {fileID: 1752101364371564078, guid: ed2e2f5bc2c99764e8b09beb23ebab55, type: 3}
       propertyPath: engagement
-      value: 0.3023209
+      value: 0.557257
       objectReference: {fileID: 0}
     - target: {fileID: 1752101364371564078, guid: ed2e2f5bc2c99764e8b09beb23ebab55, type: 3}
       propertyPath: noiseOffset
-      value: 94.301254
+      value: 105.64304
       objectReference: {fileID: 0}
     - target: {fileID: 1752101364371564078, guid: ed2e2f5bc2c99764e8b09beb23ebab55, type: 3}
       propertyPath: heartRateStdDev
-      value: 6.9255333
+      value: 4.576325
       objectReference: {fileID: 0}
     - target: {fileID: 1752101364371564078, guid: ed2e2f5bc2c99764e8b09beb23ebab55, type: 3}
       propertyPath: interBeatIntervalStdDev
-      value: 50.249447
+      value: 69.38006
       objectReference: {fileID: 0}
     - target: {fileID: 1752101364371564078, guid: ed2e2f5bc2c99764e8b09beb23ebab55, type: 3}
       propertyPath: temperatureRateOfChangeStdDev
-      value: 0.049133565
+      value: 0.058498397
       objectReference: {fileID: 0}
     - target: {fileID: 1752101364371564078, guid: ed2e2f5bc2c99764e8b09beb23ebab55, type: 3}
       propertyPath: tonicElectrodermalActivityStdDev
-      value: 0.34837422
+      value: 0.23720327
       objectReference: {fileID: 0}
     - target: {fileID: 1752101364371564078, guid: ed2e2f5bc2c99764e8b09beb23ebab55, type: 3}
       propertyPath: skinConductanceResponseFrequencyStdDev
-      value: 1.670137
+      value: 2.145911
+      objectReference: {fileID: 0}
+    - target: {fileID: 3118001866504251448, guid: ed2e2f5bc2c99764e8b09beb23ebab55, type: 3}
+      propertyPath: particleSize
+      value: 0.0102
       objectReference: {fileID: 0}
     - target: {fileID: 5539086002200411015, guid: ed2e2f5bc2c99764e8b09beb23ebab55, type: 3}
       propertyPath: m_Name
@@ -119,6 +123,10 @@ PrefabInstance:
     - target: {fileID: 6054457549625767287, guid: ed2e2f5bc2c99764e8b09beb23ebab55, type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6412563784824855904, guid: ed2e2f5bc2c99764e8b09beb23ebab55, type: 3}
+      propertyPath: InitialModule.startSize.scalar
+      value: 0.0102
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []

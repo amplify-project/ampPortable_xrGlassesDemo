@@ -4985,9 +4985,9 @@ MonoBehaviour:
   arousalTrailValenceTint: 0.15
   renderParticles: 1
   particleSize: 0.0145
-  lowValenceColor: {r: 0.08, g: 0.35, b: 1, a: 0.9}
+  lowValenceColor: {r: 1, g: 0.12, b: 0.08, a: 0.9}
   neutralColor: {r: 0.2, g: 1, b: 0.75, a: 0.9}
-  highValenceColor: {r: 1, g: 0.22, b: 0.14, a: 0.9}
+  highValenceColor: {r: 1, g: 0.82, b: 0.16, a: 0.9}
   logReceivedSamples: 1
   minimumLogIntervalSeconds: 0.5
 --- !u!114 &4827462142832796194
