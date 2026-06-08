@@ -51,6 +51,10 @@ namespace AmpPortableDataViz.Presentation.Visualization
         [SerializeField] private AudienceSignalToParticleMeshMapper.Settings particleMapperSettings =
             AudienceSignalToParticleMeshMapper.CreateDefaultSettings();
 
+        [Header("Particle Mesh Dynamic Physio Amplification")]
+        [SerializeField] private ParticleMeshPhysioAmplificationSettings particlePhysioAmplificationSettings =
+            ParticleMeshPhysioAmplificationSettings.CreateDefault();
+
         [Header("Graph Targets")]
         [SerializeField] private GraphMetricBinding[] graphStreams = Array.Empty<GraphMetricBinding>();
         [SerializeField, Range(0f, 120f)] private float graphWindowSeconds = 10f;
@@ -67,6 +71,7 @@ namespace AmpPortableDataViz.Presentation.Visualization
         [SerializeField] private bool logResolvedSamples;
 
         private IMapper<AudienceSignalSample, ParticleMeshSignalSample> _particleMapper;
+        private readonly ParticleMeshPhysioAmplifier _particlePhysioAmplifier = new ParticleMeshPhysioAmplifier();
         private GraphSeriesToGraphParamsMapper[] _graphMappers;
         private List<Vector2>[] _graphSamples;
         private long[] _graphStartTimestampTicks;
@@ -316,6 +321,7 @@ namespace AmpPortableDataViz.Presentation.Visualization
             if (particleMeshVisualizer != null && _particleMapper != null)
             {
                 ParticleMeshSignalSample parameters = _particleMapper.Map(in frame);
+                parameters = _particlePhysioAmplifier.Apply(parameters, _latestPhysioTimestamp, particlePhysioAmplificationSettings);
                 particleMeshVisualizer.Apply(parameters, frame.TimestampTicksUtc);
             }
 
@@ -558,6 +564,7 @@ namespace AmpPortableDataViz.Presentation.Visualization
             _particleSequenceId = 0;
             HasLatestFrame = false;
             LatestFrame = default;
+            _particlePhysioAmplifier.Reset();
 
             if (_graphSamples != null)
             {
@@ -752,6 +759,297 @@ namespace AmpPortableDataViz.Presentation.Visualization
                 metricKind == AudienceMetricKind.SkinConductanceResponseFrequencyStdDev ||
                 metricKind == AudienceMetricKind.HeartRateStdDev ||
                 metricKind == AudienceMetricKind.InterBeatIntervalStdDev;
+        }
+
+        private static void NormalizeRange(ref float min, ref float max)
+        {
+            if (max < min)
+            {
+                (min, max) = (max, min);
+            }
+
+            if (Mathf.Abs(max - min) < 1e-5f)
+            {
+                max = min + 1e-4f;
+            }
+        }
+    }
+
+    [Serializable]
+    public struct ParticleMeshPhysioAmplificationSettings
+    {
+        public bool Enabled;
+        [Range(0.5f, 120f)] public float WindowSeconds;
+        [Range(8, 4096)] public int MaxSamples;
+        [Range(0.5f, 4f)] public float StdDevMultiplier;
+        [Range(0.01f, 2f)] public float MinRange;
+        [Range(0f, 1f)] public float Smoothing;
+        [Range(0f, 1f)] public float Blend;
+
+        public static ParticleMeshPhysioAmplificationSettings CreateDefault()
+        {
+            return new ParticleMeshPhysioAmplificationSettings
+            {
+                Enabled = true,
+                WindowSeconds = 10f,
+                MaxSamples = 256,
+                StdDevMultiplier = 2f,
+                MinRange = 0.18f,
+                Smoothing = 0.15f,
+                Blend = 1f
+            };
+        }
+    }
+
+    internal sealed class ParticleMeshPhysioAmplifier
+    {
+        private const int ChannelCount = 5;
+        private const float HardMin = -1f;
+        private const float HardMax = 1f;
+        private const float HardRange = HardMax - HardMin;
+
+        private readonly List<Vector2>[] _samples = new List<Vector2>[ChannelCount];
+        private readonly float[] _currentMin = new float[ChannelCount];
+        private readonly float[] _currentMax = new float[ChannelCount];
+        private readonly bool[] _hasDynamicRange = new bool[ChannelCount];
+        private readonly float[] _lastValues = new float[ChannelCount];
+        private readonly float[] _candidateValues = new float[ChannelCount];
+
+        private long _startTimestampTicks;
+        private long _lastSampleTimestampTicks;
+        private float _latestXSeconds;
+        private bool _hasLastSample;
+
+        public ParticleMeshSignalSample Apply(
+            in ParticleMeshSignalSample sample,
+            long physioTimestampTicksUtc,
+            ParticleMeshPhysioAmplificationSettings settings)
+        {
+            settings = ResolveSettings(settings);
+            if (!settings.Enabled || settings.Blend <= 0f)
+            {
+                return sample;
+            }
+
+            EnsureSampleLists(settings.MaxSamples);
+            AppendSampleIfChanged(sample, physioTimestampTicksUtc, settings);
+
+            return new ParticleMeshSignalSample(
+                sample.DeviceId,
+                AmplifyChannel(0, sample.TonicElectrodermalActivityStdDev, settings),
+                AmplifyChannel(1, sample.TemperatureRateOfChangeStdDev, settings),
+                AmplifyChannel(2, sample.SkinConductanceResponseFrequencyStdDev, settings),
+                AmplifyChannel(3, sample.HeartRateStdDev, settings),
+                AmplifyChannel(4, sample.InterBeatIntervalStdDev, settings),
+                sample.FacialEmotionArousal,
+                sample.FacialEmotionValence,
+                sample.Engagement);
+        }
+
+        public void Reset()
+        {
+            for (int i = 0; i < ChannelCount; i++)
+            {
+                _samples[i]?.Clear();
+            }
+
+            Array.Clear(_currentMin, 0, _currentMin.Length);
+            Array.Clear(_currentMax, 0, _currentMax.Length);
+            Array.Clear(_hasDynamicRange, 0, _hasDynamicRange.Length);
+            Array.Clear(_lastValues, 0, _lastValues.Length);
+            Array.Clear(_candidateValues, 0, _candidateValues.Length);
+            _startTimestampTicks = 0;
+            _lastSampleTimestampTicks = 0;
+            _latestXSeconds = 0f;
+            _hasLastSample = false;
+        }
+
+        private static ParticleMeshPhysioAmplificationSettings ResolveSettings(ParticleMeshPhysioAmplificationSettings settings)
+        {
+            if (!settings.Enabled &&
+                settings.WindowSeconds <= 0f &&
+                settings.MaxSamples <= 0 &&
+                settings.StdDevMultiplier <= 0f &&
+                settings.MinRange <= 0f &&
+                settings.Smoothing <= 0f &&
+                settings.Blend <= 0f)
+            {
+                return ParticleMeshPhysioAmplificationSettings.CreateDefault();
+            }
+
+            settings.WindowSeconds = Mathf.Clamp(settings.WindowSeconds, 0.5f, 120f);
+            settings.MaxSamples = Mathf.Clamp(settings.MaxSamples, 8, 4096);
+            settings.StdDevMultiplier = Mathf.Clamp(settings.StdDevMultiplier, 0.5f, 4f);
+            settings.MinRange = Mathf.Clamp(settings.MinRange, 0.01f, HardRange);
+            settings.Smoothing = Mathf.Clamp01(settings.Smoothing);
+            settings.Blend = Mathf.Clamp01(settings.Blend);
+            return settings;
+        }
+
+        private void EnsureSampleLists(int maxSamples)
+        {
+            int capacity = Mathf.Max(8, maxSamples);
+            for (int i = 0; i < ChannelCount; i++)
+            {
+                if (_samples[i] == null)
+                {
+                    _samples[i] = new List<Vector2>(capacity);
+                    continue;
+                }
+
+                if (_samples[i].Capacity < capacity)
+                {
+                    _samples[i].Capacity = capacity;
+                }
+            }
+        }
+
+        private void AppendSampleIfChanged(
+            in ParticleMeshSignalSample sample,
+            long physioTimestampTicksUtc,
+            ParticleMeshPhysioAmplificationSettings settings)
+        {
+            _candidateValues[0] = sample.TonicElectrodermalActivityStdDev;
+            _candidateValues[1] = sample.TemperatureRateOfChangeStdDev;
+            _candidateValues[2] = sample.SkinConductanceResponseFrequencyStdDev;
+            _candidateValues[3] = sample.HeartRateStdDev;
+            _candidateValues[4] = sample.InterBeatIntervalStdDev;
+
+            if (_hasLastSample && _lastSampleTimestampTicks == physioTimestampTicksUtc && HasSameValues())
+            {
+                return;
+            }
+
+            if (_startTimestampTicks == 0)
+            {
+                _startTimestampTicks = physioTimestampTicksUtc;
+            }
+
+            float xSeconds = physioTimestampTicksUtc > 0 && _startTimestampTicks > 0
+                ? (float)((physioTimestampTicksUtc - _startTimestampTicks) / (double)TimeSpan.TicksPerSecond)
+                : _latestXSeconds;
+
+            if (xSeconds < _latestXSeconds)
+            {
+                Reset();
+                EnsureSampleLists(settings.MaxSamples);
+                _startTimestampTicks = physioTimestampTicksUtc;
+                xSeconds = 0f;
+            }
+
+            _latestXSeconds = xSeconds;
+            for (int i = 0; i < ChannelCount; i++)
+            {
+                _samples[i].Add(new Vector2(xSeconds, _candidateValues[i]));
+                _lastValues[i] = _candidateValues[i];
+                PruneSamples(_samples[i], xSeconds, settings);
+            }
+
+            _lastSampleTimestampTicks = physioTimestampTicksUtc;
+            _hasLastSample = true;
+        }
+
+        private bool HasSameValues()
+        {
+            for (int i = 0; i < ChannelCount; i++)
+            {
+                if (!Mathf.Approximately(_lastValues[i], _candidateValues[i]))
+                {
+                    return false;
+                }
+            }
+
+            return true;
+        }
+
+        private static void PruneSamples(List<Vector2> samples, float latestXSeconds, ParticleMeshPhysioAmplificationSettings settings)
+        {
+            float cutoff = latestXSeconds - settings.WindowSeconds;
+            int removeCount = 0;
+            while (removeCount < samples.Count && samples[removeCount].x < cutoff)
+            {
+                removeCount++;
+            }
+
+            if (removeCount > 0)
+            {
+                samples.RemoveRange(0, removeCount);
+            }
+
+            int extraCount = samples.Count - settings.MaxSamples;
+            if (extraCount > 0)
+            {
+                samples.RemoveRange(0, extraCount);
+            }
+        }
+
+        private float AmplifyChannel(int channelIndex, float value, ParticleMeshPhysioAmplificationSettings settings)
+        {
+            List<Vector2> channelSamples = _samples[channelIndex];
+            if (channelSamples == null || channelSamples.Count < 2)
+            {
+                return value;
+            }
+
+            float sum = 0f;
+            float sumSquares = 0f;
+            int count = channelSamples.Count;
+            for (int i = 0; i < count; i++)
+            {
+                float sampleValue = channelSamples[i].y;
+                sum += sampleValue;
+                sumSquares += sampleValue * sampleValue;
+            }
+
+            float mean = sum / count;
+            float variance = Mathf.Max(0f, (sumSquares / count) - mean * mean);
+            float stdDev = Mathf.Sqrt(variance);
+            float targetRange = Mathf.Max(settings.MinRange, stdDev * settings.StdDevMultiplier * 2f);
+            if (targetRange >= HardRange)
+            {
+                return value;
+            }
+
+            float halfRange = targetRange * 0.5f;
+            float targetMin = mean - halfRange;
+            float targetMax = mean + halfRange;
+
+            if (targetMin < HardMin)
+            {
+                float shift = HardMin - targetMin;
+                targetMin += shift;
+                targetMax += shift;
+            }
+
+            if (targetMax > HardMax)
+            {
+                float shift = targetMax - HardMax;
+                targetMin -= shift;
+                targetMax -= shift;
+            }
+
+            targetMin = Mathf.Clamp(targetMin, HardMin, HardMax);
+            targetMax = Mathf.Clamp(targetMax, HardMin, HardMax);
+            NormalizeRange(ref targetMin, ref targetMax);
+
+            if (!_hasDynamicRange[channelIndex] || settings.Smoothing <= 0f)
+            {
+                _currentMin[channelIndex] = targetMin;
+                _currentMax[channelIndex] = targetMax;
+                _hasDynamicRange[channelIndex] = true;
+            }
+            else
+            {
+                _currentMin[channelIndex] = Mathf.Lerp(_currentMin[channelIndex], targetMin, settings.Smoothing);
+                _currentMax[channelIndex] = Mathf.Lerp(_currentMax[channelIndex], targetMax, settings.Smoothing);
+            }
+
+            float yMin = Mathf.Clamp(_currentMin[channelIndex], HardMin, HardMax);
+            float yMax = Mathf.Clamp(_currentMax[channelIndex], HardMin, HardMax);
+            NormalizeRange(ref yMin, ref yMax);
+
+            float amplified = Mathf.Lerp(HardMin, HardMax, Mathf.InverseLerp(yMin, yMax, value));
+            return Mathf.Clamp(Mathf.Lerp(value, amplified, settings.Blend), HardMin, HardMax);
         }
 
         private static void NormalizeRange(ref float min, ref float max)

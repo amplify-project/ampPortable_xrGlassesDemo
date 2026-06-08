@@ -47,6 +47,10 @@ namespace AmpPortableDataViz.Presentation.Visualization
         [SerializeField] private AudienceSignalToParticleMeshMapper.Settings particleMapperSettings =
             AudienceSignalToParticleMeshMapper.CreateDefaultSettings();
 
+        [Header("Particle Mesh Dynamic Physio Amplification")]
+        [SerializeField] private ParticleMeshPhysioAmplificationSettings particlePhysioAmplificationSettings =
+            ParticleMeshPhysioAmplificationSettings.CreateDefault();
+
         [Header("Graph Targets")]
         [SerializeField] private GraphMetricBinding[] graphStreams = Array.Empty<GraphMetricBinding>();
         [SerializeField, Range(0f, 120f)] private float graphWindowSeconds = 10f;
@@ -62,6 +66,7 @@ namespace AmpPortableDataViz.Presentation.Visualization
         [SerializeField] private bool logReceivedSamples;
 
         private IMapper<AudienceSignalSample, ParticleMeshSignalSample> _particleMapper;
+        private readonly ParticleMeshPhysioAmplifier _particlePhysioAmplifier = new ParticleMeshPhysioAmplifier();
         private GraphSeriesToGraphParamsMapper[] _graphMappers;
         private List<Vector2>[] _graphSamples;
         private long[] _graphStartTimestampTicks;
@@ -84,6 +89,7 @@ namespace AmpPortableDataViz.Presentation.Visualization
         private void OnEnable()
         {
             ResetGraphState();
+            _particlePhysioAmplifier.Reset();
             ResolveReferences();
             EnsureMappers();
             EnsureGraphState();
@@ -273,6 +279,7 @@ namespace AmpPortableDataViz.Presentation.Visualization
             }
 
             ParticleMeshSignalSample parameters = _particleMapper.Map(in frame);
+            parameters = _particlePhysioAmplifier.Apply(parameters, frame.TimestampTicksUtc, particlePhysioAmplificationSettings);
             particleMeshVisualizer.Apply(parameters, frame.TimestampTicksUtc);
         }
 
