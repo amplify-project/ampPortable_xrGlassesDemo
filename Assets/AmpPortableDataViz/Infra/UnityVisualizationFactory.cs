@@ -24,8 +24,35 @@ namespace AmpPortableDataViz.Infra
 
             var instanceGo = UnityEngine.Object.Instantiate(_visualPrefab);
             instanceGo.name = $"Viz_{request.VisualId}";
+            DisableManualDrivers(instanceGo);
 
             return new UnityVisualizationInstance(request.VisualId, instanceGo);
+        }
+
+        private static void DisableManualDrivers(GameObject instance)
+        {
+            if (instance == null)
+            {
+                return;
+            }
+
+            var audienceManualDrivers = instance.GetComponentsInChildren<AudienceDataManualDriver>(true);
+            foreach (var manualDriver in audienceManualDrivers)
+            {
+                manualDriver.enabled = false;
+            }
+
+            var particleManualDrivers = instance.GetComponentsInChildren<ParticleMeshManualDriver>(true);
+            foreach (var manualDriver in particleManualDrivers)
+            {
+                manualDriver.enabled = false;
+            }
+
+            var graphManualDrivers = instance.GetComponentsInChildren<GraphManualDriver>(true);
+            foreach (var manualDriver in graphManualDrivers)
+            {
+                manualDriver.enabled = false;
+            }
         }
     }
 
@@ -95,4 +122,3 @@ namespace AmpPortableDataViz.Infra
         }
     }
 }
-

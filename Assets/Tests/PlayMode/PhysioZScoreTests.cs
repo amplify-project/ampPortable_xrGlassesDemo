@@ -25,16 +25,50 @@ namespace AmpPortableDataViz.Tests.PlayMode
         }
 
         [Test]
-        public void TryParsePayload_WhenLegacyStdDevPayloadPresent_ParsesLegacyEncoding()
+        public void TryParsePayload_WhenLivePayloadOmitsTonicEda_ParsesRemainingZScoreMetrics()
+        {
+            const string payload =
+                "{\"device\":\"MD-V5-0000448\",\"timestamp\":\"2026-06-08T15:41:39.505030\",\"temperature_roc_sd\":1.9282060223988804,\"scr_frequency_sd\":4.325434877955538,\"hr_sd\":7.433940209175751,\"ibi_sd\":101.03794138837152,\"calibrating\":false,\"calibration_remaining_s\":0.0,\"session_age_s\":89.2,\"baseline_n\":88,\"hr_z\":2.532,\"ibi_z\":-0.178,\"temperature_roc_z\":0.607,\"scr_frequency_z\":1.985,\"hr_event_soft\":true,\"hr_event_hard\":true,\"eda_event_soft\":false,\"eda_event_hard\":false,\"ibi_event_soft\":false,\"ibi_event_hard\":false,\"temperature_roc_event_soft\":false,\"temperature_roc_event_hard\":false,\"scr_frequency_event_soft\":true,\"scr_frequency_event_hard\":false,\"quality\":{\"hr\":\"ok\",\"ibi\":\"ok\",\"eda\":\"low\",\"temperature_roc\":\"ok\",\"scr_frequency\":\"ok\"}}";
+
+            bool parsed = RedisPhysioMetricsPump.TryParsePayload(payload, "MD-V5-0000448", out var sample);
+
+            Assert.IsTrue(parsed);
+            Assert.AreEqual("MD-V5-0000448", sample.DeviceId);
+            Assert.AreEqual(PhysioMetricsEncoding.ZScore, sample.Encoding);
+            Assert.AreEqual(0f, sample.TonicElectrodermalActivityStdDev);
+            Assert.AreEqual(0.607f, sample.TemperatureRateOfChangeStdDev);
+            Assert.AreEqual(1.985f, sample.SkinConductanceResponseFrequencyStdDev);
+            Assert.AreEqual(2.532f, sample.HeartRateStdDev);
+            Assert.AreEqual(-0.178f, sample.InterBeatIntervalStdDev);
+        }
+
+        [Test]
+        public void TryParsePayload_WhenLivePayloadOmitsLowQualityZScoreFields_ParsesAsZScoreWithNeutralDefaults()
+        {
+            const string payload =
+                "{\"device\":\"MD-V5-0001019\",\"timestamp\":\"2026-06-08T15:50:57.953357\",\"scr_frequency_sd\":0.4913605736890171,\"hr_sd\":25.816525251063148,\"ibi_sd\":168.42842151724844,\"calibrating\":false,\"calibration_remaining_s\":0.0,\"session_age_s\":77.9,\"baseline_n\":68,\"hr_z\":0.065,\"ibi_z\":-0.949,\"scr_frequency_z\":-0.003,\"hr_event_soft\":false,\"hr_event_hard\":false,\"eda_event_soft\":false,\"eda_event_hard\":false,\"ibi_event_soft\":false,\"ibi_event_hard\":false,\"temperature_roc_event_soft\":false,\"temperature_roc_event_hard\":false,\"scr_frequency_event_soft\":false,\"scr_frequency_event_hard\":false,\"quality\":{\"hr\":\"ok\",\"ibi\":\"ok\",\"eda\":\"low\",\"temperature_roc\":\"low\",\"scr_frequency\":\"ok\"}}";
+
+            bool parsed = RedisPhysioMetricsPump.TryParsePayload(payload, "MD-V5-0001019", out var sample);
+
+            Assert.IsTrue(parsed);
+            Assert.AreEqual("MD-V5-0001019", sample.DeviceId);
+            Assert.AreEqual(PhysioMetricsEncoding.ZScore, sample.Encoding);
+            Assert.AreEqual(0f, sample.TonicElectrodermalActivityStdDev);
+            Assert.AreEqual(0f, sample.TemperatureRateOfChangeStdDev);
+            Assert.AreEqual(-0.003f, sample.SkinConductanceResponseFrequencyStdDev);
+            Assert.AreEqual(0.065f, sample.HeartRateStdDev);
+            Assert.AreEqual(-0.949f, sample.InterBeatIntervalStdDev);
+        }
+
+        [Test]
+        public void TryParsePayload_WhenOnlyLegacyStdDevPayloadPresent_IgnoresPayload()
         {
             const string payload = "{\"hr_sd\":5,\"edl_sd\":0.2,\"temperature_roc_sd\":0.025,\"ibi_sd\":35,\"scr_frequency_sd\":2}";
 
             bool parsed = RedisPhysioMetricsPump.TryParsePayload(payload, "device-a", out var sample);
 
-            Assert.IsTrue(parsed);
-            Assert.AreEqual(PhysioMetricsEncoding.LegacyStdDev, sample.Encoding);
-            Assert.AreEqual(5f, sample.HeartRateStdDev);
-            Assert.AreEqual(0.2f, sample.TonicElectrodermalActivityStdDev);
+            Assert.IsFalse(parsed);
+            Assert.AreEqual(default(PhysioMetricsSample), sample);
         }
 
         [Test]

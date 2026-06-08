@@ -186,12 +186,7 @@ namespace AmpPortableDataViz.Presentation.Sources
                 using var jsonDoc = JsonDocument.Parse(payload);
                 var root = jsonDoc.RootElement;
 
-                if (TryParseZScoreSample(root, deviceId, out sample))
-                {
-                    return true;
-                }
-
-                return TryParseLegacyStdDevSample(root, deviceId, out sample);
+                return TryParseZScoreSample(root, deviceId, out sample);
             }
             catch (JsonException)
             {
@@ -209,7 +204,7 @@ namespace AmpPortableDataViz.Presentation.Sources
             bool hasHeartRate = TryFindFloat(root, "hr_z", out var heartRate);
             bool hasInterBeatInterval = TryFindFloat(root, "ibi_z", out var interBeatInterval);
 
-            if (!hasTonicEda || !hasTemperatureRate || !hasScrFrequency || !hasHeartRate || !hasInterBeatInterval)
+            if (!hasTonicEda && !hasTemperatureRate && !hasScrFrequency && !hasHeartRate && !hasInterBeatInterval)
             {
                 return false;
             }
@@ -223,51 +218,6 @@ namespace AmpPortableDataViz.Presentation.Sources
                 ClampZScore(heartRate),
                 ClampZScore(interBeatInterval));
             return true;
-        }
-
-        private static bool TryParseLegacyStdDevSample(JsonElement root, string deviceId, out PhysioMetricsSample sample)
-        {
-            sample = default;
-
-            bool hasTonicEda = TryFindAnyFloat(root, out var tonicEda, "edl_sd", "eda_sd");
-            bool hasTemperatureRate = TryFindFloat(root, "temperature_roc_sd", out var temperatureRate);
-            bool hasScrFrequency = TryFindFloat(root, "scr_frequency_sd", out var scrFrequency);
-            bool hasHeartRate = TryFindFloat(root, "hr_sd", out var heartRate);
-            bool hasInterBeatInterval = TryFindFloat(root, "ibi_sd", out var interBeatInterval);
-
-            if (!hasTonicEda || !hasTemperatureRate || !hasScrFrequency || !hasHeartRate || !hasInterBeatInterval)
-            {
-                return false;
-            }
-
-            sample = new PhysioMetricsSample(
-                deviceId,
-                PhysioMetricsEncoding.LegacyStdDev,
-                tonicEda,
-                temperatureRate,
-                scrFrequency,
-                heartRate,
-                interBeatInterval);
-            return true;
-        }
-
-        private static bool TryFindAnyFloat(JsonElement element, out float value, params string[] propertyNames)
-        {
-            value = 0f;
-            if (propertyNames == null)
-            {
-                return false;
-            }
-
-            for (int i = 0; i < propertyNames.Length; i++)
-            {
-                if (TryFindFloat(element, propertyNames[i], out value))
-                {
-                    return true;
-                }
-            }
-
-            return false;
         }
 
         private static float ClampZScore(float value)

@@ -14,6 +14,54 @@ public static class RedisSubscriber
     private static readonly ConcurrentDictionary<string, ConcurrentQueue<RedisMessage>> _channelQueues = new(StringComparer.Ordinal);
     private static readonly ConcurrentDictionary<string, int> _channelRefCounts = new(StringComparer.Ordinal);
     private static readonly SemaphoreSlim _connectionLock = new(1, 1);
+    private static readonly string[] EngagementAggregatePropertyNames =
+    {
+        "value",
+        "engagement",
+        "engagement_score",
+        "engagementScore",
+        "avg_engagement",
+        "average_engagement",
+        "mean_engagement",
+        "overall_engagement",
+        "average",
+        "mean",
+        "score"
+    };
+    private static readonly string[] EngagementScorePropertyNames =
+    {
+        "value",
+        "score",
+        "engagement",
+        "engagement_score",
+        "engagementScore"
+    };
+    private static readonly string[] EngagementScoreContainerPropertyNames =
+    {
+        "scores",
+        "engagement_scores",
+        "engagementScores",
+        "devices",
+        "participants",
+        "audience",
+        "values"
+    };
+    private static readonly string[] NumericMetadataPropertyNames =
+    {
+        "timestamp",
+        "time",
+        "sequence",
+        "seq",
+        "count",
+        "sample_count",
+        "score_count",
+        "device",
+        "device_id",
+        "deviceId",
+        "id",
+        "source",
+        "channel"
+    };
     private static ConnectionMultiplexer? _redis;
     private static ISubscriber? _subscriber;
     private static bool _isInitialized;
@@ -57,6 +105,28 @@ public static class RedisSubscriber
         }
 
         return queue.TryDequeue(out message);
+    }
+
+    internal static bool TryParsePayload(string channelName, string payload, out RedisMessage message)
+    {
+        message = default;
+
+        if (string.IsNullOrWhiteSpace(payload))
+        {
+            return false;
+        }
+
+        try
+        {
+            using var jsonDoc = JsonDocument.Parse(payload);
+            var normalizedChannel = NormalizeChannelName(channelName) ?? string.Empty;
+            message = ParseRedisMessage(normalizedChannel, jsonDoc.RootElement, payload);
+            return true;
+        }
+        catch (JsonException)
+        {
+            return false;
+        }
     }
 
     public static async Task RegisterChannelAsync(string host, int port, string channelName)
@@ -226,10 +296,12 @@ public static class RedisSubscriber
 
         try
         {
-            using var jsonDoc = JsonDocument.Parse(messageText);
-            var root = jsonDoc.RootElement;
+            if (!TryParsePayload(channelName, messageText, out var parsedMessage))
+            {
+                Debug.LogError($"Invalid Redis JSON payload.\nPayload: {messageText}");
+                return;
+            }
 
-            var parsedMessage = ParseRedisMessage(channelName, root, messageText);
             targetQueue.Enqueue(parsedMessage);
 
             bool isHeartRateChannel = channelName.EndsWith(":hr_filtered", StringComparison.OrdinalIgnoreCase);
@@ -253,9 +325,19 @@ public static class RedisSubscriber
     {
         if (rootElement.ValueKind == JsonValueKind.Object)
         {
-            var value = rootElement.TryGetProperty("value", out var valueProp)
-                ? ReadAsDouble(valueProp)
-                : ExtractFirstNumericValue(rootElement);
+            double value;
+            if (rootElement.TryGetProperty("value", out var valueProp))
+            {
+                value = ReadAsDouble(valueProp);
+            }
+            else if (IsEngagementScoresChannel(channelName) && TryExtractEngagementScore(rootElement, out var engagementValue))
+            {
+                value = engagementValue;
+            }
+            else
+            {
+                value = ExtractFirstNumericValue(rootElement);
+            }
 
             var sequence = rootElement.TryGetProperty("sequence", out var sequenceProp)
                 ? ReadAsInt(sequenceProp)
@@ -271,6 +353,223 @@ public static class RedisSubscriber
         // Support payloads that are just a primitive (e.g., raw numbers or numeric strings)
         var primitiveValue = ReadAsDouble(rootElement);
         return new RedisMessage(channelName, primitiveValue, -1, string.Empty, rawPayload);
+    }
+
+    private static bool TryExtractEngagementScore(JsonElement rootElement, out double value)
+    {
+        if (TryReadNamedNumericProperty(rootElement, EngagementAggregatePropertyNames, out value))
+        {
+            return true;
+        }
+
+        if (TryAverageNumericInNamedContainers(rootElement, out value))
+        {
+            return true;
+        }
+
+        if (TryAverageDirectNumericProperties(rootElement, out value))
+        {
+            return true;
+        }
+
+        if (TryAverageNamedNumericLeaves(rootElement, EngagementScorePropertyNames, out value))
+        {
+            return true;
+        }
+
+        return TryAverageNumericLeaves(rootElement, out value);
+    }
+
+    private static bool TryAverageNumericInNamedContainers(JsonElement element, out double value)
+    {
+        value = 0d;
+
+        if (element.ValueKind == JsonValueKind.Object)
+        {
+            foreach (var property in element.EnumerateObject())
+            {
+                if (MatchesAny(property.Name, EngagementScoreContainerPropertyNames))
+                {
+                    if (TryAverageNamedNumericLeaves(property.Value, EngagementScorePropertyNames, out value) ||
+                        TryAverageNumericLeaves(property.Value, out value))
+                    {
+                        return true;
+                    }
+                }
+
+                if (TryAverageNumericInNamedContainers(property.Value, out value))
+                {
+                    return true;
+                }
+            }
+        }
+        else if (element.ValueKind == JsonValueKind.Array)
+        {
+            foreach (var item in element.EnumerateArray())
+            {
+                if (TryAverageNumericInNamedContainers(item, out value))
+                {
+                    return true;
+                }
+            }
+        }
+
+        return false;
+    }
+
+    private static bool TryAverageDirectNumericProperties(JsonElement element, out double value)
+    {
+        value = 0d;
+
+        if (element.ValueKind != JsonValueKind.Object)
+        {
+            return false;
+        }
+
+        double sum = 0d;
+        int count = 0;
+        foreach (var property in element.EnumerateObject())
+        {
+            if (IsNumericMetadataProperty(property.Name))
+            {
+                continue;
+            }
+
+            var numeric = ReadAsDouble(property.Value, double.NaN);
+            if (IsUsableNumeric(numeric))
+            {
+                sum += numeric;
+                count++;
+            }
+        }
+
+        if (count == 0)
+        {
+            return false;
+        }
+
+        value = sum / count;
+        return true;
+    }
+
+    private static bool TryAverageNamedNumericLeaves(JsonElement element, string[] propertyNames, out double value)
+    {
+        double sum = 0d;
+        int count = 0;
+        AccumulateNamedNumericLeaves(element, propertyNames, ref sum, ref count);
+
+        if (count == 0)
+        {
+            value = 0d;
+            return false;
+        }
+
+        value = sum / count;
+        return true;
+    }
+
+    private static void AccumulateNamedNumericLeaves(JsonElement element, string[] propertyNames, ref double sum, ref int count)
+    {
+        if (element.ValueKind == JsonValueKind.Object)
+        {
+            foreach (var property in element.EnumerateObject())
+            {
+                if (MatchesAny(property.Name, propertyNames))
+                {
+                    var numeric = ReadAsDouble(property.Value, double.NaN);
+                    if (IsUsableNumeric(numeric))
+                    {
+                        sum += numeric;
+                        count++;
+                        continue;
+                    }
+                }
+
+                AccumulateNamedNumericLeaves(property.Value, propertyNames, ref sum, ref count);
+            }
+        }
+        else if (element.ValueKind == JsonValueKind.Array)
+        {
+            foreach (var item in element.EnumerateArray())
+            {
+                AccumulateNamedNumericLeaves(item, propertyNames, ref sum, ref count);
+            }
+        }
+    }
+
+    private static bool TryAverageNumericLeaves(JsonElement element, out double value)
+    {
+        double sum = 0d;
+        int count = 0;
+        AccumulateNumericLeaves(element, ref sum, ref count);
+
+        if (count == 0)
+        {
+            value = 0d;
+            return false;
+        }
+
+        value = sum / count;
+        return true;
+    }
+
+    private static void AccumulateNumericLeaves(JsonElement element, ref double sum, ref int count)
+    {
+        switch (element.ValueKind)
+        {
+            case JsonValueKind.Object:
+                foreach (var property in element.EnumerateObject())
+                {
+                    if (IsNumericMetadataProperty(property.Name))
+                    {
+                        continue;
+                    }
+
+                    AccumulateNumericLeaves(property.Value, ref sum, ref count);
+                }
+                break;
+            case JsonValueKind.Array:
+                foreach (var item in element.EnumerateArray())
+                {
+                    AccumulateNumericLeaves(item, ref sum, ref count);
+                }
+                break;
+            default:
+                var numeric = ReadAsDouble(element, double.NaN);
+                if (IsUsableNumeric(numeric))
+                {
+                    sum += numeric;
+                    count++;
+                }
+                break;
+        }
+    }
+
+    private static bool TryReadNamedNumericProperty(JsonElement element, string[] propertyNames, out double value)
+    {
+        value = 0d;
+
+        if (element.ValueKind != JsonValueKind.Object)
+        {
+            return false;
+        }
+
+        foreach (var property in element.EnumerateObject())
+        {
+            if (!MatchesAny(property.Name, propertyNames))
+            {
+                continue;
+            }
+
+            var numeric = ReadAsDouble(property.Value, double.NaN);
+            if (IsUsableNumeric(numeric))
+            {
+                value = numeric;
+                return true;
+            }
+        }
+
+        return false;
     }
 
     private static double ExtractFirstNumericValue(JsonElement rootElement)
@@ -319,6 +618,34 @@ public static class RedisSubscriber
         }
 
         return fallback;
+    }
+
+    private static bool IsEngagementScoresChannel(string channelName)
+    {
+        return RedisAudienceChannels.IsEngagementScoresChannel(channelName);
+    }
+
+    private static bool IsNumericMetadataProperty(string propertyName)
+    {
+        return MatchesAny(propertyName, NumericMetadataPropertyNames);
+    }
+
+    private static bool MatchesAny(string value, string[] candidates)
+    {
+        for (int i = 0; i < candidates.Length; i++)
+        {
+            if (string.Equals(value, candidates[i], StringComparison.OrdinalIgnoreCase))
+            {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
+    private static bool IsUsableNumeric(double value)
+    {
+        return !double.IsNaN(value) && !double.IsInfinity(value);
     }
 
     private static int ReadAsInt(JsonElement element, int fallback = -1)
@@ -436,7 +763,22 @@ public enum EmotionChannelKind
 public static class RedisAudienceChannels
 {
     public const string EngagementScoresChannel = "engagement:scores";
+    public const string LegacyEngagementScoreChannel = "engagement_score";
+    public const string AmplifyEngagementChannel = "amplify.engagement.engagement";
     public const string PhysioMetricsTemplate = "device:{0}:physio_metrics";
+
+    public static bool IsEngagementScoresChannel(string channelName)
+    {
+        if (string.IsNullOrWhiteSpace(channelName))
+        {
+            return false;
+        }
+
+        var normalized = channelName.Trim();
+        return string.Equals(normalized, EngagementScoresChannel, StringComparison.OrdinalIgnoreCase) ||
+               string.Equals(normalized, LegacyEngagementScoreChannel, StringComparison.OrdinalIgnoreCase) ||
+               string.Equals(normalized, AmplifyEngagementChannel, StringComparison.OrdinalIgnoreCase);
+    }
 
     public static string FormatPhysioMetricsChannel(string? deviceId)
     {

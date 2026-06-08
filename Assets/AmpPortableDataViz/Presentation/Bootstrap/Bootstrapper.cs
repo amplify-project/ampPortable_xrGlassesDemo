@@ -879,6 +879,8 @@ namespace AmpPortableDataViz.Presentation.Bootstrap
                 instance.name = $"{VisualPrefab.name}_{definition.DeviceId}";
                 PositionEmotionVisual(instance.transform, deviceIndex, hasCustomParent);
 
+                DisableManualDrivers(instance);
+
                 var bindingComponent = FindEmotionBindingComponent(instance) ?? instance.AddComponent<EmotionPlasmaBinding>();
 
                 string valenceChannel = definition.ValenceChannel;
@@ -1562,6 +1564,12 @@ namespace AmpPortableDataViz.Presentation.Bootstrap
                 return;
             }
 
+            var audienceManualDrivers = instance.GetComponentsInChildren<AudienceDataManualDriver>(true);
+            foreach (var manualDriver in audienceManualDrivers)
+            {
+                manualDriver.enabled = false;
+            }
+
             var particleManualDrivers = instance.GetComponentsInChildren<ParticleMeshManualDriver>(true);
             foreach (var manualDriver in particleManualDrivers)
             {
@@ -1730,7 +1738,7 @@ namespace AmpPortableDataViz.Presentation.Bootstrap
                 return;
             }
 
-            string channel = RedisAudienceChannels.EngagementScoresChannel;
+            string channel = ResolveEngagementScoresChannel();
             if (_engagementHudPump == null || !string.Equals(_engagementHudChannel, channel, StringComparison.Ordinal))
             {
                 ClearEngagementHudBindings();
@@ -2081,10 +2089,11 @@ namespace AmpPortableDataViz.Presentation.Bootstrap
             return filtered;
         }
 
-        private static List<AudienceDeviceChannelDefinition> BuildAudienceDeviceChannelDefinitions(IEnumerable<string> redisChannels)
+        private List<AudienceDeviceChannelDefinition> BuildAudienceDeviceChannelDefinitions(IEnumerable<string> redisChannels)
         {
             var orderedDeviceIds = new List<string>();
             var map = new Dictionary<string, AudienceDeviceChannelDefinition>(StringComparer.OrdinalIgnoreCase);
+            string engagementChannel = ResolveEngagementScoresChannel();
 
             foreach (var channel in redisChannels)
             {
@@ -2135,7 +2144,7 @@ namespace AmpPortableDataViz.Presentation.Bootstrap
                     continue;
                 }
 
-                FillAudienceChannelDefaults(ref definition);
+                FillAudienceChannelDefaults(ref definition, engagementChannel);
                 ordered.Add(definition);
             }
 
@@ -2156,7 +2165,7 @@ namespace AmpPortableDataViz.Presentation.Bootstrap
             return definition;
         }
 
-        private static void FillAudienceChannelDefaults(ref AudienceDeviceChannelDefinition definition)
+        private static void FillAudienceChannelDefaults(ref AudienceDeviceChannelDefinition definition, string engagementChannel)
         {
             if (string.IsNullOrWhiteSpace(definition.PhysioMetricsChannel))
             {
@@ -2173,7 +2182,9 @@ namespace AmpPortableDataViz.Presentation.Bootstrap
                 RedisEmotionChannels.TryFormatChannel(EmotionChannelKind.Arousal, definition.DeviceId, out definition.ArousalChannel);
             }
 
-            definition.EngagementChannel = RedisAudienceChannels.EngagementScoresChannel;
+            definition.EngagementChannel = string.IsNullOrWhiteSpace(engagementChannel)
+                ? RedisAudienceChannels.EngagementScoresChannel
+                : engagementChannel.Trim();
         }
 
         private static List<AudienceDeviceChannelDefinition> FilterAudienceToConfiguredDevices(IEnumerable<AudienceDeviceChannelDefinition> definitions, IEnumerable<string> configuredDeviceIds)
@@ -2248,7 +2259,7 @@ namespace AmpPortableDataViz.Presentation.Bootstrap
                 }
             }
 
-            AddChannel(RedisAudienceChannels.EngagementScoresChannel);
+            AddChannel(ResolveEngagementScoresChannel());
 
             if (channels.Count == 0)
             {
@@ -2256,6 +2267,27 @@ namespace AmpPortableDataViz.Presentation.Bootstrap
             }
 
             return channels.ToArray();
+        }
+
+        private string ResolveEngagementScoresChannel()
+        {
+            if (RedisAudienceChannels.IsEngagementScoresChannel(RedisChannel))
+            {
+                return RedisChannel.Trim();
+            }
+
+            if (RedisChannels != null)
+            {
+                foreach (var channel in RedisChannels)
+                {
+                    if (RedisAudienceChannels.IsEngagementScoresChannel(channel))
+                    {
+                        return channel.Trim();
+                    }
+                }
+            }
+
+            return RedisAudienceChannels.EngagementScoresChannel;
         }
 
         private void AttachDeviceLabel(GameObject visualInstance, string deviceId, int deviceIndex)
