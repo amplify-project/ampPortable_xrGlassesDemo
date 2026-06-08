@@ -13,16 +13,8 @@ namespace AmpPortableDataViz.Presentation.Visualization
     [AddComponentMenu("Amp Portable Data Viz/Visualization/Audience Data Manual Driver")]
     public sealed class AudienceDataManualDriver : MonoBehaviour, IDataSource<AudienceSignalSample>
     {
-        private const float TonicEdaStdDevMin = 0.01f;
-        private const float TonicEdaStdDevMax = 0.5f;
-        private const float TemperatureRateOfChangeStdDevMin = 0.001f;
-        private const float TemperatureRateOfChangeStdDevMax = 0.1f;
-        private const float ScrFrequencyStdDevMin = 0.5f;
-        private const float ScrFrequencyStdDevMax = 5f;
-        private const float HeartRateStdDevMin = 1f;
-        private const float HeartRateStdDevMax = 10f;
-        private const float InterBeatIntervalStdDevMin = 10f;
-        private const float InterBeatIntervalStdDevMax = 100f;
+        private const float PhysioZScoreMin = -3f;
+        private const float PhysioZScoreMax = 3f;
 
         public enum SourceMode
         {
@@ -37,12 +29,12 @@ namespace AmpPortableDataViz.Presentation.Visualization
         [SerializeField] private string sourceId = "audience-manual";
         [SerializeField] private string deviceId;
 
-        [Header("Physiological Signals")]
-        [SerializeField, Range(TonicEdaStdDevMin, TonicEdaStdDevMax)] private float tonicElectrodermalActivityStdDev = 0.2f;
-        [SerializeField, Range(TemperatureRateOfChangeStdDevMin, TemperatureRateOfChangeStdDevMax)] private float temperatureRateOfChangeStdDev = 0.025f;
-        [SerializeField, Range(ScrFrequencyStdDevMin, ScrFrequencyStdDevMax)] private float skinConductanceResponseFrequencyStdDev = 2f;
-        [SerializeField, Range(HeartRateStdDevMin, HeartRateStdDevMax)] private float heartRateStdDev = 5f;
-        [SerializeField, Range(InterBeatIntervalStdDevMin, InterBeatIntervalStdDevMax)] private float interBeatIntervalStdDev = 35f;
+        [Header("Physiological Z-Scores")]
+        [SerializeField, Range(PhysioZScoreMin, PhysioZScoreMax)] private float tonicElectrodermalActivityStdDev;
+        [SerializeField, Range(PhysioZScoreMin, PhysioZScoreMax)] private float temperatureRateOfChangeStdDev;
+        [SerializeField, Range(PhysioZScoreMin, PhysioZScoreMax)] private float skinConductanceResponseFrequencyStdDev;
+        [SerializeField, Range(PhysioZScoreMin, PhysioZScoreMax)] private float heartRateStdDev;
+        [SerializeField, Range(PhysioZScoreMin, PhysioZScoreMax)] private float interBeatIntervalStdDev;
 
         [Header("Emotion")]
         [SerializeField, Range(0f, 2f)] private float arousal = 1f;
@@ -157,11 +149,11 @@ namespace AmpPortableDataViz.Presentation.Visualization
             float engagementValue)
         {
             sourceMode = SourceMode.Manual;
-            tonicElectrodermalActivityStdDev = Mathf.Clamp(tonicEda, TonicEdaStdDevMin, TonicEdaStdDevMax);
-            temperatureRateOfChangeStdDev = Mathf.Clamp(temperatureRateOfChange, TemperatureRateOfChangeStdDevMin, TemperatureRateOfChangeStdDevMax);
-            skinConductanceResponseFrequencyStdDev = Mathf.Clamp(skinConductanceResponseFrequency, ScrFrequencyStdDevMin, ScrFrequencyStdDevMax);
-            heartRateStdDev = Mathf.Clamp(heartRate, HeartRateStdDevMin, HeartRateStdDevMax);
-            interBeatIntervalStdDev = Mathf.Clamp(interBeatInterval, InterBeatIntervalStdDevMin, InterBeatIntervalStdDevMax);
+            tonicElectrodermalActivityStdDev = Mathf.Clamp(tonicEda, PhysioZScoreMin, PhysioZScoreMax);
+            temperatureRateOfChangeStdDev = Mathf.Clamp(temperatureRateOfChange, PhysioZScoreMin, PhysioZScoreMax);
+            skinConductanceResponseFrequencyStdDev = Mathf.Clamp(skinConductanceResponseFrequency, PhysioZScoreMin, PhysioZScoreMax);
+            heartRateStdDev = Mathf.Clamp(heartRate, PhysioZScoreMin, PhysioZScoreMax);
+            interBeatIntervalStdDev = Mathf.Clamp(interBeatInterval, PhysioZScoreMin, PhysioZScoreMax);
             arousal = Mathf.Clamp(arousalValue, 0f, 2f);
             valence = Mathf.Clamp(valenceValue, 0f, 2f);
             engagement = Mathf.Clamp01(engagementValue);
@@ -173,6 +165,7 @@ namespace AmpPortableDataViz.Presentation.Visualization
 
             return new AudienceSignalSample(
                 ResolveDeviceId(),
+                PhysioMetricsEncoding.ZScore,
                 tonicElectrodermalActivityStdDev,
                 temperatureRateOfChangeStdDev,
                 skinConductanceResponseFrequencyStdDev,
@@ -185,11 +178,11 @@ namespace AmpPortableDataViz.Presentation.Visualization
 
         private AudienceSignalSample BuildProceduralSample()
         {
-            tonicElectrodermalActivityStdDev = SampleRange(0.11f, TonicEdaStdDevMin, TonicEdaStdDevMax);
-            temperatureRateOfChangeStdDev = SampleRange(1.37f, TemperatureRateOfChangeStdDevMin, TemperatureRateOfChangeStdDevMax);
-            skinConductanceResponseFrequencyStdDev = SampleRange(2.61f, ScrFrequencyStdDevMin, ScrFrequencyStdDevMax);
-            heartRateStdDev = SampleRange(3.89f, HeartRateStdDevMin, HeartRateStdDevMax);
-            interBeatIntervalStdDev = SampleRange(5.23f, InterBeatIntervalStdDevMin, InterBeatIntervalStdDevMax);
+            tonicElectrodermalActivityStdDev = SampleSignedZScore(0.11f);
+            temperatureRateOfChangeStdDev = SampleSignedZScore(1.37f);
+            skinConductanceResponseFrequencyStdDev = SampleSignedZScore(2.61f);
+            heartRateStdDev = SampleSignedZScore(3.89f);
+            interBeatIntervalStdDev = SampleSignedZScore(5.23f);
             arousal = SampleNoise(6.47f) * 2f;
             valence = SampleNoise(7.79f) * 2f;
             engagement = SampleNoise(9.01f);
@@ -197,9 +190,9 @@ namespace AmpPortableDataViz.Presentation.Visualization
             return BuildManualSample();
         }
 
-        private float SampleRange(float channelOffset, float min, float max)
+        private float SampleSignedZScore(float channelOffset)
         {
-            return Mathf.Lerp(min, max, SampleNoise(channelOffset));
+            return Mathf.Lerp(PhysioZScoreMin, PhysioZScoreMax, SampleNoise(channelOffset));
         }
 
         private float SampleNoise(float channelOffset)
@@ -216,11 +209,11 @@ namespace AmpPortableDataViz.Presentation.Visualization
 
         private void ClampInspectorValues()
         {
-            tonicElectrodermalActivityStdDev = Mathf.Clamp(tonicElectrodermalActivityStdDev, TonicEdaStdDevMin, TonicEdaStdDevMax);
-            temperatureRateOfChangeStdDev = Mathf.Clamp(temperatureRateOfChangeStdDev, TemperatureRateOfChangeStdDevMin, TemperatureRateOfChangeStdDevMax);
-            skinConductanceResponseFrequencyStdDev = Mathf.Clamp(skinConductanceResponseFrequencyStdDev, ScrFrequencyStdDevMin, ScrFrequencyStdDevMax);
-            heartRateStdDev = Mathf.Clamp(heartRateStdDev, HeartRateStdDevMin, HeartRateStdDevMax);
-            interBeatIntervalStdDev = Mathf.Clamp(interBeatIntervalStdDev, InterBeatIntervalStdDevMin, InterBeatIntervalStdDevMax);
+            tonicElectrodermalActivityStdDev = Mathf.Clamp(tonicElectrodermalActivityStdDev, PhysioZScoreMin, PhysioZScoreMax);
+            temperatureRateOfChangeStdDev = Mathf.Clamp(temperatureRateOfChangeStdDev, PhysioZScoreMin, PhysioZScoreMax);
+            skinConductanceResponseFrequencyStdDev = Mathf.Clamp(skinConductanceResponseFrequencyStdDev, PhysioZScoreMin, PhysioZScoreMax);
+            heartRateStdDev = Mathf.Clamp(heartRateStdDev, PhysioZScoreMin, PhysioZScoreMax);
+            interBeatIntervalStdDev = Mathf.Clamp(interBeatIntervalStdDev, PhysioZScoreMin, PhysioZScoreMax);
             arousal = Mathf.Clamp(arousal, 0f, 2f);
             valence = Mathf.Clamp(valence, 0f, 2f);
             engagement = Mathf.Clamp01(engagement);

@@ -19,7 +19,7 @@ namespace AmpPortableDataViz.Presentation.Visualization
 
         [Header("Graph Defaults")]
         [SerializeField] private Vector2 xRange = new Vector2(0f, 10f);
-        [SerializeField] private Vector2 yRange = new Vector2(0f, 1f);
+        [SerializeField] private Vector2 yRange = new Vector2(-3f, 3f);
         [SerializeField] private Color lineColor = Color.white;
         [SerializeField, Range(0.0005f, 0.05f)] private float lineWidth = 0.01f;
 

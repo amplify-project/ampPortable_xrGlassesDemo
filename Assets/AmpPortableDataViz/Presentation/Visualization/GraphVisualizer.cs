@@ -12,6 +12,12 @@ namespace AmpPortableDataViz.Presentation.Visualization
         [SerializeField] private LineRenderer lineRenderer;
         [SerializeField] private Vector2 graphSize = new Vector2(1f, 1f);
         [SerializeField] private bool clampToBounds = true;
+
+        [Header("Zero Baseline")]
+        [SerializeField] private bool showZeroBaseline = true;
+        [SerializeField] private Color zeroBaselineColor = new Color(1f, 1f, 1f, 0.35f);
+        [SerializeField, Range(0.1f, 2f)] private float zeroBaselineWidthMultiplier = 0.5f;
+
         [Header("Value Label")]
         [SerializeField] private bool showValueLabel = true;
         [SerializeField] private TextMeshPro valueLabel;
@@ -26,6 +32,7 @@ namespace AmpPortableDataViz.Presentation.Visualization
         public Vector2 GraphSize => graphSize;
         private Vector2 _baseGraphSize;
         private string _valueLabelFormatString;
+        private LineRenderer _zeroBaselineRenderer;
 
         private void Awake()
         {
@@ -38,6 +45,8 @@ namespace AmpPortableDataViz.Presentation.Visualization
             {
                 lineRenderer.useWorldSpace = false;
             }
+
+            EnsureZeroBaselineRenderer();
 
             _baseGraphSize = graphSize;
             UpdateValueLabelFormatCache();
@@ -55,6 +64,11 @@ namespace AmpPortableDataViz.Presentation.Visualization
             if (!showValueLabel)
             {
                 HideValueLabel();
+            }
+
+            if (!showZeroBaseline)
+            {
+                HideZeroBaseline();
             }
         }
 
@@ -85,6 +99,7 @@ namespace AmpPortableDataViz.Presentation.Visualization
             {
                 lineRenderer.positionCount = 0;
                 HideValueLabel();
+                HideZeroBaseline();
                 return;
             }
 
@@ -133,7 +148,86 @@ namespace AmpPortableDataViz.Presentation.Visualization
             lineRenderer.endWidth = width;
 
             lineRenderer.SetPositions(_positions);
+            UpdateZeroBaseline(parameters, halfWidth, halfHeight, yRange, width);
             UpdateValueLabel(parameters, count);
+        }
+
+        private void UpdateZeroBaseline(in GraphParams parameters, float halfWidth, float halfHeight, float yRange, float lineWidth)
+        {
+            if (!showZeroBaseline || parameters.yMin > 0f || parameters.yMax < 0f)
+            {
+                HideZeroBaseline();
+                return;
+            }
+
+            var baseline = EnsureZeroBaselineRenderer();
+            if (baseline == null)
+            {
+                return;
+            }
+
+            float ny = (0f - parameters.yMin) / yRange;
+            if (clampToBounds)
+            {
+                ny = Mathf.Clamp01(ny);
+            }
+
+            float y = Mathf.Lerp(-halfHeight, halfHeight, ny);
+            baseline.gameObject.SetActive(true);
+            baseline.positionCount = 2;
+            baseline.startColor = zeroBaselineColor;
+            baseline.endColor = zeroBaselineColor;
+            baseline.startWidth = Mathf.Max(0f, lineWidth * zeroBaselineWidthMultiplier);
+            baseline.endWidth = Mathf.Max(0f, lineWidth * zeroBaselineWidthMultiplier);
+            baseline.SetPosition(0, new Vector3(-halfWidth, y, 0f));
+            baseline.SetPosition(1, new Vector3(halfWidth, y, 0f));
+        }
+
+        private LineRenderer EnsureZeroBaselineRenderer()
+        {
+            if (!showZeroBaseline)
+            {
+                return null;
+            }
+
+            if (_zeroBaselineRenderer != null)
+            {
+                return _zeroBaselineRenderer;
+            }
+
+            Transform existing = transform.Find("Zero Baseline");
+            if (existing != null)
+            {
+                _zeroBaselineRenderer = existing.GetComponent<LineRenderer>();
+            }
+
+            if (_zeroBaselineRenderer == null)
+            {
+                var baselineObject = new GameObject("Zero Baseline");
+                baselineObject.transform.SetParent(transform, false);
+                _zeroBaselineRenderer = baselineObject.AddComponent<LineRenderer>();
+            }
+
+            _zeroBaselineRenderer.useWorldSpace = false;
+            _zeroBaselineRenderer.loop = false;
+            _zeroBaselineRenderer.positionCount = 0;
+            if (lineRenderer != null)
+            {
+                _zeroBaselineRenderer.sharedMaterial = lineRenderer.sharedMaterial;
+                _zeroBaselineRenderer.sortingLayerID = lineRenderer.sortingLayerID;
+                _zeroBaselineRenderer.sortingOrder = lineRenderer.sortingOrder - 1;
+            }
+
+            return _zeroBaselineRenderer;
+        }
+
+        private void HideZeroBaseline()
+        {
+            if (_zeroBaselineRenderer != null)
+            {
+                _zeroBaselineRenderer.positionCount = 0;
+                _zeroBaselineRenderer.gameObject.SetActive(false);
+            }
         }
 
         private void UpdateValueLabel(in GraphParams parameters, int count)

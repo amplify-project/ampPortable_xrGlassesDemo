@@ -15,6 +15,12 @@ namespace AmpPortableDataViz.Core
         Valence
     }
 
+    public enum PhysioMetricsEncoding
+    {
+        ZScore,
+        LegacyStdDev
+    }
+
     /// <summary>
     /// Raw physiological metrics parsed from the device physio_metrics Redis channel.
     /// </summary>
@@ -22,6 +28,7 @@ namespace AmpPortableDataViz.Core
     public readonly struct PhysioMetricsSample
     {
         public readonly string DeviceId;
+        public readonly PhysioMetricsEncoding Encoding;
         public readonly float TonicElectrodermalActivityStdDev;
         public readonly float TemperatureRateOfChangeStdDev;
         public readonly float SkinConductanceResponseFrequencyStdDev;
@@ -35,8 +42,28 @@ namespace AmpPortableDataViz.Core
             float skinConductanceResponseFrequencyStdDev,
             float heartRateStdDev,
             float interBeatIntervalStdDev)
+            : this(
+                deviceId,
+                PhysioMetricsEncoding.ZScore,
+                tonicElectrodermalActivityStdDev,
+                temperatureRateOfChangeStdDev,
+                skinConductanceResponseFrequencyStdDev,
+                heartRateStdDev,
+                interBeatIntervalStdDev)
+        {
+        }
+
+        public PhysioMetricsSample(
+            string deviceId,
+            PhysioMetricsEncoding encoding,
+            float tonicElectrodermalActivityStdDev,
+            float temperatureRateOfChangeStdDev,
+            float skinConductanceResponseFrequencyStdDev,
+            float heartRateStdDev,
+            float interBeatIntervalStdDev)
         {
             DeviceId = deviceId ?? string.Empty;
+            Encoding = encoding;
             TonicElectrodermalActivityStdDev = Sanitize(tonicElectrodermalActivityStdDev);
             TemperatureRateOfChangeStdDev = Sanitize(temperatureRateOfChangeStdDev);
             SkinConductanceResponseFrequencyStdDev = Sanitize(skinConductanceResponseFrequencyStdDev);
@@ -47,6 +74,7 @@ namespace AmpPortableDataViz.Core
         public override string ToString()
         {
             return $"Device={DeviceId}, " +
+                $"Encoding={Encoding}, " +
                 $"TonicEDA={TonicElectrodermalActivityStdDev:F3}, " +
                 $"TempRate={TemperatureRateOfChangeStdDev:F3}, " +
                 $"SCRFreq={SkinConductanceResponseFrequencyStdDev:F3}, " +
@@ -67,6 +95,7 @@ namespace AmpPortableDataViz.Core
     public readonly struct AudienceSignalSample
     {
         public readonly string DeviceId;
+        public readonly PhysioMetricsEncoding PhysioEncoding;
         public readonly float TonicElectrodermalActivityStdDev;
         public readonly float TemperatureRateOfChangeStdDev;
         public readonly float SkinConductanceResponseFrequencyStdDev;
@@ -86,8 +115,34 @@ namespace AmpPortableDataViz.Core
             float engagement,
             float arousal,
             float valence)
+            : this(
+                deviceId,
+                PhysioMetricsEncoding.ZScore,
+                tonicElectrodermalActivityStdDev,
+                temperatureRateOfChangeStdDev,
+                skinConductanceResponseFrequencyStdDev,
+                heartRateStdDev,
+                interBeatIntervalStdDev,
+                engagement,
+                arousal,
+                valence)
+        {
+        }
+
+        public AudienceSignalSample(
+            string deviceId,
+            PhysioMetricsEncoding physioEncoding,
+            float tonicElectrodermalActivityStdDev,
+            float temperatureRateOfChangeStdDev,
+            float skinConductanceResponseFrequencyStdDev,
+            float heartRateStdDev,
+            float interBeatIntervalStdDev,
+            float engagement,
+            float arousal,
+            float valence)
         {
             DeviceId = deviceId ?? string.Empty;
+            PhysioEncoding = physioEncoding;
             TonicElectrodermalActivityStdDev = Sanitize(tonicElectrodermalActivityStdDev);
             TemperatureRateOfChangeStdDev = Sanitize(temperatureRateOfChangeStdDev);
             SkinConductanceResponseFrequencyStdDev = Sanitize(skinConductanceResponseFrequencyStdDev);
@@ -117,6 +172,7 @@ namespace AmpPortableDataViz.Core
         public override string ToString()
         {
             return $"Device={DeviceId}, " +
+                $"PhysioEncoding={PhysioEncoding}, " +
                 $"TonicEDA={TonicElectrodermalActivityStdDev:F3}, " +
                 $"TempRate={TemperatureRateOfChangeStdDev:F3}, " +
                 $"SCRFreq={SkinConductanceResponseFrequencyStdDev:F3}, " +

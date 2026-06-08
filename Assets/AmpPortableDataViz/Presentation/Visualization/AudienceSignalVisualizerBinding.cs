@@ -13,6 +13,13 @@ namespace AmpPortableDataViz.Presentation.Visualization
     [AddComponentMenu("Amp Portable Data Viz/Visualization/Audience Signal Visualizer Binding")]
     public sealed class AudienceSignalVisualizerBinding : MonoBehaviour
     {
+        private static readonly Vector2 SignedPhysioGraphRange = new Vector2(-3f, 3f);
+        private static readonly Vector2 LegacyTonicEdaRange = new Vector2(0.01f, 0.5f);
+        private static readonly Vector2 LegacyTemperatureRateRange = new Vector2(0.001f, 0.1f);
+        private static readonly Vector2 LegacyScrFrequencyRange = new Vector2(0.5f, 5f);
+        private static readonly Vector2 LegacyHeartRateRange = new Vector2(1f, 10f);
+        private static readonly Vector2 LegacyInterBeatIntervalRange = new Vector2(10f, 100f);
+
         public enum SourceMode
         {
             Auto,
@@ -284,7 +291,7 @@ namespace AmpPortableDataViz.Presentation.Visualization
                     continue;
                 }
 
-                float value = frame.Payload.GetMetricValue(graphStreams[i].Metric);
+                float value = ResolveGraphValue(graphStreams[i].Metric, frame.Payload);
                 AppendGraphSample(i, value, frame.TimestampTicksUtc);
             }
         }
@@ -503,6 +510,13 @@ namespace AmpPortableDataViz.Presentation.Visualization
 
         private void ResolveYRange(int index, GraphMetricBinding binding, IReadOnlyList<Vector2> samples, out float yMin, out float yMax)
         {
+            if (IsPhysioMetric(binding.Metric))
+            {
+                yMin = SignedPhysioGraphRange.x;
+                yMax = SignedPhysioGraphRange.y;
+                return;
+            }
+
             yMin = binding.YRange.x;
             yMax = binding.YRange.y;
             NormalizeRange(ref yMin, ref yMax);
@@ -581,6 +595,46 @@ namespace AmpPortableDataViz.Presentation.Visualization
             yMin = Mathf.Clamp(_graphCurrentYMin[index], hardMin, hardMax);
             yMax = Mathf.Clamp(_graphCurrentYMax[index], hardMin, hardMax);
             NormalizeRange(ref yMin, ref yMax);
+        }
+
+        private static float ResolveGraphValue(AudienceMetricKind metricKind, AudienceSignalSample sample)
+        {
+            float value = sample.GetMetricValue(metricKind);
+            if (!IsPhysioMetric(metricKind))
+            {
+                return value;
+            }
+
+            if (sample.PhysioEncoding != PhysioMetricsEncoding.LegacyStdDev)
+            {
+                return Mathf.Clamp(value, SignedPhysioGraphRange.x, SignedPhysioGraphRange.y);
+            }
+
+            return Mathf.Clamp(NormalizeLegacyPhysioValue(metricKind, value) * SignedPhysioGraphRange.y, 0f, SignedPhysioGraphRange.y);
+        }
+
+        private static float NormalizeLegacyPhysioValue(AudienceMetricKind metricKind, float value)
+        {
+            Vector2 range = metricKind switch
+            {
+                AudienceMetricKind.TonicElectrodermalActivityStdDev => LegacyTonicEdaRange,
+                AudienceMetricKind.TemperatureRateOfChangeStdDev => LegacyTemperatureRateRange,
+                AudienceMetricKind.SkinConductanceResponseFrequencyStdDev => LegacyScrFrequencyRange,
+                AudienceMetricKind.HeartRateStdDev => LegacyHeartRateRange,
+                AudienceMetricKind.InterBeatIntervalStdDev => LegacyInterBeatIntervalRange,
+                _ => new Vector2(0f, 1f)
+            };
+
+            return Mathf.Clamp01(Mathf.InverseLerp(range.x, range.y, value));
+        }
+
+        private static bool IsPhysioMetric(AudienceMetricKind metricKind)
+        {
+            return metricKind == AudienceMetricKind.TonicElectrodermalActivityStdDev ||
+                metricKind == AudienceMetricKind.TemperatureRateOfChangeStdDev ||
+                metricKind == AudienceMetricKind.SkinConductanceResponseFrequencyStdDev ||
+                metricKind == AudienceMetricKind.HeartRateStdDev ||
+                metricKind == AudienceMetricKind.InterBeatIntervalStdDev;
         }
 
         private static void NormalizeRange(ref float min, ref float max)

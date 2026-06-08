@@ -145,6 +145,7 @@ namespace AmpPortableDataViz.Presentation.Visualization
             public float Lifetime;
             public float Radius;
             public float Intensity;
+            public float Direction;
         }
 
         private struct ScrSpark
@@ -166,12 +167,13 @@ namespace AmpPortableDataViz.Presentation.Visualization
             public float Radius;
             public float Intensity;
             public float PhaseSeed;
+            public float Direction;
         }
 
         private ScrEvent[] _scrEvents;
         private float _scrEventAccumulator;
         private int _nextScrEventIndex;
-        private float _previousScrFrequency = 0.5f;
+        private float _previousScrFrequency;
 
         private ScrSpark[] _scrSparks;
         private ParticleSystem.Particle[] _scrSparkParticles;
@@ -206,20 +208,20 @@ namespace AmpPortableDataViz.Presentation.Visualization
         private bool _needsRebuild = true;
         private float _localTime;
 
-        private float _tonicEda = 0.5f;
-        private float _temperatureRate = 0.5f;
-        private float _scrFrequency = 0.5f;
-        private float _heartRate = 0.5f;
-        private float _interBeatInterval = 0.5f;
+        private float _tonicEda;
+        private float _temperatureRate;
+        private float _scrFrequency;
+        private float _heartRate;
+        private float _interBeatInterval;
         private float _facialArousal = 0.5f;
         private float _facialValence = 0.5f;
         private float _engagement = 0.5f;
 
-        private float _targetTonicEda = 0.5f;
-        private float _targetTemperatureRate = 0.5f;
-        private float _targetScrFrequency = 0.5f;
-        private float _targetHeartRate = 0.5f;
-        private float _targetInterBeatInterval = 0.5f;
+        private float _targetTonicEda;
+        private float _targetTemperatureRate;
+        private float _targetScrFrequency;
+        private float _targetHeartRate;
+        private float _targetInterBeatInterval;
         private float _targetFacialArousal = 0.5f;
         private float _targetFacialValence = 0.5f;
         private float _targetEngagement = 0.5f;
@@ -598,15 +600,18 @@ namespace AmpPortableDataViz.Presentation.Visualization
                 }
             }
 
-            float sustainedDrive = Mathf.InverseLerp(scrEventThreshold, 1f, _scrFrequency);
-            float riseDrive = Mathf.Max(0f, _scrFrequency - _previousScrFrequency) * Mathf.Max(0f, scrRiseEventGain);
+            float scrMagnitude = Mathf.Abs(_scrFrequency);
+            float previousScrMagnitude = Mathf.Abs(_previousScrFrequency);
+            float sustainedDrive = Mathf.InverseLerp(scrEventThreshold, 1f, scrMagnitude);
+            float riseDrive = Mathf.Max(0f, scrMagnitude - previousScrMagnitude) * Mathf.Max(0f, scrRiseEventGain);
             _scrEventAccumulator += sustainedDrive * Mathf.Max(0f, scrEventsPerSecondAtMax) * safeDeltaTime;
             _scrEventAccumulator += riseDrive;
 
             int spawnedThisFrame = 0;
             while (_scrEventAccumulator >= 1f && spawnedThisFrame < 4)
             {
-                SpawnScrEvent(Mathf.Clamp01(Mathf.Max(_scrFrequency, sustainedDrive)));
+                float direction = _scrFrequency < 0f ? -1f : 1f;
+                SpawnScrEvent(direction * Mathf.Clamp01(Mathf.Max(scrMagnitude, sustainedDrive)));
                 _scrEventAccumulator -= 1f;
                 spawnedThisFrame++;
             }
@@ -619,7 +624,7 @@ namespace AmpPortableDataViz.Presentation.Visualization
             _previousScrFrequency = _scrFrequency;
         }
 
-        private void SpawnScrEvent(float intensity)
+        private void SpawnScrEvent(float signedIntensity)
         {
             if (_scrEvents == null || _scrEvents.Length == 0)
             {
@@ -632,7 +637,8 @@ namespace AmpPortableDataViz.Presentation.Visualization
 
             float u = Mathf.Repeat(placementIndex * 0.6180339f + _localTime * 0.037f, 1f);
             float v = Mathf.Repeat(placementIndex * 0.381966f + Mathf.Sin(_localTime * 0.11f + placementIndex) * 0.17f, 1f);
-            float clampedIntensity = Mathf.Clamp01(intensity);
+            float direction = signedIntensity < 0f ? -1f : 1f;
+            float clampedIntensity = Mathf.Clamp01(Mathf.Abs(signedIntensity));
 
             _scrEvents[eventIndex] = new ScrEvent
             {
@@ -641,13 +647,14 @@ namespace AmpPortableDataViz.Presentation.Visualization
                 Age = 0f,
                 Lifetime = Mathf.Max(0.1f, scrEventLifetime) * Mathf.Lerp(0.75f, 1.35f, clampedIntensity),
                 Radius = Mathf.Max(0.01f, scrEventRadius) * Mathf.Lerp(0.75f, 1.4f, clampedIntensity),
-                Intensity = Mathf.Lerp(0.35f, 1f, clampedIntensity)
+                Intensity = Mathf.Lerp(0.35f, 1f, clampedIntensity),
+                Direction = direction
             };
 
-            SpawnScrSparks(new Vector2(u, v), clampedIntensity);
+            SpawnScrSparks(new Vector2(u, v), direction * clampedIntensity);
         }
 
-        private void SpawnScrSparks(Vector2 centerUv, float intensity)
+        private void SpawnScrSparks(Vector2 centerUv, float signedIntensity)
         {
             EnsureScrSparkCapacity();
             if (_scrSparks == null || _scrSparks.Length == 0 || scrSparksPerEventAtMax <= 0)
@@ -655,7 +662,8 @@ namespace AmpPortableDataViz.Presentation.Visualization
                 return;
             }
 
-            float clampedIntensity = Mathf.Clamp01(intensity);
+            float direction = signedIntensity < 0f ? -1f : 1f;
+            float clampedIntensity = Mathf.Clamp01(Mathf.Abs(signedIntensity));
             int sparkCount = Mathf.Clamp(
                 Mathf.RoundToInt(Mathf.Lerp(1f, scrSparksPerEventAtMax, clampedIntensity)),
                 0,
@@ -678,11 +686,14 @@ namespace AmpPortableDataViz.Presentation.Visualization
                 float angle = seed * Tau;
                 float radius = spread * Mathf.Lerp(0.25f, 1f, Mathf.Repeat(seed * 0.7548777f, 1f));
                 Vector3 lateral = new Vector3(Mathf.Cos(angle), 0f, Mathf.Sin(angle)) * radius;
+                Vector3 velocity = direction > 0f
+                    ? (lateral / lifetime) + (Vector3.up * lift)
+                    : (-lateral / lifetime) + (Vector3.down * lift);
                 _scrSparks[sparkIndex] = new ScrSpark
                 {
                     Active = true,
                     Position = origin + lateral * 0.2f,
-                    Velocity = (lateral / lifetime) + (Vector3.up * lift),
+                    Velocity = velocity,
                     Age = 0f,
                     Lifetime = lifetime,
                     Intensity = Mathf.Lerp(0.35f, 1f, clampedIntensity),
@@ -827,7 +838,7 @@ namespace AmpPortableDataViz.Presentation.Visualization
             }
 
             float baseHz = Mathf.Max(20f, rhythmBaseBpm) / 60f;
-            float rateMultiplier = Mathf.Lerp(0.85f, 1f + Mathf.Max(0f, rhythmRateStdDevBoost), _heartRate);
+            float rateMultiplier = Mathf.Clamp(1f + _heartRate * Mathf.Max(0f, rhythmRateStdDevBoost), 0.25f, 3f);
             _rhythmPhase += baseHz * rateMultiplier * safeDeltaTime;
 
             int spawnedThisFrame = 0;
@@ -844,7 +855,7 @@ namespace AmpPortableDataViz.Presentation.Visualization
             }
         }
 
-        private void SpawnRhythmPulse(float intensity)
+        private void SpawnRhythmPulse(float signedIntensity)
         {
             if (_rhythmPulses == null || _rhythmPulses.Length == 0)
             {
@@ -855,7 +866,8 @@ namespace AmpPortableDataViz.Presentation.Visualization
             float placementIndex = _nextRhythmPulseIndex;
             _nextRhythmPulseIndex++;
 
-            float clampedIntensity = Mathf.Clamp01(intensity);
+            float direction = signedIntensity < 0f ? -1f : 1f;
+            float clampedIntensity = Mathf.Clamp01(Mathf.Abs(signedIntensity));
             _rhythmPulses[pulseIndex] = new RhythmPulse
             {
                 Active = true,
@@ -863,7 +875,8 @@ namespace AmpPortableDataViz.Presentation.Visualization
                 Lifetime = Mathf.Max(0.1f, rhythmPulseLifetime) * Mathf.Lerp(1.15f, 0.85f, clampedIntensity),
                 Radius = Mathf.Max(0.01f, rhythmPulseRadius) * Mathf.Lerp(0.85f, 1.25f, clampedIntensity),
                 Intensity = Mathf.Lerp(0.35f, 1f, clampedIntensity),
-                PhaseSeed = placementIndex * 1.6180339f
+                PhaseSeed = placementIndex * 1.6180339f,
+                Direction = direction
             };
         }
 
@@ -1477,11 +1490,17 @@ namespace AmpPortableDataViz.Presentation.Visualization
                 return;
             }
 
-            float formCompression = Mathf.Lerp(1.2f, 0.62f, _tonicEda);
-            float formLift = Mathf.Lerp(0.02f, 0.2f, _tonicEda);
-            float contourAmplitude = Mathf.Lerp(0.025f, 0.38f, _temperatureRate);
-            float contourFrequency = Mathf.Lerp(0.35f, 1.25f, _temperatureRate);
-            float contourDrift = _localTime * Mathf.Lerp(0.015f, 0.12f, _temperatureRate);
+            float tonicMagnitude = Mathf.Abs(_tonicEda);
+            float temperatureMagnitude = Mathf.Abs(_temperatureRate);
+            float scrMagnitude = Mathf.Abs(_scrFrequency);
+            float heartMagnitude = Mathf.Abs(_heartRate);
+            float ibiMagnitude = Mathf.Abs(_interBeatInterval);
+            float formCompression = Mathf.Lerp(1f, _tonicEda >= 0f ? 0.62f : 1.45f, tonicMagnitude);
+            float formLift = Mathf.Lerp(0.02f, _tonicEda >= 0f ? 0.2f : -0.08f, tonicMagnitude);
+            float contourAmplitude = Mathf.Lerp(0.025f, 0.38f, temperatureMagnitude);
+            float contourFrequency = Mathf.Lerp(0.35f, 1.25f, temperatureMagnitude);
+            float contourDirection = _temperatureRate < 0f ? -1f : 1f;
+            float contourDrift = _localTime * contourDirection * Mathf.Lerp(0.015f, 0.12f, temperatureMagnitude);
             float arousalMotion = Mathf.Clamp01(_facialArousal);
             float engagementSolidity = Mathf.Clamp01(_engagement);
             float engagementLooseness = 1f - engagementSolidity;
@@ -1489,7 +1508,7 @@ namespace AmpPortableDataViz.Presentation.Visualization
             float coherence = Mathf.Clamp01((engagementSolidity * meshCoherence * engagementMeshSurfaceStrength) + 0.15f);
             float arousalTurbulence = Mathf.Lerp(arousalTurbulenceMin, arousalTurbulenceMax, arousalMotion);
             float affectMotionSpeed = Mathf.Lerp(arousalMotionSpeedMin, arousalMotionSpeedMax, arousalMotion);
-            float noiseAmount = turbulenceStrength * (arousalTurbulence + _interBeatInterval * 0.08f) * Mathf.Lerp(1f, 0.65f, coherence);
+            float noiseAmount = turbulenceStrength * (arousalTurbulence + ibiMagnitude * 0.08f) * Mathf.Lerp(1f, 0.65f, coherence);
             float morphSmoothTime = baseMorphSmoothTime * Mathf.Lerp(arousalMorphSmoothMax, arousalMorphSmoothMin, arousalMotion);
             float engagementAlpha = Mathf.Lerp(lowEngagementAlpha, highEngagementAlpha, engagementSolidity);
             float engagementParticleScale = Mathf.Lerp(lowEngagementParticleScale, highEngagementParticleScale, engagementSolidity);
@@ -1510,7 +1529,7 @@ namespace AmpPortableDataViz.Presentation.Visualization
 
                 _vertices[i] = Vector3.SmoothDamp(_vertices[i], target, ref _velocities[i], Mathf.Max(0.01f, morphSmoothTime), Mathf.Infinity, deltaTime);
 
-                float localEnergy = Mathf.Clamp01(arousalMotion * 0.5f + _heartRate * 0.25f + _scrFrequency * 0.25f);
+                float localEnergy = Mathf.Clamp01(arousalMotion * 0.5f + heartMagnitude * 0.25f + scrMagnitude * 0.25f);
                 Color vertexColor = Color.Lerp(valenceColor, Color.white, Mathf.Clamp01(localEnergy * 0.25f + rhythmEnergy * 0.35f + scrEventEnergy * 0.65f));
                 vertexColor.a = Mathf.Lerp(engagementAlpha, highEngagementAlpha, Mathf.Max(rhythmEnergy * 0.25f, scrEventEnergy * 0.35f));
                 _colors[i] = vertexColor;
@@ -1577,14 +1596,28 @@ namespace AmpPortableDataViz.Presentation.Visualization
                 }
 
                 float normalizedAge = Mathf.Clamp01(_scrEvents[i].Age / Mathf.Max(0.0001f, _scrEvents[i].Lifetime));
-                float ringRadius = _scrEvents[i].Radius * normalizedAge;
+                float eventDirection = _scrEvents[i].Direction < 0f ? -1f : 1f;
+                float ringRadius = _scrEvents[i].Radius * (eventDirection < 0f ? 1f - normalizedAge : normalizedAge);
                 float ringWidth = Mathf.Lerp(0.025f, 0.07f, _scrEvents[i].Intensity);
                 float distance = Vector2.Distance(uv, _scrEvents[i].CenterUv);
                 float ring = 1f - Mathf.Clamp01(Mathf.Abs(distance - ringRadius) / ringWidth);
                 float envelope = Mathf.Sin(normalizedAge * Mathf.PI) * (1f - normalizedAge * 0.35f);
                 float energy = ring * envelope * _scrEvents[i].Intensity;
 
-                offset += Vector3.up * energy * scrEventDisplacement;
+                if (eventDirection < 0f)
+                {
+                    var implosion = new Vector3(_scrEvents[i].CenterUv.x - u, 0f, _scrEvents[i].CenterUv.y - v);
+                    if (implosion.sqrMagnitude > 1e-5f)
+                    {
+                        implosion.Normalize();
+                    }
+
+                    offset += (Vector3.down + implosion * 0.65f) * energy * scrEventDisplacement;
+                }
+                else
+                {
+                    offset += Vector3.up * energy * scrEventDisplacement;
+                }
                 if (energy > eventEnergy)
                 {
                     eventEnergy = energy;
@@ -1603,14 +1636,20 @@ namespace AmpPortableDataViz.Presentation.Visualization
             float z = v - 0.5f;
             float distance = Mathf.Sqrt((x * x) + (z * z));
             float angle = Mathf.Atan2(z, x);
-            float phaseSpread = _interBeatInterval * ibiPhaseSpread;
+            float ibiMagnitude = Mathf.Abs(_interBeatInterval);
+            float ibiDirection = _interBeatInterval < 0f ? -1f : 1f;
+            float phaseSpread = ibiMagnitude * ibiPhaseSpread;
             float pulseScale = Mathf.Clamp(pulseStrength / 0.2f, 0f, 3f);
-            float breathPhase = _rhythmPhase + Mathf.Sin((x - z) * Tau) * phaseSpread;
-            float breathEnergy = Mathf.Clamp01(Mathf.Sin(breathPhase * Tau) * 0.5f + 0.5f) * Mathf.Lerp(0.25f, 1f, _heartRate);
+            float breathPhase = _rhythmPhase + Mathf.Sin((x - z) * Tau) * phaseSpread * ibiDirection;
+            float heartMagnitude = Mathf.Abs(_heartRate);
+            float breathEnergy = Mathf.Clamp01(Mathf.Sin(breathPhase * Tau) * 0.5f + 0.5f) * Mathf.Lerp(0.25f, 1f, heartMagnitude);
+            float ibiRadiusBias = Mathf.Lerp(1f, ibiDirection > 0f ? 1.35f : 0.65f, ibiMagnitude);
+            float ibiRingWidthBias = Mathf.Lerp(1f, ibiDirection > 0f ? 1.3f : 0.75f, ibiMagnitude);
+            float ibiBreakBias = Mathf.Lerp(1f, ibiDirection > 0f ? 0.55f : 1.75f, ibiMagnitude);
             Vector3 radialDirection = distance > 0.0001f
                 ? new Vector3(x / distance, 0f, z / distance)
                 : Vector3.zero;
-            Vector3 offset = radialDirection * breathEnergy * rhythmBreathDisplacement * pulseScale;
+            Vector3 offset = radialDirection * breathEnergy * rhythmBreathDisplacement * pulseScale * ibiRadiusBias;
 
             if (_rhythmPulses == null || _rhythmPulses.Length == 0)
             {
@@ -1626,20 +1665,26 @@ namespace AmpPortableDataViz.Presentation.Visualization
                 }
 
                 float normalizedAge = Mathf.Clamp01(_rhythmPulses[i].Age / Mathf.Max(0.0001f, _rhythmPulses[i].Lifetime));
-                float stagger = Mathf.Sin(angle * Mathf.Lerp(1.5f, 5f, _interBeatInterval) + _rhythmPulses[i].PhaseSeed) * phaseSpread;
+                float stagger = Mathf.Sin(angle * Mathf.Lerp(1.5f, 5f, ibiMagnitude) + _rhythmPulses[i].PhaseSeed) * phaseSpread * ibiDirection;
                 float localAge = Mathf.Clamp01(normalizedAge + stagger);
-                float ringRadius = _rhythmPulses[i].Radius * localAge;
-                float ringWidth = Mathf.Lerp(0.025f, 0.075f, _rhythmPulses[i].Intensity);
+                float pulseDirection = _rhythmPulses[i].Direction < 0f ? -1f : 1f;
+                float ringProgress = pulseDirection < 0f ? 1f - localAge : localAge;
+                float ringRadius = _rhythmPulses[i].Radius * ringProgress * ibiRadiusBias;
+                float ringWidth = Mathf.Lerp(0.025f, 0.075f, _rhythmPulses[i].Intensity) * ibiRingWidthBias;
                 float ring = 1f - Mathf.Clamp01(Mathf.Abs(distance - ringRadius) / ringWidth);
                 float envelope = Mathf.Sin(localAge * Mathf.PI) * (1f - localAge * 0.2f);
-                float breakStrength = Mathf.Clamp01(_interBeatInterval * ibiBreakAmount);
+                float breakStrength = Mathf.Clamp01(ibiMagnitude * ibiBreakAmount * ibiBreakBias);
                 float segments = Mathf.Lerp(3f, 9f, breakStrength);
                 float breakPattern = Mathf.Sin(angle * segments + _rhythmPulses[i].PhaseSeed);
                 float breakThreshold = Mathf.Lerp(-1f, 0.35f, breakStrength);
                 float arcMask = Mathf.Lerp(1f, breakPattern > breakThreshold ? 1f : 0.12f, breakStrength);
                 float energy = ring * envelope * _rhythmPulses[i].Intensity * arcMask;
 
-                offset += Vector3.up * energy * rhythmPulseDisplacement * pulseScale;
+                Vector3 pulseOffsetDirection = pulseDirection < 0f
+                    ? Vector3.down + (-radialDirection * 0.65f)
+                    : Vector3.up;
+                Vector3 ibiSpacingOffset = radialDirection * ibiDirection * ibiMagnitude * energy * rhythmPulseDisplacement * pulseScale * 0.85f;
+                offset += (pulseOffsetDirection * energy * rhythmPulseDisplacement * pulseScale) + ibiSpacingOffset;
                 if (energy > rhythmEnergy)
                 {
                     rhythmEnergy = energy;

@@ -14,6 +14,13 @@ namespace AmpPortableDataViz.Presentation.Visualization
     [AddComponentMenu("Amp Portable Data Viz/Visualization/Audience Signal Binding")]
     public sealed class AudienceSignalBinding : MonoBehaviour, IDataSource<AudienceSignalSample>
     {
+        private static readonly Vector2 SignedPhysioGraphRange = new Vector2(-3f, 3f);
+        private static readonly Vector2 LegacyTonicEdaRange = new Vector2(0.01f, 0.5f);
+        private static readonly Vector2 LegacyTemperatureRateRange = new Vector2(0.001f, 0.1f);
+        private static readonly Vector2 LegacyScrFrequencyRange = new Vector2(0.5f, 5f);
+        private static readonly Vector2 LegacyHeartRateRange = new Vector2(1f, 10f);
+        private static readonly Vector2 LegacyInterBeatIntervalRange = new Vector2(10f, 100f);
+
         [Serializable]
         private struct GraphMetricBinding
         {
@@ -239,11 +246,11 @@ namespace AmpPortableDataViz.Presentation.Visualization
                 Debug.Log($"AudienceSignalBinding[{ResolveDeviceId()}] physio {frame.Payload} seq={frame.SequenceId} ts={frame.TimestampTicksUtc}", this);
             }
 
-            AppendGraphSample(AudienceMetricKind.TonicElectrodermalActivityStdDev, frame.Payload.TonicElectrodermalActivityStdDev, frame.TimestampTicksUtc);
-            AppendGraphSample(AudienceMetricKind.TemperatureRateOfChangeStdDev, frame.Payload.TemperatureRateOfChangeStdDev, frame.TimestampTicksUtc);
-            AppendGraphSample(AudienceMetricKind.SkinConductanceResponseFrequencyStdDev, frame.Payload.SkinConductanceResponseFrequencyStdDev, frame.TimestampTicksUtc);
-            AppendGraphSample(AudienceMetricKind.HeartRateStdDev, frame.Payload.HeartRateStdDev, frame.TimestampTicksUtc);
-            AppendGraphSample(AudienceMetricKind.InterBeatIntervalStdDev, frame.Payload.InterBeatIntervalStdDev, frame.TimestampTicksUtc);
+            AppendGraphSample(AudienceMetricKind.TonicElectrodermalActivityStdDev, ResolvePhysioGraphValue(AudienceMetricKind.TonicElectrodermalActivityStdDev, frame.Payload), frame.TimestampTicksUtc);
+            AppendGraphSample(AudienceMetricKind.TemperatureRateOfChangeStdDev, ResolvePhysioGraphValue(AudienceMetricKind.TemperatureRateOfChangeStdDev, frame.Payload), frame.TimestampTicksUtc);
+            AppendGraphSample(AudienceMetricKind.SkinConductanceResponseFrequencyStdDev, ResolvePhysioGraphValue(AudienceMetricKind.SkinConductanceResponseFrequencyStdDev, frame.Payload), frame.TimestampTicksUtc);
+            AppendGraphSample(AudienceMetricKind.HeartRateStdDev, ResolvePhysioGraphValue(AudienceMetricKind.HeartRateStdDev, frame.Payload), frame.TimestampTicksUtc);
+            AppendGraphSample(AudienceMetricKind.InterBeatIntervalStdDev, ResolvePhysioGraphValue(AudienceMetricKind.InterBeatIntervalStdDev, frame.Payload), frame.TimestampTicksUtc);
             TryApplyParticleMesh();
         }
 
@@ -322,6 +329,7 @@ namespace AmpPortableDataViz.Presentation.Visualization
         {
             return new AudienceSignalSample(
                 ResolveDeviceId(),
+                _latestPhysio.Encoding,
                 _latestPhysio.TonicElectrodermalActivityStdDev,
                 _latestPhysio.TemperatureRateOfChangeStdDev,
                 _latestPhysio.SkinConductanceResponseFrequencyStdDev,
@@ -615,6 +623,13 @@ namespace AmpPortableDataViz.Presentation.Visualization
 
         private void ResolveYRange(int index, GraphMetricBinding binding, IReadOnlyList<Vector2> samples, out float yMin, out float yMax)
         {
+            if (IsPhysioMetric(binding.Metric))
+            {
+                yMin = SignedPhysioGraphRange.x;
+                yMax = SignedPhysioGraphRange.y;
+                return;
+            }
+
             yMin = binding.YRange.x;
             yMax = binding.YRange.y;
             NormalizeRange(ref yMin, ref yMax);
@@ -693,6 +708,50 @@ namespace AmpPortableDataViz.Presentation.Visualization
             yMin = Mathf.Clamp(_graphCurrentYMin[index], hardMin, hardMax);
             yMax = Mathf.Clamp(_graphCurrentYMax[index], hardMin, hardMax);
             NormalizeRange(ref yMin, ref yMax);
+        }
+
+        private static float ResolvePhysioGraphValue(AudienceMetricKind metricKind, PhysioMetricsSample sample)
+        {
+            float value = metricKind switch
+            {
+                AudienceMetricKind.TonicElectrodermalActivityStdDev => sample.TonicElectrodermalActivityStdDev,
+                AudienceMetricKind.TemperatureRateOfChangeStdDev => sample.TemperatureRateOfChangeStdDev,
+                AudienceMetricKind.SkinConductanceResponseFrequencyStdDev => sample.SkinConductanceResponseFrequencyStdDev,
+                AudienceMetricKind.HeartRateStdDev => sample.HeartRateStdDev,
+                AudienceMetricKind.InterBeatIntervalStdDev => sample.InterBeatIntervalStdDev,
+                _ => 0f
+            };
+
+            if (sample.Encoding != PhysioMetricsEncoding.LegacyStdDev)
+            {
+                return Mathf.Clamp(value, SignedPhysioGraphRange.x, SignedPhysioGraphRange.y);
+            }
+
+            return Mathf.Clamp(NormalizeLegacyPhysioValue(metricKind, value) * SignedPhysioGraphRange.y, 0f, SignedPhysioGraphRange.y);
+        }
+
+        private static float NormalizeLegacyPhysioValue(AudienceMetricKind metricKind, float value)
+        {
+            Vector2 range = metricKind switch
+            {
+                AudienceMetricKind.TonicElectrodermalActivityStdDev => LegacyTonicEdaRange,
+                AudienceMetricKind.TemperatureRateOfChangeStdDev => LegacyTemperatureRateRange,
+                AudienceMetricKind.SkinConductanceResponseFrequencyStdDev => LegacyScrFrequencyRange,
+                AudienceMetricKind.HeartRateStdDev => LegacyHeartRateRange,
+                AudienceMetricKind.InterBeatIntervalStdDev => LegacyInterBeatIntervalRange,
+                _ => new Vector2(0f, 1f)
+            };
+
+            return Mathf.Clamp01(Mathf.InverseLerp(range.x, range.y, value));
+        }
+
+        private static bool IsPhysioMetric(AudienceMetricKind metricKind)
+        {
+            return metricKind == AudienceMetricKind.TonicElectrodermalActivityStdDev ||
+                metricKind == AudienceMetricKind.TemperatureRateOfChangeStdDev ||
+                metricKind == AudienceMetricKind.SkinConductanceResponseFrequencyStdDev ||
+                metricKind == AudienceMetricKind.HeartRateStdDev ||
+                metricKind == AudienceMetricKind.InterBeatIntervalStdDev;
         }
 
         private static void NormalizeRange(ref float min, ref float max)

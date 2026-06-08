@@ -8,6 +8,7 @@ namespace AmpPortableDataViz.Presentation.Mapping
         [System.Serializable]
         public struct Settings
         {
+            public Vector2 PhysioZScoreRange;
             public Vector2 TonicElectrodermalActivityRange;
             public Vector2 TemperatureRateOfChangeRange;
             public Vector2 SkinConductanceResponseFrequencyRange;
@@ -30,11 +31,11 @@ namespace AmpPortableDataViz.Presentation.Mapping
 
             return new ParticleMeshSignalSample(
                 payload.DeviceId,
-                Normalize(payload.TonicElectrodermalActivityStdDev, settings.TonicElectrodermalActivityRange),
-                Normalize(payload.TemperatureRateOfChangeStdDev, settings.TemperatureRateOfChangeRange),
-                Normalize(payload.SkinConductanceResponseFrequencyStdDev, settings.SkinConductanceResponseFrequencyRange),
-                Normalize(payload.HeartRateStdDev, settings.HeartRateRange),
-                Normalize(payload.InterBeatIntervalStdDev, settings.InterBeatIntervalRange),
+                MapPhysio(payload.TonicElectrodermalActivityStdDev, payload.PhysioEncoding, settings.TonicElectrodermalActivityRange, settings.PhysioZScoreRange),
+                MapPhysio(payload.TemperatureRateOfChangeStdDev, payload.PhysioEncoding, settings.TemperatureRateOfChangeRange, settings.PhysioZScoreRange),
+                MapPhysio(payload.SkinConductanceResponseFrequencyStdDev, payload.PhysioEncoding, settings.SkinConductanceResponseFrequencyRange, settings.PhysioZScoreRange),
+                MapPhysio(payload.HeartRateStdDev, payload.PhysioEncoding, settings.HeartRateRange, settings.PhysioZScoreRange),
+                MapPhysio(payload.InterBeatIntervalStdDev, payload.PhysioEncoding, settings.InterBeatIntervalRange, settings.PhysioZScoreRange),
                 Normalize(payload.Arousal, settings.EmotionRange),
                 Normalize(payload.Valence, settings.EmotionRange),
                 payload.Engagement);
@@ -44,6 +45,7 @@ namespace AmpPortableDataViz.Presentation.Mapping
         {
             return new Settings
             {
+                PhysioZScoreRange = new Vector2(-3f, 3f),
                 TonicElectrodermalActivityRange = new Vector2(0.01f, 0.5f),
                 TemperatureRateOfChangeRange = new Vector2(0.001f, 0.1f),
                 SkinConductanceResponseFrequencyRange = new Vector2(0.5f, 5f),
@@ -55,6 +57,12 @@ namespace AmpPortableDataViz.Presentation.Mapping
 
         private static Settings ResolveSettings(Settings settings)
         {
+            NormalizeRange(ref settings.PhysioZScoreRange);
+            if (settings.PhysioZScoreRange == new Vector2(0f, 1f))
+            {
+                settings.PhysioZScoreRange = new Vector2(-3f, 3f);
+            }
+
             NormalizeRange(ref settings.TonicElectrodermalActivityRange);
             NormalizeRange(ref settings.TemperatureRateOfChangeRange);
             NormalizeRange(ref settings.SkinConductanceResponseFrequencyRange);
@@ -62,6 +70,23 @@ namespace AmpPortableDataViz.Presentation.Mapping
             NormalizeRange(ref settings.InterBeatIntervalRange);
             NormalizeRange(ref settings.EmotionRange);
             return settings;
+        }
+
+        private static float MapPhysio(float value, PhysioMetricsEncoding encoding, Vector2 legacyRange, Vector2 zScoreRange)
+        {
+            if (encoding == PhysioMetricsEncoding.LegacyStdDev)
+            {
+                return Normalize(value, legacyRange);
+            }
+
+            return NormalizeSigned(value, zScoreRange);
+        }
+
+        private static float NormalizeSigned(float value, Vector2 range)
+        {
+            float midpoint = (range.x + range.y) * 0.5f;
+            float halfRange = Mathf.Max(1e-5f, (range.y - range.x) * 0.5f);
+            return Mathf.Clamp((value - midpoint) / halfRange, -1f, 1f);
         }
 
         private static float Normalize(float value, Vector2 range)

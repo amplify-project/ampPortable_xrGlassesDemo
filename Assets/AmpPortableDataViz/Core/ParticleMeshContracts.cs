@@ -5,6 +5,7 @@ namespace AmpPortableDataViz.Core
 {
     /// <summary>
     /// Combined normalized signal snapshot for the ParticleMesh visualizer.
+    /// Physiological channels are signed -1..1 values; emotion and engagement remain 0..1.
     /// </summary>
     [Serializable]
     public readonly struct ParticleMeshSignalSample
@@ -31,11 +32,11 @@ namespace AmpPortableDataViz.Core
             float engagement)
         {
             DeviceId = deviceId ?? string.Empty;
-            TonicElectrodermalActivityStdDev = Mathf.Clamp01(tonicElectrodermalActivityStdDev);
-            TemperatureRateOfChangeStdDev = Mathf.Clamp01(temperatureRateOfChangeStdDev);
-            SkinConductanceResponseFrequencyStdDev = Mathf.Clamp01(skinConductanceResponseFrequencyStdDev);
-            HeartRateStdDev = Mathf.Clamp01(heartRateStdDev);
-            InterBeatIntervalStdDev = Mathf.Clamp01(interBeatIntervalStdDev);
+            TonicElectrodermalActivityStdDev = ClampSigned(tonicElectrodermalActivityStdDev);
+            TemperatureRateOfChangeStdDev = ClampSigned(temperatureRateOfChangeStdDev);
+            SkinConductanceResponseFrequencyStdDev = ClampSigned(skinConductanceResponseFrequencyStdDev);
+            HeartRateStdDev = ClampSigned(heartRateStdDev);
+            InterBeatIntervalStdDev = ClampSigned(interBeatIntervalStdDev);
             FacialEmotionArousal = Mathf.Clamp01(facialEmotionArousal);
             FacialEmotionValence = Mathf.Clamp01(facialEmotionValence);
             Engagement = Mathf.Clamp01(engagement);
@@ -52,6 +53,16 @@ namespace AmpPortableDataViz.Core
                 $"FacialEmotionArousal={FacialEmotionArousal:F3}, " +
                 $"FacialEmotionValence={FacialEmotionValence:F3}, " +
                 $"Engagement={Engagement:F3}";
+        }
+
+        private static float ClampSigned(float value)
+        {
+            if (float.IsNaN(value) || float.IsInfinity(value))
+            {
+                return 0f;
+            }
+
+            return Mathf.Clamp(value, -1f, 1f);
         }
     }
 }

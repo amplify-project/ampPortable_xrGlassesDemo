@@ -30,11 +30,11 @@ namespace AmpPortableDataViz.Presentation.Visualization
         [SerializeField] private string deviceId;
 
         [Header("Physiological Signals")]
-        [SerializeField, Range(0f, 1f)] private float tonicElectrodermalActivityStdDev = 0.5f;
-        [SerializeField, Range(0f, 1f)] private float temperatureRateOfChangeStdDev = 0.5f;
-        [SerializeField, Range(0f, 1f)] private float skinConductanceResponseFrequencyStdDev = 0.5f;
-        [SerializeField, Range(0f, 1f)] private float heartRateStdDev = 0.5f;
-        [SerializeField, Range(0f, 1f)] private float interBeatIntervalStdDev = 0.5f;
+        [SerializeField, Range(-1f, 1f)] private float tonicElectrodermalActivityStdDev;
+        [SerializeField, Range(-1f, 1f)] private float temperatureRateOfChangeStdDev;
+        [SerializeField, Range(-1f, 1f)] private float skinConductanceResponseFrequencyStdDev;
+        [SerializeField, Range(-1f, 1f)] private float heartRateStdDev;
+        [SerializeField, Range(-1f, 1f)] private float interBeatIntervalStdDev;
 
         [Header("Facial Emotion")]
         [SerializeField, Range(0f, 1f)] private float facialEmotionArousal = 0.5f;
@@ -147,11 +147,11 @@ namespace AmpPortableDataViz.Presentation.Visualization
             float engagementValue)
         {
             sourceMode = SourceMode.Manual;
-            tonicElectrodermalActivityStdDev = Mathf.Clamp01(tonicEda);
-            temperatureRateOfChangeStdDev = Mathf.Clamp01(temperatureRateOfChange);
-            skinConductanceResponseFrequencyStdDev = Mathf.Clamp01(skinConductanceResponseFrequency);
-            heartRateStdDev = Mathf.Clamp01(heartRate);
-            interBeatIntervalStdDev = Mathf.Clamp01(interBeatInterval);
+            tonicElectrodermalActivityStdDev = Mathf.Clamp(tonicEda, -1f, 1f);
+            temperatureRateOfChangeStdDev = Mathf.Clamp(temperatureRateOfChange, -1f, 1f);
+            skinConductanceResponseFrequencyStdDev = Mathf.Clamp(skinConductanceResponseFrequency, -1f, 1f);
+            heartRateStdDev = Mathf.Clamp(heartRate, -1f, 1f);
+            interBeatIntervalStdDev = Mathf.Clamp(interBeatInterval, -1f, 1f);
             facialEmotionArousal = Mathf.Clamp01(facialEmotionArousalValue);
             facialEmotionValence = Mathf.Clamp01(facialEmotionValenceValue);
             engagement = Mathf.Clamp01(engagementValue);
@@ -191,7 +191,7 @@ namespace AmpPortableDataViz.Presentation.Visualization
         {
             float x = noiseSeed + channelOffset;
             float y = noiseOffset * Mathf.Max(0.0001f, noiseFrequency) + channelOffset * 0.173f;
-            return Mathf.Clamp01(Mathf.PerlinNoise(x, y));
+            return Mathf.Clamp(Mathf.PerlinNoise(x, y) * 2f - 1f, -1f, 1f);
         }
 
         private string ResolveDeviceId()
@@ -201,11 +201,11 @@ namespace AmpPortableDataViz.Presentation.Visualization
 
         private void ClampInspectorValues()
         {
-            tonicElectrodermalActivityStdDev = Mathf.Clamp01(tonicElectrodermalActivityStdDev);
-            temperatureRateOfChangeStdDev = Mathf.Clamp01(temperatureRateOfChangeStdDev);
-            skinConductanceResponseFrequencyStdDev = Mathf.Clamp01(skinConductanceResponseFrequencyStdDev);
-            heartRateStdDev = Mathf.Clamp01(heartRateStdDev);
-            interBeatIntervalStdDev = Mathf.Clamp01(interBeatIntervalStdDev);
+            tonicElectrodermalActivityStdDev = Mathf.Clamp(tonicElectrodermalActivityStdDev, -1f, 1f);
+            temperatureRateOfChangeStdDev = Mathf.Clamp(temperatureRateOfChangeStdDev, -1f, 1f);
+            skinConductanceResponseFrequencyStdDev = Mathf.Clamp(skinConductanceResponseFrequencyStdDev, -1f, 1f);
+            heartRateStdDev = Mathf.Clamp(heartRateStdDev, -1f, 1f);
+            interBeatIntervalStdDev = Mathf.Clamp(interBeatIntervalStdDev, -1f, 1f);
             facialEmotionArousal = Mathf.Clamp01(facialEmotionArousal);
             facialEmotionValence = Mathf.Clamp01(facialEmotionValence);
             engagement = Mathf.Clamp01(engagement);
