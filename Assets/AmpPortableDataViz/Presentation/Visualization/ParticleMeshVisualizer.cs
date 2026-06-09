@@ -122,6 +122,7 @@ namespace AmpPortableDataViz.Presentation.Visualization
         [SerializeField] private Color hotTemperatureTrendColor = new Color(1f, 0.28f, 0.04f, 0.95f);
         [SerializeField] private Color coldTemperatureTrendColor = new Color(0.1f, 0.66f, 1f, 0.95f);
         [SerializeField, Range(1, 16)] private int maxTemperatureTrendWaves = 8;
+        [SerializeField, Range(1, 8)] private int minTemperatureTrendBurstWaves = 3;
         [SerializeField, Range(1, 8)] private int maxTemperatureTrendBurstWaves = 4;
         [SerializeField, Range(0f, 1f)] private float temperatureTrendWaveThreshold = 0.18f;
         [SerializeField, Range(0.05f, 1f)] private float temperatureTrendWaveReleaseFactor = 0.65f;
@@ -375,7 +376,9 @@ namespace AmpPortableDataViz.Presentation.Visualization
             lowEngagementRadialDrift = Mathf.Clamp01(lowEngagementRadialDrift);
             engagementRigidityPower = Mathf.Clamp(engagementRigidityPower, 0.25f, 4f);
             maxTemperatureTrendWaves = Mathf.Max(1, maxTemperatureTrendWaves);
+            minTemperatureTrendBurstWaves = Mathf.Clamp(minTemperatureTrendBurstWaves, 1, maxTemperatureTrendWaves);
             maxTemperatureTrendBurstWaves = Mathf.Clamp(maxTemperatureTrendBurstWaves, 1, maxTemperatureTrendWaves);
+            maxTemperatureTrendBurstWaves = Mathf.Max(minTemperatureTrendBurstWaves, maxTemperatureTrendBurstWaves);
             temperatureTrendWaveReleaseFactor = Mathf.Clamp(temperatureTrendWaveReleaseFactor, 0.05f, 1f);
             temperatureTrendWaveThreshold = Mathf.Clamp01(temperatureTrendWaveThreshold);
             temperatureTrendWaveLifetime = Mathf.Max(0.1f, temperatureTrendWaveLifetime);
@@ -998,7 +1001,8 @@ namespace AmpPortableDataViz.Presentation.Visualization
             float clampedMagnitude = Mathf.Clamp01(magnitude);
             float drive = Mathf.InverseLerp(threshold, 1f, clampedMagnitude);
             int maxBurstCount = Mathf.Clamp(maxTemperatureTrendBurstWaves, 1, Mathf.Max(1, maxTemperatureTrendWaves));
-            int burstCount = Mathf.Clamp(Mathf.RoundToInt(Mathf.Lerp(1f, maxBurstCount, drive)), 1, maxBurstCount);
+            int minBurstCount = Mathf.Clamp(minTemperatureTrendBurstWaves, 1, maxBurstCount);
+            int burstCount = Mathf.Clamp(Mathf.RoundToInt(Mathf.Lerp(minBurstCount, maxBurstCount, drive)), minBurstCount, maxBurstCount);
 
             _temperatureTrendActiveDirection = direction < 0f ? -1f : 1f;
             _temperatureTrendBurstMagnitude = clampedMagnitude;
