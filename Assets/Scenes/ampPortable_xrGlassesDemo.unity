@@ -6015,6 +6015,15 @@ MonoBehaviour:
   GraphGroupsGrabbable: 1
   GraphItemBoundsSize: {x: 1, y: 1, z: 0.02}
   GraphGroupBoundsPadding: {x: 0.05, y: 0.05, z: 0.05}
+  ParticleMeshesGrabbable: 1
+  ParticleMeshBoundsSize: {x: 2.8, y: 1.2, z: 2.8}
+  ParticleMeshBoundsPadding: {x: 0.08, y: 0.08, z: 0.08}
+  FaceGrabbableVisualizationsToCamera: 1
+  FaceVisualizationsWhileGrabbed: 1
+  KeepPlacedVisualizationsFacingCamera: 1
+  GrabFacingYawOnly: 1
+  GrabFacingFlipForward: 1
+  GrabFacingRotationSpeed: 18
   LiveKitTokenEndpoint: https://cloud-api.livekit.io/api/sandbox/connection-details
   LiveKitSandboxId: amp-portable-viz-16o67i
   LiveKitRoomName: xr-room

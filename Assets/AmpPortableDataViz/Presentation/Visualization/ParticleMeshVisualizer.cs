@@ -119,6 +119,16 @@ namespace AmpPortableDataViz.Presentation.Visualization
         [SerializeField] private Color lowValenceColor = new Color(1f, 0.12f, 0.08f, 0.9f);
         [SerializeField] private Color neutralColor = new Color(0.2f, 1f, 0.75f, 0.9f);
         [SerializeField] private Color highValenceColor = new Color(1f, 0.82f, 0.16f, 0.9f);
+        [SerializeField] private Color hotTemperatureTrendColor = new Color(1f, 0.28f, 0.04f, 0.95f);
+        [SerializeField] private Color coldTemperatureTrendColor = new Color(0.1f, 0.66f, 1f, 0.95f);
+        [SerializeField, Range(1, 16)] private int maxTemperatureTrendWaves = 8;
+        [SerializeField, Range(1, 8)] private int maxTemperatureTrendBurstWaves = 4;
+        [SerializeField, Range(0f, 1f)] private float temperatureTrendWaveThreshold = 0.18f;
+        [SerializeField, Range(0.05f, 1f)] private float temperatureTrendWaveReleaseFactor = 0.65f;
+        [SerializeField, Range(0.1f, 4f)] private float temperatureTrendWaveLifetime = 1.25f;
+        [SerializeField, Range(0.03f, 0.8f)] private float temperatureTrendWaveWidth = 0.24f;
+        [SerializeField, Range(0.05f, 1f)] private float temperatureTrendWaveInterval = 0.26f;
+        [SerializeField, Range(0f, 1f)] private float temperatureTrendWaveTintStrength = 0.78f;
 
         [Header("Diagnostics")]
         [SerializeField] private bool logReceivedSamples = true;
@@ -170,6 +180,16 @@ namespace AmpPortableDataViz.Presentation.Visualization
             public float Direction;
         }
 
+        private struct TemperatureTrendWave
+        {
+            public bool Active;
+            public float Age;
+            public float Lifetime;
+            public float Intensity;
+            public float Direction;
+            public float Width;
+        }
+
         private ScrEvent[] _scrEvents;
         private float _scrEventAccumulator;
         private int _nextScrEventIndex;
@@ -182,6 +202,13 @@ namespace AmpPortableDataViz.Presentation.Visualization
         private RhythmPulse[] _rhythmPulses;
         private float _rhythmPhase;
         private int _nextRhythmPulseIndex;
+
+        private TemperatureTrendWave[] _temperatureTrendWaves;
+        private int _nextTemperatureTrendWaveIndex;
+        private int _temperatureTrendBurstRemaining;
+        private float _temperatureTrendBurstMagnitude;
+        private float _temperatureTrendWaveSpawnTimer;
+        private float _temperatureTrendActiveDirection;
 
         private LineRenderer[] _engagementLatticeLines;
         private int[] _engagementLatticeXCoordinates;
@@ -261,6 +288,7 @@ namespace AmpPortableDataViz.Presentation.Visualization
             EnsureScrSparkCapacity();
             EnsureScrSparkParticleSystem();
             EnsureRhythmPulseCapacity();
+            EnsureTemperatureTrendWaveCapacity();
 
             float deltaTime = ResolveDeltaTime();
             _localTime += deltaTime * internalTimeScale;
@@ -268,6 +296,7 @@ namespace AmpPortableDataViz.Presentation.Visualization
             SmoothSignals(deltaTime);
             UpdateScrEvents(deltaTime);
             UpdateRhythmPulses(deltaTime);
+            UpdateTemperatureTrendWaves(deltaTime);
             UpdateScrSparks(deltaTime);
             UpdateGeometry(deltaTime);
             if (renderEngagementLattice)
@@ -290,6 +319,7 @@ namespace AmpPortableDataViz.Presentation.Visualization
             }
 
             ClearScrSparks();
+            ClearTemperatureTrendWaves();
             ClearEngagementLattice();
             ClearArousalTrails(true);
         }
@@ -344,6 +374,14 @@ namespace AmpPortableDataViz.Presentation.Visualization
             lowEngagementDriftNoiseScale = Mathf.Clamp(lowEngagementDriftNoiseScale, 0.1f, 12f);
             lowEngagementRadialDrift = Mathf.Clamp01(lowEngagementRadialDrift);
             engagementRigidityPower = Mathf.Clamp(engagementRigidityPower, 0.25f, 4f);
+            maxTemperatureTrendWaves = Mathf.Max(1, maxTemperatureTrendWaves);
+            maxTemperatureTrendBurstWaves = Mathf.Clamp(maxTemperatureTrendBurstWaves, 1, maxTemperatureTrendWaves);
+            temperatureTrendWaveReleaseFactor = Mathf.Clamp(temperatureTrendWaveReleaseFactor, 0.05f, 1f);
+            temperatureTrendWaveThreshold = Mathf.Clamp01(temperatureTrendWaveThreshold);
+            temperatureTrendWaveLifetime = Mathf.Max(0.1f, temperatureTrendWaveLifetime);
+            temperatureTrendWaveWidth = Mathf.Clamp(temperatureTrendWaveWidth, 0.03f, 0.8f);
+            temperatureTrendWaveInterval = Mathf.Clamp(temperatureTrendWaveInterval, 0.05f, 1f);
+            temperatureTrendWaveTintStrength = Mathf.Clamp01(temperatureTrendWaveTintStrength);
             _needsRebuild = true;
 
             if (isActiveAndEnabled)
@@ -354,6 +392,7 @@ namespace AmpPortableDataViz.Presentation.Visualization
                 EnsureScrSparkCapacity();
                 EnsureScrSparkParticleSystem();
                 EnsureRhythmPulseCapacity();
+                EnsureTemperatureTrendWaveCapacity();
                 EnsureEngagementLatticeCapacity();
                 EnsureArousalTrailCapacity();
             }
@@ -500,6 +539,7 @@ namespace AmpPortableDataViz.Presentation.Visualization
             EnsureScrSparkCapacity();
             EnsureScrSparkParticleSystem();
             EnsureRhythmPulseCapacity();
+            EnsureTemperatureTrendWaveCapacity();
             EnsureEngagementLatticeCapacity();
             EnsureArousalTrailCapacity();
             _builtGridWidth = width;
@@ -878,6 +918,131 @@ namespace AmpPortableDataViz.Presentation.Visualization
                 PhaseSeed = placementIndex * 1.6180339f,
                 Direction = direction
             };
+        }
+
+        private void EnsureTemperatureTrendWaveCapacity()
+        {
+            int waveCount = Mathf.Max(1, maxTemperatureTrendWaves);
+            if (_temperatureTrendWaves != null && _temperatureTrendWaves.Length == waveCount)
+            {
+                return;
+            }
+
+            _temperatureTrendWaves = new TemperatureTrendWave[waveCount];
+            _nextTemperatureTrendWaveIndex = 0;
+            _temperatureTrendBurstRemaining = 0;
+            _temperatureTrendBurstMagnitude = 0f;
+            _temperatureTrendWaveSpawnTimer = 0f;
+            _temperatureTrendActiveDirection = 0f;
+        }
+
+        private void UpdateTemperatureTrendWaves(float deltaTime)
+        {
+            EnsureTemperatureTrendWaveCapacity();
+
+            float safeDeltaTime = Mathf.Max(0f, deltaTime);
+            for (int i = 0; i < _temperatureTrendWaves.Length; i++)
+            {
+                if (!_temperatureTrendWaves[i].Active)
+                {
+                    continue;
+                }
+
+                _temperatureTrendWaves[i].Age += safeDeltaTime;
+                if (_temperatureTrendWaves[i].Age >= _temperatureTrendWaves[i].Lifetime)
+                {
+                    _temperatureTrendWaves[i].Active = false;
+                }
+            }
+
+            float magnitude = Mathf.Abs(_temperatureRate);
+            float threshold = Mathf.Max(0.0001f, temperatureTrendWaveThreshold);
+            float releaseThreshold = threshold * Mathf.Clamp(temperatureTrendWaveReleaseFactor, 0.05f, 1f);
+            if (magnitude >= threshold)
+            {
+                float direction = _temperatureRate < 0f ? -1f : 1f;
+                if (_temperatureTrendActiveDirection == 0f || Mathf.Sign(_temperatureTrendActiveDirection) != direction)
+                {
+                    StartTemperatureTrendBurst(direction, magnitude);
+                }
+            }
+            else if (magnitude <= releaseThreshold && _temperatureTrendBurstRemaining == 0)
+            {
+                _temperatureTrendActiveDirection = 0f;
+                _temperatureTrendBurstMagnitude = 0f;
+                _temperatureTrendWaveSpawnTimer = 0f;
+            }
+
+            if (_temperatureTrendBurstRemaining <= 0 || _temperatureTrendActiveDirection == 0f)
+            {
+                return;
+            }
+
+            _temperatureTrendWaveSpawnTimer -= safeDeltaTime;
+            int spawnedThisFrame = 0;
+            while (_temperatureTrendWaveSpawnTimer <= 0f && _temperatureTrendBurstRemaining > 0 && spawnedThisFrame < 4)
+            {
+                SpawnTemperatureTrendWave(_temperatureTrendActiveDirection * _temperatureTrendBurstMagnitude);
+                _temperatureTrendBurstRemaining--;
+                spawnedThisFrame++;
+
+                float drive = Mathf.InverseLerp(threshold, 1f, _temperatureTrendBurstMagnitude);
+                float interval = Mathf.Max(0.05f, temperatureTrendWaveInterval) * Mathf.Lerp(1.25f, 0.65f, drive);
+                _temperatureTrendWaveSpawnTimer += interval;
+            }
+        }
+
+        private void StartTemperatureTrendBurst(float direction, float magnitude)
+        {
+            float threshold = Mathf.Max(0.0001f, temperatureTrendWaveThreshold);
+            float clampedMagnitude = Mathf.Clamp01(magnitude);
+            float drive = Mathf.InverseLerp(threshold, 1f, clampedMagnitude);
+            int maxBurstCount = Mathf.Clamp(maxTemperatureTrendBurstWaves, 1, Mathf.Max(1, maxTemperatureTrendWaves));
+            int burstCount = Mathf.Clamp(Mathf.RoundToInt(Mathf.Lerp(1f, maxBurstCount, drive)), 1, maxBurstCount);
+
+            _temperatureTrendActiveDirection = direction < 0f ? -1f : 1f;
+            _temperatureTrendBurstMagnitude = clampedMagnitude;
+            _temperatureTrendBurstRemaining = burstCount;
+            _temperatureTrendWaveSpawnTimer = Mathf.Min(_temperatureTrendWaveSpawnTimer, 0f);
+        }
+
+        private void SpawnTemperatureTrendWave(float signedIntensity)
+        {
+            if (_temperatureTrendWaves == null || _temperatureTrendWaves.Length == 0)
+            {
+                return;
+            }
+
+            int waveIndex = _nextTemperatureTrendWaveIndex % _temperatureTrendWaves.Length;
+            _nextTemperatureTrendWaveIndex++;
+
+            float direction = signedIntensity < 0f ? -1f : 1f;
+            float clampedIntensity = Mathf.Clamp01(Mathf.Abs(signedIntensity));
+            _temperatureTrendWaves[waveIndex] = new TemperatureTrendWave
+            {
+                Active = true,
+                Age = 0f,
+                Lifetime = Mathf.Max(0.1f, temperatureTrendWaveLifetime) * Mathf.Lerp(0.85f, 1.25f, clampedIntensity),
+                Intensity = Mathf.Lerp(0.35f, 1f, clampedIntensity),
+                Direction = direction,
+                Width = Mathf.Max(0.03f, temperatureTrendWaveWidth) * Mathf.Lerp(0.75f, 1.25f, clampedIntensity)
+            };
+        }
+
+        private void ClearTemperatureTrendWaves()
+        {
+            if (_temperatureTrendWaves != null)
+            {
+                for (int i = 0; i < _temperatureTrendWaves.Length; i++)
+                {
+                    _temperatureTrendWaves[i].Active = false;
+                }
+            }
+
+            _temperatureTrendBurstRemaining = 0;
+            _temperatureTrendBurstMagnitude = 0f;
+            _temperatureTrendWaveSpawnTimer = 0f;
+            _temperatureTrendActiveDirection = 0f;
         }
 
         private void EnsureEngagementLatticeCapacity()
@@ -1532,6 +1697,14 @@ namespace AmpPortableDataViz.Presentation.Visualization
                 float localEnergy = Mathf.Clamp01(arousalMotion * 0.5f + heartMagnitude * 0.25f + scrMagnitude * 0.25f);
                 Color vertexColor = Color.Lerp(valenceColor, Color.white, Mathf.Clamp01(localEnergy * 0.25f + rhythmEnergy * 0.35f + scrEventEnergy * 0.65f));
                 vertexColor.a = Mathf.Lerp(engagementAlpha, highEngagementAlpha, Mathf.Max(rhythmEnergy * 0.25f, scrEventEnergy * 0.35f));
+                float temperatureTrendEnergy = ResolveTemperatureTrendWaveEnergy(u, out Color temperatureTrendColor);
+                if (temperatureTrendEnergy > 0f)
+                {
+                    float alpha = vertexColor.a;
+                    vertexColor = Color.Lerp(vertexColor, temperatureTrendColor, temperatureTrendEnergy * temperatureTrendWaveTintStrength);
+                    vertexColor.a = alpha;
+                }
+
                 _colors[i] = vertexColor;
 
                 _particles[i].position = _vertices[i];
@@ -1693,6 +1866,50 @@ namespace AmpPortableDataViz.Presentation.Visualization
 
             rhythmEnergy = Mathf.Clamp01(Mathf.Max(rhythmEnergy, breathEnergy * 0.35f));
             return offset;
+        }
+
+        private float ResolveTemperatureTrendWaveEnergy(float u, out Color trendColor)
+        {
+            trendColor = neutralColor;
+            if (_temperatureTrendWaves == null || _temperatureTrendWaves.Length == 0)
+            {
+                return 0f;
+            }
+
+            float strongestEnergy = 0f;
+            for (int i = 0; i < _temperatureTrendWaves.Length; i++)
+            {
+                if (!_temperatureTrendWaves[i].Active)
+                {
+                    continue;
+                }
+
+                float lifetime = Mathf.Max(0.0001f, _temperatureTrendWaves[i].Lifetime);
+                float normalizedAge = Mathf.Clamp01(_temperatureTrendWaves[i].Age / lifetime);
+                float width = Mathf.Max(0.0001f, _temperatureTrendWaves[i].Width);
+                float direction = _temperatureTrendWaves[i].Direction < 0f ? -1f : 1f;
+                float front = direction > 0f
+                    ? Mathf.Lerp(-width, 1f + width, normalizedAge)
+                    : Mathf.Lerp(1f + width, -width, normalizedAge);
+                float distanceBehindFront = direction > 0f ? front - u : u - front;
+                if (distanceBehindFront < 0f || distanceBehindFront > width)
+                {
+                    continue;
+                }
+
+                float tail = Mathf.SmoothStep(0f, 1f, 1f - distanceBehindFront / width);
+                float envelope = Mathf.Sin(normalizedAge * Mathf.PI);
+                float energy = tail * envelope * _temperatureTrendWaves[i].Intensity;
+                if (energy <= strongestEnergy)
+                {
+                    continue;
+                }
+
+                strongestEnergy = energy;
+                trendColor = direction > 0f ? hotTemperatureTrendColor : coldTemperatureTrendColor;
+            }
+
+            return Mathf.Clamp01(strongestEnergy);
         }
 
         private Vector3 BuildEngagementDriftOffset(int index, float u, float v, float loosenessResponse, float arousalMotion)
