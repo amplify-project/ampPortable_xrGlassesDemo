@@ -4961,6 +4961,13 @@ MonoBehaviour:
   lowEngagementParticleScale: 0.7
   highEngagementParticleScale: 1.35
   engagementMeshSurfaceStrength: 1
+  lowEngagementDriftRadius: 0.28
+  lowEngagementDriftSpeed: 0.65
+  lowEngagementDriftNoiseScale: 3.2
+  lowEngagementVerticalDrift: 0.14
+  lowEngagementRadialDrift: 0.35
+  engagementRigidityPower: 1.6
+  renderEngagementLattice: 0
   engagementLatticeRoot: {fileID: 0}
   engagementLatticeMaterial: {fileID: 2100000, guid: 505131eaa95e71c4796959a3a9e7cddc, type: 2}
   engagementLatticeThreshold: 0.05
@@ -4985,9 +4992,24 @@ MonoBehaviour:
   arousalTrailValenceTint: 0.15
   renderParticles: 1
   particleSize: 0.0145
+  temperatureTrendParticleTintStrength: 1
+  temperatureTrendParticleGlowBrightness: 1.8
+  temperatureTrendParticleSizeBoost: 1.75
+  temperatureTrendParticleAlphaBoost: 0.35
   lowValenceColor: {r: 1, g: 0.12, b: 0.08, a: 0.9}
   neutralColor: {r: 0.2, g: 1, b: 0.75, a: 0.9}
   highValenceColor: {r: 1, g: 0.82, b: 0.16, a: 0.9}
+  hotTemperatureTrendColor: {r: 1, g: 0.28, b: 0.04, a: 0.95}
+  coldTemperatureTrendColor: {r: 0.1, g: 0.66, b: 1, a: 0.95}
+  maxTemperatureTrendWaves: 8
+  minTemperatureTrendBurstWaves: 3
+  maxTemperatureTrendBurstWaves: 4
+  temperatureTrendWaveThreshold: 0.18
+  temperatureTrendWaveReleaseFactor: 0.65
+  temperatureTrendWaveLifetime: 2.45
+  temperatureTrendWaveWidth: 0.24
+  temperatureTrendWaveInterval: 0.26
+  temperatureTrendWaveTintStrength: 0.78
   logReceivedSamples: 1
   minimumLogIntervalSeconds: 0.5
 --- !u!114 &4827462142832796194
@@ -5010,12 +5032,21 @@ MonoBehaviour:
   particleMeshVisualizer: {fileID: 3118001866504251448}
   requireAllSignalsBeforeParticleApply: 1
   particleMapperSettings:
+    PhysioZScoreRange: {x: -3, y: 3}
     TonicElectrodermalActivityRange: {x: 0.01, y: 0.5}
     TemperatureRateOfChangeRange: {x: 0.001, y: 0.1}
     SkinConductanceResponseFrequencyRange: {x: 0.5, y: 5}
     HeartRateRange: {x: 1, y: 10}
     InterBeatIntervalRange: {x: 10, y: 100}
     EmotionRange: {x: 0, y: 2}
+  particlePhysioAmplificationSettings:
+    Enabled: 1
+    WindowSeconds: 10
+    MaxSamples: 256
+    StdDevMultiplier: 2
+    MinRange: 0.18
+    Smoothing: 0.15
+    Blend: 1
   graphStreams: []
   graphWindowSeconds: 10
   graphMaxSamples: 512
@@ -5039,21 +5070,21 @@ MonoBehaviour:
   m_EditorClassIdentifier: Amp::AmpPortableDataViz.Presentation.Visualization.AudienceDataManualDriver
   sourceId: audience-manual
   deviceId: 
-  tonicElectrodermalActivityStdDev: 0.42685035
-  temperatureRateOfChangeStdDev: 0.042744204
-  skinConductanceResponseFrequencyStdDev: 1.5746197
-  heartRateStdDev: 6.0614
-  interBeatIntervalStdDev: 39.005447
-  arousal: 0.2819121
-  valence: 1.2046922
-  engagement: 0.6153433
+  tonicElectrodermalActivityStdDev: -1.5056424
+  temperatureRateOfChangeStdDev: -0.57097006
+  skinConductanceResponseFrequencyStdDev: -1.1583393
+  heartRateStdDev: 0.64023435
+  interBeatIntervalStdDev: -0.70747393
+  arousal: 0.29742432
+  valence: 0.6947213
+  engagement: 0.54351825
   sourceMode: 1
   autoEmit: 1
   animateProceduralNoise: 1
   timeScale: 0.35
   noiseFrequency: 0.75
   noiseSeed: 0.1234
-  noiseOffset: 74.04267
+  noiseOffset: 107.40534
   onSampleEmitted:
     m_PersistentCalls:
       m_Calls: []
@@ -5099,12 +5130,21 @@ MonoBehaviour:
   manualSource: {fileID: 1752101364371564078}
   particleMeshVisualizer: {fileID: 3118001866504251448}
   particleMapperSettings:
+    PhysioZScoreRange: {x: -3, y: 3}
     TonicElectrodermalActivityRange: {x: 0.01, y: 0.5}
     TemperatureRateOfChangeRange: {x: 0.001, y: 0.1}
     SkinConductanceResponseFrequencyRange: {x: 0.5, y: 5}
     HeartRateRange: {x: 1, y: 10}
     InterBeatIntervalRange: {x: 10, y: 100}
     EmotionRange: {x: 0, y: 2}
+  particlePhysioAmplificationSettings:
+    Enabled: 1
+    WindowSeconds: 10
+    MaxSamples: 256
+    StdDevMultiplier: 2
+    MinRange: 0.18
+    Smoothing: 0.15
+    Blend: 1
   graphStreams: []
   graphWindowSeconds: 10
   graphMaxSamples: 512
