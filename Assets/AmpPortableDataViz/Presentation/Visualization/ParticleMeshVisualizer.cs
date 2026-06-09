@@ -15,6 +15,8 @@ namespace AmpPortableDataViz.Presentation.Visualization
     public sealed class ParticleMeshVisualizer : MonoBehaviour, IVisualizer<ParticleMeshSignalSample>
     {
         private const float Tau = Mathf.PI * 2f;
+        private static readonly int BaseColorPropertyId = Shader.PropertyToID("_BaseColor");
+        private static readonly int ColorPropertyId = Shader.PropertyToID("_Color");
 
         [Header("Legacy Manual Source (optional)")]
         [SerializeField] private ParticleMeshManualDriver manualDriver;
@@ -114,6 +116,10 @@ namespace AmpPortableDataViz.Presentation.Visualization
         [Header("Particles")]
         [SerializeField] private bool renderParticles = true;
         [SerializeField, Range(0.001f, 0.12f)] private float particleSize = 0.025f;
+        [SerializeField, Range(0f, 1f)] private float temperatureTrendParticleTintStrength = 1f;
+        [SerializeField, Range(1f, 4f)] private float temperatureTrendParticleGlowBrightness = 1.8f;
+        [SerializeField, Range(1f, 4f)] private float temperatureTrendParticleSizeBoost = 1.75f;
+        [SerializeField, Range(0f, 1f)] private float temperatureTrendParticleAlphaBoost = 0.35f;
 
         [Header("Colour")]
         [SerializeField] private Color lowValenceColor = new Color(1f, 0.12f, 0.08f, 0.9f);
@@ -137,6 +143,8 @@ namespace AmpPortableDataViz.Presentation.Visualization
 
         private MeshFilter _meshFilter;
         private ParticleSystem _particleSystem;
+        private ParticleSystemRenderer _particleRenderer;
+        private MaterialPropertyBlock _particlePropertyBlock;
         private Mesh _mesh;
         private Vector3[] _vertices;
         private Vector3[] _velocities;
@@ -321,6 +329,7 @@ namespace AmpPortableDataViz.Presentation.Visualization
 
             ClearScrSparks();
             ClearTemperatureTrendWaves();
+            ApplyParticleRendererGlow(0f);
             ClearEngagementLattice();
             ClearArousalTrails(true);
         }
@@ -375,6 +384,10 @@ namespace AmpPortableDataViz.Presentation.Visualization
             lowEngagementDriftNoiseScale = Mathf.Clamp(lowEngagementDriftNoiseScale, 0.1f, 12f);
             lowEngagementRadialDrift = Mathf.Clamp01(lowEngagementRadialDrift);
             engagementRigidityPower = Mathf.Clamp(engagementRigidityPower, 0.25f, 4f);
+            temperatureTrendParticleTintStrength = Mathf.Clamp01(temperatureTrendParticleTintStrength);
+            temperatureTrendParticleGlowBrightness = Mathf.Clamp(temperatureTrendParticleGlowBrightness, 1f, 4f);
+            temperatureTrendParticleSizeBoost = Mathf.Clamp(temperatureTrendParticleSizeBoost, 1f, 4f);
+            temperatureTrendParticleAlphaBoost = Mathf.Clamp01(temperatureTrendParticleAlphaBoost);
             maxTemperatureTrendWaves = Mathf.Max(1, maxTemperatureTrendWaves);
             minTemperatureTrendBurstWaves = Mathf.Clamp(minTemperatureTrendBurstWaves, 1, maxTemperatureTrendWaves);
             maxTemperatureTrendBurstWaves = Mathf.Clamp(maxTemperatureTrendBurstWaves, 1, maxTemperatureTrendWaves);
@@ -415,6 +428,7 @@ namespace AmpPortableDataViz.Presentation.Visualization
         {
             _meshFilter = GetComponent<MeshFilter>();
             _particleSystem = GetComponent<ParticleSystem>();
+            _particleRenderer = _particleSystem != null ? _particleSystem.GetComponent<ParticleSystemRenderer>() : null;
 
             if (scrSparkParticleSystem == null)
             {
@@ -1611,11 +1625,55 @@ namespace AmpPortableDataViz.Presentation.Visualization
             var shape = _particleSystem.shape;
             shape.enabled = false;
 
+            ApplyParticleRendererGlow(0f);
+
             _particleSystem.Clear();
             if (renderParticles && _particles != null)
             {
                 _particleSystem.SetParticles(_particles, _particles.Length);
             }
+        }
+
+        private void ApplyParticleRendererGlow(float glowAmount)
+        {
+            if (_particleRenderer == null)
+            {
+                return;
+            }
+
+            Material material = _particleRenderer.sharedMaterial;
+            if (material == null)
+            {
+                return;
+            }
+
+            bool hasBaseColor = material.HasProperty(BaseColorPropertyId);
+            bool hasColor = material.HasProperty(ColorPropertyId);
+            if (!hasBaseColor && !hasColor)
+            {
+                return;
+            }
+
+            _particlePropertyBlock ??= new MaterialPropertyBlock();
+            _particleRenderer.GetPropertyBlock(_particlePropertyBlock);
+
+            float brightness = Mathf.Lerp(1f, Mathf.Max(1f, temperatureTrendParticleGlowBrightness), Mathf.Clamp01(glowAmount));
+            Color rendererColor = hasBaseColor ? material.GetColor(BaseColorPropertyId) : material.GetColor(ColorPropertyId);
+            float alpha = rendererColor.a;
+            rendererColor *= brightness;
+            rendererColor.a = alpha;
+
+            if (hasBaseColor)
+            {
+                _particlePropertyBlock.SetColor(BaseColorPropertyId, rendererColor);
+            }
+
+            if (hasColor)
+            {
+                _particlePropertyBlock.SetColor(ColorPropertyId, rendererColor);
+            }
+
+            _particleRenderer.SetPropertyBlock(_particlePropertyBlock);
         }
 
         private void ReceiveSample(in ParticleMeshSignalSample sample, long timestampTicksUtc, int sequenceId)
@@ -1682,6 +1740,8 @@ namespace AmpPortableDataViz.Presentation.Visualization
             float engagementAlpha = Mathf.Lerp(lowEngagementAlpha, highEngagementAlpha, engagementSolidity);
             float engagementParticleScale = Mathf.Lerp(lowEngagementParticleScale, highEngagementParticleScale, engagementSolidity);
             Color valenceColor = ResolveBaseColor(_facialValence);
+            float temperatureTrendParticleGlow = ResolveTemperatureTrendParticleGlow();
+            ApplyParticleRendererGlow(temperatureTrendParticleGlow);
 
             for (int i = 0; i < _vertices.Length; i++)
             {
@@ -1712,8 +1772,17 @@ namespace AmpPortableDataViz.Presentation.Visualization
                 _colors[i] = vertexColor;
 
                 _particles[i].position = _vertices[i];
-                _particles[i].startColor = vertexColor;
-                _particles[i].startSize = particleSize * engagementParticleScale * Mathf.Lerp(0.75f, 1.8f, localEnergy) * Mathf.Lerp(1f, 1.8f, rhythmEnergy) * Mathf.Lerp(1f, 2.4f, scrEventEnergy);
+                Color particleColor = vertexColor;
+                if (temperatureTrendEnergy > 0f)
+                {
+                    float particleAlpha = particleColor.a;
+                    particleColor = Color.Lerp(particleColor, temperatureTrendColor, temperatureTrendEnergy * temperatureTrendParticleTintStrength);
+                    particleColor.a = Mathf.Clamp01(Mathf.Max(particleAlpha, temperatureTrendColor.a) + temperatureTrendEnergy * temperatureTrendParticleAlphaBoost);
+                }
+
+                float temperatureTrendParticleScale = Mathf.Lerp(1f, temperatureTrendParticleSizeBoost, temperatureTrendEnergy);
+                _particles[i].startColor = particleColor;
+                _particles[i].startSize = particleSize * engagementParticleScale * Mathf.Lerp(0.75f, 1.8f, localEnergy) * Mathf.Lerp(1f, 1.8f, rhythmEnergy) * Mathf.Lerp(1f, 2.4f, scrEventEnergy) * temperatureTrendParticleScale;
                 _particles[i].startLifetime = float.MaxValue;
                 _particles[i].remainingLifetime = float.MaxValue;
             }
@@ -1914,6 +1983,34 @@ namespace AmpPortableDataViz.Presentation.Visualization
             }
 
             return Mathf.Clamp01(strongestEnergy);
+        }
+
+        private float ResolveTemperatureTrendParticleGlow()
+        {
+            if (_temperatureTrendWaves == null || _temperatureTrendWaves.Length == 0)
+            {
+                return 0f;
+            }
+
+            float strongestGlow = 0f;
+            for (int i = 0; i < _temperatureTrendWaves.Length; i++)
+            {
+                if (!_temperatureTrendWaves[i].Active)
+                {
+                    continue;
+                }
+
+                float lifetime = Mathf.Max(0.0001f, _temperatureTrendWaves[i].Lifetime);
+                float normalizedAge = Mathf.Clamp01(_temperatureTrendWaves[i].Age / lifetime);
+                float envelope = Mathf.Sin(normalizedAge * Mathf.PI);
+                float glow = envelope * _temperatureTrendWaves[i].Intensity;
+                if (glow > strongestGlow)
+                {
+                    strongestGlow = glow;
+                }
+            }
+
+            return Mathf.Clamp01(strongestGlow);
         }
 
         private Vector3 BuildEngagementDriftOffset(int index, float u, float v, float loosenessResponse, float arousalMotion)
