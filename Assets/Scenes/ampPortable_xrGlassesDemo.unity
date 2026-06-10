@@ -600,7 +600,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!114 &171230029
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -5947,7 +5947,7 @@ MonoBehaviour:
   ProfileId: Default
   Seed: 12345
   ActiveSignalSource: 1
-  UseManualVisualizationDrivers: 1
+  UseManualVisualizationDrivers: 0
   RedisHost: 10.215.55.160
   RedisPort: 6379
   RedisChannel: engagement_score
@@ -6019,7 +6019,7 @@ MonoBehaviour:
   ParticleMeshBoundsSize: {x: 2.8, y: 1.2, z: 2.8}
   ParticleMeshBoundsPadding: {x: 0.08, y: 0.08, z: 0.08}
   FaceGrabbableVisualizationsToCamera: 1
-  FaceVisualizationsWhileGrabbed: 1
+  FaceVisualizationsWhileGrabbed: 0
   KeepPlacedVisualizationsFacingCamera: 1
   GrabFacingYawOnly: 1
   GrabFacingFlipForward: 1
@@ -7481,7 +7481,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!224 &2056354647
 RectTransform:
   m_ObjectHideFlags: 0
