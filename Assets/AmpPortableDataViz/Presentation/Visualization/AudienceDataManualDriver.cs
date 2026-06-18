@@ -36,7 +36,7 @@ namespace AmpPortableDataViz.Presentation.Visualization
         [SerializeField, Range(PhysioZScoreMin, PhysioZScoreMax)] private float heartRateStdDev;
         [SerializeField, Range(PhysioZScoreMin, PhysioZScoreMax)] private float interBeatIntervalStdDev;
 
-        [Header("Emotion")]
+        [Header("Affective State")]
         [SerializeField, Range(0f, 2f)] private float arousal = 1f;
         [SerializeField, Range(0f, 2f)] private float valence = 1f;
 
