@@ -3,9 +3,10 @@ using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Linq;
 using System.Globalization;
-using System.Text.Json;
 using System.Threading;
 using System.Threading.Tasks;
+using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
 using StackExchange.Redis;
 using UnityEngine;
 
@@ -118,9 +119,9 @@ public static class RedisSubscriber
 
         try
         {
-            using var jsonDoc = JsonDocument.Parse(payload);
+            var root = JToken.Parse(payload);
             var normalizedChannel = NormalizeChannelName(channelName) ?? string.Empty;
-            message = ParseRedisMessage(normalizedChannel, jsonDoc.RootElement, payload);
+            message = ParseRedisMessage(normalizedChannel, root, payload);
             return true;
         }
         catch (JsonException)
@@ -321,12 +322,13 @@ public static class RedisSubscriber
         }
     }
 
-    private static RedisMessage ParseRedisMessage(string channelName, JsonElement rootElement, string rawPayload)
+    private static RedisMessage ParseRedisMessage(string channelName, JToken rootElement, string rawPayload)
     {
-        if (rootElement.ValueKind == JsonValueKind.Object)
+        if (rootElement.Type == JTokenType.Object)
         {
+            var rootObject = (JObject)rootElement;
             double value;
-            if (rootElement.TryGetProperty("value", out var valueProp))
+            if (rootObject.TryGetValue("value", StringComparison.Ordinal, out var valueProp))
             {
                 value = ReadAsDouble(valueProp);
             }
@@ -339,11 +341,11 @@ public static class RedisSubscriber
                 value = ExtractFirstNumericValue(rootElement);
             }
 
-            var sequence = rootElement.TryGetProperty("sequence", out var sequenceProp)
+            var sequence = rootObject.TryGetValue("sequence", StringComparison.Ordinal, out var sequenceProp)
                 ? ReadAsInt(sequenceProp)
                 : -1;
 
-            var timestamp = rootElement.TryGetProperty("timestamp", out var timestampProp)
+            var timestamp = rootObject.TryGetValue("timestamp", StringComparison.Ordinal, out var timestampProp)
                 ? ReadAsString(timestampProp)
                 : string.Empty;
 
@@ -355,7 +357,7 @@ public static class RedisSubscriber
         return new RedisMessage(channelName, primitiveValue, -1, string.Empty, rawPayload);
     }
 
-    private static bool TryExtractEngagementScore(JsonElement rootElement, out double value)
+    private static bool TryExtractEngagementScore(JToken rootElement, out double value)
     {
         if (TryReadNamedNumericProperty(rootElement, EngagementAggregatePropertyNames, out value))
         {
@@ -380,13 +382,13 @@ public static class RedisSubscriber
         return TryAverageNumericLeaves(rootElement, out value);
     }
 
-    private static bool TryAverageNumericInNamedContainers(JsonElement element, out double value)
+    private static bool TryAverageNumericInNamedContainers(JToken element, out double value)
     {
         value = 0d;
 
-        if (element.ValueKind == JsonValueKind.Object)
+        if (element.Type == JTokenType.Object)
         {
-            foreach (var property in element.EnumerateObject())
+            foreach (var property in element.Children<JProperty>())
             {
                 if (MatchesAny(property.Name, EngagementScoreContainerPropertyNames))
                 {
@@ -403,9 +405,9 @@ public static class RedisSubscriber
                 }
             }
         }
-        else if (element.ValueKind == JsonValueKind.Array)
+        else if (element.Type == JTokenType.Array)
         {
-            foreach (var item in element.EnumerateArray())
+            foreach (var item in element.Children())
             {
                 if (TryAverageNumericInNamedContainers(item, out value))
                 {
@@ -417,18 +419,18 @@ public static class RedisSubscriber
         return false;
     }
 
-    private static bool TryAverageDirectNumericProperties(JsonElement element, out double value)
+    private static bool TryAverageDirectNumericProperties(JToken element, out double value)
     {
         value = 0d;
 
-        if (element.ValueKind != JsonValueKind.Object)
+        if (element.Type != JTokenType.Object)
         {
             return false;
         }
 
         double sum = 0d;
         int count = 0;
-        foreach (var property in element.EnumerateObject())
+        foreach (var property in element.Children<JProperty>())
         {
             if (IsNumericMetadataProperty(property.Name))
             {
@@ -452,7 +454,7 @@ public static class RedisSubscriber
         return true;
     }
 
-    private static bool TryAverageNamedNumericLeaves(JsonElement element, string[] propertyNames, out double value)
+    private static bool TryAverageNamedNumericLeaves(JToken element, string[] propertyNames, out double value)
     {
         double sum = 0d;
         int count = 0;
@@ -468,11 +470,11 @@ public static class RedisSubscriber
         return true;
     }
 
-    private static void AccumulateNamedNumericLeaves(JsonElement element, string[] propertyNames, ref double sum, ref int count)
+    private static void AccumulateNamedNumericLeaves(JToken element, string[] propertyNames, ref double sum, ref int count)
     {
-        if (element.ValueKind == JsonValueKind.Object)
+        if (element.Type == JTokenType.Object)
         {
-            foreach (var property in element.EnumerateObject())
+            foreach (var property in element.Children<JProperty>())
             {
                 if (MatchesAny(property.Name, propertyNames))
                 {
@@ -488,16 +490,16 @@ public static class RedisSubscriber
                 AccumulateNamedNumericLeaves(property.Value, propertyNames, ref sum, ref count);
             }
         }
-        else if (element.ValueKind == JsonValueKind.Array)
+        else if (element.Type == JTokenType.Array)
         {
-            foreach (var item in element.EnumerateArray())
+            foreach (var item in element.Children())
             {
                 AccumulateNamedNumericLeaves(item, propertyNames, ref sum, ref count);
             }
         }
     }
 
-    private static bool TryAverageNumericLeaves(JsonElement element, out double value)
+    private static bool TryAverageNumericLeaves(JToken element, out double value)
     {
         double sum = 0d;
         int count = 0;
@@ -513,12 +515,12 @@ public static class RedisSubscriber
         return true;
     }
 
-    private static void AccumulateNumericLeaves(JsonElement element, ref double sum, ref int count)
+    private static void AccumulateNumericLeaves(JToken element, ref double sum, ref int count)
     {
-        switch (element.ValueKind)
+        switch (element.Type)
         {
-            case JsonValueKind.Object:
-                foreach (var property in element.EnumerateObject())
+            case JTokenType.Object:
+                foreach (var property in element.Children<JProperty>())
                 {
                     if (IsNumericMetadataProperty(property.Name))
                     {
@@ -528,8 +530,8 @@ public static class RedisSubscriber
                     AccumulateNumericLeaves(property.Value, ref sum, ref count);
                 }
                 break;
-            case JsonValueKind.Array:
-                foreach (var item in element.EnumerateArray())
+            case JTokenType.Array:
+                foreach (var item in element.Children())
                 {
                     AccumulateNumericLeaves(item, ref sum, ref count);
                 }
@@ -545,16 +547,16 @@ public static class RedisSubscriber
         }
     }
 
-    private static bool TryReadNamedNumericProperty(JsonElement element, string[] propertyNames, out double value)
+    private static bool TryReadNamedNumericProperty(JToken element, string[] propertyNames, out double value)
     {
         value = 0d;
 
-        if (element.ValueKind != JsonValueKind.Object)
+        if (element.Type != JTokenType.Object)
         {
             return false;
         }
 
-        foreach (var property in element.EnumerateObject())
+        foreach (var property in element.Children<JProperty>())
         {
             if (!MatchesAny(property.Name, propertyNames))
             {
@@ -572,12 +574,12 @@ public static class RedisSubscriber
         return false;
     }
 
-    private static double ExtractFirstNumericValue(JsonElement rootElement)
+    private static double ExtractFirstNumericValue(JToken rootElement)
     {
-        foreach (var property in rootElement.EnumerateObject())
+        foreach (var property in rootElement.Children<JProperty>())
         {
-            if (property.Value.ValueKind == JsonValueKind.Object ||
-                property.Value.ValueKind == JsonValueKind.Array)
+            if (property.Value.Type == JTokenType.Object ||
+                property.Value.Type == JTokenType.Array)
             {
                 continue;
             }
@@ -592,24 +594,23 @@ public static class RedisSubscriber
         return 0d;
     }
 
-    private static double ReadAsDouble(JsonElement element, double fallback = 0d)
+    private static double ReadAsDouble(JToken element, double fallback = 0d)
     {
         try
         {
-            switch (element.ValueKind)
+            switch (element.Type)
             {
-                case JsonValueKind.Number:
-                    return element.GetDouble();
-                case JsonValueKind.String:
-                    if (double.TryParse(element.GetString(), NumberStyles.Float, CultureInfo.InvariantCulture, out var parsed))
+                case JTokenType.Integer:
+                case JTokenType.Float:
+                    return element.Value<double>();
+                case JTokenType.String:
+                    if (double.TryParse(element.Value<string>(), NumberStyles.Float, CultureInfo.InvariantCulture, out var parsed))
                     {
                         return parsed;
                     }
                     break;
-                case JsonValueKind.True:
-                    return 1d;
-                case JsonValueKind.False:
-                    return 0d;
+                case JTokenType.Boolean:
+                    return element.Value<bool>() ? 1d : 0d;
             }
         }
         catch
@@ -648,22 +649,18 @@ public static class RedisSubscriber
         return !double.IsNaN(value) && !double.IsInfinity(value);
     }
 
-    private static int ReadAsInt(JsonElement element, int fallback = -1)
+    private static int ReadAsInt(JToken element, int fallback = -1)
     {
         try
         {
-            switch (element.ValueKind)
+            switch (element.Type)
             {
-                case JsonValueKind.Number:
-                    if (element.TryGetInt32(out var intVal))
-                    {
-                        return intVal;
-                    }
-
-                    var asDouble = element.GetDouble();
-                    return (int)Math.Round(asDouble);
-                case JsonValueKind.String:
-                    if (int.TryParse(element.GetString(), NumberStyles.Integer, CultureInfo.InvariantCulture, out var parsed))
+                case JTokenType.Integer:
+                    return element.Value<int>();
+                case JTokenType.Float:
+                    return (int)Math.Round(element.Value<double>());
+                case JTokenType.String:
+                    if (int.TryParse(element.Value<string>(), NumberStyles.Integer, CultureInfo.InvariantCulture, out var parsed))
                     {
                         return parsed;
                     }
@@ -678,18 +675,18 @@ public static class RedisSubscriber
         return fallback;
     }
 
-    private static string ReadAsString(JsonElement element)
+    private static string ReadAsString(JToken element)
     {
         try
         {
-            switch (element.ValueKind)
+            switch (element.Type)
             {
-                case JsonValueKind.String:
-                    return element.GetString() ?? string.Empty;
-                case JsonValueKind.Number:
-                case JsonValueKind.True:
-                case JsonValueKind.False:
-                    return element.GetRawText();
+                case JTokenType.String:
+                    return element.Value<string>() ?? string.Empty;
+                case JTokenType.Integer:
+                case JTokenType.Float:
+                case JTokenType.Boolean:
+                    return element.ToString(Formatting.None);
             }
         }
         catch

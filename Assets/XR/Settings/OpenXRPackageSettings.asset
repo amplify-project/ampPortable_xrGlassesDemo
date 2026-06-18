@@ -639,8 +639,6 @@ MonoBehaviour:
   lateLatchingMode: 0
   lateLatchingDebug: 0
   optimizeMultiviewRenderRegions: 0
-  m_multiviewRenderRegionsOptimizationMode: 0
-  m_hasMigratedMultiviewRenderRegions: 1
   spacewarpMotionVectorTextureFormat: 0
 --- !u!114 &3843051431942383266
 MonoBehaviour:
@@ -655,12 +653,9 @@ MonoBehaviour:
   m_Name: Android
   m_EditorClassIdentifier: Unity.XR.OpenXR::UnityEngine.XR.OpenXR.OpenXRSettings
   features:
-  - {fileID: 6347001660375775554}
-  - {fileID: 3599448508941947857}
   - {fileID: 4952300268843299466}
   - {fileID: -4668250468023854392}
   - {fileID: -1670026370884878779}
-  - {fileID: -5000004789587379906}
   - {fileID: -5971154430838410656}
   - {fileID: 2163861146641801134}
   - {fileID: -8879597201346511142}
@@ -686,11 +681,6 @@ MonoBehaviour:
   m_spacewarpMotionVectorTextureFormat: 0
   m_optimizeBufferDiscards: 0
   m_symmetricProjection: 0
-  m_optimizeMultiviewRenderRegions: 0
-  m_multiviewRenderRegionsOptimizationMode: 0
-  m_hasMigratedMultiviewRenderRegionSetting: 1
-  m_foveatedRenderingApi: 0
-  m_useOpenXRPredictedTime: 0
 --- !u!114 &3896628983742280235
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -926,7 +916,6 @@ MonoBehaviour:
   targetOpenXRApiVersion: 
   required: 0
   customRuntimeLoaderName: 
-  m_UseRightHandedNDC: 0
 --- !u!114 &6564017364805645056
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -943,7 +932,6 @@ MonoBehaviour:
   - {fileID: -6482931868843151432}
   - {fileID: 4151915057237610315}
   - {fileID: -6899903146281131395}
-  - {fileID: 1780304539242936150}
   - {fileID: 6324650235706831408}
   - {fileID: 5578235616831410958}
   - {fileID: 6741464490598621729}
@@ -971,11 +959,6 @@ MonoBehaviour:
   m_spacewarpMotionVectorTextureFormat: 0
   m_optimizeBufferDiscards: 0
   m_symmetricProjection: 0
-  m_optimizeMultiviewRenderRegions: 0
-  m_multiviewRenderRegionsOptimizationMode: 0
-  m_hasMigratedMultiviewRenderRegionSetting: 1
-  m_foveatedRenderingApi: 0
-  m_useOpenXRPredictedTime: 0
 --- !u!114 &6741464490598621729
 MonoBehaviour:
   m_ObjectHideFlags: 0
