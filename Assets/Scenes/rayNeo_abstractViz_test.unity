@@ -270,6 +270,7 @@ GameObject:
   - component: {fileID: 403005149}
   - component: {fileID: 403005148}
   - component: {fileID: 403005150}
+  - component: {fileID: 403005151}
   m_Layer: 0
   m_Name: VizManager
   m_TagString: Untagged
@@ -332,6 +333,25 @@ MonoBehaviour:
   minScale: 0.35
   maxScale: 2.5
   forwardSwipeIsRightSwipe: 1
+  logDiagnostics: 1
+--- !u!114 &403005151
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 403005147}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2c9a936a2a0f4f2e8ac925a4b67cf4e8, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  visualizationRoots:
+  - {fileID: 487737870}
+  - {fileID: 1320515583}
+  yStep: 0.1
+  minLocalY: -1
+  maxLocalY: 1
   logDiagnostics: 1
 --- !u!1 &487737867 stripped
 GameObject:
