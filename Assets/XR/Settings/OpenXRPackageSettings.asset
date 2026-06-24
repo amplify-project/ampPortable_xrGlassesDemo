@@ -62,7 +62,7 @@ MonoBehaviour:
   required: 0
   OpenSLAMOnStart: 0
   ATWSupport: 0
-  CameraAttitudeType: 8193
+  CameraAttitudeType: 4097
 --- !u!114 &-6899903146281131395
 MonoBehaviour:
   m_ObjectHideFlags: 0

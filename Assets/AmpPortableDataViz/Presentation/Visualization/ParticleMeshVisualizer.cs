@@ -15,6 +15,8 @@ namespace AmpPortableDataViz.Presentation.Visualization
     public sealed class ParticleMeshVisualizer : MonoBehaviour, IVisualizer<ParticleMeshSignalSample>
     {
         private const float Tau = Mathf.PI * 2f;
+        private const float MinVisualScale = 0.1f;
+        private const float MaxVisualScale = 5f;
         private static readonly int BaseColorPropertyId = Shader.PropertyToID("_BaseColor");
         private static readonly int ColorPropertyId = Shader.PropertyToID("_Color");
 
@@ -24,7 +26,7 @@ namespace AmpPortableDataViz.Presentation.Visualization
         [Header("Mesh")]
         [SerializeField, Range(4, 96)] private int gridWidth = 32;
         [SerializeField, Range(4, 96)] private int gridHeight = 32;
-        [SerializeField, Range(0.1f, 5f)] private float visualScale = 1.25f;
+        [SerializeField, Range(MinVisualScale, MaxVisualScale)] private float visualScale = 1.25f;
         [SerializeField, Range(0.01f, 2f)] private float meshCoherence = 0.75f;
 
         [Header("Motion")]
@@ -377,6 +379,7 @@ namespace AmpPortableDataViz.Presentation.Visualization
         {
             gridWidth = Mathf.Max(4, gridWidth);
             gridHeight = Mathf.Max(4, gridHeight);
+            visualScale = Mathf.Clamp(visualScale, MinVisualScale, MaxVisualScale);
             engagementLatticeLineWidth = Mathf.Clamp(engagementLatticeLineWidth, 0.0005f, 0.02f);
             engagementLatticeMinimumWidthFactor = Mathf.Clamp01(engagementLatticeMinimumWidthFactor);
             engagementLatticeResponsePower = Mathf.Clamp(engagementLatticeResponsePower, 0.25f, 4f);
@@ -417,6 +420,13 @@ namespace AmpPortableDataViz.Presentation.Visualization
         public void Apply(in ParticleMeshSignalSample parameters, long timestampTicksUtc)
         {
             ReceiveSample(parameters, timestampTicksUtc, -1);
+        }
+
+        public float VisualScale => visualScale;
+
+        public void SetVisualScale(float value)
+        {
+            visualScale = Mathf.Clamp(value, MinVisualScale, MaxVisualScale);
         }
 
         private void OnManualDriverFrame(DataFrame<ParticleMeshSignalSample> frame)
