@@ -259,6 +259,105 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1001 &193282146
+PrefabInstance:
+  m_ObjectHideFlags: 0
+  serializedVersion: 2
+  m_Modification:
+    serializedVersion: 3
+    m_TransformParent: {fileID: 250959349}
+    m_Modifications:
+    - target: {fileID: 4718808774520319148, guid: f76925451474e044490134be6cd2b2bd, type: 3}
+      propertyPath: m_Name
+      value: ImageBoard (1)
+      objectReference: {fileID: 0}
+    - target: {fileID: 5215725546370811409, guid: f76925451474e044490134be6cd2b2bd, type: 3}
+      propertyPath: pathOrFileName
+      value: Corridinho do Algarve - Soprano Sax_2.png
+      objectReference: {fileID: 0}
+    - target: {fileID: 7352656975339755639, guid: f76925451474e044490134be6cd2b2bd, type: 3}
+      propertyPath: m_LocalPosition.x
+      value: 1.1
+      objectReference: {fileID: 0}
+    - target: {fileID: 7352656975339755639, guid: f76925451474e044490134be6cd2b2bd, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7352656975339755639, guid: f76925451474e044490134be6cd2b2bd, type: 3}
+      propertyPath: m_LocalPosition.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7352656975339755639, guid: f76925451474e044490134be6cd2b2bd, type: 3}
+      propertyPath: m_LocalRotation.w
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 7352656975339755639, guid: f76925451474e044490134be6cd2b2bd, type: 3}
+      propertyPath: m_LocalRotation.x
+      value: -0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7352656975339755639, guid: f76925451474e044490134be6cd2b2bd, type: 3}
+      propertyPath: m_LocalRotation.y
+      value: -0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7352656975339755639, guid: f76925451474e044490134be6cd2b2bd, type: 3}
+      propertyPath: m_LocalRotation.z
+      value: -0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7352656975339755639, guid: f76925451474e044490134be6cd2b2bd, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7352656975339755639, guid: f76925451474e044490134be6cd2b2bd, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7352656975339755639, guid: f76925451474e044490134be6cd2b2bd, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.z
+      value: 0
+      objectReference: {fileID: 0}
+    m_RemovedComponents: []
+    m_RemovedGameObjects: []
+    m_AddedGameObjects: []
+    m_AddedComponents: []
+  m_SourcePrefab: {fileID: 100100000, guid: f76925451474e044490134be6cd2b2bd, type: 3}
+--- !u!4 &193282147 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 7352656975339755639, guid: f76925451474e044490134be6cd2b2bd, type: 3}
+  m_PrefabInstance: {fileID: 193282146}
+  m_PrefabAsset: {fileID: 0}
+--- !u!1 &250959348
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 250959349}
+  m_Layer: 0
+  m_Name: StandardNotationParent
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 0
+--- !u!4 &250959349
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 250959348}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: -0.5, z: 3}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children:
+  - {fileID: 1320515583}
+  - {fileID: 193282147}
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &403005147
 GameObject:
   m_ObjectHideFlags: 0
@@ -291,7 +390,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   particleMeshRoot: {fileID: 487737867}
-  imageBoardRoot: {fileID: 1320515581}
+  imageBoardRoot: {fileID: 250959348}
   showParticleMeshOnStart: 0
   applyStartupState: 1
 --- !u!4 &403005149
@@ -323,7 +422,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   visualizationRoots:
   - {fileID: 487737870}
-  - {fileID: 1320515583}
+  - {fileID: 250959349}
   gazeCamera: {fileID: 864700092}
   maxGazeDistance: 10
   gazeLayerMask:
@@ -348,7 +447,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   visualizationRoots:
   - {fileID: 487737870}
-  - {fileID: 1320515583}
+  - {fileID: 250959349}
   yStep: 0.1
   minLocalY: -1
   maxLocalY: 1
@@ -653,7 +752,7 @@ PrefabInstance:
   serializedVersion: 2
   m_Modification:
     serializedVersion: 3
-    m_TransformParent: {fileID: 0}
+    m_TransformParent: {fileID: 250959349}
     m_Modifications:
     - target: {fileID: 4718808774520319148, guid: f76925451474e044490134be6cd2b2bd, type: 3}
       propertyPath: m_Name
@@ -661,11 +760,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 4718808774520319148, guid: f76925451474e044490134be6cd2b2bd, type: 3}
       propertyPath: m_IsActive
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 5215725546370811409, guid: f76925451474e044490134be6cd2b2bd, type: 3}
       propertyPath: pathOrFileName
-      value: Corridinho do Algarve - Soprano Sax_highRes.png
+      value: Corridinho do Algarve - Soprano Sax_1.png
       objectReference: {fileID: 0}
     - target: {fileID: 7352656975339755639, guid: f76925451474e044490134be6cd2b2bd, type: 3}
       propertyPath: m_LocalPosition.x
@@ -677,7 +776,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 7352656975339755639, guid: f76925451474e044490134be6cd2b2bd, type: 3}
       propertyPath: m_LocalPosition.z
-      value: 3
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 7352656975339755639, guid: f76925451474e044490134be6cd2b2bd, type: 3}
       propertyPath: m_LocalRotation.w
@@ -685,15 +784,15 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 7352656975339755639, guid: f76925451474e044490134be6cd2b2bd, type: 3}
       propertyPath: m_LocalRotation.x
-      value: 0
+      value: -0
       objectReference: {fileID: 0}
     - target: {fileID: 7352656975339755639, guid: f76925451474e044490134be6cd2b2bd, type: 3}
       propertyPath: m_LocalRotation.y
-      value: 0
+      value: -0
       objectReference: {fileID: 0}
     - target: {fileID: 7352656975339755639, guid: f76925451474e044490134be6cd2b2bd, type: 3}
       propertyPath: m_LocalRotation.z
-      value: 0
+      value: -0
       objectReference: {fileID: 0}
     - target: {fileID: 7352656975339755639, guid: f76925451474e044490134be6cd2b2bd, type: 3}
       propertyPath: m_LocalEulerAnglesHint.x
@@ -712,11 +811,6 @@ PrefabInstance:
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: f76925451474e044490134be6cd2b2bd, type: 3}
---- !u!1 &1320515581 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: 4718808774520319148, guid: f76925451474e044490134be6cd2b2bd, type: 3}
-  m_PrefabInstance: {fileID: 1214273933}
-  m_PrefabAsset: {fileID: 0}
 --- !u!4 &1320515583 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 7352656975339755639, guid: f76925451474e044490134be6cd2b2bd, type: 3}
@@ -796,7 +890,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 7919801646832807489, guid: 74e05b7be47103748b0057db90b75d78, type: 3}
       propertyPath: m_LocalPosition.y
-      value: 0
+      value: -0.5
       objectReference: {fileID: 0}
     - target: {fileID: 7919801646832807489, guid: 74e05b7be47103748b0057db90b75d78, type: 3}
       propertyPath: m_LocalPosition.z
@@ -856,5 +950,5 @@ SceneRoots:
   - {fileID: 1027992218}
   - {fileID: 637596220}
   - {fileID: 1600115299}
-  - {fileID: 1214273933}
+  - {fileID: 250959349}
   - {fileID: 403005149}
