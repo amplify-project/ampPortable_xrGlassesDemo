@@ -4,7 +4,13 @@
 
 This is a Unity XR glasses proof-of-concept for real-time audience data visualization. Visualizations act as abstract graphical scores and engagement/emotion displays.
 
-Unity version: `6000.3.10f1`
+Current working branch: `rayNeoPort`
+
+Current branch goal: port the XR Score Viewer app from XREAL Air 2 Ultra glasses to RayNeo X3 Pro glasses.
+
+Unity version for `rayNeoPort`: `2022.3.36f1`
+
+Main branch Unity version: `6000.3.10f1`
 
 Primary project code lives in:
 
@@ -64,7 +70,8 @@ Important packages include:
 - URP
 - LiveKit Unity SDK
 - NuGetForUnity
-- XREAL SDK via local package path
+- RayNeo SDK / ARDK for the `rayNeoPort` branch
+- XREAL SDK via local package path on the main branch and legacy XREAL work
 
 Do not alter `Packages/manifest.json` or `Packages/packages-lock.json` unless dependency work is explicitly requested.
 
@@ -79,7 +86,7 @@ Use Unity Test Runner when possible.
 Example Windows CLI command:
 
 ```powershell
-& "C:\Program Files\Unity\Hub\Editor\6000.3.10f1\Editor\Unity.exe" -batchmode -projectPath . -runTests -testPlatform PlayMode -testResults TestResults\playmode.xml -quit
+& "C:\Program Files\Unity\Hub\Editor\2022.3.36f1\Editor\Unity.exe" -batchmode -projectPath . -runTests -testPlatform PlayMode -testResults TestResults\playmode.xml -quit
 ```
 
 If Unity is not available from that path, report that tests could not be run and explain what was checked instead.
