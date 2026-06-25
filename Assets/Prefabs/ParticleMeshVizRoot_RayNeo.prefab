@@ -1,0 +1,135 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!1001 &6515723144000308657
+PrefabInstance:
+  m_ObjectHideFlags: 0
+  serializedVersion: 2
+  m_Modification:
+    serializedVersion: 3
+    m_TransformParent: {fileID: 0}
+    m_Modifications:
+    - target: {fileID: 462658995576620322, guid: 74e05b7be47103748b0057db90b75d78, type: 3}
+      propertyPath: InitialModule.startSize.scalar
+      value: 0.025
+      objectReference: {fileID: 0}
+    - target: {fileID: 632910883045713548, guid: 74e05b7be47103748b0057db90b75d78, type: 3}
+      propertyPath: m_Materials.Array.data[0]
+      value: 
+      objectReference: {fileID: 2100000, guid: 7231b177775e0454ba21848ce41db794, type: 2}
+    - target: {fileID: 4067197417196135219, guid: 74e05b7be47103748b0057db90b75d78, type: 3}
+      propertyPath: m_Name
+      value: ParticleMeshVizRoot_RayNeo
+      objectReference: {fileID: 0}
+    - target: {fileID: 5049573012337638692, guid: 74e05b7be47103748b0057db90b75d78, type: 3}
+      propertyPath: m_Materials.Array.data[0]
+      value: 
+      objectReference: {fileID: 2100000, guid: 72558d4b97c34224ab088264be7d1563, type: 2}
+    - target: {fileID: 5099490702948499052, guid: 74e05b7be47103748b0057db90b75d78, type: 3}
+      propertyPath: arousal
+      value: 0.59179986
+      objectReference: {fileID: 0}
+    - target: {fileID: 5099490702948499052, guid: 74e05b7be47103748b0057db90b75d78, type: 3}
+      propertyPath: valence
+      value: 0.583066
+      objectReference: {fileID: 0}
+    - target: {fileID: 5099490702948499052, guid: 74e05b7be47103748b0057db90b75d78, type: 3}
+      propertyPath: engagement
+      value: 0.5837391
+      objectReference: {fileID: 0}
+    - target: {fileID: 5099490702948499052, guid: 74e05b7be47103748b0057db90b75d78, type: 3}
+      propertyPath: noiseOffset
+      value: 437.26624
+      objectReference: {fileID: 0}
+    - target: {fileID: 5099490702948499052, guid: 74e05b7be47103748b0057db90b75d78, type: 3}
+      propertyPath: heartRateStdDev
+      value: 0.90741634
+      objectReference: {fileID: 0}
+    - target: {fileID: 5099490702948499052, guid: 74e05b7be47103748b0057db90b75d78, type: 3}
+      propertyPath: interBeatIntervalStdDev
+      value: -1.3507411
+      objectReference: {fileID: 0}
+    - target: {fileID: 5099490702948499052, guid: 74e05b7be47103748b0057db90b75d78, type: 3}
+      propertyPath: temperatureRateOfChangeStdDev
+      value: 1.3735896
+      objectReference: {fileID: 0}
+    - target: {fileID: 5099490702948499052, guid: 74e05b7be47103748b0057db90b75d78, type: 3}
+      propertyPath: tonicElectrodermalActivityStdDev
+      value: -1.3503059
+      objectReference: {fileID: 0}
+    - target: {fileID: 5099490702948499052, guid: 74e05b7be47103748b0057db90b75d78, type: 3}
+      propertyPath: skinConductanceResponseFrequencyStdDev
+      value: -0.95093876
+      objectReference: {fileID: 0}
+    - target: {fileID: 7649927837592745194, guid: 74e05b7be47103748b0057db90b75d78, type: 3}
+      propertyPath: m_Materials.Array.data[0]
+      value: 
+      objectReference: {fileID: 2100000, guid: 6fd344480969d5c4aaacaa81b4d6eeb0, type: 2}
+    - target: {fileID: 7919801646832807489, guid: 74e05b7be47103748b0057db90b75d78, type: 3}
+      propertyPath: m_LocalPosition.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7919801646832807489, guid: 74e05b7be47103748b0057db90b75d78, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7919801646832807489, guid: 74e05b7be47103748b0057db90b75d78, type: 3}
+      propertyPath: m_LocalPosition.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7919801646832807489, guid: 74e05b7be47103748b0057db90b75d78, type: 3}
+      propertyPath: m_LocalRotation.w
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 7919801646832807489, guid: 74e05b7be47103748b0057db90b75d78, type: 3}
+      propertyPath: m_LocalRotation.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7919801646832807489, guid: 74e05b7be47103748b0057db90b75d78, type: 3}
+      propertyPath: m_LocalRotation.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7919801646832807489, guid: 74e05b7be47103748b0057db90b75d78, type: 3}
+      propertyPath: m_LocalRotation.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7919801646832807489, guid: 74e05b7be47103748b0057db90b75d78, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7919801646832807489, guid: 74e05b7be47103748b0057db90b75d78, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7919801646832807489, guid: 74e05b7be47103748b0057db90b75d78, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8489548096852947066, guid: 74e05b7be47103748b0057db90b75d78, type: 3}
+      propertyPath: particleSize
+      value: 0.025
+      objectReference: {fileID: 0}
+    - target: {fileID: 8489548096852947066, guid: 74e05b7be47103748b0057db90b75d78, type: 3}
+      propertyPath: neutralColor.b
+      value: 0.506
+      objectReference: {fileID: 0}
+    - target: {fileID: 8489548096852947066, guid: 74e05b7be47103748b0057db90b75d78, type: 3}
+      propertyPath: highValenceColor.g
+      value: 0.625
+      objectReference: {fileID: 0}
+    - target: {fileID: 8489548096852947066, guid: 74e05b7be47103748b0057db90b75d78, type: 3}
+      propertyPath: lowEngagementAlpha
+      value: 0.75
+      objectReference: {fileID: 0}
+    - target: {fileID: 8489548096852947066, guid: 74e05b7be47103748b0057db90b75d78, type: 3}
+      propertyPath: arousalTrailMaterial
+      value: 
+      objectReference: {fileID: 2100000, guid: 5b101d5b79f8c0147bdcd1167fb8af49, type: 2}
+    - target: {fileID: 8489548096852947066, guid: 74e05b7be47103748b0057db90b75d78, type: 3}
+      propertyPath: engagementLatticeMaterial
+      value: 
+      objectReference: {fileID: 2100000, guid: 21bf74cb165f82545ad23077e60f1775, type: 2}
+    m_RemovedComponents: []
+    m_RemovedGameObjects: []
+    m_AddedGameObjects: []
+    m_AddedComponents: []
+  m_SourcePrefab: {fileID: 100100000, guid: 74e05b7be47103748b0057db90b75d78, type: 3}
