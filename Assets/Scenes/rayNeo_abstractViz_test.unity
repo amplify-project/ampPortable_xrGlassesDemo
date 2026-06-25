@@ -390,7 +390,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   particleMeshRoot: {fileID: 487737867}
-  imageBoardRoot: {fileID: 250959348}
+  imageBoardRoot: {fileID: 1541529391}
   showParticleMeshOnStart: 0
   applyStartupState: 1
 --- !u!4 &403005149
@@ -422,7 +422,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   visualizationRoots:
   - {fileID: 487737870}
-  - {fileID: 250959349}
+  - {fileID: 1541529392}
   gazeCamera: {fileID: 864700092}
   maxGazeDistance: 10
   gazeLayerMask:
@@ -447,9 +447,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   visualizationRoots:
   - {fileID: 487737870}
-  - {fileID: 250959349}
+  - {fileID: 1541529392}
   yStep: 0.1
-  minLocalY: -1
+  minLocalY: -2
   maxLocalY: 1
   logDiagnostics: 1
 --- !u!1 &487737867 stripped
@@ -816,6 +816,81 @@ Transform:
   m_CorrespondingSourceObject: {fileID: 7352656975339755639, guid: f76925451474e044490134be6cd2b2bd, type: 3}
   m_PrefabInstance: {fileID: 1214273933}
   m_PrefabAsset: {fileID: 0}
+--- !u!1001 &1541529390
+PrefabInstance:
+  m_ObjectHideFlags: 0
+  serializedVersion: 2
+  m_Modification:
+    serializedVersion: 3
+    m_TransformParent: {fileID: 0}
+    m_Modifications:
+    - target: {fileID: 4718808774520319148, guid: f76925451474e044490134be6cd2b2bd, type: 3}
+      propertyPath: m_Name
+      value: ImageBoard
+      objectReference: {fileID: 0}
+    - target: {fileID: 4718808774520319148, guid: f76925451474e044490134be6cd2b2bd, type: 3}
+      propertyPath: m_IsActive
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 5215725546370811409, guid: f76925451474e044490134be6cd2b2bd, type: 3}
+      propertyPath: pathOrFileName
+      value: Corridinho do Algarve - Soprano Sax_singleImgCropped.png
+      objectReference: {fileID: 0}
+    - target: {fileID: 7352656975339755639, guid: f76925451474e044490134be6cd2b2bd, type: 3}
+      propertyPath: m_LocalPosition.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7352656975339755639, guid: f76925451474e044490134be6cd2b2bd, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: -0.5
+      objectReference: {fileID: 0}
+    - target: {fileID: 7352656975339755639, guid: f76925451474e044490134be6cd2b2bd, type: 3}
+      propertyPath: m_LocalPosition.z
+      value: 3
+      objectReference: {fileID: 0}
+    - target: {fileID: 7352656975339755639, guid: f76925451474e044490134be6cd2b2bd, type: 3}
+      propertyPath: m_LocalRotation.w
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 7352656975339755639, guid: f76925451474e044490134be6cd2b2bd, type: 3}
+      propertyPath: m_LocalRotation.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7352656975339755639, guid: f76925451474e044490134be6cd2b2bd, type: 3}
+      propertyPath: m_LocalRotation.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7352656975339755639, guid: f76925451474e044490134be6cd2b2bd, type: 3}
+      propertyPath: m_LocalRotation.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7352656975339755639, guid: f76925451474e044490134be6cd2b2bd, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7352656975339755639, guid: f76925451474e044490134be6cd2b2bd, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7352656975339755639, guid: f76925451474e044490134be6cd2b2bd, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.z
+      value: 0
+      objectReference: {fileID: 0}
+    m_RemovedComponents: []
+    m_RemovedGameObjects: []
+    m_AddedGameObjects: []
+    m_AddedComponents: []
+  m_SourcePrefab: {fileID: 100100000, guid: f76925451474e044490134be6cd2b2bd, type: 3}
+--- !u!1 &1541529391 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 4718808774520319148, guid: f76925451474e044490134be6cd2b2bd, type: 3}
+  m_PrefabInstance: {fileID: 1541529390}
+  m_PrefabAsset: {fileID: 0}
+--- !u!4 &1541529392 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 7352656975339755639, guid: f76925451474e044490134be6cd2b2bd, type: 3}
+  m_PrefabInstance: {fileID: 1541529390}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1001 &1600115299
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -952,3 +1027,4 @@ SceneRoots:
   - {fileID: 1600115299}
   - {fileID: 250959349}
   - {fileID: 403005149}
+  - {fileID: 1541529390}
