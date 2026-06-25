@@ -210,8 +210,23 @@ public class RuntimePngLoader : MonoBehaviour
                 // Make an instance so we don't overwrite a shared material in editor
                 var mat = meshRenderer.material;
                 mat.SetTexture(materialTextureProperty, tex);
+                ApplyMeshRendererAspect(tex);
                 break;
         }
+    }
+
+    private void ApplyMeshRendererAspect(Texture2D tex)
+    {
+        if (tex == null || tex.width <= 0 || tex.height <= 0 || meshRenderer == null)
+        {
+            return;
+        }
+
+        float aspect = (float)tex.height / tex.width;
+        Transform targetTransform = meshRenderer.transform;
+        Vector3 scale = targetTransform.localScale;
+        float width = Mathf.Abs(scale.x) > 0.0001f ? scale.x : 1f;
+        targetTransform.localScale = new Vector3(width, Mathf.Abs(width) * aspect, scale.z);
     }
 
     private Sprite TextureToSprite(Texture2D tex)

@@ -665,7 +665,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 5215725546370811409, guid: f76925451474e044490134be6cd2b2bd, type: 3}
       propertyPath: pathOrFileName
-      value: Corridinho do Algarve - Soprano Sax.png
+      value: Corridinho do Algarve - Soprano Sax_highRes.png
       objectReference: {fileID: 0}
     - target: {fileID: 7352656975339755639, guid: f76925451474e044490134be6cd2b2bd, type: 3}
       propertyPath: m_LocalPosition.x
