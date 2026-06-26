@@ -651,7 +651,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 4718808774520319148, guid: f76925451474e044490134be6cd2b2bd, type: 3}
       propertyPath: m_IsActive
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 5215725546370811409, guid: f76925451474e044490134be6cd2b2bd, type: 3}
       propertyPath: pathOrFileName
@@ -811,6 +811,10 @@ PrefabInstance:
     - target: {fileID: 7070063373814244994, guid: 7fe113f1db4d2784d8f60c23f9c9137b, type: 3}
       propertyPath: m_Name
       value: ParticleMeshVizRoot_RayNeo
+      objectReference: {fileID: 0}
+    - target: {fileID: 7070063373814244994, guid: 7fe113f1db4d2784d8f60c23f9c9137b, type: 3}
+      propertyPath: m_IsActive
+      value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
