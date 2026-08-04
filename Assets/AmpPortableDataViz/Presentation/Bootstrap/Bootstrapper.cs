@@ -12,7 +12,6 @@ using AmpPortableDataViz.Presentation.Utility;
 using AmpPortableDataViz.Presentation.Visualization;
 using TMPro;
 using UnityEngine;
-using UnityEngine.XR.Interaction.Toolkit.Interactables;
 
 namespace AmpPortableDataViz.Presentation.Bootstrap
 {
@@ -151,24 +150,9 @@ namespace AmpPortableDataViz.Presentation.Bootstrap
         [Range(0.0001f, 0.05f)]
         public float GraphLineWidth = 0.01f;
 
-        [Header("Graph Group Interaction")]
-        public bool GraphGroupsGrabbable = true;
+        [Header("Graph Group Layout")]
         public Vector3 GraphItemBoundsSize = new Vector3(1f, 1f, 0.02f);
         public Vector3 GraphGroupBoundsPadding = new Vector3(0.05f, 0.05f, 0.05f);
-
-        [Header("Particle Mesh Interaction")]
-        public bool ParticleMeshesGrabbable = true;
-        public Vector3 ParticleMeshBoundsSize = new Vector3(2.8f, 1.2f, 2.8f);
-        public Vector3 ParticleMeshBoundsPadding = new Vector3(0.08f, 0.08f, 0.08f);
-
-        [Header("Grab Placement Facing")]
-        public bool FaceGrabbableVisualizationsToCamera = true;
-        public bool FaceVisualizationsWhileGrabbed = true;
-        public bool KeepPlacedVisualizationsFacingCamera = true;
-        public bool GrabFacingYawOnly = true;
-        public bool GrabFacingFlipForward;
-        [Min(0f)]
-        public float GrabFacingRotationSpeed = 18f;
 
         [Header("LiveKit Settings")]
         public string LiveKitTokenEndpoint = "https://cloud-api.livekit.io/api/sandbox/connection-details";
@@ -743,17 +727,6 @@ namespace AmpPortableDataViz.Presentation.Bootstrap
             }
 
             ConfigureManualDriverInstance(instance);
-            if (isGraphPrefab)
-            {
-                if (GraphGroupsGrabbable)
-                {
-                    ConfigureGraphGroupGrab(instance, Array.Empty<Vector3>());
-                }
-            }
-            else if (ParticleMeshesGrabbable)
-            {
-                ConfigureParticleMeshGrab(instance);
-            }
             _manualDriverInstances.Add(instance);
         }
 
@@ -943,11 +916,6 @@ namespace AmpPortableDataViz.Presentation.Bootstrap
                     HeartRatePump = heartRatePump
                 });
 
-                if (ParticleMeshesGrabbable)
-                {
-                    ConfigureParticleMeshGrab(instance);
-                }
-
                 AttachDeviceLabel(instance, definition.DeviceId, deviceIndex);
                 deviceIndex++;
             }
@@ -1055,11 +1023,6 @@ namespace AmpPortableDataViz.Presentation.Bootstrap
                     ArousalPump = arousalPump,
                     EngagementPump = engagementPump
                 });
-
-                if (ParticleMeshesGrabbable)
-                {
-                    ConfigureParticleMeshGrab(instance);
-                }
 
                 AttachDeviceLabel(instance, definition.DeviceId, deviceIndex);
                 deviceIndex++;
@@ -1251,11 +1214,6 @@ namespace AmpPortableDataViz.Presentation.Bootstrap
                     continue;
                 }
 
-                if (GraphGroupsGrabbable)
-                {
-                    ConfigureGraphGroupGrab(groupRoot, offsetsInUse);
-                }
-
                 AttachGraphGroupPanel(groupRoot, offsetsInUse);
                 AttachGraphGroupLabel(groupRoot, definition.DeviceId, deviceIndex, offsetsInUse);
                 _graphDeviceGroups.Add(instance);
@@ -1370,11 +1328,6 @@ namespace AmpPortableDataViz.Presentation.Bootstrap
                     ArousalPump = arousalPump,
                     EngagementPump = engagementPump
                 });
-
-                if (GraphGroupsGrabbable)
-                {
-                    ConfigureGraphGroupGrab(instance, Array.Empty<Vector3>());
-                }
 
                 AttachGraphGroupLabel(instance, definition.DeviceId, deviceIndex, Array.Empty<Vector3>());
                 deviceIndex++;
@@ -1958,244 +1911,6 @@ namespace AmpPortableDataViz.Presentation.Bootstrap
             // Re-apply the channel offset so Bootstrapper-controlled layouts remain in effect.
             instance.transform.localPosition = localOffset;
             return instance;
-        }
-
-        private void ConfigureGraphGroupGrab(GameObject groupRoot, IReadOnlyList<Vector3> channelOffsets)
-        {
-            if (groupRoot == null)
-            {
-                return;
-            }
-
-            var rigidbody = groupRoot.GetComponent<Rigidbody>();
-            if (rigidbody == null)
-            {
-                rigidbody = groupRoot.AddComponent<Rigidbody>();
-            }
-
-            rigidbody.useGravity = false;
-            rigidbody.isKinematic = true;
-
-            var collider = groupRoot.GetComponent<BoxCollider>();
-            if (collider == null)
-            {
-                collider = groupRoot.AddComponent<BoxCollider>();
-            }
-
-            if (TryCalculateGraphGroupBounds(channelOffsets, out var center, out var size))
-            {
-                collider.center = center;
-                collider.size = size;
-            }
-
-            var grab = groupRoot.GetComponent<XRGrabInteractable>();
-            if (grab == null)
-            {
-                grab = groupRoot.AddComponent<XRGrabInteractable>();
-            }
-
-            grab.distanceCalculationMode = XRBaseInteractable.DistanceCalculationMode.ColliderPosition;
-            grab.selectMode = InteractableSelectMode.Multiple;
-            grab.focusMode = InteractableFocusMode.Multiple;
-            grab.movementType = XRBaseInteractable.MovementType.Kinematic;
-            grab.trackPosition = true;
-            grab.smoothPosition = true;
-            grab.smoothPositionAmount = 14f;
-            grab.tightenPosition = 0.1f;
-            grab.useDynamicAttach = true;
-            grab.matchAttachPosition = true;
-            grab.matchAttachRotation = true;
-            grab.snapToColliderVolume = true;
-            grab.reinitializeDynamicAttachEverySingleGrab = true;
-            grab.attachEaseInTime = 0.15f;
-
-            if (grab.colliders != null)
-            {
-                grab.colliders.Clear();
-                grab.colliders.Add(collider);
-            }
-
-            ConfigureGrabFacing(groupRoot);
-        }
-
-        private void ConfigureParticleMeshGrab(GameObject visualInstance)
-        {
-            if (visualInstance == null)
-            {
-                return;
-            }
-
-            var particleMesh = visualInstance.GetComponentInChildren<ParticleMeshVisualizer>(true);
-            if (particleMesh == null)
-            {
-                return;
-            }
-
-            var grab = particleMesh.GetComponentInParent<XRGrabInteractable>();
-            if (grab == null || !grab.transform.IsChildOf(visualInstance.transform))
-            {
-                grab = visualInstance.GetComponentInChildren<XRGrabInteractable>(true);
-            }
-
-            GameObject grabRoot = grab != null ? grab.gameObject : particleMesh.gameObject;
-            var rigidbody = grabRoot.GetComponent<Rigidbody>();
-            if (rigidbody == null)
-            {
-                rigidbody = grabRoot.AddComponent<Rigidbody>();
-            }
-
-            rigidbody.useGravity = false;
-            rigidbody.isKinematic = true;
-
-            bool needsGeneratedCollider = grab == null || grab.colliders == null || grab.colliders.Count == 0;
-            var collider = needsGeneratedCollider ? ResolveParticleMeshGrabCollider(grabRoot, particleMesh) : null;
-            if (grab == null)
-            {
-                grab = grabRoot.AddComponent<XRGrabInteractable>();
-            }
-
-            grab.distanceCalculationMode = XRBaseInteractable.DistanceCalculationMode.ColliderPosition;
-            grab.selectMode = InteractableSelectMode.Multiple;
-            grab.focusMode = InteractableFocusMode.Multiple;
-            grab.movementType = XRBaseInteractable.MovementType.Kinematic;
-            grab.trackPosition = true;
-            grab.smoothPosition = true;
-            grab.smoothPositionAmount = 14f;
-            grab.tightenPosition = 0.1f;
-            grab.useDynamicAttach = true;
-            grab.matchAttachPosition = true;
-            grab.matchAttachRotation = true;
-            grab.snapToColliderVolume = true;
-            grab.reinitializeDynamicAttachEverySingleGrab = true;
-            grab.attachEaseInTime = 0.15f;
-
-            if (collider != null && grab.colliders != null && grab.colliders.Count == 0)
-            {
-                grab.colliders.Add(collider);
-            }
-
-            ConfigureGrabFacing(grabRoot);
-        }
-
-        private Collider ResolveParticleMeshGrabCollider(GameObject grabRoot, ParticleMeshVisualizer particleMesh)
-        {
-            if (grabRoot == null || particleMesh == null)
-            {
-                return null;
-            }
-
-            var collider = grabRoot.GetComponent<BoxCollider>();
-            if (collider == null)
-            {
-                collider = grabRoot.AddComponent<BoxCollider>();
-            }
-
-            if (TryCalculateParticleMeshBounds(grabRoot.transform, particleMesh, out var center, out var size))
-            {
-                collider.center = center;
-                collider.size = size;
-            }
-
-            return collider;
-        }
-
-        private bool TryCalculateParticleMeshBounds(Transform boundsRoot, ParticleMeshVisualizer particleMesh, out Vector3 center, out Vector3 size)
-        {
-            center = Vector3.zero;
-            size = ParticleMeshBoundsSize;
-
-            if (boundsRoot == null || particleMesh == null)
-            {
-                return ParticleMeshBoundsSize.sqrMagnitude > 1e-6f;
-            }
-
-            Vector3 min = new Vector3(float.PositiveInfinity, float.PositiveInfinity, float.PositiveInfinity);
-            Vector3 max = new Vector3(float.NegativeInfinity, float.NegativeInfinity, float.NegativeInfinity);
-            bool hasBounds = false;
-
-            var renderers = particleMesh.GetComponentsInChildren<Renderer>(includeInactive: false);
-            foreach (var renderer in renderers)
-            {
-                if (renderer == null || !renderer.enabled)
-                {
-                    continue;
-                }
-
-                EncapsulateWorldBounds(boundsRoot, renderer.bounds, ref min, ref max, ref hasBounds);
-            }
-
-            if (!hasBounds)
-            {
-                return ParticleMeshBoundsSize.sqrMagnitude > 1e-6f;
-            }
-
-            center = (min + max) * 0.5f;
-            size = max - min;
-            size += ParticleMeshBoundsPadding * 2f;
-            size.x = Mathf.Max(size.x, ParticleMeshBoundsSize.x);
-            size.y = Mathf.Max(size.y, ParticleMeshBoundsSize.y);
-            size.z = Mathf.Max(size.z, ParticleMeshBoundsSize.z);
-            return size.sqrMagnitude > 1e-6f;
-        }
-
-        private static void EncapsulateWorldBounds(Transform localRoot, Bounds bounds, ref Vector3 min, ref Vector3 max, ref bool hasBounds)
-        {
-            Vector3 boundsMin = bounds.min;
-            Vector3 boundsMax = bounds.max;
-
-            EncapsulateLocalPoint(localRoot, new Vector3(boundsMin.x, boundsMin.y, boundsMin.z), ref min, ref max, ref hasBounds);
-            EncapsulateLocalPoint(localRoot, new Vector3(boundsMin.x, boundsMin.y, boundsMax.z), ref min, ref max, ref hasBounds);
-            EncapsulateLocalPoint(localRoot, new Vector3(boundsMin.x, boundsMax.y, boundsMin.z), ref min, ref max, ref hasBounds);
-            EncapsulateLocalPoint(localRoot, new Vector3(boundsMin.x, boundsMax.y, boundsMax.z), ref min, ref max, ref hasBounds);
-            EncapsulateLocalPoint(localRoot, new Vector3(boundsMax.x, boundsMin.y, boundsMin.z), ref min, ref max, ref hasBounds);
-            EncapsulateLocalPoint(localRoot, new Vector3(boundsMax.x, boundsMin.y, boundsMax.z), ref min, ref max, ref hasBounds);
-            EncapsulateLocalPoint(localRoot, new Vector3(boundsMax.x, boundsMax.y, boundsMin.z), ref min, ref max, ref hasBounds);
-            EncapsulateLocalPoint(localRoot, new Vector3(boundsMax.x, boundsMax.y, boundsMax.z), ref min, ref max, ref hasBounds);
-        }
-
-        private static void EncapsulateLocalPoint(Transform localRoot, Vector3 worldPoint, ref Vector3 min, ref Vector3 max, ref bool hasBounds)
-        {
-            Vector3 point = localRoot != null ? localRoot.InverseTransformPoint(worldPoint) : worldPoint;
-            if (!hasBounds)
-            {
-                min = point;
-                max = point;
-                hasBounds = true;
-                return;
-            }
-
-            min = Vector3.Min(min, point);
-            max = Vector3.Max(max, point);
-        }
-
-        private void ConfigureGrabFacing(GameObject grabRoot)
-        {
-            if (!FaceGrabbableVisualizationsToCamera || grabRoot == null)
-            {
-                return;
-            }
-
-            var facing = grabRoot.GetComponent<FaceUserOnGrabPlacement>();
-            if (facing == null)
-            {
-                facing = grabRoot.AddComponent<FaceUserOnGrabPlacement>();
-            }
-
-            Transform cameraTransform = null;
-            var mainCamera = Camera.main;
-            if (mainCamera != null)
-            {
-                cameraTransform = mainCamera.transform;
-            }
-
-            facing.Configure(
-                cameraTransform,
-                FaceVisualizationsWhileGrabbed,
-                KeepPlacedVisualizationsFacingCamera,
-                GrabFacingYawOnly,
-                GrabFacingFlipForward,
-                GrabFacingRotationSpeed);
-            facing.FaceNow();
         }
 
         private bool TryCalculateGraphGroupBounds(IReadOnlyList<Vector3> channelOffsets, out Vector3 center, out Vector3 size)
@@ -3020,18 +2735,6 @@ namespace AmpPortableDataViz.Presentation.Bootstrap
             var particleMeshVisualizer = instance.GetComponentInChildren<ParticleMeshVisualizer>(true);
             if (particleMeshVisualizer != null)
             {
-                var grab = particleMeshVisualizer.GetComponentInParent<XRGrabInteractable>();
-                if (grab != null && grab.transform.IsChildOf(instance.transform))
-                {
-                    return grab.transform;
-                }
-
-                grab = instance.GetComponentInChildren<XRGrabInteractable>(true);
-                if (grab != null)
-                {
-                    return grab.transform;
-                }
-
                 return particleMeshVisualizer.transform;
             }
 

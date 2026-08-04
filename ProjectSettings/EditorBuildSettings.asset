@@ -8,13 +8,13 @@ EditorBuildSettings:
   - enabled: 0
     path: Assets/Scenes/SampleScene.unity
     guid: 99c9720ab356a0642a771bea13969a05
-  - enabled: 0
+  - enabled: 1
     path: Assets/Scenes/ampPortable_xrGlassesDemo.unity
     guid: abd89e4bd273a9146893c6869abb76f2
   - enabled: 0
     path: Assets/Samples/XR Interaction Toolkit/3.2.1/Hands Interaction Demo/HandsDemoScene.unity
     guid: 3ff35cecbcc52cc42945cf531638a60a
-  - enabled: 1
+  - enabled: 0
     path: Assets/Scenes/rayNeo_abstractViz_test.unity
     guid: 9ce31fa2e7594774e8f66632080addf4
   m_configObjects:
