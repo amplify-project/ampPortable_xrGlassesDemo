@@ -52,10 +52,8 @@ Avoid moving responsibilities between layers unless explicitly requested.
 
 The current active visualization work is around:
 
-- `Assets/AmpPortableDataViz/Presentation/Visualization/EngagementHudBinding.cs`
-- `Assets/AmpPortableDataViz/Presentation/Visualization/EmotionRayPlasmaManualDriver.cs`
-- `Assets/AmpPortableDataViz/Presentation/Visualization/EmotionRayPlasmaVisualizer.cs`
-- `Assets/AmpPortableDataViz/Presentation/Visualization/EmotionRayPlasmaBinding.cs`
+- `Assets/AmpPortableDataViz/Presentation/Visualization/GraphVisualizer.cs`
+- `Assets/AmpPortableDataViz/Presentation/Visualization/ParticleMeshVisualizer.cs`
 
 For bindings, preserve the pattern of mapping incoming data into visualizer parameters rather than mixing data acquisition directly into visualizer components.
 
@@ -64,14 +62,12 @@ For bindings, preserve the pattern of mapping incoming data into visualizer para
 Important packages include:
 
 - Unity XR Interaction Toolkit
-- Unity XR Hands
 - AR Foundation
 - OpenXR
 - URP
 - LiveKit Unity SDK
 - NuGetForUnity
 - RayNeo SDK / ARDK for the `rayNeoPort` branch
-- XREAL SDK via local package path on the main branch and legacy XREAL work
 
 Do not alter `Packages/manifest.json` or `Packages/packages-lock.json` unless dependency work is explicitly requested.
 

@@ -716,6 +716,10 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 139782922, guid: f82accd910f54e44cb54d6e87ad284d6, type: 3}
+      propertyPath: m_TrackingStateInput.m_Action.m_Name
+      value: Tracking State Input
+      objectReference: {fileID: 0}
     - target: {fileID: 8340958969312374639, guid: f82accd910f54e44cb54d6e87ad284d6, type: 3}
       propertyPath: m_Name
       value: XR Plugin
@@ -763,8 +767,65 @@ PrefabInstance:
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
-    m_AddedComponents: []
+    m_AddedComponents:
+    - targetCorrespondingSourceObject: {fileID: 4087872765269157519, guid: f82accd910f54e44cb54d6e87ad284d6, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 567705657}
   m_SourcePrefab: {fileID: 100100000, guid: f82accd910f54e44cb54d6e87ad284d6, type: 3}
+--- !u!20 &567705655 stripped
+Camera:
+  m_CorrespondingSourceObject: {fileID: 4087872765269157507, guid: f82accd910f54e44cb54d6e87ad284d6, type: 3}
+  m_PrefabInstance: {fileID: 567705654}
+  m_PrefabAsset: {fileID: 0}
+--- !u!1 &567705656 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 4087872765269157519, guid: f82accd910f54e44cb54d6e87ad284d6, type: 3}
+  m_PrefabInstance: {fileID: 567705654}
+  m_PrefabAsset: {fileID: 0}
+--- !u!114 &567705657
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 567705656}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a79441f348de89743a2939f4d699eac1, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_RenderShadows: 1
+  m_RequiresDepthTextureOption: 2
+  m_RequiresOpaqueTextureOption: 2
+  m_CameraType: 0
+  m_Cameras: []
+  m_RendererIndex: -1
+  m_VolumeLayerMask:
+    serializedVersion: 2
+    m_Bits: 1
+  m_VolumeTrigger: {fileID: 0}
+  m_VolumeFrameworkUpdateModeOption: 2
+  m_RenderPostProcessing: 0
+  m_Antialiasing: 0
+  m_AntialiasingQuality: 2
+  m_StopNaN: 0
+  m_Dithering: 0
+  m_ClearDepth: 1
+  m_AllowXRRendering: 1
+  m_AllowHDROutput: 1
+  m_UseScreenCoordOverride: 0
+  m_ScreenSizeOverride: {x: 0, y: 0, z: 0, w: 0}
+  m_ScreenCoordScaleBias: {x: 0, y: 0, z: 0, w: 0}
+  m_RequiresDepthTexture: 0
+  m_RequiresColorTexture: 0
+  m_Version: 2
+  m_TaaSettings:
+    m_Quality: 3
+    m_FrameInfluence: 0.1
+    m_JitterScale: 1
+    m_MipBias: 0
+    m_VarianceClampScale: 0.9
+    m_ContrastAdaptiveSharpening: 0
 --- !u!1 &645856976
 GameObject:
   m_ObjectHideFlags: 0
@@ -791,6 +852,50 @@ Transform:
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 5}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &662000459
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 662000461}
+  - component: {fileID: 662000460}
+  m_Layer: 0
+  m_Name: QuitApp
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &662000460
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 662000459}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0088fc322f08e0341b58a8503b1099af, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!4 &662000461
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 662000459}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -993,6 +1098,8 @@ GameObject:
   m_Component:
   - component: {fileID: 1076767360}
   - component: {fileID: 1076767361}
+  - component: {fileID: 1076767363}
+  - component: {fileID: 1076767362}
   m_Layer: 0
   m_Name: InteractionManager
   m_TagString: Untagged
@@ -1033,6 +1140,46 @@ MonoBehaviour:
   - {fileID: 645856976}
   startIndex: 0
   applyStartupState: 1
+--- !u!114 &1076767362
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1076767359}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2c9a936a2a0f4f2e8ac925a4b67cf4e8, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  visualizationToggle: {fileID: 1076767361}
+  yStep: 0.1
+  minLocalY: -2
+  maxLocalY: 2
+  logDiagnostics: 1
+--- !u!114 &1076767363
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1076767359}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 8f6a587c07fb4e74a9260f5c8e3c02e6, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  visualizationToggle: {fileID: 1076767361}
+  gazeCamera: {fileID: 567705655}
+  maxGazeDistance: 10
+  gazeLayerMask:
+    serializedVersion: 2
+    m_Bits: 4294967295
+  scaleStep: 0.15
+  minScale: 0.35
+  maxScale: 2.5
+  forwardSwipeIsRightSwipe: 1
+  logDiagnostics: 1
 --- !u!1 &1109378269
 GameObject:
   m_ObjectHideFlags: 0
@@ -1778,18 +1925,8 @@ MonoBehaviour:
   GraphHeartRateColor: {r: 0.95, g: 0.2, b: 0.2, a: 1}
   GraphEdaColor: {r: 0.2, g: 0.8, b: 0.95, a: 1}
   GraphLineWidth: 0.01
-  GraphGroupsGrabbable: 1
   GraphItemBoundsSize: {x: 1, y: 1, z: 0.02}
   GraphGroupBoundsPadding: {x: 0.05, y: 0.05, z: 0.05}
-  ParticleMeshesGrabbable: 1
-  ParticleMeshBoundsSize: {x: 2.8, y: 1.2, z: 2.8}
-  ParticleMeshBoundsPadding: {x: 0.08, y: 0.08, z: 0.08}
-  FaceGrabbableVisualizationsToCamera: 1
-  FaceVisualizationsWhileGrabbed: 0
-  KeepPlacedVisualizationsFacingCamera: 1
-  GrabFacingYawOnly: 1
-  GrabFacingFlipForward: 1
-  GrabFacingRotationSpeed: 18
   LiveKitTokenEndpoint: https://cloud-api.livekit.io/api/sandbox/connection-details
   LiveKitSandboxId: amp-portable-viz-16o67i
   LiveKitRoomName: xr-room
@@ -2197,3 +2334,4 @@ SceneRoots:
   - {fileID: 1165166120}
   - {fileID: 645856977}
   - {fileID: 171230033}
+  - {fileID: 662000461}

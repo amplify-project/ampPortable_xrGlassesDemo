@@ -20,6 +20,27 @@ namespace AmpPortableDataViz.Presentation.Interaction
 
         public int CurrentIndex => _currentIndex;
 
+        public bool TryGetCurrentVisualizationRoot(out Transform root)
+        {
+            root = null;
+
+            if (!HasVisualizationRoots())
+            {
+                return false;
+            }
+
+            _currentIndex = ClampIndex(_currentIndex);
+            var currentRoot = visualizationRoots[_currentIndex];
+            if (currentRoot == null)
+            {
+                Debug.LogWarning($"RayNeoTempleVisualizationToggle: Current visualization root {_currentIndex} is not assigned.");
+                return false;
+            }
+
+            root = currentRoot.transform;
+            return true;
+        }
+
         private void Awake()
         {
             _currentIndex = ClampIndex(startIndex);
