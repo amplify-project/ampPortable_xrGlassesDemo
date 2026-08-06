@@ -14,7 +14,7 @@ public class QuitApp : MonoBehaviour
     void Start()
     {
         // Add double-tap event
-        SimpleTouchForLite.Instance.OnDoubleTap.AddListener(ToQuitApp);
+        SimpleTouchForLite.Instance.OnDoubleFingerTap.AddListener(ToQuitApp);
     }
 
     private void OnDestroy()
