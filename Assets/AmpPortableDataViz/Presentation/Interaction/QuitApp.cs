@@ -22,7 +22,7 @@ public class QuitApp : MonoBehaviour
         if (SimpleTouchForLite.SingletonExist)
         {
             // Remove double-tap event
-            SimpleTouchForLite.Instance.OnDoubleTap.RemoveListener(ToQuitApp);
+            SimpleTouchForLite.Instance.OnDoubleFingerTap.RemoveListener(ToQuitApp);
         }
     }
 }

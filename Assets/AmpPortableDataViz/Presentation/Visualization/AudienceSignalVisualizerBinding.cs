@@ -78,6 +78,8 @@ namespace AmpPortableDataViz.Presentation.Visualization
 
         private Action<DataFrame<AudienceSignalSample>> _liveHandler;
         private Action<DataFrame<AudienceSignalSample>> _manualHandler;
+        private IDataSource<AudienceSignalSample> _runtimeLiveSource;
+        private string _activeDeviceId = string.Empty;
 
         private void Awake()
         {
@@ -113,13 +115,19 @@ namespace AmpPortableDataViz.Presentation.Visualization
 
         public void ConfigureLiveSource(AudienceSignalBinding source, string overrideDeviceId = null)
         {
+            ConfigureLiveSource((IDataSource<AudienceSignalSample>)source, overrideDeviceId);
+        }
+
+        public void ConfigureLiveSource(IDataSource<AudienceSignalSample> source, string overrideDeviceId = null)
+        {
             bool wasEnabled = isActiveAndEnabled;
             if (wasEnabled)
             {
                 DetachSource();
             }
 
-            liveSource = source;
+            liveSource = source as AudienceSignalBinding;
+            _runtimeLiveSource = source;
             if (source != null)
             {
                 sourceMode = SourceMode.LiveRedis;
@@ -167,6 +175,11 @@ namespace AmpPortableDataViz.Presentation.Visualization
                 liveSource = GetComponent<AudienceSignalBinding>();
             }
 
+            if (_runtimeLiveSource == null)
+            {
+                _runtimeLiveSource = liveSource;
+            }
+
             if (manualSource == null)
             {
                 manualSource = GetComponent<AudienceDataManualDriver>();
@@ -193,23 +206,25 @@ namespace AmpPortableDataViz.Presentation.Visualization
                     manualSource.OnFrame += _manualHandler;
                     break;
                 case SourceMode.LiveRedis:
-                    if (liveSource == null)
+                    IDataSource<AudienceSignalSample> selectedLiveSource = ResolveLiveSource();
+                    if (selectedLiveSource == null)
                     {
                         Debug.LogWarning($"{nameof(AudienceSignalVisualizerBinding)}[{name}] is missing a live source.", this);
                         return;
                     }
 
                     _liveHandler ??= OnFrame;
-                    liveSource.OnFrame += _liveHandler;
+                    selectedLiveSource.OnFrame += _liveHandler;
                     break;
             }
         }
 
         private void DetachSource()
         {
-            if (liveSource != null && _liveHandler != null)
+            IDataSource<AudienceSignalSample> selectedLiveSource = ResolveLiveSource();
+            if (selectedLiveSource != null && _liveHandler != null)
             {
-                liveSource.OnFrame -= _liveHandler;
+                selectedLiveSource.OnFrame -= _liveHandler;
             }
 
             if (manualSource != null && _manualHandler != null)
@@ -232,9 +247,9 @@ namespace AmpPortableDataViz.Presentation.Visualization
                     }
                     break;
                 case SourceMode.LiveRedis:
-                    if (liveSource != null && liveSource.HasLatestFrame)
+                    if (ResolveLiveSource() is ILatestDataSource<AudienceSignalSample> latestLiveSource && latestLiveSource.HasLatestFrame)
                     {
-                        OnFrame(liveSource.LatestFrame);
+                        OnFrame(latestLiveSource.LatestFrame);
                     }
                     break;
             }
@@ -262,6 +277,14 @@ namespace AmpPortableDataViz.Presentation.Visualization
 
         private void OnFrame(DataFrame<AudienceSignalSample> frame)
         {
+            string frameDeviceId = frame.Payload.DeviceId ?? string.Empty;
+            if (!string.Equals(_activeDeviceId, frameDeviceId, StringComparison.OrdinalIgnoreCase))
+            {
+                ResetGraphState();
+                _particlePhysioAmplifier.Reset();
+                _activeDeviceId = frameDeviceId;
+            }
+
             if (logReceivedSamples)
             {
                 Debug.Log($"{nameof(AudienceSignalVisualizerBinding)}[{name}] received {frame.Payload}", this);
@@ -269,6 +292,11 @@ namespace AmpPortableDataViz.Presentation.Visualization
 
             ApplyParticleMesh(frame);
             ApplyGraphStreams(frame);
+        }
+
+        private IDataSource<AudienceSignalSample> ResolveLiveSource()
+        {
+            return _runtimeLiveSource ?? liveSource;
         }
 
         private void ApplyParticleMesh(DataFrame<AudienceSignalSample> frame)

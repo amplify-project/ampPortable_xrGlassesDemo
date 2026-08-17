@@ -12,7 +12,7 @@ namespace AmpPortableDataViz.Presentation.Visualization
     /// </summary>
     [DisallowMultipleComponent]
     [AddComponentMenu("Amp Portable Data Viz/Visualization/Audience Signal Binding")]
-    public sealed class AudienceSignalBinding : MonoBehaviour, IDataSource<AudienceSignalSample>
+    public sealed class AudienceSignalBinding : MonoBehaviour, ILatestDataSource<AudienceSignalSample>
     {
         private static readonly Vector2 SignedPhysioGraphRange = new Vector2(-3f, 3f);
         private static readonly Vector2 LegacyTonicEdaRange = new Vector2(0.01f, 0.5f);

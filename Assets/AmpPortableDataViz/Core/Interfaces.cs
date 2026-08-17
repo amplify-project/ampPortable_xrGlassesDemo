@@ -24,6 +24,12 @@ namespace AmpPortableDataViz.Core
         event Action<DataFrame<TPayload>> OnFrame;
     }
 
+    public interface ILatestDataSource<TPayload> : IDataSource<TPayload>
+    {
+        bool HasLatestFrame { get; }
+        DataFrame<TPayload> LatestFrame { get; }
+    }
+
     public interface IMapper<TInput, TOutput>
     {
         TOutput Map(in DataFrame<TInput> inputFrame);
