@@ -102,13 +102,14 @@ namespace AmpPortableDataViz.Infra
         private static ConfigurationOptions CreateConfigurationOptions(string host, int port, int timeoutMs)
         {
             int effectiveTimeoutMs = Mathf.Max(1, timeoutMs);
-            return new ConfigurationOptions
+            var options = new ConfigurationOptions
             {
-                EndPoints = { $"{host}:{port}" },
                 ConnectTimeout = effectiveTimeoutMs,
                 SyncTimeout = effectiveTimeoutMs,
                 AbortOnConnectFail = false
             };
+            options.EndPoints.Add(host, port);
+            return options;
         }
 
         private static async Task CloseConnectionAsync(ConnectionMultiplexer redis)

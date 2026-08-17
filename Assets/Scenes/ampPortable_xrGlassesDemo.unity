@@ -141,7 +141,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!114 &171230029
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -413,10 +413,14 @@ MonoBehaviour:
   confirmButton: {fileID: 790806165}
   rootPanel: {fileID: 171230028}
   validationLabel: {fileID: 0}
-  useTouchScreenKeyboard: 1
+  useTouchScreenKeyboard: 0
   autoCreateValidationLabel: 1
   validationLabelColor: {r: 0.9, g: 0.3, b: 0.3, a: 1}
   connectionTimeoutMs: 2000
+  automaticallyDiscoverEndpoint: 1
+  cachedEndpointTimeoutMs: 750
+  automaticDiscoveryTimeoutMs: 5000
+  requiredTxtRecords: []
   OnEndpointReady:
     m_PersistentCalls:
       m_Calls:
@@ -1867,7 +1871,7 @@ MonoBehaviour:
   ProfileId: Default
   Seed: 12345
   ActiveSignalSource: 1
-  UseManualVisualizationDrivers: 1
+  UseManualVisualizationDrivers: 0
   RedisHost: 10.215.55.160
   RedisPort: 6379
   RedisChannel: engagement_score

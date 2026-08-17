@@ -1,5 +1,9 @@
 using System;
+using System.Collections.Generic;
+using System.Threading;
 using System.Threading.Tasks;
+using AmpPortableDataViz.Application;
+using AmpPortableDataViz.Core;
 using AmpPortableDataViz.Infra;
 using TMPro;
 using UnityEngine;
@@ -26,6 +30,13 @@ namespace AmpPortableDataViz.Presentation.Sources
         [SerializeField] private Color validationLabelColor = new Color(0.9f, 0.3f, 0.3f, 1f);
         [SerializeField] private int connectionTimeoutMs = 2000;
 
+        [Header("Automatic Discovery")]
+        [SerializeField] private bool automaticallyDiscoverEndpoint = true;
+        [SerializeField] private int cachedEndpointTimeoutMs = 750;
+        [SerializeField] private int automaticDiscoveryTimeoutMs = 5000;
+        [Tooltip("Required TXT entries in key=value form. A key without '=' only requires that the key exists.")]
+        [SerializeField] private string[] requiredTxtRecords = Array.Empty<string>();
+
         [Header("Events")]
         public UnityEvent OnEndpointReady = new UnityEvent();
         public UnityEvent<string> OnValidationError = new UnityEvent<string>();
@@ -33,6 +44,8 @@ namespace AmpPortableDataViz.Presentation.Sources
         private TouchScreenKeyboard _keyboard;
         private TMP_InputField _activeInput;
         private bool _confirmInProgress;
+        private bool _endpointAccepted;
+        private CancellationTokenSource _automaticDiscoveryCancellation;
 
         private void Awake()
         {
@@ -56,8 +69,23 @@ namespace AmpPortableDataViz.Presentation.Sources
             }
         }
 
+        private void OnEnable()
+        {
+            if (automaticallyDiscoverEndpoint && AndroidRedisEndpointDiscovery.IsSupported)
+            {
+                StartAutomaticDiscovery();
+            }
+        }
+
+        private void OnDisable()
+        {
+            CancelAutomaticDiscovery();
+        }
+
         private void OnDestroy()
         {
+            CancelAutomaticDiscovery();
+
             if (confirmButton != null)
             {
                 confirmButton.onClick.RemoveListener(HandleConfirm);
@@ -109,6 +137,7 @@ namespace AmpPortableDataViz.Presentation.Sources
 
             _confirmInProgress = true;
             SetConfirmInteractable(false);
+            CancelAutomaticDiscovery();
 
             try
             {
@@ -119,26 +148,9 @@ namespace AmpPortableDataViz.Presentation.Sources
                     return;
                 }
 
-                var settings = RedisRuntimeSettings.Instance;
-                settings.Apply(hostValue, portValue);
-                settings.Save();
-                RedisRuntimeSettings.SetInstance(settings);
+                SaveManualEndpoint(hostValue, portValue);
                 Debug.Log($"RedisEndpointPrompt: Saved Redis endpoint {hostValue}:{portValue}.");
-
-                try
-                {
-                    Debug.Log("RedisEndpointPrompt: Invoking OnEndpointReady.");
-                    OnEndpointReady?.Invoke();
-                }
-                catch (Exception ex)
-                {
-                    Debug.LogException(ex, this);
-                }
-                finally
-                {
-                    HidePanel();
-                    Debug.Log("RedisEndpointPrompt: Startup panel hidden.");
-                }
+                CompleteEndpointReady("manual confirmation");
             }
             finally
             {
@@ -170,6 +182,7 @@ namespace AmpPortableDataViz.Presentation.Sources
         {
             if (validationLabel != null)
             {
+                validationLabel.color = validationLabelColor;
                 validationLabel.text = message;
                 validationLabel.gameObject.SetActive(true);
             }
@@ -187,6 +200,186 @@ namespace AmpPortableDataViz.Presentation.Sources
 
             validationLabel.text = string.Empty;
             validationLabel.gameObject.SetActive(false);
+        }
+
+        private void StartAutomaticDiscovery()
+        {
+            CancelAutomaticDiscovery();
+            _automaticDiscoveryCancellation = new CancellationTokenSource();
+            _ = DiscoverEndpointAutomaticallyAsync(_automaticDiscoveryCancellation);
+        }
+
+        private async Task DiscoverEndpointAutomaticallyAsync(CancellationTokenSource cancellation)
+        {
+            var settings = RedisRuntimeSettings.Load();
+            SetStatus(settings.HasPersistedEndpoint
+                ? "Checking the saved Redis server and searching the network..."
+                : "Searching for the Redis server...");
+
+            try
+            {
+                using var discovery = new AndroidRedisEndpointDiscovery(BuildTxtRequirements(requiredTxtRecords));
+                var resolver = new RedisEndpointStartupResolver(
+                    discovery,
+                    (endpoint, timeoutMs, _) => RedisDeviceDiscovery.CanConnectAsync(endpoint.Host, endpoint.Port, timeoutMs));
+
+                var resolution = await resolver.ResolveAsync(
+                    settings.ToEndpoint(),
+                    settings.HasPersistedEndpoint,
+                    cachedEndpointTimeoutMs,
+                    automaticDiscoveryTimeoutMs,
+                    connectionTimeoutMs,
+                    cancellation.Token);
+
+                if (cancellation.IsCancellationRequested || !resolution.Succeeded || _confirmInProgress)
+                {
+                    if (!cancellation.IsCancellationRequested && !resolution.Succeeded)
+                    {
+                        SetStatus("Redis was not found automatically. Enter the server address to connect manually.");
+                    }
+
+                    return;
+                }
+
+                if (resolution.Source == RedisEndpointResolutionSource.Discovered)
+                {
+                    settings.ApplyDiscovered(resolution.Endpoint);
+                    settings.Save();
+                    RedisRuntimeSettings.SetInstance(settings);
+                    Debug.Log($"RedisEndpointPrompt: Discovered and saved Redis endpoint {resolution.Endpoint.Host}:{resolution.Endpoint.Port}.");
+                }
+                else
+                {
+                    Debug.Log($"RedisEndpointPrompt: Reusing reachable saved Redis endpoint {resolution.Endpoint.Host}:{resolution.Endpoint.Port}.");
+                }
+
+                UpdateInputs(resolution.Endpoint);
+                CompleteEndpointReady(resolution.Source == RedisEndpointResolutionSource.Cached
+                    ? "saved endpoint"
+                    : "DNS-SD discovery");
+            }
+            catch (OperationCanceledException)
+            {
+                // Expected when manual confirmation wins or the panel is disabled.
+            }
+            catch (Exception ex)
+            {
+                Debug.LogWarning($"RedisEndpointPrompt: Automatic Redis discovery failed ({ex.Message}).");
+                SetStatus("Automatic discovery failed. Enter the server address to connect manually.");
+            }
+            finally
+            {
+                cancellation.Dispose();
+                if (ReferenceEquals(_automaticDiscoveryCancellation, cancellation))
+                {
+                    _automaticDiscoveryCancellation = null;
+                }
+            }
+        }
+
+        private void CancelAutomaticDiscovery()
+        {
+            if (_automaticDiscoveryCancellation == null)
+            {
+                return;
+            }
+
+            _automaticDiscoveryCancellation.Cancel();
+        }
+
+        private static IReadOnlyList<RedisTxtRecordRequirement> BuildTxtRequirements(IEnumerable<string> serializedRequirements)
+        {
+            var requirements = new List<RedisTxtRecordRequirement>();
+            if (serializedRequirements == null)
+            {
+                return requirements;
+            }
+
+            foreach (var serializedRequirement in serializedRequirements)
+            {
+                if (string.IsNullOrWhiteSpace(serializedRequirement))
+                {
+                    continue;
+                }
+
+                int separatorIndex = serializedRequirement.IndexOf('=');
+                if (separatorIndex < 0)
+                {
+                    requirements.Add(new RedisTxtRecordRequirement(serializedRequirement));
+                    continue;
+                }
+
+                string key = serializedRequirement.Substring(0, separatorIndex).Trim();
+                string value = serializedRequirement.Substring(separatorIndex + 1).Trim();
+                if (!string.IsNullOrWhiteSpace(key))
+                {
+                    requirements.Add(new RedisTxtRecordRequirement(key, value));
+                }
+            }
+
+            return requirements;
+        }
+
+        private void SaveManualEndpoint(string hostValue, int portValue)
+        {
+            var settings = RedisRuntimeSettings.Instance;
+            settings.Apply(hostValue, portValue);
+            settings.Save();
+            RedisRuntimeSettings.SetInstance(settings);
+        }
+
+        private void CompleteEndpointReady(string source)
+        {
+            if (_endpointAccepted)
+            {
+                return;
+            }
+
+            _endpointAccepted = true;
+            try
+            {
+                Debug.Log($"RedisEndpointPrompt: Invoking OnEndpointReady after {source}.");
+                OnEndpointReady?.Invoke();
+            }
+            catch (Exception ex)
+            {
+                Debug.LogException(ex, this);
+            }
+            finally
+            {
+                HidePanel();
+                Debug.Log("RedisEndpointPrompt: Startup panel hidden.");
+            }
+        }
+
+        private void UpdateInputs(RedisServiceEndpoint endpoint)
+        {
+            if (endpoint == null)
+            {
+                return;
+            }
+
+            if (hostInput != null)
+            {
+                hostInput.text = endpoint.Host;
+            }
+
+            if (portInput != null)
+            {
+                portInput.text = endpoint.Port.ToString();
+            }
+        }
+
+        private void SetStatus(string message)
+        {
+            if (validationLabel == null || _endpointAccepted)
+            {
+                return;
+            }
+
+            validationLabel.color = Color.white;
+            validationLabel.text = message;
+            validationLabel.gameObject.SetActive(true);
         }
 
         private void Update()

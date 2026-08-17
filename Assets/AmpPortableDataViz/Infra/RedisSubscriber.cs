@@ -217,11 +217,11 @@ public static class RedisSubscriber
     {
         var config = new ConfigurationOptions
         {
-            EndPoints = { $"{_host}:{_port}" },
             ConnectTimeout = 5000,
             SyncTimeout = 5000,
             AbortOnConnectFail = false
         };
+        config.EndPoints.Add(_host, _port);
 
         Debug.Log($"Connecting to Redis at {_host}:{_port}...");
         _redis = await ConnectionMultiplexer.ConnectAsync(config);
