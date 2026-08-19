@@ -862,8 +862,8 @@ Transform:
   m_GameObject: {fileID: 645856976}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 5}
-  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_LocalPosition: {x: 0, y: -0.2, z: 5}
+  m_LocalScale: {x: 0.55, y: 0.55, z: 0.55}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 567705661}
@@ -1340,7 +1340,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &1165166120
 Transform:
   m_ObjectHideFlags: 0
@@ -1350,7 +1350,7 @@ Transform:
   m_GameObject: {fileID: 1165166119}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 1}
+  m_LocalPosition: {x: 0, y: -0.1, z: 1}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -1918,12 +1918,12 @@ MonoBehaviour:
   GraphLabelVerticalOffset: 0
   GraphLabelDepthOffset: 0
   GraphLabelOffset: {x: 0, y: 0, z: 0}
-  GraphLabelFontSize: 0.5
+  GraphLabelFontSize: 0.75
   GraphLabelColor: {r: 1, g: 1, b: 1, a: 1}
   ShowGraphGroupLabels: 1
   GraphGroupLabelOffset: {x: 0, y: -0.35, z: 0}
   GraphGroupLabelVerticalOffset: 0
-  GraphGroupLabelFontSize: 0.5
+  GraphGroupLabelFontSize: 0.75
   GraphGroupLabelColor: {r: 1, g: 1, b: 1, a: 1}
   GraphChannelLayout: 1
   GraphStackedOriginOffset: {x: 0, y: 0.1, z: 0}
@@ -2328,7 +2328,7 @@ RectTransform:
   m_GameObject: {fileID: 2056354646}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 2}
-  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_LocalScale: {x: 0.55, y: 0.55, z: 0.55}
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 720777881}

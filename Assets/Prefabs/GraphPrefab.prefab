@@ -53,11 +53,6 @@ LineRenderer:
   m_ReflectionProbeUsage: 0
   m_RayTracingMode: 0
   m_RayTraceProcedural: 0
-  m_RayTracingAccelStructBuildFlagsOverride: 0
-  m_RayTracingAccelStructBuildFlags: 1
-  m_SmallMeshCulling: 1
-  m_ForceMeshLod: -1
-  m_MeshLodSelectionBias: 0
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
@@ -79,7 +74,6 @@ LineRenderer:
   m_AutoUVMaxDistance: 0.5
   m_AutoUVMaxAngle: 89
   m_LightmapParameters: {fileID: 0}
-  m_GlobalIlluminationMeshLod: 0
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 0
@@ -160,10 +154,13 @@ MonoBehaviour:
   lineRenderer: {fileID: 0}
   graphSize: {x: 1, y: 1}
   clampToBounds: 1
+  showZeroBaseline: 1
+  zeroBaselineColor: {r: 1, g: 1, b: 1, a: 0.35}
+  zeroBaselineWidthMultiplier: 0.5
   showValueLabel: 1
   valueLabel: {fileID: 0}
   valueLabelOffset: {x: 0.05, y: 0, z: 0}
-  valueLabelFontSize: 0.4
+  valueLabelFontSize: 0.6
   valueLabelColor: {r: 1, g: 1, b: 1, a: 1}
   valueLabelUseLineColor: 1
   valueLabelFormat: 0.00

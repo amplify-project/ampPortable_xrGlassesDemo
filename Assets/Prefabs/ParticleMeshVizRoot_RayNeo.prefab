@@ -9,8 +9,16 @@ PrefabInstance:
     m_TransformParent: {fileID: 0}
     m_Modifications:
     - target: {fileID: 462658995576620322, guid: 74e05b7be47103748b0057db90b75d78, type: 3}
+      propertyPath: scalingMode
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 462658995576620322, guid: 74e05b7be47103748b0057db90b75d78, type: 3}
+      propertyPath: InitialModule.maxNumParticles
+      value: 25
+      objectReference: {fileID: 0}
+    - target: {fileID: 462658995576620322, guid: 74e05b7be47103748b0057db90b75d78, type: 3}
       propertyPath: InitialModule.startSize.scalar
-      value: 0.025
+      value: 0.015
       objectReference: {fileID: 0}
     - target: {fileID: 632910883045713548, guid: 74e05b7be47103748b0057db90b75d78, type: 3}
       propertyPath: m_Materials.Array.data[0]
@@ -26,39 +34,39 @@ PrefabInstance:
       objectReference: {fileID: 2100000, guid: 72558d4b97c34224ab088264be7d1563, type: 2}
     - target: {fileID: 5099490702948499052, guid: 74e05b7be47103748b0057db90b75d78, type: 3}
       propertyPath: arousal
-      value: 0.59179986
+      value: 0.54188627
       objectReference: {fileID: 0}
     - target: {fileID: 5099490702948499052, guid: 74e05b7be47103748b0057db90b75d78, type: 3}
       propertyPath: valence
-      value: 0.583066
+      value: 0.3592764
       objectReference: {fileID: 0}
     - target: {fileID: 5099490702948499052, guid: 74e05b7be47103748b0057db90b75d78, type: 3}
       propertyPath: engagement
-      value: 0.5837391
+      value: 0.39251953
       objectReference: {fileID: 0}
     - target: {fileID: 5099490702948499052, guid: 74e05b7be47103748b0057db90b75d78, type: 3}
       propertyPath: noiseOffset
-      value: 437.26624
+      value: 561.3736
       objectReference: {fileID: 0}
     - target: {fileID: 5099490702948499052, guid: 74e05b7be47103748b0057db90b75d78, type: 3}
       propertyPath: heartRateStdDev
-      value: 0.90741634
+      value: -1.7247418
       objectReference: {fileID: 0}
     - target: {fileID: 5099490702948499052, guid: 74e05b7be47103748b0057db90b75d78, type: 3}
       propertyPath: interBeatIntervalStdDev
-      value: -1.3507411
+      value: 0.6205952
       objectReference: {fileID: 0}
     - target: {fileID: 5099490702948499052, guid: 74e05b7be47103748b0057db90b75d78, type: 3}
       propertyPath: temperatureRateOfChangeStdDev
-      value: 1.3735896
+      value: 0.118940234
       objectReference: {fileID: 0}
     - target: {fileID: 5099490702948499052, guid: 74e05b7be47103748b0057db90b75d78, type: 3}
       propertyPath: tonicElectrodermalActivityStdDev
-      value: -1.3503059
+      value: -0.40378046
       objectReference: {fileID: 0}
     - target: {fileID: 5099490702948499052, guid: 74e05b7be47103748b0057db90b75d78, type: 3}
       propertyPath: skinConductanceResponseFrequencyStdDev
-      value: -0.95093876
+      value: 1.2919217
       objectReference: {fileID: 0}
     - target: {fileID: 7649927837592745194, guid: 74e05b7be47103748b0057db90b75d78, type: 3}
       propertyPath: m_Materials.Array.data[0]
@@ -105,8 +113,20 @@ PrefabInstance:
       value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 8489548096852947066, guid: 74e05b7be47103748b0057db90b75d78, type: 3}
+      propertyPath: gridWidth
+      value: 5
+      objectReference: {fileID: 0}
+    - target: {fileID: 8489548096852947066, guid: 74e05b7be47103748b0057db90b75d78, type: 3}
+      propertyPath: gridHeight
+      value: 5
+      objectReference: {fileID: 0}
+    - target: {fileID: 8489548096852947066, guid: 74e05b7be47103748b0057db90b75d78, type: 3}
+      propertyPath: visualScale
+      value: 0.275
+      objectReference: {fileID: 0}
+    - target: {fileID: 8489548096852947066, guid: 74e05b7be47103748b0057db90b75d78, type: 3}
       propertyPath: particleSize
-      value: 0.025
+      value: 0.015
       objectReference: {fileID: 0}
     - target: {fileID: 8489548096852947066, guid: 74e05b7be47103748b0057db90b75d78, type: 3}
       propertyPath: neutralColor.b
