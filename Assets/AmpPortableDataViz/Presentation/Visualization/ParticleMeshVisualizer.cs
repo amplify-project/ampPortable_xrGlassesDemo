@@ -1,5 +1,6 @@
 using AmpPortableDataViz.Core;
 using UnityEngine;
+using UnityEngine.Serialization;
 
 namespace AmpPortableDataViz.Presentation.Visualization
 {
@@ -64,16 +65,11 @@ namespace AmpPortableDataViz.Presentation.Visualization
         [SerializeField, Range(0.01f, 1f)] private float rhythmPulseRadius = 0.65f;
         [SerializeField, Range(0f, 1f)] private float rhythmPulseDisplacement = 0.08f;
         [SerializeField, Range(0f, 0.2f)] private float rhythmBreathDisplacement = 0.025f;
-        [SerializeField, Range(0f, 1f)] private float ibiPhaseSpread = 0.18f;
-        [SerializeField, Range(0f, 1f)] private float ibiBreakAmount = 0.7f;
 
-        [Header("Affect Layer")]
-        [SerializeField, Range(0f, 3f)] private float arousalTurbulenceMin = 0.04f;
-        [SerializeField, Range(0f, 3f)] private float arousalTurbulenceMax = 0.4f;
-        [SerializeField, Range(0.01f, 5f)] private float arousalMotionSpeedMin = 0.2f;
-        [SerializeField, Range(0.01f, 5f)] private float arousalMotionSpeedMax = 2.5f;
-        [SerializeField, Range(0.1f, 4f)] private float arousalMorphSmoothMin = 0.3f;
-        [SerializeField, Range(0.1f, 4f)] private float arousalMorphSmoothMax = 1.8f;
+        [Header("Motion Response")]
+        [SerializeField, Range(0f, 3f)] private float motionTurbulence = 0.22f;
+        [SerializeField, Range(0.01f, 5f)] private float motionSpeed = 1.35f;
+        [SerializeField, Range(0.1f, 4f)] private float morphSmoothMultiplier = 1.05f;
         [SerializeField, Range(0f, 1f)] private float lowEngagementAlpha = 0.28f;
         [SerializeField, Range(0f, 1f)] private float highEngagementAlpha = 1f;
         [SerializeField, Range(0f, 3f)] private float lowEngagementParticleScale = 0.7f;
@@ -100,20 +96,31 @@ namespace AmpPortableDataViz.Presentation.Visualization
         [SerializeField, Range(0.25f, 4f)] private float engagementLatticeResponsePower = 1.75f;
         [SerializeField, Range(0f, 0.08f)] private float engagementLatticeLift = 0.01f;
         [SerializeField, Range(0f, 1f)] private float engagementLatticeMaxAlpha = 0.55f;
-        [SerializeField, Range(0f, 1f)] private float engagementLatticeValenceTint = 0.35f;
+        [FormerlySerializedAs("engagementLatticeValenceTint")]
+        [SerializeField, Range(0f, 1f)] private float engagementLatticeHighlightTint = 0.35f;
 
-        [Header("Arousal Trails")]
-        [SerializeField] private Transform arousalTrailRoot;
-        [SerializeField] private Material arousalTrailMaterial;
-        [SerializeField, Range(0f, 1f)] private float arousalTrailThreshold = 0.55f;
-        [SerializeField, Range(0.01f, 1f)] private float arousalTrailFadeRange = 0.25f;
-        [SerializeField, Range(1, 12)] private int arousalTrailStride = 4;
-        [SerializeField, Range(4, 96)] private int maxArousalTrails = 64;
-        [SerializeField, Range(3, 48)] private int arousalTrailHistoryLength = 18;
-        [SerializeField, Range(0.001f, 0.08f)] private float arousalTrailLineWidth = 0.014f;
-        [SerializeField, Range(0f, 0.1f)] private float arousalTrailLift = 0.018f;
-        [SerializeField, Range(0f, 1f)] private float arousalTrailMaxAlpha = 0.42f;
-        [SerializeField, Range(0f, 1f)] private float arousalTrailValenceTint = 0.15f;
+        [Header("Temperature Rate Trails")]
+        [FormerlySerializedAs("arousalTrailRoot")]
+        [SerializeField] private Transform temperatureTrailRoot;
+        [FormerlySerializedAs("arousalTrailMaterial")]
+        [SerializeField] private Material temperatureTrailMaterial;
+        [FormerlySerializedAs("arousalTrailThreshold")]
+        [SerializeField, Range(0f, 1f)] private float temperatureTrailThreshold = 0.18f;
+        [FormerlySerializedAs("arousalTrailFadeRange")]
+        [SerializeField, Range(0.01f, 1f)] private float temperatureTrailFadeRange = 0.25f;
+        [SerializeField, Range(0.05f, 1f)] private float temperatureTrailReleaseFactor = 0.65f;
+        [FormerlySerializedAs("arousalTrailStride")]
+        [SerializeField, Range(1, 12)] private int temperatureTrailStride = 4;
+        [FormerlySerializedAs("maxArousalTrails")]
+        [SerializeField, Range(4, 96)] private int maxTemperatureTrails = 64;
+        [FormerlySerializedAs("arousalTrailHistoryLength")]
+        [SerializeField, Range(3, 48)] private int temperatureTrailHistoryLength = 18;
+        [FormerlySerializedAs("arousalTrailLineWidth")]
+        [SerializeField, Range(0.001f, 0.08f)] private float temperatureTrailLineWidth = 0.014f;
+        [FormerlySerializedAs("arousalTrailLift")]
+        [SerializeField, Range(0f, 0.1f)] private float temperatureTrailVerticalOffset = 0.018f;
+        [FormerlySerializedAs("arousalTrailMaxAlpha")]
+        [SerializeField, Range(0f, 1f)] private float temperatureTrailMaxAlpha = 0.42f;
 
         [Header("Particles")]
         [SerializeField] private bool renderParticles = true;
@@ -124,9 +131,7 @@ namespace AmpPortableDataViz.Presentation.Visualization
         [SerializeField, Range(0f, 1f)] private float temperatureTrendParticleAlphaBoost = 0.35f;
 
         [Header("Colour")]
-        [SerializeField] private Color lowValenceColor = new Color(1f, 0.12f, 0.08f, 0.9f);
         [SerializeField] private Color neutralColor = new Color(0.2f, 1f, 0.75f, 0.9f);
-        [SerializeField] private Color highValenceColor = new Color(1f, 0.82f, 0.16f, 0.9f);
         [SerializeField] private Color hotTemperatureTrendColor = new Color(1f, 0.28f, 0.04f, 0.95f);
         [SerializeField] private Color coldTemperatureTrendColor = new Color(0.1f, 0.66f, 1f, 0.95f);
         [SerializeField, Range(1, 16)] private int maxTemperatureTrendWaves = 8;
@@ -229,17 +234,19 @@ namespace AmpPortableDataViz.Presentation.Visualization
         private int _builtLatticeGridHeight;
         private int _builtLatticeStride;
 
-        private LineRenderer[] _arousalTrailLines;
-        private int[] _arousalTrailVertexIndices;
-        private Vector3[][] _arousalTrailHistory;
-        private Material _arousalTrailMaterialInstance;
-        private int _arousalTrailHead;
-        private bool _arousalTrailHistoryFilled;
-        private int _builtArousalTrailGridWidth;
-        private int _builtArousalTrailGridHeight;
-        private int _builtArousalTrailStride;
-        private int _builtArousalTrailMaxCount;
-        private int _builtArousalTrailHistoryLength;
+        private LineRenderer[] _temperatureTrailLines;
+        private int[] _temperatureTrailVertexIndices;
+        private Vector3[][] _temperatureTrailHistory;
+        private Material _temperatureTrailMaterialInstance;
+        private int _temperatureTrailHead;
+        private bool _temperatureTrailHistoryFilled;
+        private float _temperatureTrailDirection;
+        private bool _temperatureTrailsActive;
+        private int _builtTemperatureTrailGridWidth;
+        private int _builtTemperatureTrailGridHeight;
+        private int _builtTemperatureTrailStride;
+        private int _builtTemperatureTrailMaxCount;
+        private int _builtTemperatureTrailHistoryLength;
 
         private int _builtGridWidth;
         private int _builtGridHeight;
@@ -250,18 +257,12 @@ namespace AmpPortableDataViz.Presentation.Visualization
         private float _temperatureRate;
         private float _scrFrequency;
         private float _heartRate;
-        private float _interBeatInterval;
-        private float _facialArousal = 0.5f;
-        private float _facialValence = 0.5f;
         private float _engagement = 0.5f;
 
         private float _targetTonicEda;
         private float _targetTemperatureRate;
         private float _targetScrFrequency;
         private float _targetHeartRate;
-        private float _targetInterBeatInterval;
-        private float _targetFacialArousal = 0.5f;
-        private float _targetFacialValence = 0.5f;
         private float _targetEngagement = 0.5f;
 
         private double _nextLogTime;
@@ -318,7 +319,7 @@ namespace AmpPortableDataViz.Presentation.Visualization
             {
                 ClearEngagementLattice();
             }
-            UpdateArousalTrails();
+            UpdateTemperatureRateTrails();
             ApplyScrSparkParticles();
         }
 
@@ -333,7 +334,9 @@ namespace AmpPortableDataViz.Presentation.Visualization
             ClearTemperatureTrendWaves();
             ApplyParticleRendererGlow(0f);
             ClearEngagementLattice();
-            ClearArousalTrails(true);
+            ClearTemperatureTrails(true);
+            _temperatureTrailsActive = false;
+            _temperatureTrailDirection = 0f;
         }
 
         private void OnDestroy()
@@ -362,15 +365,15 @@ namespace AmpPortableDataViz.Presentation.Visualization
                 }
             }
 
-            if (_arousalTrailMaterialInstance != null)
+            if (_temperatureTrailMaterialInstance != null)
             {
                 if (UnityEngine.Application.isPlaying)
                 {
-                    Destroy(_arousalTrailMaterialInstance);
+                    Destroy(_temperatureTrailMaterialInstance);
                 }
                 else
                 {
-                    DestroyImmediate(_arousalTrailMaterialInstance);
+                    DestroyImmediate(_temperatureTrailMaterialInstance);
                 }
             }
         }
@@ -401,6 +404,11 @@ namespace AmpPortableDataViz.Presentation.Visualization
             temperatureTrendWaveWidth = Mathf.Clamp(temperatureTrendWaveWidth, 0.03f, 0.8f);
             temperatureTrendWaveInterval = Mathf.Clamp(temperatureTrendWaveInterval, 0.05f, 1f);
             temperatureTrendWaveTintStrength = Mathf.Clamp01(temperatureTrendWaveTintStrength);
+            temperatureTrailThreshold = Mathf.Clamp01(temperatureTrailThreshold);
+            temperatureTrailFadeRange = Mathf.Clamp(temperatureTrailFadeRange, 0.01f, 1f);
+            temperatureTrailReleaseFactor = Mathf.Clamp(temperatureTrailReleaseFactor, 0.05f, 1f);
+            temperatureTrailVerticalOffset = Mathf.Clamp(temperatureTrailVerticalOffset, 0f, 0.1f);
+            temperatureTrailMaxAlpha = Mathf.Clamp01(temperatureTrailMaxAlpha);
             _needsRebuild = true;
 
             if (isActiveAndEnabled)
@@ -413,7 +421,7 @@ namespace AmpPortableDataViz.Presentation.Visualization
                 EnsureRhythmPulseCapacity();
                 EnsureTemperatureTrendWaveCapacity();
                 EnsureEngagementLatticeCapacity();
-                EnsureArousalTrailCapacity();
+                EnsureTemperatureTrailCapacity();
             }
         }
 
@@ -474,12 +482,18 @@ namespace AmpPortableDataViz.Presentation.Visualization
                 }
             }
 
-            if (arousalTrailRoot == null)
+            if (temperatureTrailRoot == null)
             {
-                Transform existingTrails = transform.Find("Arousal Trails");
+                Transform existingTrails = transform.Find("Temperature Rate Trails");
+                if (existingTrails == null)
+                {
+                    existingTrails = transform.Find("Arousal Trails");
+                }
+
                 if (existingTrails != null)
                 {
-                    arousalTrailRoot = existingTrails;
+                    temperatureTrailRoot = existingTrails;
+                    temperatureTrailRoot.name = "Temperature Rate Trails";
                 }
             }
         }
@@ -568,7 +582,7 @@ namespace AmpPortableDataViz.Presentation.Visualization
             EnsureRhythmPulseCapacity();
             EnsureTemperatureTrendWaveCapacity();
             EnsureEngagementLatticeCapacity();
-            EnsureArousalTrailCapacity();
+            EnsureTemperatureTrailCapacity();
             _builtGridWidth = width;
             _builtGridHeight = height;
             _needsRebuild = false;
@@ -804,7 +818,7 @@ namespace AmpPortableDataViz.Presentation.Visualization
             }
 
             int particleCount = 0;
-            Color sparkTint = Color.Lerp(ResolveBaseColor(_facialValence), scrSparkColor, 0.78f);
+            Color sparkTint = Color.Lerp(neutralColor, scrSparkColor, 0.78f);
             for (int i = 0; i < _scrSparks.Length; i++)
             {
                 if (!_scrSparks[i].Active)
@@ -1222,7 +1236,7 @@ namespace AmpPortableDataViz.Presentation.Visualization
                 Mathf.Min(1f, engagementLatticeThreshold + fadeRange),
                 Mathf.Clamp01(_engagement));
 
-            Color latticeColor = Color.Lerp(ResolveBaseColor(_facialValence), Color.white, engagementLatticeValenceTint);
+            Color latticeColor = Color.Lerp(neutralColor, Color.white, engagementLatticeHighlightTint);
             float reactiveStrength = Mathf.Pow(engagementStrength, Mathf.Max(0.25f, engagementLatticeResponsePower));
             latticeColor.a = engagementLatticeMaxAlpha * Mathf.Lerp(0.18f, 1f, reactiveStrength);
             float lineWidth = engagementLatticeLineWidth * Mathf.Lerp(engagementLatticeMinimumWidthFactor, 1f, reactiveStrength);
@@ -1292,56 +1306,56 @@ namespace AmpPortableDataViz.Presentation.Visualization
             }
         }
 
-        private void EnsureArousalTrailCapacity()
+        private void EnsureTemperatureTrailCapacity()
         {
             int width = Mathf.Max(4, gridWidth);
             int height = Mathf.Max(4, gridHeight);
-            int stride = Mathf.Max(1, arousalTrailStride);
-            int maxTrailCount = Mathf.Max(1, maxArousalTrails);
-            int historyLength = Mathf.Max(3, arousalTrailHistoryLength);
+            int stride = Mathf.Max(1, temperatureTrailStride);
+            int maxTrailCount = Mathf.Max(1, maxTemperatureTrails);
+            int historyLength = Mathf.Max(3, temperatureTrailHistoryLength);
 
-            if (arousalTrailRoot == null)
+            if (temperatureTrailRoot == null)
             {
                 if (!UnityEngine.Application.isPlaying)
                 {
                     return;
                 }
 
-                var trailObject = new GameObject("Arousal Trails");
+                var trailObject = new GameObject("Temperature Rate Trails");
                 trailObject.transform.SetParent(transform, false);
-                arousalTrailRoot = trailObject.transform;
+                temperatureTrailRoot = trailObject.transform;
             }
 
-            if (_arousalTrailLines != null
-                && _arousalTrailVertexIndices != null
-                && _arousalTrailHistory != null
-                && _builtArousalTrailGridWidth == width
-                && _builtArousalTrailGridHeight == height
-                && _builtArousalTrailStride == stride
-                && _builtArousalTrailMaxCount == maxTrailCount
-                && _builtArousalTrailHistoryLength == historyLength)
+            if (_temperatureTrailLines != null
+                && _temperatureTrailVertexIndices != null
+                && _temperatureTrailHistory != null
+                && _builtTemperatureTrailGridWidth == width
+                && _builtTemperatureTrailGridHeight == height
+                && _builtTemperatureTrailStride == stride
+                && _builtTemperatureTrailMaxCount == maxTrailCount
+                && _builtTemperatureTrailHistoryLength == historyLength)
             {
                 return;
             }
 
-            _arousalTrailVertexIndices = BuildArousalTrailVertexIndices(width, height, stride, maxTrailCount);
-            _arousalTrailHistory = new Vector3[_arousalTrailVertexIndices.Length][];
-            _arousalTrailLines = new LineRenderer[_arousalTrailVertexIndices.Length];
-            _arousalTrailHead = 0;
-            _arousalTrailHistoryFilled = false;
+            _temperatureTrailVertexIndices = BuildTemperatureTrailVertexIndices(width, height, stride, maxTrailCount);
+            _temperatureTrailHistory = new Vector3[_temperatureTrailVertexIndices.Length][];
+            _temperatureTrailLines = new LineRenderer[_temperatureTrailVertexIndices.Length];
+            _temperatureTrailHead = 0;
+            _temperatureTrailHistoryFilled = false;
 
-            LineRenderer[] existingLines = arousalTrailRoot.GetComponentsInChildren<LineRenderer>(true);
-            for (int i = 0; i < _arousalTrailVertexIndices.Length; i++)
+            LineRenderer[] existingLines = temperatureTrailRoot.GetComponentsInChildren<LineRenderer>(true);
+            for (int i = 0; i < _temperatureTrailVertexIndices.Length; i++)
             {
-                _arousalTrailHistory[i] = new Vector3[historyLength];
+                _temperatureTrailHistory[i] = new Vector3[historyLength];
                 LineRenderer line = i < existingLines.Length
                     ? existingLines[i]
-                    : CreateArousalTrailLine(i);
-                ConfigureArousalTrailLine(line, historyLength);
-                _arousalTrailLines[i] = line;
+                    : CreateTemperatureTrailLine(i);
+                ConfigureTemperatureTrailLine(line, historyLength);
+                _temperatureTrailLines[i] = line;
             }
 
-            for (int i = _arousalTrailVertexIndices.Length; i < existingLines.Length; i++)
+            for (int i = _temperatureTrailVertexIndices.Length; i < existingLines.Length; i++)
             {
                 if (existingLines[i] != null)
                 {
@@ -1350,21 +1364,21 @@ namespace AmpPortableDataViz.Presentation.Visualization
                 }
             }
 
-            _builtArousalTrailGridWidth = width;
-            _builtArousalTrailGridHeight = height;
-            _builtArousalTrailStride = stride;
-            _builtArousalTrailMaxCount = maxTrailCount;
-            _builtArousalTrailHistoryLength = historyLength;
+            _builtTemperatureTrailGridWidth = width;
+            _builtTemperatureTrailGridHeight = height;
+            _builtTemperatureTrailStride = stride;
+            _builtTemperatureTrailMaxCount = maxTrailCount;
+            _builtTemperatureTrailHistoryLength = historyLength;
         }
 
-        private LineRenderer CreateArousalTrailLine(int lineIndex)
+        private LineRenderer CreateTemperatureTrailLine(int lineIndex)
         {
-            var lineObject = new GameObject($"Arousal Trail {lineIndex:00}");
-            lineObject.transform.SetParent(arousalTrailRoot, false);
+            var lineObject = new GameObject($"Temperature Rate Trail {lineIndex:00}");
+            lineObject.transform.SetParent(temperatureTrailRoot, false);
             return lineObject.AddComponent<LineRenderer>();
         }
 
-        private void ConfigureArousalTrailLine(LineRenderer line, int positionCount)
+        private void ConfigureTemperatureTrailLine(LineRenderer line, int positionCount)
         {
             if (line == null)
             {
@@ -1375,27 +1389,27 @@ namespace AmpPortableDataViz.Presentation.Visualization
             line.loop = false;
             line.positionCount = positionCount;
             line.widthMultiplier = 1f;
-            line.startWidth = arousalTrailLineWidth;
-            line.endWidth = arousalTrailLineWidth;
+            line.startWidth = temperatureTrailLineWidth;
+            line.endWidth = temperatureTrailLineWidth;
             line.numCapVertices = 0;
             line.numCornerVertices = 1;
-            Material material = ResolveArousalTrailMaterial();
+            Material material = ResolveTemperatureTrailMaterial();
             if (material != null)
             {
                 line.sharedMaterial = material;
             }
         }
 
-        private Material ResolveArousalTrailMaterial()
+        private Material ResolveTemperatureTrailMaterial()
         {
-            if (arousalTrailMaterial != null)
+            if (temperatureTrailMaterial != null)
             {
-                return arousalTrailMaterial;
+                return temperatureTrailMaterial;
             }
 
-            if (_arousalTrailMaterialInstance != null)
+            if (_temperatureTrailMaterialInstance != null)
             {
-                return _arousalTrailMaterialInstance;
+                return _temperatureTrailMaterialInstance;
             }
 
             Shader shader = Shader.Find("Sprites/Default");
@@ -1414,70 +1428,90 @@ namespace AmpPortableDataViz.Presentation.Visualization
                 return null;
             }
 
-            _arousalTrailMaterialInstance = new Material(shader)
+            _temperatureTrailMaterialInstance = new Material(shader)
             {
-                name = "Arousal Trail Runtime Material",
+                name = "Temperature Rate Trail Runtime Material",
                 hideFlags = HideFlags.DontSave
             };
-            return _arousalTrailMaterialInstance;
+            return _temperatureTrailMaterialInstance;
         }
 
-        private void UpdateArousalTrails()
+        private void UpdateTemperatureRateTrails()
         {
-            EnsureArousalTrailCapacity();
+            EnsureTemperatureTrailCapacity();
             if (_vertices == null
-                || _arousalTrailLines == null
-                || _arousalTrailVertexIndices == null
-                || _arousalTrailHistory == null)
+                || _temperatureTrailLines == null
+                || _temperatureTrailVertexIndices == null
+                || _temperatureTrailHistory == null)
             {
                 return;
             }
 
-            float fadeRange = Mathf.Max(0.01f, arousalTrailFadeRange);
-            float arousalStrength = Mathf.InverseLerp(
-                arousalTrailThreshold,
-                Mathf.Min(1f, arousalTrailThreshold + fadeRange),
-                Mathf.Clamp01(_facialArousal));
-            if (arousalStrength <= 0.001f || arousalTrailMaxAlpha <= 0f)
+            TemperatureTrailResponse response = TemperatureTrailResponseMapper.Resolve(
+                _temperatureRate,
+                _temperatureTrailsActive,
+                _temperatureTrailDirection,
+                temperatureTrailThreshold,
+                temperatureTrailFadeRange,
+                temperatureTrailReleaseFactor,
+                hotTemperatureTrendColor,
+                coldTemperatureTrendColor);
+            if (!response.IsActive)
             {
-                ClearArousalTrails(true);
+                _temperatureTrailsActive = false;
+                _temperatureTrailDirection = 0f;
+                ClearTemperatureTrails(true);
                 return;
             }
 
-            Vector3 lift = Vector3.up * arousalTrailLift;
-            for (int i = 0; i < _arousalTrailVertexIndices.Length; i++)
+            if (response.DirectionChanged)
             {
-                int vertexIndex = _arousalTrailVertexIndices[i];
-                if (vertexIndex < 0 || vertexIndex >= _vertices.Length || _arousalTrailHistory[i] == null)
+                ClearTemperatureTrails(true);
+            }
+
+            _temperatureTrailsActive = true;
+            _temperatureTrailDirection = response.Direction;
+            float trailStrength = response.Strength;
+            if (trailStrength <= 0.001f || temperatureTrailMaxAlpha <= 0f)
+            {
+                ClearTemperatureTrails(true);
+                return;
+            }
+
+            Vector3 verticalOffset = Vector3.up * (temperatureTrailVerticalOffset * _temperatureTrailDirection);
+            for (int i = 0; i < _temperatureTrailVertexIndices.Length; i++)
+            {
+                int vertexIndex = _temperatureTrailVertexIndices[i];
+                if (vertexIndex < 0 || vertexIndex >= _vertices.Length || _temperatureTrailHistory[i] == null)
                 {
                     continue;
                 }
 
-                _arousalTrailHistory[i][_arousalTrailHead] = _vertices[vertexIndex] + lift;
+                _temperatureTrailHistory[i][_temperatureTrailHead] = _vertices[vertexIndex] + verticalOffset;
             }
 
-            _arousalTrailHead++;
-            if (_arousalTrailHead >= _builtArousalTrailHistoryLength)
+            _temperatureTrailHead++;
+            if (_temperatureTrailHead >= _builtTemperatureTrailHistoryLength)
             {
-                _arousalTrailHead = 0;
-                _arousalTrailHistoryFilled = true;
+                _temperatureTrailHead = 0;
+                _temperatureTrailHistoryFilled = true;
             }
 
-            int availableHistory = _arousalTrailHistoryFilled ? _builtArousalTrailHistoryLength : _arousalTrailHead;
+            int availableHistory = _temperatureTrailHistoryFilled ? _builtTemperatureTrailHistoryLength : _temperatureTrailHead;
             int activeHistory = Mathf.Clamp(
-                Mathf.RoundToInt(Mathf.Lerp(2f, _builtArousalTrailHistoryLength, arousalStrength)),
+                Mathf.RoundToInt(Mathf.Lerp(2f, _builtTemperatureTrailHistoryLength, trailStrength)),
                 2,
                 Mathf.Max(2, availableHistory));
-            Color headColor = Color.Lerp(ResolveBaseColor(_facialValence), highValenceColor, arousalTrailValenceTint);
-            headColor.a = arousalTrailMaxAlpha * arousalStrength;
+            Color headColor = response.Color;
+            headColor.a = temperatureTrailMaxAlpha * trailStrength;
             Color tailColor = headColor;
             tailColor.a = 0f;
-            float lineWidth = arousalTrailLineWidth * Mathf.Lerp(0.65f, 1.6f, arousalStrength);
+            float lineWidth = temperatureTrailLineWidth * Mathf.Lerp(0.65f, 1.6f, trailStrength);
 
-            for (int lineIndex = 0; lineIndex < _arousalTrailLines.Length; lineIndex++)
+            for (int lineIndex = 0; lineIndex < _temperatureTrailLines.Length; lineIndex++)
             {
-                LineRenderer line = _arousalTrailLines[lineIndex];
-                Vector3[] history = _arousalTrailHistory[lineIndex];
+                LineRenderer line = _temperatureTrailLines[lineIndex];
+                Vector3[] history = _temperatureTrailHistory[lineIndex];
                 if (line == null || history == null || availableHistory < 2)
                 {
                     continue;
@@ -1490,29 +1524,29 @@ namespace AmpPortableDataViz.Presentation.Visualization
                 line.startWidth = lineWidth * 0.25f;
                 line.endWidth = lineWidth;
 
-                int oldest = _arousalTrailHead - activeHistory;
+                int oldest = _temperatureTrailHead - activeHistory;
                 if (oldest < 0)
                 {
-                    oldest += _builtArousalTrailHistoryLength;
+                    oldest += _builtTemperatureTrailHistoryLength;
                 }
 
                 for (int pointIndex = 0; pointIndex < activeHistory; pointIndex++)
                 {
-                    int historyIndex = (oldest + pointIndex) % _builtArousalTrailHistoryLength;
+                    int historyIndex = (oldest + pointIndex) % _builtTemperatureTrailHistoryLength;
                     line.SetPosition(pointIndex, history[historyIndex]);
                 }
             }
         }
 
-        private void ClearArousalTrails(bool resetHistory)
+        private void ClearTemperatureTrails(bool resetHistory)
         {
-            if (_arousalTrailLines != null)
+            if (_temperatureTrailLines != null)
             {
-                for (int i = 0; i < _arousalTrailLines.Length; i++)
+                for (int i = 0; i < _temperatureTrailLines.Length; i++)
                 {
-                    if (_arousalTrailLines[i] != null)
+                    if (_temperatureTrailLines[i] != null)
                     {
-                        _arousalTrailLines[i].enabled = false;
+                        _temperatureTrailLines[i].enabled = false;
                     }
                 }
             }
@@ -1522,11 +1556,11 @@ namespace AmpPortableDataViz.Presentation.Visualization
                 return;
             }
 
-            _arousalTrailHead = 0;
-            _arousalTrailHistoryFilled = false;
+            _temperatureTrailHead = 0;
+            _temperatureTrailHistoryFilled = false;
         }
 
-        private static int[] BuildArousalTrailVertexIndices(int width, int height, int stride, int maxTrailCount)
+        private static int[] BuildTemperatureTrailVertexIndices(int width, int height, int stride, int maxTrailCount)
         {
             int safeWidth = Mathf.Max(1, width);
             int safeHeight = Mathf.Max(1, height);
@@ -1692,9 +1726,6 @@ namespace AmpPortableDataViz.Presentation.Visualization
             _targetTemperatureRate = sample.TemperatureRateOfChangeStdDev;
             _targetScrFrequency = sample.SkinConductanceResponseFrequencyStdDev;
             _targetHeartRate = sample.HeartRateStdDev;
-            _targetInterBeatInterval = sample.InterBeatIntervalStdDev;
-            _targetFacialArousal = sample.FacialEmotionArousal;
-            _targetFacialValence = sample.FacialEmotionValence;
             _targetEngagement = sample.Engagement;
 
             if (!logReceivedSamples || !ShouldLogNow())
@@ -1714,9 +1745,6 @@ namespace AmpPortableDataViz.Presentation.Visualization
             _temperatureRate = Mathf.Lerp(_temperatureRate, _targetTemperatureRate, slowFormT);
             _scrFrequency = Mathf.Lerp(_scrFrequency, _targetScrFrequency, t);
             _heartRate = Mathf.Lerp(_heartRate, _targetHeartRate, t);
-            _interBeatInterval = Mathf.Lerp(_interBeatInterval, _targetInterBeatInterval, t);
-            _facialArousal = Mathf.Lerp(_facialArousal, _targetFacialArousal, t);
-            _facialValence = Mathf.Lerp(_facialValence, _targetFacialValence, t);
             _engagement = Mathf.Lerp(_engagement, _targetEngagement, t);
         }
 
@@ -1731,25 +1759,20 @@ namespace AmpPortableDataViz.Presentation.Visualization
             float temperatureMagnitude = Mathf.Abs(_temperatureRate);
             float scrMagnitude = Mathf.Abs(_scrFrequency);
             float heartMagnitude = Mathf.Abs(_heartRate);
-            float ibiMagnitude = Mathf.Abs(_interBeatInterval);
             float formCompression = Mathf.Lerp(1f, _tonicEda >= 0f ? 0.62f : 1.45f, tonicMagnitude);
             float formLift = Mathf.Lerp(0.02f, _tonicEda >= 0f ? 0.2f : -0.08f, tonicMagnitude);
             float contourAmplitude = Mathf.Lerp(0.025f, 0.38f, temperatureMagnitude);
             float contourFrequency = Mathf.Lerp(0.35f, 1.25f, temperatureMagnitude);
             float contourDirection = _temperatureRate < 0f ? -1f : 1f;
             float contourDrift = _localTime * contourDirection * Mathf.Lerp(0.015f, 0.12f, temperatureMagnitude);
-            float arousalMotion = Mathf.Clamp01(_facialArousal);
             float engagementSolidity = Mathf.Clamp01(_engagement);
             float engagementLooseness = 1f - engagementSolidity;
             float loosenessResponse = Mathf.Pow(engagementLooseness, Mathf.Max(0.25f, engagementRigidityPower));
             float coherence = Mathf.Clamp01((engagementSolidity * meshCoherence * engagementMeshSurfaceStrength) + 0.15f);
-            float arousalTurbulence = Mathf.Lerp(arousalTurbulenceMin, arousalTurbulenceMax, arousalMotion);
-            float affectMotionSpeed = Mathf.Lerp(arousalMotionSpeedMin, arousalMotionSpeedMax, arousalMotion);
-            float noiseAmount = turbulenceStrength * (arousalTurbulence + ibiMagnitude * 0.08f) * Mathf.Lerp(1f, 0.65f, coherence);
-            float morphSmoothTime = baseMorphSmoothTime * Mathf.Lerp(arousalMorphSmoothMax, arousalMorphSmoothMin, arousalMotion);
+            float noiseAmount = turbulenceStrength * motionTurbulence * Mathf.Lerp(1f, 0.65f, coherence);
+            float morphSmoothTime = baseMorphSmoothTime * morphSmoothMultiplier;
             float engagementAlpha = Mathf.Lerp(lowEngagementAlpha, highEngagementAlpha, engagementSolidity);
             float engagementParticleScale = Mathf.Lerp(lowEngagementParticleScale, highEngagementParticleScale, engagementSolidity);
-            Color valenceColor = ResolveBaseColor(_facialValence);
             float temperatureTrendParticleGlow = ResolveTemperatureTrendParticleGlow();
             ApplyParticleRendererGlow(temperatureTrendParticleGlow);
 
@@ -1760,16 +1783,16 @@ namespace AmpPortableDataViz.Presentation.Visualization
                 Vector3 slowForm = BuildSlowFormTarget(u, v, formCompression, formLift, contourAmplitude, contourFrequency, contourDrift);
                 Vector3 scrEventOffset = BuildScrEventOffset(u, v, out float scrEventEnergy);
                 Vector3 rhythm = BuildRhythmPulseOffset(u, v, out float rhythmEnergy);
-                Vector3 turbulence = BuildTurbulence(i, u, v, noiseAmount, affectMotionSpeed);
-                Vector3 loosenessDrift = BuildEngagementDriftOffset(i, u, v, loosenessResponse, arousalMotion);
+                Vector3 turbulence = BuildTurbulence(i, u, v, noiseAmount, motionSpeed);
+                Vector3 loosenessDrift = BuildEngagementDriftOffset(i, u, v, loosenessResponse);
 
                 Vector3 lockedTarget = (slowForm + scrEventOffset + rhythm) * visualScale;
                 Vector3 target = lockedTarget + turbulence + loosenessDrift;
 
                 _vertices[i] = Vector3.SmoothDamp(_vertices[i], target, ref _velocities[i], Mathf.Max(0.01f, morphSmoothTime), Mathf.Infinity, deltaTime);
 
-                float localEnergy = Mathf.Clamp01(arousalMotion * 0.5f + heartMagnitude * 0.25f + scrMagnitude * 0.25f);
-                Color vertexColor = Color.Lerp(valenceColor, Color.white, Mathf.Clamp01(localEnergy * 0.25f + rhythmEnergy * 0.35f + scrEventEnergy * 0.65f));
+                float localEnergy = Mathf.Clamp01(0.25f + heartMagnitude * 0.25f + scrMagnitude * 0.25f);
+                Color vertexColor = Color.Lerp(neutralColor, Color.white, Mathf.Clamp01(localEnergy * 0.25f + rhythmEnergy * 0.35f + scrEventEnergy * 0.65f));
                 vertexColor.a = Mathf.Lerp(engagementAlpha, highEngagementAlpha, Mathf.Max(rhythmEnergy * 0.25f, scrEventEnergy * 0.35f));
                 float temperatureTrendEnergy = ResolveTemperatureTrendWaveEnergy(u, out Color temperatureTrendColor);
                 if (temperatureTrendEnergy > 0f)
@@ -1891,21 +1914,14 @@ namespace AmpPortableDataViz.Presentation.Visualization
             float x = u - 0.5f;
             float z = v - 0.5f;
             float distance = Mathf.Sqrt((x * x) + (z * z));
-            float angle = Mathf.Atan2(z, x);
-            float ibiMagnitude = Mathf.Abs(_interBeatInterval);
-            float ibiDirection = _interBeatInterval < 0f ? -1f : 1f;
-            float phaseSpread = ibiMagnitude * ibiPhaseSpread;
             float pulseScale = Mathf.Clamp(pulseStrength / 0.2f, 0f, 3f);
-            float breathPhase = _rhythmPhase + Mathf.Sin((x - z) * Tau) * phaseSpread * ibiDirection;
+            float breathPhase = _rhythmPhase;
             float heartMagnitude = Mathf.Abs(_heartRate);
             float breathEnergy = Mathf.Clamp01(Mathf.Sin(breathPhase * Tau) * 0.5f + 0.5f) * Mathf.Lerp(0.25f, 1f, heartMagnitude);
-            float ibiRadiusBias = Mathf.Lerp(1f, ibiDirection > 0f ? 1.35f : 0.65f, ibiMagnitude);
-            float ibiRingWidthBias = Mathf.Lerp(1f, ibiDirection > 0f ? 1.3f : 0.75f, ibiMagnitude);
-            float ibiBreakBias = Mathf.Lerp(1f, ibiDirection > 0f ? 0.55f : 1.75f, ibiMagnitude);
             Vector3 radialDirection = distance > 0.0001f
                 ? new Vector3(x / distance, 0f, z / distance)
                 : Vector3.zero;
-            Vector3 offset = radialDirection * breathEnergy * rhythmBreathDisplacement * pulseScale * ibiRadiusBias;
+            Vector3 offset = radialDirection * breathEnergy * rhythmBreathDisplacement * pulseScale;
 
             if (_rhythmPulses == null || _rhythmPulses.Length == 0)
             {
@@ -1921,26 +1937,19 @@ namespace AmpPortableDataViz.Presentation.Visualization
                 }
 
                 float normalizedAge = Mathf.Clamp01(_rhythmPulses[i].Age / Mathf.Max(0.0001f, _rhythmPulses[i].Lifetime));
-                float stagger = Mathf.Sin(angle * Mathf.Lerp(1.5f, 5f, ibiMagnitude) + _rhythmPulses[i].PhaseSeed) * phaseSpread * ibiDirection;
-                float localAge = Mathf.Clamp01(normalizedAge + stagger);
+                float localAge = normalizedAge;
                 float pulseDirection = _rhythmPulses[i].Direction < 0f ? -1f : 1f;
                 float ringProgress = pulseDirection < 0f ? 1f - localAge : localAge;
-                float ringRadius = _rhythmPulses[i].Radius * ringProgress * ibiRadiusBias;
-                float ringWidth = Mathf.Lerp(0.025f, 0.075f, _rhythmPulses[i].Intensity) * ibiRingWidthBias;
+                float ringRadius = _rhythmPulses[i].Radius * ringProgress;
+                float ringWidth = Mathf.Lerp(0.025f, 0.075f, _rhythmPulses[i].Intensity);
                 float ring = 1f - Mathf.Clamp01(Mathf.Abs(distance - ringRadius) / ringWidth);
                 float envelope = Mathf.Sin(localAge * Mathf.PI) * (1f - localAge * 0.2f);
-                float breakStrength = Mathf.Clamp01(ibiMagnitude * ibiBreakAmount * ibiBreakBias);
-                float segments = Mathf.Lerp(3f, 9f, breakStrength);
-                float breakPattern = Mathf.Sin(angle * segments + _rhythmPulses[i].PhaseSeed);
-                float breakThreshold = Mathf.Lerp(-1f, 0.35f, breakStrength);
-                float arcMask = Mathf.Lerp(1f, breakPattern > breakThreshold ? 1f : 0.12f, breakStrength);
-                float energy = ring * envelope * _rhythmPulses[i].Intensity * arcMask;
+                float energy = ring * envelope * _rhythmPulses[i].Intensity;
 
                 Vector3 pulseOffsetDirection = pulseDirection < 0f
                     ? Vector3.down + (-radialDirection * 0.65f)
                     : Vector3.up;
-                Vector3 ibiSpacingOffset = radialDirection * ibiDirection * ibiMagnitude * energy * rhythmPulseDisplacement * pulseScale * 0.85f;
-                offset += (pulseOffsetDirection * energy * rhythmPulseDisplacement * pulseScale) + ibiSpacingOffset;
+                offset += pulseOffsetDirection * energy * rhythmPulseDisplacement * pulseScale;
                 if (energy > rhythmEnergy)
                 {
                     rhythmEnergy = energy;
@@ -2023,7 +2032,7 @@ namespace AmpPortableDataViz.Presentation.Visualization
             return Mathf.Clamp01(strongestGlow);
         }
 
-        private Vector3 BuildEngagementDriftOffset(int index, float u, float v, float loosenessResponse, float arousalMotion)
+        private Vector3 BuildEngagementDriftOffset(int index, float u, float v, float loosenessResponse)
         {
             if (loosenessResponse <= 0.0001f
                 || lowEngagementDriftRadius <= 0f
@@ -2044,9 +2053,8 @@ namespace AmpPortableDataViz.Presentation.Visualization
             float zNoise = (Mathf.PerlinNoise(seed.x + 5.9f - time, seed.y + v * noiseScale + 17.3f) - 0.5f) * 2f;
             var wandering = new Vector3(xNoise, yNoise * lowEngagementVerticalDrift, zNoise);
 
-            float arousalDrift = Mathf.Lerp(0.75f, 1.3f, Mathf.Clamp01(arousalMotion));
             Vector3 drift = _engagementDriftDirections[index] + wandering * 0.55f;
-            return drift * lowEngagementDriftRadius * loosenessResponse * arousalDrift;
+            return drift * lowEngagementDriftRadius * loosenessResponse;
         }
 
         private Vector3 BuildTurbulence(int index, float u, float v, float amount, float motionSpeed)
@@ -2088,13 +2096,6 @@ namespace AmpPortableDataViz.Presentation.Visualization
             return value - Mathf.Floor(value);
         }
 
-        private Color ResolveBaseColor(float valence)
-        {
-            return valence < 0.5f
-                ? Color.Lerp(lowValenceColor, neutralColor, valence * 2f)
-                : Color.Lerp(neutralColor, highValenceColor, (valence - 0.5f) * 2f);
-        }
-
         private static float ResolveDeltaTime()
         {
             if (UnityEngine.Application.isPlaying)
@@ -2122,6 +2123,62 @@ namespace AmpPortableDataViz.Presentation.Visualization
 
             _nextLogTime = now + minimumLogIntervalSeconds;
             return true;
+        }
+    }
+
+    internal readonly struct TemperatureTrailResponse
+    {
+        public readonly bool IsActive;
+        public readonly bool DirectionChanged;
+        public readonly float Direction;
+        public readonly float Strength;
+        public readonly Color Color;
+
+        public TemperatureTrailResponse(bool isActive, bool directionChanged, float direction, float strength, Color color)
+        {
+            IsActive = isActive;
+            DirectionChanged = directionChanged;
+            Direction = direction;
+            Strength = strength;
+            Color = color;
+        }
+    }
+
+    internal static class TemperatureTrailResponseMapper
+    {
+        public static TemperatureTrailResponse Resolve(
+            float temperatureRate,
+            bool wasActive,
+            float previousDirection,
+            float activationThreshold,
+            float fadeRange,
+            float releaseFactor,
+            Color hotColor,
+            Color coldColor)
+        {
+            float magnitude = Mathf.Clamp01(Mathf.Abs(temperatureRate));
+            float safeActivationThreshold = Mathf.Clamp01(activationThreshold);
+            float releaseThreshold = safeActivationThreshold * Mathf.Clamp(releaseFactor, 0.05f, 1f);
+            bool isActive = wasActive
+                ? magnitude > releaseThreshold
+                : magnitude >= Mathf.Max(0.0001f, safeActivationThreshold);
+            if (!isActive)
+            {
+                return new TemperatureTrailResponse(false, false, 0f, 0f, Color.clear);
+            }
+
+            float direction = temperatureRate < 0f ? -1f : 1f;
+            bool directionChanged = wasActive &&
+                !Mathf.Approximately(previousDirection, 0f) &&
+                !Mathf.Approximately(previousDirection, direction);
+            float fullStrengthThreshold = Mathf.Min(
+                1f,
+                safeActivationThreshold + Mathf.Max(0.01f, fadeRange));
+            float strength = fullStrengthThreshold <= releaseThreshold + 0.00001f
+                ? 1f
+                : Mathf.InverseLerp(releaseThreshold, fullStrengthThreshold, magnitude);
+            Color color = direction > 0f ? hotColor : coldColor;
+            return new TemperatureTrailResponse(true, directionChanged, direction, strength, color);
         }
     }
 }

@@ -4948,14 +4948,9 @@ MonoBehaviour:
   rhythmPulseRadius: 0.65
   rhythmPulseDisplacement: 0.104
   rhythmBreathDisplacement: 0.025
-  ibiPhaseSpread: 0.18
-  ibiBreakAmount: 0.7
-  arousalTurbulenceMin: 0.04
-  arousalTurbulenceMax: 0.4
-  arousalMotionSpeedMin: 0.2
-  arousalMotionSpeedMax: 2.5
-  arousalMorphSmoothMin: 0.3
-  arousalMorphSmoothMax: 1.8
+  motionTurbulence: 0.22
+  motionSpeed: 1.35
+  morphSmoothMultiplier: 1.05
   lowEngagementAlpha: 0.28
   highEngagementAlpha: 1
   lowEngagementParticleScale: 0.7
@@ -4978,27 +4973,25 @@ MonoBehaviour:
   engagementLatticeResponsePower: 1.75
   engagementLatticeLift: 0.01
   engagementLatticeMaxAlpha: 0.55
-  engagementLatticeValenceTint: 0.35
-  arousalTrailRoot: {fileID: 0}
-  arousalTrailMaterial: {fileID: 2100000, guid: f76fbc4762b567c4c96b681dba3b4d62, type: 2}
-  arousalTrailThreshold: 0.55
-  arousalTrailFadeRange: 0.25
-  arousalTrailStride: 4
-  maxArousalTrails: 64
-  arousalTrailHistoryLength: 18
-  arousalTrailLineWidth: 0.0307
-  arousalTrailLift: 0.018
-  arousalTrailMaxAlpha: 0.65
-  arousalTrailValenceTint: 0.15
+  engagementLatticeHighlightTint: 0.35
+  temperatureTrailRoot: {fileID: 0}
+  temperatureTrailMaterial: {fileID: 2100000, guid: f76fbc4762b567c4c96b681dba3b4d62, type: 2}
+  temperatureTrailThreshold: 0.18
+  temperatureTrailFadeRange: 0.25
+  temperatureTrailReleaseFactor: 0.65
+  temperatureTrailStride: 4
+  maxTemperatureTrails: 64
+  temperatureTrailHistoryLength: 18
+  temperatureTrailLineWidth: 0.0307
+  temperatureTrailVerticalOffset: 0.018
+  temperatureTrailMaxAlpha: 0.65
   renderParticles: 1
   particleSize: 0.0145
   temperatureTrendParticleTintStrength: 1
   temperatureTrendParticleGlowBrightness: 1.8
   temperatureTrendParticleSizeBoost: 1.75
   temperatureTrendParticleAlphaBoost: 0.35
-  lowValenceColor: {r: 1, g: 0.12, b: 0.08, a: 0.9}
   neutralColor: {r: 0.2, g: 1, b: 0.75, a: 0.9}
-  highValenceColor: {r: 1, g: 0.82, b: 0.16, a: 0.9}
   hotTemperatureTrendColor: {r: 1, g: 0.28, b: 0.04, a: 0.95}
   coldTemperatureTrendColor: {r: 0.1, g: 0.66, b: 1, a: 0.95}
   maxTemperatureTrendWaves: 8
@@ -5025,20 +5018,16 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Amp::AmpPortableDataViz.Presentation.Visualization.AudienceSignalBinding
   physioSource: {fileID: 0}
-  valenceSource: {fileID: 0}
-  arousalSource: {fileID: 0}
   engagementSource: {fileID: 0}
   deviceId: 
   particleMeshVisualizer: {fileID: 3118001866504251448}
-  requireAllSignalsBeforeParticleApply: 1
+  requirePhysioAndEngagementBeforeApply: 1
   particleMapperSettings:
     PhysioZScoreRange: {x: -3, y: 3}
     TonicElectrodermalActivityRange: {x: 0.01, y: 0.5}
     TemperatureRateOfChangeRange: {x: 0.001, y: 0.1}
     SkinConductanceResponseFrequencyRange: {x: 0.5, y: 5}
     HeartRateRange: {x: 1, y: 10}
-    InterBeatIntervalRange: {x: 10, y: 100}
-    EmotionRange: {x: 0, y: 2}
   particlePhysioAmplificationSettings:
     Enabled: 1
     WindowSeconds: 10
@@ -5135,8 +5124,6 @@ MonoBehaviour:
     TemperatureRateOfChangeRange: {x: 0.001, y: 0.1}
     SkinConductanceResponseFrequencyRange: {x: 0.5, y: 5}
     HeartRateRange: {x: 1, y: 10}
-    InterBeatIntervalRange: {x: 10, y: 100}
-    EmotionRange: {x: 0, y: 2}
   particlePhysioAmplificationSettings:
     Enabled: 1
     WindowSeconds: 10

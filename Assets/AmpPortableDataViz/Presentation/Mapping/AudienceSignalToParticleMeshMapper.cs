@@ -13,8 +13,6 @@ namespace AmpPortableDataViz.Presentation.Mapping
             public Vector2 TemperatureRateOfChangeRange;
             public Vector2 SkinConductanceResponseFrequencyRange;
             public Vector2 HeartRateRange;
-            public Vector2 InterBeatIntervalRange;
-            public Vector2 EmotionRange;
         }
 
         public Settings CurrentSettings;
@@ -35,9 +33,6 @@ namespace AmpPortableDataViz.Presentation.Mapping
                 MapPhysio(payload.TemperatureRateOfChangeStdDev, payload.PhysioEncoding, settings.TemperatureRateOfChangeRange, settings.PhysioZScoreRange),
                 MapPhysio(payload.SkinConductanceResponseFrequencyStdDev, payload.PhysioEncoding, settings.SkinConductanceResponseFrequencyRange, settings.PhysioZScoreRange),
                 MapPhysio(payload.HeartRateStdDev, payload.PhysioEncoding, settings.HeartRateRange, settings.PhysioZScoreRange),
-                MapPhysio(payload.InterBeatIntervalStdDev, payload.PhysioEncoding, settings.InterBeatIntervalRange, settings.PhysioZScoreRange),
-                Normalize(payload.Arousal, settings.EmotionRange),
-                Normalize(payload.Valence, settings.EmotionRange),
                 payload.Engagement);
         }
 
@@ -49,9 +44,7 @@ namespace AmpPortableDataViz.Presentation.Mapping
                 TonicElectrodermalActivityRange = new Vector2(0.01f, 0.5f),
                 TemperatureRateOfChangeRange = new Vector2(0.001f, 0.1f),
                 SkinConductanceResponseFrequencyRange = new Vector2(0.5f, 5f),
-                HeartRateRange = new Vector2(1f, 10f),
-                InterBeatIntervalRange = new Vector2(10f, 100f),
-                EmotionRange = new Vector2(0f, 2f)
+                HeartRateRange = new Vector2(1f, 10f)
             };
         }
 
@@ -67,8 +60,6 @@ namespace AmpPortableDataViz.Presentation.Mapping
             NormalizeRange(ref settings.TemperatureRateOfChangeRange);
             NormalizeRange(ref settings.SkinConductanceResponseFrequencyRange);
             NormalizeRange(ref settings.HeartRateRange);
-            NormalizeRange(ref settings.InterBeatIntervalRange);
-            NormalizeRange(ref settings.EmotionRange);
             return settings;
         }
 

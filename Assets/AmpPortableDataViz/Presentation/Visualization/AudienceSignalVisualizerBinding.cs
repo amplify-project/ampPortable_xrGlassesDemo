@@ -18,7 +18,6 @@ namespace AmpPortableDataViz.Presentation.Visualization
         private static readonly Vector2 LegacyTemperatureRateRange = new Vector2(0.001f, 0.1f);
         private static readonly Vector2 LegacyScrFrequencyRange = new Vector2(0.5f, 5f);
         private static readonly Vector2 LegacyHeartRateRange = new Vector2(1f, 10f);
-        private static readonly Vector2 LegacyInterBeatIntervalRange = new Vector2(10f, 100f);
 
         public enum SourceMode
         {
@@ -321,7 +320,8 @@ namespace AmpPortableDataViz.Presentation.Visualization
             EnsureGraphState();
             for (int i = 0; i < graphStreams.Length; i++)
             {
-                if (graphStreams[i].Visualizer == null)
+                if (graphStreams[i].Visualizer == null ||
+                    !AudienceVisualizationMetricPolicy.IsGraphMetricSupported(graphStreams[i].Metric))
                 {
                     continue;
                 }
@@ -656,7 +656,6 @@ namespace AmpPortableDataViz.Presentation.Visualization
                 AudienceMetricKind.TemperatureRateOfChangeStdDev => LegacyTemperatureRateRange,
                 AudienceMetricKind.SkinConductanceResponseFrequencyStdDev => LegacyScrFrequencyRange,
                 AudienceMetricKind.HeartRateStdDev => LegacyHeartRateRange,
-                AudienceMetricKind.InterBeatIntervalStdDev => LegacyInterBeatIntervalRange,
                 _ => new Vector2(0f, 1f)
             };
 
@@ -668,8 +667,7 @@ namespace AmpPortableDataViz.Presentation.Visualization
             return metricKind == AudienceMetricKind.TonicElectrodermalActivityStdDev ||
                 metricKind == AudienceMetricKind.TemperatureRateOfChangeStdDev ||
                 metricKind == AudienceMetricKind.SkinConductanceResponseFrequencyStdDev ||
-                metricKind == AudienceMetricKind.HeartRateStdDev ||
-                metricKind == AudienceMetricKind.InterBeatIntervalStdDev;
+                metricKind == AudienceMetricKind.HeartRateStdDev;
         }
 
         private static void NormalizeRange(ref float min, ref float max)
@@ -683,6 +681,18 @@ namespace AmpPortableDataViz.Presentation.Visualization
             {
                 max = min + 1e-4f;
             }
+        }
+    }
+
+    internal static class AudienceVisualizationMetricPolicy
+    {
+        public static bool IsGraphMetricSupported(AudienceMetricKind metricKind)
+        {
+            return metricKind == AudienceMetricKind.TonicElectrodermalActivityStdDev ||
+                metricKind == AudienceMetricKind.TemperatureRateOfChangeStdDev ||
+                metricKind == AudienceMetricKind.SkinConductanceResponseFrequencyStdDev ||
+                metricKind == AudienceMetricKind.HeartRateStdDev ||
+                metricKind == AudienceMetricKind.Engagement;
         }
     }
 }

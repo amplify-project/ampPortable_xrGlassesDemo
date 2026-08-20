@@ -140,7 +140,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!114 &161144380
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -290,9 +290,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 51bc7306d8684759ba297a26953ca70e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  particleMeshRoot: {fileID: 1894845172}
-  imageBoardRoot: {fileID: 1541529391}
-  showParticleMeshOnStart: 0
+  visualizationRoots:
+  - {fileID: 1894845172}
+  - {fileID: 1541529391}
+  startIndex: 0
   applyStartupState: 1
 --- !u!4 &403005149
 Transform:
@@ -321,9 +322,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8f6a587c07fb4e74a9260f5c8e3c02e6, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  visualizationRoots:
-  - {fileID: 1894845171}
-  - {fileID: 1541529392}
+  visualizationToggle: {fileID: 0}
   gazeCamera: {fileID: 864700092}
   maxGazeDistance: 10
   gazeLayerMask:
@@ -346,9 +345,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2c9a936a2a0f4f2e8ac925a4b67cf4e8, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  visualizationRoots:
-  - {fileID: 1894845171}
-  - {fileID: 1541529392}
+  visualizationToggle: {fileID: 0}
   yStep: 0.1
   minLocalY: -2
   maxLocalY: 1
@@ -415,7 +412,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 8340958969312374639, guid: f82accd910f54e44cb54d6e87ad284d6, type: 3}
       propertyPath: m_IsActive
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 8983171046854280205, guid: f82accd910f54e44cb54d6e87ad284d6, type: 3}
       propertyPath: m_LocalPosition.x
@@ -707,11 +704,6 @@ GameObject:
   m_CorrespondingSourceObject: {fileID: 4718808774520319148, guid: f76925451474e044490134be6cd2b2bd, type: 3}
   m_PrefabInstance: {fileID: 1541529390}
   m_PrefabAsset: {fileID: 0}
---- !u!4 &1541529392 stripped
-Transform:
-  m_CorrespondingSourceObject: {fileID: 7352656975339755639, guid: f76925451474e044490134be6cd2b2bd, type: 3}
-  m_PrefabInstance: {fileID: 1541529390}
-  m_PrefabAsset: {fileID: 0}
 --- !u!1001 &1894845170
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -731,6 +723,10 @@ PrefabInstance:
     - target: {fileID: 2065314308577360861, guid: 7fe113f1db4d2784d8f60c23f9c9137b, type: 3}
       propertyPath: engagement
       value: 0.6111036
+      objectReference: {fileID: 0}
+    - target: {fileID: 2065314308577360861, guid: 7fe113f1db4d2784d8f60c23f9c9137b, type: 3}
+      propertyPath: sourceMode
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 2065314308577360861, guid: 7fe113f1db4d2784d8f60c23f9c9137b, type: 3}
       propertyPath: noiseOffset
@@ -766,11 +762,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 4000522542269590512, guid: 7fe113f1db4d2784d8f60c23f9c9137b, type: 3}
       propertyPath: m_LocalPosition.y
-      value: -0.5
+      value: -0.12
       objectReference: {fileID: 0}
     - target: {fileID: 4000522542269590512, guid: 7fe113f1db4d2784d8f60c23f9c9137b, type: 3}
       propertyPath: m_LocalPosition.z
-      value: 3
+      value: 2.26
       objectReference: {fileID: 0}
     - target: {fileID: 4000522542269590512, guid: 7fe113f1db4d2784d8f60c23f9c9137b, type: 3}
       propertyPath: m_LocalRotation.w
@@ -814,18 +810,13 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 7070063373814244994, guid: 7fe113f1db4d2784d8f60c23f9c9137b, type: 3}
       propertyPath: m_IsActive
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 7fe113f1db4d2784d8f60c23f9c9137b, type: 3}
---- !u!4 &1894845171 stripped
-Transform:
-  m_CorrespondingSourceObject: {fileID: 4000522542269590512, guid: 7fe113f1db4d2784d8f60c23f9c9137b, type: 3}
-  m_PrefabInstance: {fileID: 1894845170}
-  m_PrefabAsset: {fileID: 0}
 --- !u!1 &1894845172 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 7070063373814244994, guid: 7fe113f1db4d2784d8f60c23f9c9137b, type: 3}

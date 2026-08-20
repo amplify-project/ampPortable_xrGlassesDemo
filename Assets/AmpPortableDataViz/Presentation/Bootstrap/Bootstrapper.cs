@@ -144,18 +144,12 @@ namespace AmpPortableDataViz.Presentation.Bootstrap
         public float GraphStackedHeightScale = 0.6f;
 
         [Header("Legacy Graph Channel Offsets")]
-        public Vector3 GraphValenceOffset = new Vector3(-0.6f, 0f, 0f);
-        public Vector3 GraphArousalOffset = Vector3.zero;
         public Vector3 GraphHeartRateOffset = new Vector3(0.6f, 0f, 0f);
         public Vector3 GraphEdaOffset = new Vector3(0.6f, -0.6f, 0f);
 
         [Header("Legacy Graph Stream Settings")]
-        public Vector2 GraphValenceRange = new Vector2(0f, 1f);
-        public Vector2 GraphArousalRange = new Vector2(0f, 1f);
         public Vector2 GraphHeartRateRange = new Vector2(40f, 200f);
         public Vector2 GraphEdaRange = new Vector2(0f, 10f);
-        public Color GraphValenceColor = new Color(0.2f, 0.9f, 0.4f, 1f);
-        public Color GraphArousalColor = new Color(0.95f, 0.65f, 0.15f, 1f);
         public Color GraphHeartRateColor = new Color(0.95f, 0.2f, 0.2f, 1f);
         public Color GraphEdaColor = new Color(0.2f, 0.8f, 0.95f, 1f);
         [Range(0.0001f, 0.05f)]
@@ -979,7 +973,7 @@ namespace AmpPortableDataViz.Presentation.Bootstrap
 
             foreach (var definition in deviceDefinitions)
             {
-                if (!definition.HasRequiredChannels)
+                if (!definition.HasVisualizationChannels)
                 {
                     Debug.LogWarning($"Bootstrapper: Incomplete audience channel set for device '{definition.DeviceId}', skipping selectable stream.");
                     continue;
@@ -991,25 +985,19 @@ namespace AmpPortableDataViz.Presentation.Bootstrap
 
                 var binding = sourceObject.AddComponent<AudienceSignalBinding>();
                 var physioPump = AcquirePhysioPumpForChannel(definition.DeviceId, definition.PhysioMetricsChannel);
-                var valencePump = AcquireRedisPumpForChannel(definition.DeviceId, EmotionChannelKind.Valence, definition.ValenceChannel);
-                var arousalPump = AcquireRedisPumpForChannel(definition.DeviceId, EmotionChannelKind.Arousal, definition.ArousalChannel);
                 var engagementPump = AcquireRedisPumpForChannel("global", EmotionChannelKind.Broadcast, definition.EngagementChannel);
 
-                if (physioPump == null || valencePump == null || arousalPump == null || engagementPump == null)
+                if (physioPump == null || engagementPump == null)
                 {
                     Debug.LogWarning($"Bootstrapper: Unable to create selectable stream for '{definition.DeviceId}'.");
                     Destroy(sourceObject);
                     ReleasePhysioPump(definition.PhysioMetricsChannel);
-                    ReleaseRedisPump(definition.ValenceChannel);
-                    ReleaseRedisPump(definition.ArousalChannel);
                     ReleaseRedisPump(definition.EngagementChannel);
                     continue;
                 }
 
                 binding.ConfigureSources(
                     physioPump,
-                    valencePump,
-                    arousalPump,
                     engagementPump,
                     definition.DeviceId);
                 binding.ConfigureParticleTarget(null);
@@ -1020,8 +1008,6 @@ namespace AmpPortableDataViz.Presentation.Bootstrap
                     SourceObject = sourceObject,
                     Binding = binding,
                     PhysioMetricsChannel = definition.PhysioMetricsChannel,
-                    ValenceChannel = definition.ValenceChannel,
-                    ArousalChannel = definition.ArousalChannel,
                     EngagementChannel = definition.EngagementChannel
                 });
             }
@@ -1243,7 +1229,7 @@ namespace AmpPortableDataViz.Presentation.Bootstrap
             int deviceIndex = 0;
             foreach (var definition in deviceDefinitions)
             {
-                if (!definition.HasRequiredChannels)
+                if (!definition.HasVisualizationChannels)
                 {
                     Debug.LogWarning($"Bootstrapper: Incomplete audience channel set for device '{definition.DeviceId}', skipping visual spawn.");
                     continue;
@@ -1268,17 +1254,13 @@ namespace AmpPortableDataViz.Presentation.Bootstrap
 
                 var particleMeshVisualizer = instance.GetComponentInChildren<ParticleMeshVisualizer>();
                 var physioPump = AcquirePhysioPumpForChannel(definition.DeviceId, definition.PhysioMetricsChannel);
-                var valencePump = AcquireRedisPumpForChannel(definition.DeviceId, EmotionChannelKind.Valence, definition.ValenceChannel);
-                var arousalPump = AcquireRedisPumpForChannel(definition.DeviceId, EmotionChannelKind.Arousal, definition.ArousalChannel);
                 var engagementPump = AcquireRedisPumpForChannel("global", EmotionChannelKind.Broadcast, definition.EngagementChannel);
 
-                if (!TryConfigureAudienceBinding(binding, physioPump, valencePump, arousalPump, engagementPump, particleMeshVisualizer, definition.DeviceId))
+                if (!TryConfigureAudienceBinding(binding, physioPump, engagementPump, particleMeshVisualizer, definition.DeviceId))
                 {
                     Debug.LogWarning($"Bootstrapper: Unable to configure audience binding on '{instance.name}', skipping visual spawn.");
                     Destroy(instance);
                     ReleasePhysioPump(definition.PhysioMetricsChannel);
-                    ReleaseRedisPump(definition.ValenceChannel);
-                    ReleaseRedisPump(definition.ArousalChannel);
                     ReleaseRedisPump(definition.EngagementChannel);
                     continue;
                 }
@@ -1289,12 +1271,8 @@ namespace AmpPortableDataViz.Presentation.Bootstrap
                     VisualInstance = instance,
                     Binding = binding,
                     PhysioMetricsChannel = definition.PhysioMetricsChannel,
-                    ValenceChannel = definition.ValenceChannel,
-                    ArousalChannel = definition.ArousalChannel,
                     EngagementChannel = definition.EngagementChannel,
                     PhysioPump = physioPump,
-                    ValencePump = valencePump,
-                    ArousalPump = arousalPump,
                     EngagementPump = engagementPump
                 });
 
@@ -1367,7 +1345,7 @@ namespace AmpPortableDataViz.Presentation.Bootstrap
 
                 PositionGraphGroup(groupRoot.transform, deviceIndex, hasCustomParent);
 
-                var offsetsInUse = new List<Vector3>(4);
+                var offsetsInUse = new List<Vector3>(2);
                 var instance = new GraphDeviceGroupInstance
                 {
                     DeviceId = definition.DeviceId,
@@ -1376,58 +1354,8 @@ namespace AmpPortableDataViz.Presentation.Bootstrap
                 };
 
                 string deviceLabel = FormatDeviceLabel(definition.DeviceId, deviceIndex);
-                Vector3 valenceOffset = ResolveGraphChannelOffset(EmotionChannelKind.Valence);
-                Vector3 arousalOffset = ResolveGraphChannelOffset(EmotionChannelKind.Arousal);
                 Vector3 heartRateOffset = ResolveGraphChannelOffset(EmotionChannelKind.HeartRate);
                 Vector3 edaOffset = ResolveGraphChannelOffset(EmotionChannelKind.EdaFiltered);
-
-                if (!string.IsNullOrWhiteSpace(definition.ValenceChannel))
-                {
-                    string valenceChannel = definition.ValenceChannel;
-                    instance.ValenceGraph = SpawnGraphForChannel(
-                        groupRoot.transform,
-                        definition.DeviceId,
-                        EmotionChannelKind.Valence,
-                        valenceChannel,
-                        valenceOffset,
-                        GraphValenceRange,
-                        GraphValenceColor,
-                        GraphLineWidth,
-                        $"{deviceLabel} - Valence",
-                        out instance.ValencePump);
-                    if (instance.ValenceGraph != null)
-                    {
-                        instance.ValenceChannel = valenceChannel;
-                        offsetsInUse.Add(valenceOffset);
-                        ApplyGraphHeightScale(instance.ValenceGraph);
-                        AttachGraphPanel(instance.ValenceGraph);
-                        AttachGraphLabel(groupRoot, instance.ValenceGraph, valenceOffset, ResolveGraphChannelLabel(EmotionChannelKind.Valence));
-                    }
-                }
-
-                if (!string.IsNullOrWhiteSpace(definition.ArousalChannel))
-                {
-                    string arousalChannel = definition.ArousalChannel;
-                    instance.ArousalGraph = SpawnGraphForChannel(
-                        groupRoot.transform,
-                        definition.DeviceId,
-                        EmotionChannelKind.Arousal,
-                        arousalChannel,
-                        arousalOffset,
-                        GraphArousalRange,
-                        GraphArousalColor,
-                        GraphLineWidth,
-                        $"{deviceLabel} - Arousal",
-                        out instance.ArousalPump);
-                    if (instance.ArousalGraph != null)
-                    {
-                        instance.ArousalChannel = arousalChannel;
-                        offsetsInUse.Add(arousalOffset);
-                        ApplyGraphHeightScale(instance.ArousalGraph);
-                        AttachGraphPanel(instance.ArousalGraph);
-                        AttachGraphLabel(groupRoot, instance.ArousalGraph, arousalOffset, ResolveGraphChannelLabel(EmotionChannelKind.Arousal));
-                    }
-                }
 
                 if (!string.IsNullOrWhiteSpace(definition.HeartRateChannel))
                 {
@@ -1477,12 +1405,10 @@ namespace AmpPortableDataViz.Presentation.Bootstrap
                     }
                 }
 
-                if (instance.ValenceGraph == null && instance.ArousalGraph == null && instance.HeartRateGraph == null && instance.EdaGraph == null)
+                if (instance.HeartRateGraph == null && instance.EdaGraph == null)
                 {
                     Debug.LogWarning($"Bootstrapper: No graph channels found for device '{definition.DeviceId}', skipping group spawn.");
                     Destroy(groupRoot);
-                    ReleaseRedisPump(instance.ValenceChannel);
-                    ReleaseRedisPump(instance.ArousalChannel);
                     ReleaseRedisPump(instance.HeartRateChannel);
                     ReleaseRedisPump(instance.EdaChannel);
                     continue;
@@ -1543,7 +1469,7 @@ namespace AmpPortableDataViz.Presentation.Bootstrap
             int deviceIndex = 0;
             foreach (var definition in deviceDefinitions)
             {
-                if (!definition.HasRequiredChannels)
+                if (!definition.HasVisualizationChannels)
                 {
                     Debug.LogWarning($"Bootstrapper: Incomplete audience channel set for device '{definition.DeviceId}', skipping graph spawn.");
                     continue;
@@ -1572,17 +1498,13 @@ namespace AmpPortableDataViz.Presentation.Bootstrap
                 }
 
                 var physioPump = AcquirePhysioPumpForChannel(definition.DeviceId, definition.PhysioMetricsChannel);
-                var valencePump = AcquireRedisPumpForChannel(definition.DeviceId, EmotionChannelKind.Valence, definition.ValenceChannel);
-                var arousalPump = AcquireRedisPumpForChannel(definition.DeviceId, EmotionChannelKind.Arousal, definition.ArousalChannel);
                 var engagementPump = AcquireRedisPumpForChannel("global", EmotionChannelKind.Broadcast, definition.EngagementChannel);
 
-                if (!TryConfigureAudienceBinding(binding, physioPump, valencePump, arousalPump, engagementPump, null, definition.DeviceId))
+                if (!TryConfigureAudienceBinding(binding, physioPump, engagementPump, null, definition.DeviceId))
                 {
                     Debug.LogWarning($"Bootstrapper: Unable to configure audience graph binding on '{instance.name}', skipping graph spawn.");
                     Destroy(instance);
                     ReleasePhysioPump(definition.PhysioMetricsChannel);
-                    ReleaseRedisPump(definition.ValenceChannel);
-                    ReleaseRedisPump(definition.ArousalChannel);
                     ReleaseRedisPump(definition.EngagementChannel);
                     continue;
                 }
@@ -1594,12 +1516,8 @@ namespace AmpPortableDataViz.Presentation.Bootstrap
                     GroupRoot = instance,
                     Binding = binding,
                     PhysioMetricsChannel = definition.PhysioMetricsChannel,
-                    ValenceChannel = definition.ValenceChannel,
-                    ArousalChannel = definition.ArousalChannel,
                     EngagementChannel = definition.EngagementChannel,
                     PhysioPump = physioPump,
-                    ValencePump = valencePump,
-                    ArousalPump = arousalPump,
                     EngagementPump = engagementPump
                 });
 
@@ -1781,18 +1699,16 @@ namespace AmpPortableDataViz.Presentation.Bootstrap
         private static bool TryConfigureAudienceBinding(
             AudienceSignalBinding binding,
             RedisPhysioMetricsPump physioPump,
-            RedisDataPump valencePump,
-            RedisDataPump arousalPump,
             RedisDataPump engagementPump,
             ParticleMeshVisualizer particleMeshVisualizer,
             string deviceId)
         {
-            if (binding == null || physioPump == null || valencePump == null || arousalPump == null || engagementPump == null)
+            if (binding == null || physioPump == null || engagementPump == null)
             {
                 return false;
             }
 
-            binding.ConfigureSources(physioPump, valencePump, arousalPump, engagementPump, deviceId);
+            binding.ConfigureSources(physioPump, engagementPump, deviceId);
             if (particleMeshVisualizer != null)
             {
                 binding.ConfigureParticleTarget(particleMeshVisualizer);
@@ -1890,8 +1806,6 @@ namespace AmpPortableDataViz.Presentation.Bootstrap
                 }
 
                 ReleasePhysioPump(instance.PhysioMetricsChannel);
-                ReleaseRedisPump(instance.ValenceChannel);
-                ReleaseRedisPump(instance.ArousalChannel);
                 ReleaseRedisPump(instance.EngagementChannel);
             }
 
@@ -1913,14 +1827,10 @@ namespace AmpPortableDataViz.Presentation.Bootstrap
                 }
                 else
                 {
-                    if (instance.ValenceGraph != null) Destroy(instance.ValenceGraph);
-                    if (instance.ArousalGraph != null) Destroy(instance.ArousalGraph);
                     if (instance.HeartRateGraph != null) Destroy(instance.HeartRateGraph);
                     if (instance.EdaGraph != null) Destroy(instance.EdaGraph);
                 }
 
-                ReleaseRedisPump(instance.ValenceChannel);
-                ReleaseRedisPump(instance.ArousalChannel);
                 ReleaseRedisPump(instance.HeartRateChannel);
                 ReleaseRedisPump(instance.EdaChannel);
             }
@@ -1947,8 +1857,6 @@ namespace AmpPortableDataViz.Presentation.Bootstrap
                 }
 
                 ReleasePhysioPump(instance.PhysioMetricsChannel);
-                ReleaseRedisPump(instance.ValenceChannel);
-                ReleaseRedisPump(instance.ArousalChannel);
                 ReleaseRedisPump(instance.EngagementChannel);
             }
 
@@ -1975,8 +1883,6 @@ namespace AmpPortableDataViz.Presentation.Bootstrap
                 }
 
                 ReleasePhysioPump(source.PhysioMetricsChannel);
-                ReleaseRedisPump(source.ValenceChannel);
-                ReleaseRedisPump(source.ArousalChannel);
                 ReleaseRedisPump(source.EngagementChannel);
             }
 
@@ -2157,8 +2063,6 @@ namespace AmpPortableDataViz.Presentation.Bootstrap
             {
                 return channelKind switch
                 {
-                    EmotionChannelKind.Valence => GraphValenceOffset,
-                    EmotionChannelKind.Arousal => GraphArousalOffset,
                     EmotionChannelKind.HeartRate => GraphHeartRateOffset,
                     EmotionChannelKind.EdaFiltered => GraphEdaOffset,
                     _ => Vector3.zero
@@ -2168,10 +2072,8 @@ namespace AmpPortableDataViz.Presentation.Bootstrap
             float spacing = Mathf.Max(0.01f, GraphStackedVerticalSpacing);
             float yOffset = channelKind switch
             {
-                EmotionChannelKind.Valence => spacing,
-                EmotionChannelKind.Arousal => 0f,
-                EmotionChannelKind.HeartRate => -spacing,
-                EmotionChannelKind.EdaFiltered => -spacing * 2f,
+                EmotionChannelKind.HeartRate => spacing * 0.5f,
+                EmotionChannelKind.EdaFiltered => -spacing * 0.5f,
                 _ => 0f
             };
 
@@ -2355,37 +2257,14 @@ namespace AmpPortableDataViz.Presentation.Bootstrap
                     continue;
                 }
 
-                string deviceId = string.Empty;
+                string deviceId;
                 AudienceDeviceChannelDefinition definition;
-                bool hasDeviceChannel = false;
 
                 if (RedisAudienceChannels.TryParsePhysioMetricsDeviceChannel(channel, out deviceId))
                 {
-                    hasDeviceChannel = true;
                     definition = GetOrCreateAudienceDefinition(deviceId, orderedDeviceIds, map);
                     definition.PhysioMetricsChannel = channel;
                     map[deviceId] = definition;
-                }
-                else if (RedisEmotionChannels.TryParseDeviceChannel(channel, out deviceId, out var kind))
-                {
-                    hasDeviceChannel = true;
-                    definition = GetOrCreateAudienceDefinition(deviceId, orderedDeviceIds, map);
-
-                    if (kind == EmotionChannelKind.Valence)
-                    {
-                        definition.ValenceChannel = channel;
-                    }
-                    else if (kind == EmotionChannelKind.Arousal)
-                    {
-                        definition.ArousalChannel = channel;
-                    }
-
-                    map[deviceId] = definition;
-                }
-
-                if (!hasDeviceChannel)
-                {
-                    continue;
                 }
             }
 
@@ -2423,16 +2302,6 @@ namespace AmpPortableDataViz.Presentation.Bootstrap
             if (string.IsNullOrWhiteSpace(definition.PhysioMetricsChannel))
             {
                 definition.PhysioMetricsChannel = RedisAudienceChannels.FormatPhysioMetricsChannel(definition.DeviceId);
-            }
-
-            if (string.IsNullOrWhiteSpace(definition.ValenceChannel))
-            {
-                RedisEmotionChannels.TryFormatChannel(EmotionChannelKind.Valence, definition.DeviceId, out definition.ValenceChannel);
-            }
-
-            if (string.IsNullOrWhiteSpace(definition.ArousalChannel))
-            {
-                RedisEmotionChannels.TryFormatChannel(EmotionChannelKind.Arousal, definition.DeviceId, out definition.ArousalChannel);
             }
 
             definition.EngagementChannel = string.IsNullOrWhiteSpace(engagementChannel)
@@ -2645,28 +2514,10 @@ namespace AmpPortableDataViz.Presentation.Bootstrap
                     continue;
                 }
 
-                Vector3 valenceOffset = ResolveGraphChannelOffset(EmotionChannelKind.Valence);
-                Vector3 arousalOffset = ResolveGraphChannelOffset(EmotionChannelKind.Arousal);
                 Vector3 heartRateOffset = ResolveGraphChannelOffset(EmotionChannelKind.HeartRate);
                 Vector3 edaOffset = ResolveGraphChannelOffset(EmotionChannelKind.EdaFiltered);
 
-                var offsetsInUse = new List<Vector3>(4);
-
-                if (instance.ValenceGraph != null)
-                {
-                    instance.ValenceGraph.transform.localPosition = valenceOffset;
-                    offsetsInUse.Add(valenceOffset);
-                    ApplyGraphHeightScale(instance.ValenceGraph);
-                    UpdateGraphPanelSize(instance.ValenceGraph);
-                }
-
-                if (instance.ArousalGraph != null)
-                {
-                    instance.ArousalGraph.transform.localPosition = arousalOffset;
-                    offsetsInUse.Add(arousalOffset);
-                    ApplyGraphHeightScale(instance.ArousalGraph);
-                    UpdateGraphPanelSize(instance.ArousalGraph);
-                }
+                var offsetsInUse = new List<Vector3>(2);
 
                 if (instance.HeartRateGraph != null)
                 {
@@ -2685,16 +2536,6 @@ namespace AmpPortableDataViz.Presentation.Bootstrap
                 }
 
                 ClearGraphGroupDecorations(instance.GroupRoot.transform);
-
-                if (instance.ValenceGraph != null)
-                {
-                    AttachGraphLabel(instance.GroupRoot, instance.ValenceGraph, valenceOffset, ResolveGraphChannelLabel(EmotionChannelKind.Valence));
-                }
-
-                if (instance.ArousalGraph != null)
-                {
-                    AttachGraphLabel(instance.GroupRoot, instance.ArousalGraph, arousalOffset, ResolveGraphChannelLabel(EmotionChannelKind.Arousal));
-                }
 
                 if (instance.HeartRateGraph != null)
                 {
@@ -2984,8 +2825,6 @@ namespace AmpPortableDataViz.Presentation.Bootstrap
         {
             return channelKind switch
             {
-                EmotionChannelKind.Valence => "Valence",
-                EmotionChannelKind.Arousal => "Arousal",
                 EmotionChannelKind.HeartRate => "Heart Rate",
                 EmotionChannelKind.EdaFiltered => "EDA",
                 _ => channelKind.ToString()
@@ -3097,12 +2936,8 @@ namespace AmpPortableDataViz.Presentation.Bootstrap
             public GameObject VisualInstance;
             public AudienceSignalBinding Binding;
             public string PhysioMetricsChannel;
-            public string ValenceChannel;
-            public string ArousalChannel;
             public string EngagementChannel;
             public RedisPhysioMetricsPump PhysioPump;
-            public RedisDataPump ValencePump;
-            public RedisDataPump ArousalPump;
             public RedisDataPump EngagementPump;
         }
 
@@ -3111,16 +2946,10 @@ namespace AmpPortableDataViz.Presentation.Bootstrap
             public string DeviceId;
             public int DeviceIndex;
             public GameObject GroupRoot;
-            public GameObject ValenceGraph;
-            public GameObject ArousalGraph;
             public GameObject HeartRateGraph;
             public GameObject EdaGraph;
-            public string ValenceChannel;
-            public string ArousalChannel;
             public string HeartRateChannel;
             public string EdaChannel;
-            public RedisDataPump ValencePump;
-            public RedisDataPump ArousalPump;
             public RedisDataPump HeartRatePump;
             public RedisDataPump EdaPump;
         }
@@ -3132,12 +2961,8 @@ namespace AmpPortableDataViz.Presentation.Bootstrap
             public GameObject GroupRoot;
             public AudienceSignalBinding Binding;
             public string PhysioMetricsChannel;
-            public string ValenceChannel;
-            public string ArousalChannel;
             public string EngagementChannel;
             public RedisPhysioMetricsPump PhysioPump;
-            public RedisDataPump ValencePump;
-            public RedisDataPump ArousalPump;
             public RedisDataPump EngagementPump;
         }
 
@@ -3146,8 +2971,6 @@ namespace AmpPortableDataViz.Presentation.Bootstrap
             public GameObject SourceObject;
             public AudienceSignalBinding Binding;
             public string PhysioMetricsChannel;
-            public string ValenceChannel;
-            public string ArousalChannel;
             public string EngagementChannel;
         }
 
@@ -3182,15 +3005,11 @@ namespace AmpPortableDataViz.Presentation.Bootstrap
         {
             public string DeviceId;
             public string PhysioMetricsChannel;
-            public string ValenceChannel;
-            public string ArousalChannel;
             public string EngagementChannel;
 
-            public bool HasRequiredChannels =>
+            public bool HasVisualizationChannels =>
                 !string.IsNullOrWhiteSpace(DeviceId) &&
                 !string.IsNullOrWhiteSpace(PhysioMetricsChannel) &&
-                !string.IsNullOrWhiteSpace(ValenceChannel) &&
-                !string.IsNullOrWhiteSpace(ArousalChannel) &&
                 !string.IsNullOrWhiteSpace(EngagementChannel);
         }
 

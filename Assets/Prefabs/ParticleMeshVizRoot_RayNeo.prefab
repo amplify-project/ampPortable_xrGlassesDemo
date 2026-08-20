@@ -133,15 +133,11 @@ PrefabInstance:
       value: 0.506
       objectReference: {fileID: 0}
     - target: {fileID: 8489548096852947066, guid: 74e05b7be47103748b0057db90b75d78, type: 3}
-      propertyPath: highValenceColor.g
-      value: 0.625
-      objectReference: {fileID: 0}
-    - target: {fileID: 8489548096852947066, guid: 74e05b7be47103748b0057db90b75d78, type: 3}
       propertyPath: lowEngagementAlpha
       value: 0.75
       objectReference: {fileID: 0}
     - target: {fileID: 8489548096852947066, guid: 74e05b7be47103748b0057db90b75d78, type: 3}
-      propertyPath: arousalTrailMaterial
+      propertyPath: temperatureTrailMaterial
       value: 
       objectReference: {fileID: 2100000, guid: 5b101d5b79f8c0147bdcd1167fb8af49, type: 2}
     - target: {fileID: 8489548096852947066, guid: 74e05b7be47103748b0057db90b75d78, type: 3}

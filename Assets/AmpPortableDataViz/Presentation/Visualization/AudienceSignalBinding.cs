@@ -4,11 +4,12 @@ using AmpPortableDataViz.Core;
 using AmpPortableDataViz.Presentation.Mapping;
 using AmpPortableDataViz.Presentation.Sources;
 using UnityEngine;
+using UnityEngine.Serialization;
 
 namespace AmpPortableDataViz.Presentation.Visualization
 {
     /// <summary>
-    /// Aggregates Redis physiological, engagement, valence, and arousal streams for particle mesh and graph visuals.
+    /// Aggregates Redis physiological and engagement streams for particle mesh and graph visuals.
     /// </summary>
     [DisallowMultipleComponent]
     [AddComponentMenu("Amp Portable Data Viz/Visualization/Audience Signal Binding")]
@@ -19,7 +20,6 @@ namespace AmpPortableDataViz.Presentation.Visualization
         private static readonly Vector2 LegacyTemperatureRateRange = new Vector2(0.001f, 0.1f);
         private static readonly Vector2 LegacyScrFrequencyRange = new Vector2(0.5f, 5f);
         private static readonly Vector2 LegacyHeartRateRange = new Vector2(1f, 10f);
-        private static readonly Vector2 LegacyInterBeatIntervalRange = new Vector2(10f, 100f);
 
         [Serializable]
         private struct GraphMetricBinding
@@ -38,8 +38,6 @@ namespace AmpPortableDataViz.Presentation.Visualization
 
         [Header("Redis Sources")]
         [SerializeField] private RedisPhysioMetricsPump physioSource;
-        [SerializeField] private RedisDataPump valenceSource;
-        [SerializeField] private RedisDataPump arousalSource;
         [SerializeField] private RedisDataPump engagementSource;
 
         [Header("Device Identity")]
@@ -47,7 +45,8 @@ namespace AmpPortableDataViz.Presentation.Visualization
 
         [Header("Particle Mesh Target")]
         [SerializeField] private ParticleMeshVisualizer particleMeshVisualizer;
-        [SerializeField] private bool requireAllSignalsBeforeParticleApply = true;
+        [FormerlySerializedAs("requireAllSignalsBeforeParticleApply")]
+        [SerializeField] private bool requirePhysioAndEngagementBeforeApply = true;
         [SerializeField] private AudienceSignalToParticleMeshMapper.Settings particleMapperSettings =
             AudienceSignalToParticleMeshMapper.CreateDefaultSettings();
 
@@ -82,22 +81,14 @@ namespace AmpPortableDataViz.Presentation.Visualization
         private int[] _graphSequenceIds;
 
         private Action<DataFrame<PhysioMetricsSample>> _physioHandler;
-        private Action<DataFrame<float>> _valenceHandler;
-        private Action<DataFrame<float>> _arousalHandler;
         private Action<DataFrame<float>> _engagementHandler;
 
         private bool _hasPhysio;
-        private bool _hasValence;
-        private bool _hasArousal;
         private bool _hasEngagement;
 
         private PhysioMetricsSample _latestPhysio;
-        private float _latestValence = 1f;
-        private float _latestArousal = 1f;
         private float _latestEngagement = 0.5f;
         private long _latestPhysioTimestamp;
-        private long _latestValenceTimestamp;
-        private long _latestArousalTimestamp;
         private long _latestEngagementTimestamp;
         private int _particleSequenceId;
 
@@ -139,8 +130,6 @@ namespace AmpPortableDataViz.Presentation.Visualization
 
         public void ConfigureSources(
             RedisPhysioMetricsPump newPhysioSource,
-            RedisDataPump newValenceSource,
-            RedisDataPump newArousalSource,
             RedisDataPump newEngagementSource,
             string overrideDeviceId = null)
         {
@@ -151,8 +140,6 @@ namespace AmpPortableDataViz.Presentation.Visualization
             }
 
             physioSource = newPhysioSource;
-            valenceSource = newValenceSource;
-            arousalSource = newArousalSource;
             engagementSource = newEngagementSource;
 
             if (!string.IsNullOrWhiteSpace(overrideDeviceId))
@@ -183,16 +170,12 @@ namespace AmpPortableDataViz.Presentation.Visualization
         private void AttachSources()
         {
             SubscribeToPhysioPump(physioSource, ref _physioHandler, OnPhysioFrame);
-            SubscribeToFloatPump(valenceSource, ref _valenceHandler, OnValenceFrame, "valence");
-            SubscribeToFloatPump(arousalSource, ref _arousalHandler, OnArousalFrame, "arousal");
             SubscribeToFloatPump(engagementSource, ref _engagementHandler, OnEngagementFrame, "engagement");
         }
 
         private void DetachSources()
         {
             UnsubscribeFromPhysioPump(physioSource, ref _physioHandler);
-            UnsubscribeFromFloatPump(valenceSource, ref _valenceHandler);
-            UnsubscribeFromFloatPump(arousalSource, ref _arousalHandler);
             UnsubscribeFromFloatPump(engagementSource, ref _engagementHandler);
         }
 
@@ -255,37 +238,6 @@ namespace AmpPortableDataViz.Presentation.Visualization
             AppendGraphSample(AudienceMetricKind.TemperatureRateOfChangeStdDev, ResolvePhysioGraphValue(AudienceMetricKind.TemperatureRateOfChangeStdDev, frame.Payload), frame.TimestampTicksUtc);
             AppendGraphSample(AudienceMetricKind.SkinConductanceResponseFrequencyStdDev, ResolvePhysioGraphValue(AudienceMetricKind.SkinConductanceResponseFrequencyStdDev, frame.Payload), frame.TimestampTicksUtc);
             AppendGraphSample(AudienceMetricKind.HeartRateStdDev, ResolvePhysioGraphValue(AudienceMetricKind.HeartRateStdDev, frame.Payload), frame.TimestampTicksUtc);
-            AppendGraphSample(AudienceMetricKind.InterBeatIntervalStdDev, ResolvePhysioGraphValue(AudienceMetricKind.InterBeatIntervalStdDev, frame.Payload), frame.TimestampTicksUtc);
-            TryApplyParticleMesh();
-        }
-
-        private void OnValenceFrame(DataFrame<float> frame)
-        {
-            _latestValence = frame.Payload;
-            _latestValenceTimestamp = frame.TimestampTicksUtc;
-            _hasValence = true;
-
-            if (logRawInputs)
-            {
-                Debug.Log($"AudienceSignalBinding[{ResolveDeviceId()}] valence={_latestValence:F4} seq={frame.SequenceId} ts={frame.TimestampTicksUtc}", this);
-            }
-
-            AppendGraphSample(AudienceMetricKind.Valence, _latestValence, frame.TimestampTicksUtc);
-            TryApplyParticleMesh();
-        }
-
-        private void OnArousalFrame(DataFrame<float> frame)
-        {
-            _latestArousal = frame.Payload;
-            _latestArousalTimestamp = frame.TimestampTicksUtc;
-            _hasArousal = true;
-
-            if (logRawInputs)
-            {
-                Debug.Log($"AudienceSignalBinding[{ResolveDeviceId()}] arousal={_latestArousal:F4} seq={frame.SequenceId} ts={frame.TimestampTicksUtc}", this);
-            }
-
-            AppendGraphSample(AudienceMetricKind.Arousal, _latestArousal, frame.TimestampTicksUtc);
             TryApplyParticleMesh();
         }
 
@@ -306,7 +258,7 @@ namespace AmpPortableDataViz.Presentation.Visualization
 
         private void TryApplyParticleMesh()
         {
-            if (requireAllSignalsBeforeParticleApply && (!_hasPhysio || !_hasValence || !_hasArousal || !_hasEngagement))
+            if (requirePhysioAndEngagementBeforeApply && (!_hasPhysio || !_hasEngagement))
             {
                 return;
             }
@@ -342,21 +294,24 @@ namespace AmpPortableDataViz.Presentation.Visualization
                 _latestPhysio.HeartRateStdDev,
                 _latestPhysio.InterBeatIntervalStdDev,
                 _latestEngagement,
-                _latestArousal,
-                _latestValence);
+                1f,
+                1f);
         }
 
         private long ResolveLatestTimestamp()
         {
             long timestamp = _latestPhysioTimestamp;
-            if (_latestValenceTimestamp > timestamp) timestamp = _latestValenceTimestamp;
-            if (_latestArousalTimestamp > timestamp) timestamp = _latestArousalTimestamp;
             if (_latestEngagementTimestamp > timestamp) timestamp = _latestEngagementTimestamp;
             return timestamp;
         }
 
         private void AppendGraphSample(AudienceMetricKind metricKind, float value, long timestampTicksUtc)
         {
+            if (!AudienceVisualizationMetricPolicy.IsGraphMetricSupported(metricKind))
+            {
+                return;
+            }
+
             EnsureGraphState();
 
             if (graphStreams == null || _graphSamples == null)
@@ -550,16 +505,10 @@ namespace AmpPortableDataViz.Presentation.Visualization
         private void ResetState()
         {
             _hasPhysio = false;
-            _hasValence = false;
-            _hasArousal = false;
             _hasEngagement = false;
             _latestPhysio = default;
-            _latestValence = 1f;
-            _latestArousal = 1f;
             _latestEngagement = 0.5f;
             _latestPhysioTimestamp = 0;
-            _latestValenceTimestamp = 0;
-            _latestArousalTimestamp = 0;
             _latestEngagementTimestamp = 0;
             _particleSequenceId = 0;
             HasLatestFrame = false;
@@ -725,7 +674,6 @@ namespace AmpPortableDataViz.Presentation.Visualization
                 AudienceMetricKind.TemperatureRateOfChangeStdDev => sample.TemperatureRateOfChangeStdDev,
                 AudienceMetricKind.SkinConductanceResponseFrequencyStdDev => sample.SkinConductanceResponseFrequencyStdDev,
                 AudienceMetricKind.HeartRateStdDev => sample.HeartRateStdDev,
-                AudienceMetricKind.InterBeatIntervalStdDev => sample.InterBeatIntervalStdDev,
                 _ => 0f
             };
 
@@ -745,7 +693,6 @@ namespace AmpPortableDataViz.Presentation.Visualization
                 AudienceMetricKind.TemperatureRateOfChangeStdDev => LegacyTemperatureRateRange,
                 AudienceMetricKind.SkinConductanceResponseFrequencyStdDev => LegacyScrFrequencyRange,
                 AudienceMetricKind.HeartRateStdDev => LegacyHeartRateRange,
-                AudienceMetricKind.InterBeatIntervalStdDev => LegacyInterBeatIntervalRange,
                 _ => new Vector2(0f, 1f)
             };
 
@@ -757,8 +704,7 @@ namespace AmpPortableDataViz.Presentation.Visualization
             return metricKind == AudienceMetricKind.TonicElectrodermalActivityStdDev ||
                 metricKind == AudienceMetricKind.TemperatureRateOfChangeStdDev ||
                 metricKind == AudienceMetricKind.SkinConductanceResponseFrequencyStdDev ||
-                metricKind == AudienceMetricKind.HeartRateStdDev ||
-                metricKind == AudienceMetricKind.InterBeatIntervalStdDev;
+                metricKind == AudienceMetricKind.HeartRateStdDev;
         }
 
         private static void NormalizeRange(ref float min, ref float max)
@@ -803,7 +749,7 @@ namespace AmpPortableDataViz.Presentation.Visualization
 
     internal sealed class ParticleMeshPhysioAmplifier
     {
-        private const int ChannelCount = 5;
+        private const int ChannelCount = 4;
         private const float HardMin = -1f;
         private const float HardMax = 1f;
         private const float HardRange = HardMax - HardMin;
@@ -840,9 +786,6 @@ namespace AmpPortableDataViz.Presentation.Visualization
                 AmplifyChannel(1, sample.TemperatureRateOfChangeStdDev, settings),
                 AmplifyChannel(2, sample.SkinConductanceResponseFrequencyStdDev, settings),
                 AmplifyChannel(3, sample.HeartRateStdDev, settings),
-                AmplifyChannel(4, sample.InterBeatIntervalStdDev, settings),
-                sample.FacialEmotionArousal,
-                sample.FacialEmotionValence,
                 sample.Engagement);
         }
 
@@ -913,7 +856,6 @@ namespace AmpPortableDataViz.Presentation.Visualization
             _candidateValues[1] = sample.TemperatureRateOfChangeStdDev;
             _candidateValues[2] = sample.SkinConductanceResponseFrequencyStdDev;
             _candidateValues[3] = sample.HeartRateStdDev;
-            _candidateValues[4] = sample.InterBeatIntervalStdDev;
 
             if (_hasLastSample && _lastSampleTimestampTicks == physioTimestampTicksUtc && HasSameValues())
             {
