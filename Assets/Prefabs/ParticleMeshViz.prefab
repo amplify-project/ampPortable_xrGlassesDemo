@@ -5041,8 +5041,10 @@ MonoBehaviour:
   graphMaxSamples: 512
   useDynamicYRange: 1
   dynamicYRangeStdDevMultiplier: 2.5
-  dynamicYRangeMinRangeFraction: 0.1
-  dynamicYRangeSmoothing: 0.15
+  dynamicYRangeMinRangeFraction: 0.05
+  dynamicYRangePaddingFraction: 0.15
+  dynamicYRangeZoomOutTimeSeconds: 0.1
+  dynamicYRangeZoomInTimeSeconds: 2
   logRawInputs: 0
   logResolvedSamples: 0
 --- !u!114 &1752101364371564078
@@ -5137,8 +5139,10 @@ MonoBehaviour:
   graphMaxSamples: 512
   useDynamicYRange: 1
   dynamicYRangeStdDevMultiplier: 2.5
-  dynamicYRangeMinRangeFraction: 0.1
-  dynamicYRangeSmoothing: 0.15
+  dynamicYRangeMinRangeFraction: 0.05
+  dynamicYRangePaddingFraction: 0.15
+  dynamicYRangeZoomOutTimeSeconds: 0.1
+  dynamicYRangeZoomInTimeSeconds: 2
   logReceivedSamples: 0
 --- !u!54 &8504547342908878345
 Rigidbody:

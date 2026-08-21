@@ -58,8 +58,10 @@ namespace AmpPortableDataViz.Presentation.Visualization
         [Header("Graph Dynamic Y Range")]
         [SerializeField] private bool useDynamicYRange = true;
         [SerializeField, Range(0.5f, 4f)] private float dynamicYRangeStdDevMultiplier = 2.5f;
-        [SerializeField, Range(0.01f, 1f)] private float dynamicYRangeMinRangeFraction = 0.1f;
-        [SerializeField, Range(0f, 1f)] private float dynamicYRangeSmoothing = 0.15f;
+        [SerializeField, Range(0.01f, 1f)] private float dynamicYRangeMinRangeFraction = 0.05f;
+        [SerializeField, Range(0f, 0.5f)] private float dynamicYRangePaddingFraction = 0.15f;
+        [SerializeField, Range(0f, 2f)] private float dynamicYRangeZoomOutTimeSeconds = 0.1f;
+        [SerializeField, Range(0.1f, 10f)] private float dynamicYRangeZoomInTimeSeconds = 2f;
 
         [Header("Diagnostics")]
         [SerializeField] private bool logReceivedSamples;
@@ -70,9 +72,7 @@ namespace AmpPortableDataViz.Presentation.Visualization
         private List<Vector2>[] _graphSamples;
         private long[] _graphStartTimestampTicks;
         private float[] _graphLatestXSeconds;
-        private float[] _graphCurrentYMin;
-        private float[] _graphCurrentYMax;
-        private bool[] _graphHasDynamicYRange;
+        private DynamicGraphYRangeTracker[] _graphYRangeTrackers;
         private int[] _graphSequenceIds;
 
         private Action<DataFrame<AudienceSignalSample>> _liveHandler;
@@ -380,7 +380,7 @@ namespace AmpPortableDataViz.Presentation.Visualization
             float xMin = graphWindowSeconds > 0f ? Mathf.Max(0f, xMax - graphWindowSeconds) : 0f;
             NormalizeRange(ref xMin, ref xMax);
 
-            ResolveYRange(index, binding, samples, out float yMin, out float yMax);
+            ResolveYRange(index, binding, samples, timestampTicksUtc, out float yMin, out float yMax);
 
             Vector2[] points = samples.Count == 0 ? Array.Empty<Vector2>() : samples.ToArray();
             var series = new GraphSeriesSample(xMin, xMax, yMin, yMax, points);
@@ -437,12 +437,8 @@ namespace AmpPortableDataViz.Presentation.Visualization
             int length = graphStreams == null ? 0 : graphStreams.Length;
             if (_graphSamples != null &&
                 _graphSamples.Length == length &&
-                _graphCurrentYMin != null &&
-                _graphCurrentYMin.Length == length &&
-                _graphCurrentYMax != null &&
-                _graphCurrentYMax.Length == length &&
-                _graphHasDynamicYRange != null &&
-                _graphHasDynamicYRange.Length == length)
+                _graphYRangeTrackers != null &&
+                _graphYRangeTrackers.Length == length)
             {
                 EnsureGraphSampleCapacities();
                 return;
@@ -452,15 +448,14 @@ namespace AmpPortableDataViz.Presentation.Visualization
             _graphSamples = new List<Vector2>[length];
             _graphStartTimestampTicks = new long[length];
             _graphLatestXSeconds = new float[length];
-            _graphCurrentYMin = new float[length];
-            _graphCurrentYMax = new float[length];
-            _graphHasDynamicYRange = new bool[length];
+            _graphYRangeTrackers = new DynamicGraphYRangeTracker[length];
             _graphSequenceIds = new int[length];
 
             for (int i = 0; i < length; i++)
             {
                 _graphMappers[i] = new GraphSeriesToGraphParamsMapper(MakeGraphSettings(graphStreams[i]));
                 _graphSamples[i] = new List<Vector2>(Mathf.Max(16, graphMaxSamples));
+                _graphYRangeTrackers[i] = new DynamicGraphYRangeTracker();
             }
         }
 
@@ -528,9 +523,12 @@ namespace AmpPortableDataViz.Presentation.Visualization
                 Array.Clear(_graphSequenceIds, 0, _graphSequenceIds.Length);
             }
 
-            if (_graphHasDynamicYRange != null)
+            if (_graphYRangeTrackers != null)
             {
-                Array.Clear(_graphHasDynamicYRange, 0, _graphHasDynamicYRange.Length);
+                for (int i = 0; i < _graphYRangeTrackers.Length; i++)
+                {
+                    _graphYRangeTrackers[i]?.Reset();
+                }
             }
         }
 
@@ -543,93 +541,56 @@ namespace AmpPortableDataViz.Presentation.Visualization
             };
         }
 
-        private void ResolveYRange(int index, GraphMetricBinding binding, IReadOnlyList<Vector2> samples, out float yMin, out float yMax)
+        private void ResolveYRange(
+            int index,
+            GraphMetricBinding binding,
+            IReadOnlyList<Vector2> samples,
+            long timestampTicksUtc,
+            out float yMin,
+            out float yMax)
         {
             if (IsPhysioMetric(binding.Metric))
             {
                 yMin = SignedPhysioGraphRange.x;
                 yMax = SignedPhysioGraphRange.y;
-                return;
-            }
-
-            yMin = binding.YRange.x;
-            yMax = binding.YRange.y;
-            NormalizeRange(ref yMin, ref yMax);
-
-            if (!useDynamicYRange || samples == null || samples.Count == 0 || index < 0)
-            {
-                return;
-            }
-
-            float hardMin = yMin;
-            float hardMax = yMax;
-            float hardRange = Mathf.Max(1e-4f, hardMax - hardMin);
-
-            float sum = 0f;
-            float sumSquares = 0f;
-            int count = samples.Count;
-            for (int i = 0; i < count; i++)
-            {
-                float value = samples[i].y;
-                sum += value;
-                sumSquares += value * value;
-            }
-
-            float mean = sum / count;
-            float variance = Mathf.Max(0f, (sumSquares / count) - mean * mean);
-            float stdDev = Mathf.Sqrt(variance);
-            float minRange = Mathf.Max(1e-4f, hardRange * Mathf.Max(0.001f, dynamicYRangeMinRangeFraction));
-            float targetRange = Mathf.Max(minRange, stdDev * Mathf.Max(0f, dynamicYRangeStdDevMultiplier) * 2f);
-            if (targetRange >= hardRange)
-            {
-                yMin = hardMin;
-                yMax = hardMax;
             }
             else
             {
-                float halfRange = targetRange * 0.5f;
-                yMin = mean - halfRange;
-                yMax = mean + halfRange;
-
-                if (yMin < hardMin)
-                {
-                    float shift = hardMin - yMin;
-                    yMin += shift;
-                    yMax += shift;
-                }
-
-                if (yMax > hardMax)
-                {
-                    float shift = yMax - hardMax;
-                    yMin -= shift;
-                    yMax -= shift;
-                }
-
-                yMin = Mathf.Clamp(yMin, hardMin, hardMax);
-                yMax = Mathf.Clamp(yMax, hardMin, hardMax);
+                yMin = binding.YRange.x;
+                yMax = binding.YRange.y;
             }
 
-            if (_graphCurrentYMin == null || _graphCurrentYMax == null || _graphHasDynamicYRange == null || index >= _graphCurrentYMin.Length)
+            NormalizeRange(ref yMin, ref yMax);
+
+            if (!useDynamicYRange ||
+                samples == null ||
+                samples.Count == 0 ||
+                index < 0 ||
+                _graphYRangeTrackers == null ||
+                index >= _graphYRangeTrackers.Length)
             {
                 return;
             }
 
-            float smoothing = Mathf.Clamp01(dynamicYRangeSmoothing);
-            if (!_graphHasDynamicYRange[index] || smoothing <= 0f)
+            var tracker = _graphYRangeTrackers[index];
+            if (tracker == null)
             {
-                _graphCurrentYMin[index] = yMin;
-                _graphCurrentYMax[index] = yMax;
-                _graphHasDynamicYRange[index] = true;
-            }
-            else
-            {
-                _graphCurrentYMin[index] = Mathf.Lerp(_graphCurrentYMin[index], yMin, smoothing);
-                _graphCurrentYMax[index] = Mathf.Lerp(_graphCurrentYMax[index], yMax, smoothing);
+                tracker = new DynamicGraphYRangeTracker();
+                _graphYRangeTrackers[index] = tracker;
             }
 
-            yMin = Mathf.Clamp(_graphCurrentYMin[index], hardMin, hardMax);
-            yMax = Mathf.Clamp(_graphCurrentYMax[index], hardMin, hardMax);
-            NormalizeRange(ref yMin, ref yMax);
+            tracker.Resolve(
+                samples,
+                yMin,
+                yMax,
+                dynamicYRangeStdDevMultiplier,
+                dynamicYRangeMinRangeFraction,
+                dynamicYRangePaddingFraction,
+                dynamicYRangeZoomOutTimeSeconds,
+                dynamicYRangeZoomInTimeSeconds,
+                timestampTicksUtc,
+                out yMin,
+                out yMax);
         }
 
         private static float ResolveGraphValue(AudienceMetricKind metricKind, AudienceSignalSample sample)
