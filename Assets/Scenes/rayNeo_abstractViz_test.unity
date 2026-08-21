@@ -756,6 +756,10 @@ PrefabInstance:
       propertyPath: particleSize
       value: 0.01
       objectReference: {fileID: 0}
+    - target: {fileID: 3439783295698433483, guid: 7fe113f1db4d2784d8f60c23f9c9137b, type: 3}
+      propertyPath: temperatureTrailMaterial
+      value: 
+      objectReference: {fileID: 2100000, guid: d4607f21cf2283f4a970bb3644075398, type: 2}
     - target: {fileID: 4000522542269590512, guid: 7fe113f1db4d2784d8f60c23f9c9137b, type: 3}
       propertyPath: m_LocalPosition.x
       value: 0
@@ -766,7 +770,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 4000522542269590512, guid: 7fe113f1db4d2784d8f60c23f9c9137b, type: 3}
       propertyPath: m_LocalPosition.z
-      value: 2.26
+      value: 1.56
       objectReference: {fileID: 0}
     - target: {fileID: 4000522542269590512, guid: 7fe113f1db4d2784d8f60c23f9c9137b, type: 3}
       propertyPath: m_LocalRotation.w
