@@ -1,9 +1,9 @@
 ﻿<Solution>
+  <Project Path="Tests.csproj" />
   <Project Path="Amp.csproj" />
   <Project Path="RayNeo.csproj" />
   <Project Path="RayNeoXREditor.csproj" />
   <Project Path="Unity.XR.RayNeo.OpenXR.csproj" />
-  <Project Path="Tests.csproj" />
   <Project Path="Unity.XR.RayNeo.OpenXR.Editor.csproj" />
   <Project Path="Unity.XR.Interaction.Toolkit.Samples.StarterAssets.csproj" />
   <Project Path="Assembly-CSharp.csproj" />

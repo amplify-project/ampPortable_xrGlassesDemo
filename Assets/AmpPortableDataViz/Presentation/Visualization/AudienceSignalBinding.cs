@@ -274,7 +274,7 @@ namespace AmpPortableDataViz.Presentation.Visualization
             {
                 ParticleMeshSignalSample parameters = _particleMapper.Map(in frame);
                 parameters = _particlePhysioAmplifier.Apply(parameters, _latestPhysioTimestamp, particlePhysioAmplificationSettings);
-                particleMeshVisualizer.Apply(parameters, frame.TimestampTicksUtc);
+                particleMeshVisualizer.Apply(parameters, _latestPhysioTimestamp);
             }
 
             if (logResolvedSamples)

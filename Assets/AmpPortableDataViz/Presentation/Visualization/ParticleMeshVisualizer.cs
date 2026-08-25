@@ -1,4 +1,5 @@
 using AmpPortableDataViz.Core;
+using AmpPortableDataViz.Presentation.Mapping;
 using UnityEngine;
 using UnityEngine.Serialization;
 
@@ -18,8 +19,6 @@ namespace AmpPortableDataViz.Presentation.Visualization
         private const float Tau = Mathf.PI * 2f;
         private const float MinVisualScale = 0.1f;
         private const float MaxVisualScale = 5f;
-        private static readonly int BaseColorPropertyId = Shader.PropertyToID("_BaseColor");
-        private static readonly int ColorPropertyId = Shader.PropertyToID("_Color");
 
         [Header("Legacy Manual Source (optional)")]
         [SerializeField] private ParticleMeshManualDriver manualDriver;
@@ -35,7 +34,6 @@ namespace AmpPortableDataViz.Presentation.Visualization
         [SerializeField, Range(0.01f, 5f)] private float slowFormSmoothing = 0.35f;
         [SerializeField, Range(0.01f, 5f)] private float baseMorphSmoothTime = 0.45f;
         [SerializeField, Range(0f, 3f)] private float turbulenceStrength = 0.35f;
-        [SerializeField, Range(0f, 3f)] private float pulseStrength = 0.2f;
         [SerializeField, Range(0f, 5f)] private float internalTimeScale = 1f;
 
         [Header("SCR Events")]
@@ -57,23 +55,29 @@ namespace AmpPortableDataViz.Presentation.Visualization
         [SerializeField, Range(0f, 1f)] private float scrSparkLift = 0.28f;
         [SerializeField] private Color scrSparkColor = Color.white;
 
-        [Header("Rhythm Layer")]
-        [SerializeField, Range(20f, 180f)] private float rhythmBaseBpm = 72f;
-        [SerializeField, Range(0f, 2f)] private float rhythmRateStdDevBoost = 0.6f;
-        [SerializeField, Range(1, 32)] private int maxRhythmPulses = 8;
-        [SerializeField, Range(0.1f, 4f)] private float rhythmPulseLifetime = 1.2f;
-        [SerializeField, Range(0.01f, 1f)] private float rhythmPulseRadius = 0.65f;
-        [SerializeField, Range(0f, 1f)] private float rhythmPulseDisplacement = 0.08f;
-        [SerializeField, Range(0f, 0.2f)] private float rhythmBreathDisplacement = 0.025f;
+        [Header("Heart Rate Particle Response")]
+        [SerializeField] private HeartRateVisualSettings heartRateVisualSettings =
+            HeartRateVisualSettings.CreateDefault();
+        [SerializeField, Range(0f, 1f)] private float minimumParticleAlpha = 0.72f;
+        [SerializeField, Range(0.1f, 30f)] private float heartRateStaleAfterSeconds = 5f;
+        [SerializeField, Range(0.1f, 5f)] private float heartRateStaleFadeSeconds = 1f;
+
+        [Header("Heart Rate Halo")]
+        [SerializeField] private bool renderHeartRateHalo = true;
+        [SerializeField] private Transform heartRateHaloRoot;
+        [SerializeField] private Material heartRateHaloMaterial;
+        [SerializeField, Range(24, 192)] private int heartRateHaloSegments = 96;
+        [SerializeField, Range(1f, 2.5f)] private float heartRateHaloRadiusMultiplier = 1.55f;
+        [SerializeField, Range(0.0005f, 0.04f)] private float heartRateHaloReferenceWidth = 0.005f;
+        [SerializeField, Range(0.0005f, 0.06f)] private float heartRateHaloActiveWidth = 0.011f;
+        [SerializeField, Range(0f, 1f)] private float heartRateHaloPulseWidthBoost = 0.35f;
+        [SerializeField] private Color heartRateHaloReferenceColor = new Color(0.75f, 1f, 0.95f, 0.22f);
+        [SerializeField] private Color heartRateHaloActiveColor = new Color(0.82f, 1f, 0.96f, 0.9f);
 
         [Header("Motion Response")]
         [SerializeField, Range(0f, 3f)] private float motionTurbulence = 0.22f;
         [SerializeField, Range(0.01f, 5f)] private float motionSpeed = 1.35f;
         [SerializeField, Range(0.1f, 4f)] private float morphSmoothMultiplier = 1.05f;
-        [SerializeField, Range(0f, 1f)] private float lowEngagementAlpha = 0.28f;
-        [SerializeField, Range(0f, 1f)] private float highEngagementAlpha = 1f;
-        [SerializeField, Range(0f, 3f)] private float lowEngagementParticleScale = 0.7f;
-        [SerializeField, Range(0f, 3f)] private float highEngagementParticleScale = 1.35f;
         [SerializeField, Range(0f, 1f)] private float engagementMeshSurfaceStrength = 1f;
 
         [Header("Engagement Rigidity")]
@@ -126,9 +130,6 @@ namespace AmpPortableDataViz.Presentation.Visualization
         [SerializeField] private bool renderParticles = true;
         [SerializeField, Range(0.001f, 0.12f)] private float particleSize = 0.025f;
         [SerializeField, Range(0f, 1f)] private float temperatureTrendParticleTintStrength = 1f;
-        [SerializeField, Range(1f, 4f)] private float temperatureTrendParticleGlowBrightness = 1.8f;
-        [SerializeField, Range(1f, 4f)] private float temperatureTrendParticleSizeBoost = 1.75f;
-        [SerializeField, Range(0f, 1f)] private float temperatureTrendParticleAlphaBoost = 0.35f;
 
         [Header("Colour")]
         [SerializeField] private Color neutralColor = new Color(0.2f, 1f, 0.75f, 0.9f);
@@ -150,8 +151,6 @@ namespace AmpPortableDataViz.Presentation.Visualization
 
         private MeshFilter _meshFilter;
         private ParticleSystem _particleSystem;
-        private ParticleSystemRenderer _particleRenderer;
-        private MaterialPropertyBlock _particlePropertyBlock;
         private Mesh _mesh;
         private Vector3[] _vertices;
         private Vector3[] _velocities;
@@ -185,17 +184,6 @@ namespace AmpPortableDataViz.Presentation.Visualization
             public float Size;
         }
 
-        private struct RhythmPulse
-        {
-            public bool Active;
-            public float Age;
-            public float Lifetime;
-            public float Radius;
-            public float Intensity;
-            public float PhaseSeed;
-            public float Direction;
-        }
-
         private struct TemperatureTrendWave
         {
             public bool Active;
@@ -215,9 +203,19 @@ namespace AmpPortableDataViz.Presentation.Visualization
         private ParticleSystem.Particle[] _scrSparkParticles;
         private int _nextScrSparkIndex;
 
-        private RhythmPulse[] _rhythmPulses;
-        private float _rhythmPhase;
-        private int _nextRhythmPulseIndex;
+        private float _heartRatePulsePhase;
+        private HeartRateVisualResponse _heartRateVisualResponse;
+        private HeartRatePulseEnvelope _heartRatePulseEnvelope;
+        private HeartRateHaloResponse _heartRateHaloResponse;
+        private bool _hasHeartRateSample;
+        private long _lastHeartRateTimestampTicks;
+        private float _secondsSinceHeartRateSample;
+        private float _heartRateDataFreshness;
+        private LineRenderer _heartRateReferenceHalo;
+        private LineRenderer _heartRateActiveHalo;
+        private Material _heartRateHaloMaterialInstance;
+        private Vector3[] _heartRateHaloUnitCircle;
+        private int _builtHeartRateHaloSegments;
 
         private TemperatureTrendWave[] _temperatureTrendWaves;
         private int _nextTemperatureTrendWaveIndex;
@@ -299,18 +297,26 @@ namespace AmpPortableDataViz.Presentation.Visualization
             EnsureScrEventCapacity();
             EnsureScrSparkCapacity();
             EnsureScrSparkParticleSystem();
-            EnsureRhythmPulseCapacity();
             EnsureTemperatureTrendWaveCapacity();
 
             float deltaTime = ResolveDeltaTime();
             _localTime += deltaTime * internalTimeScale;
 
+            UpdateHeartRateFreshness(deltaTime);
             SmoothSignals(deltaTime);
             UpdateScrEvents(deltaTime);
-            UpdateRhythmPulses(deltaTime);
+            UpdateHeartRatePulse(deltaTime);
             UpdateTemperatureTrendWaves(deltaTime);
             UpdateScrSparks(deltaTime);
             UpdateGeometry(deltaTime);
+            if (renderHeartRateHalo)
+            {
+                UpdateHeartRateHalo();
+            }
+            else
+            {
+                ClearHeartRateHalo();
+            }
             if (renderEngagementLattice)
             {
                 UpdateEngagementLattice();
@@ -332,11 +338,13 @@ namespace AmpPortableDataViz.Presentation.Visualization
 
             ClearScrSparks();
             ClearTemperatureTrendWaves();
-            ApplyParticleRendererGlow(0f);
+            ClearHeartRateHalo();
             ClearEngagementLattice();
             ClearTemperatureTrails(true);
             _temperatureTrailsActive = false;
             _temperatureTrailDirection = 0f;
+            _hasHeartRateSample = false;
+            _heartRateDataFreshness = 0f;
         }
 
         private void OnDestroy()
@@ -376,6 +384,18 @@ namespace AmpPortableDataViz.Presentation.Visualization
                     DestroyImmediate(_temperatureTrailMaterialInstance);
                 }
             }
+
+            if (_heartRateHaloMaterialInstance != null)
+            {
+                if (UnityEngine.Application.isPlaying)
+                {
+                    Destroy(_heartRateHaloMaterialInstance);
+                }
+                else
+                {
+                    DestroyImmediate(_heartRateHaloMaterialInstance);
+                }
+            }
         }
 
         private void OnValidate()
@@ -391,9 +411,6 @@ namespace AmpPortableDataViz.Presentation.Visualization
             lowEngagementRadialDrift = Mathf.Clamp01(lowEngagementRadialDrift);
             engagementRigidityPower = Mathf.Clamp(engagementRigidityPower, 0.25f, 4f);
             temperatureTrendParticleTintStrength = Mathf.Clamp01(temperatureTrendParticleTintStrength);
-            temperatureTrendParticleGlowBrightness = Mathf.Clamp(temperatureTrendParticleGlowBrightness, 1f, 4f);
-            temperatureTrendParticleSizeBoost = Mathf.Clamp(temperatureTrendParticleSizeBoost, 1f, 4f);
-            temperatureTrendParticleAlphaBoost = Mathf.Clamp01(temperatureTrendParticleAlphaBoost);
             maxTemperatureTrendWaves = Mathf.Max(1, maxTemperatureTrendWaves);
             minTemperatureTrendBurstWaves = Mathf.Clamp(minTemperatureTrendBurstWaves, 1, maxTemperatureTrendWaves);
             maxTemperatureTrendBurstWaves = Mathf.Clamp(maxTemperatureTrendBurstWaves, 1, maxTemperatureTrendWaves);
@@ -409,6 +426,15 @@ namespace AmpPortableDataViz.Presentation.Visualization
             temperatureTrailReleaseFactor = Mathf.Clamp(temperatureTrailReleaseFactor, 0.05f, 1f);
             temperatureTrailVerticalOffset = Mathf.Clamp(temperatureTrailVerticalOffset, 0f, 0.1f);
             temperatureTrailMaxAlpha = Mathf.Clamp01(temperatureTrailMaxAlpha);
+            heartRateVisualSettings = HeartRateVisualResponseMapper.ResolveSettings(heartRateVisualSettings);
+            minimumParticleAlpha = Mathf.Clamp01(minimumParticleAlpha);
+            heartRateStaleAfterSeconds = Mathf.Clamp(heartRateStaleAfterSeconds, 0.1f, 30f);
+            heartRateStaleFadeSeconds = Mathf.Clamp(heartRateStaleFadeSeconds, 0.1f, 5f);
+            heartRateHaloSegments = Mathf.Clamp(heartRateHaloSegments, 24, 192);
+            heartRateHaloRadiusMultiplier = Mathf.Clamp(heartRateHaloRadiusMultiplier, 1f, 2.5f);
+            heartRateHaloReferenceWidth = Mathf.Clamp(heartRateHaloReferenceWidth, 0.0005f, 0.04f);
+            heartRateHaloActiveWidth = Mathf.Clamp(heartRateHaloActiveWidth, 0.0005f, 0.06f);
+            heartRateHaloPulseWidthBoost = Mathf.Clamp01(heartRateHaloPulseWidthBoost);
             _needsRebuild = true;
 
             if (isActiveAndEnabled)
@@ -418,7 +444,6 @@ namespace AmpPortableDataViz.Presentation.Visualization
                 EnsureScrEventCapacity();
                 EnsureScrSparkCapacity();
                 EnsureScrSparkParticleSystem();
-                EnsureRhythmPulseCapacity();
                 EnsureTemperatureTrendWaveCapacity();
                 EnsureEngagementLatticeCapacity();
                 EnsureTemperatureTrailCapacity();
@@ -446,7 +471,6 @@ namespace AmpPortableDataViz.Presentation.Visualization
         {
             _meshFilter = GetComponent<MeshFilter>();
             _particleSystem = GetComponent<ParticleSystem>();
-            _particleRenderer = _particleSystem != null ? _particleSystem.GetComponent<ParticleSystemRenderer>() : null;
 
             if (scrSparkParticleSystem == null)
             {
@@ -579,7 +603,6 @@ namespace AmpPortableDataViz.Presentation.Visualization
             EnsureScrEventCapacity();
             EnsureScrSparkCapacity();
             EnsureScrSparkParticleSystem();
-            EnsureRhythmPulseCapacity();
             EnsureTemperatureTrendWaveCapacity();
             EnsureEngagementLatticeCapacity();
             EnsureTemperatureTrailCapacity();
@@ -886,79 +909,222 @@ namespace AmpPortableDataViz.Presentation.Visualization
             return Vector3.Lerp(lower, upper, yBlend);
         }
 
-        private void EnsureRhythmPulseCapacity()
+        private void UpdateHeartRatePulse(float deltaTime)
         {
-            int pulseCount = Mathf.Max(1, maxRhythmPulses);
-            if (_rhythmPulses != null && _rhythmPulses.Length == pulseCount)
+            heartRateVisualSettings = HeartRateVisualResponseMapper.ResolveSettings(heartRateVisualSettings);
+            float effectiveHeartRate = _heartRate * _heartRateDataFreshness;
+            _heartRateVisualResponse = HeartRateVisualResponseMapper.Resolve(effectiveHeartRate, heartRateVisualSettings);
+
+            float pulseHz = _heartRateVisualResponse.PulseBpm / 60f;
+            _heartRatePulsePhase = Mathf.Repeat(_heartRatePulsePhase + pulseHz * Mathf.Max(0f, deltaTime), 1f);
+            HeartRatePulseEnvelope mappedPulse = HeartRatePulseEnvelopeMapper.Resolve(
+                _heartRatePulsePhase,
+                in _heartRateVisualResponse,
+                heartRateVisualSettings);
+            _heartRatePulseEnvelope = new HeartRatePulseEnvelope(
+                mappedPulse.Energy * _heartRateDataFreshness,
+                Mathf.Lerp(1f, mappedPulse.Scale, _heartRateDataFreshness));
+        }
+
+        private void UpdateHeartRateFreshness(float deltaTime)
+        {
+            if (_hasHeartRateSample)
+            {
+                _secondsSinceHeartRateSample += Mathf.Max(0f, deltaTime);
+            }
+
+            _heartRateDataFreshness = HeartRateFreshnessMapper.Resolve(
+                _hasHeartRateSample,
+                _secondsSinceHeartRateSample,
+                heartRateStaleAfterSeconds,
+                heartRateStaleFadeSeconds);
+        }
+
+        private void EnsureHeartRateHalo()
+        {
+            if (heartRateHaloRoot == null)
+            {
+                if (!UnityEngine.Application.isPlaying)
+                {
+                    return;
+                }
+
+                var haloObject = new GameObject("Heart Rate Halo");
+                haloObject.transform.SetParent(transform, false);
+                heartRateHaloRoot = haloObject.transform;
+            }
+
+            int segmentCount = Mathf.Clamp(heartRateHaloSegments, 24, 192);
+            if (_heartRateHaloUnitCircle == null || _builtHeartRateHaloSegments != segmentCount)
+            {
+                _heartRateHaloUnitCircle = new Vector3[segmentCount];
+                for (int i = 0; i < segmentCount; i++)
+                {
+                    float angle = Tau * i / segmentCount;
+                    _heartRateHaloUnitCircle[i] = new Vector3(Mathf.Cos(angle), Mathf.Sin(angle), 0f);
+                }
+
+                _builtHeartRateHaloSegments = segmentCount;
+            }
+
+            if (_heartRateReferenceHalo == null)
+            {
+                _heartRateReferenceHalo = CreateHeartRateHaloLine("Heart Rate Neutral Reference");
+            }
+
+            if (_heartRateActiveHalo == null)
+            {
+                _heartRateActiveHalo = CreateHeartRateHaloLine("Heart Rate Active Halo");
+                if (_heartRateActiveHalo != null)
+                {
+                    _heartRateActiveHalo.sortingOrder = 1;
+                }
+            }
+
+            ConfigureHeartRateHaloLine(_heartRateReferenceHalo, segmentCount);
+            ConfigureHeartRateHaloLine(_heartRateActiveHalo, segmentCount);
+        }
+
+        private LineRenderer CreateHeartRateHaloLine(string objectName)
+        {
+            if (heartRateHaloRoot == null)
+            {
+                return null;
+            }
+
+            var lineObject = new GameObject(objectName);
+            lineObject.transform.SetParent(heartRateHaloRoot, false);
+            return lineObject.AddComponent<LineRenderer>();
+        }
+
+        private void ConfigureHeartRateHaloLine(LineRenderer line, int segmentCount)
+        {
+            if (line == null)
             {
                 return;
             }
 
-            _rhythmPulses = new RhythmPulse[pulseCount];
-            _rhythmPhase = 0f;
-            _nextRhythmPulseIndex = 0;
-        }
+            line.useWorldSpace = false;
+            line.loop = true;
+            line.positionCount = segmentCount;
+            line.widthMultiplier = 1f;
+            line.numCapVertices = 0;
+            line.numCornerVertices = 2;
+            line.alignment = LineAlignment.View;
+            line.shadowCastingMode = UnityEngine.Rendering.ShadowCastingMode.Off;
+            line.receiveShadows = false;
 
-        private void UpdateRhythmPulses(float deltaTime)
-        {
-            EnsureRhythmPulseCapacity();
-
-            float safeDeltaTime = Mathf.Max(0f, deltaTime);
-            for (int i = 0; i < _rhythmPulses.Length; i++)
+            Material material = ResolveHeartRateHaloMaterial();
+            if (material != null)
             {
-                if (!_rhythmPulses[i].Active)
-                {
-                    continue;
-                }
-
-                _rhythmPulses[i].Age += safeDeltaTime;
-                if (_rhythmPulses[i].Age >= _rhythmPulses[i].Lifetime)
-                {
-                    _rhythmPulses[i].Active = false;
-                }
-            }
-
-            float baseHz = Mathf.Max(20f, rhythmBaseBpm) / 60f;
-            float rateMultiplier = Mathf.Clamp(1f + _heartRate * Mathf.Max(0f, rhythmRateStdDevBoost), 0.25f, 3f);
-            _rhythmPhase += baseHz * rateMultiplier * safeDeltaTime;
-
-            int spawnedThisFrame = 0;
-            while (_rhythmPhase >= 1f && spawnedThisFrame < 4)
-            {
-                SpawnRhythmPulse(_heartRate);
-                _rhythmPhase -= 1f;
-                spawnedThisFrame++;
-            }
-
-            if (_rhythmPhase > 4f)
-            {
-                _rhythmPhase = Mathf.Repeat(_rhythmPhase, 1f);
+                line.sharedMaterial = material;
             }
         }
 
-        private void SpawnRhythmPulse(float signedIntensity)
+        private Material ResolveHeartRateHaloMaterial()
         {
-            if (_rhythmPulses == null || _rhythmPulses.Length == 0)
+            if (heartRateHaloMaterial != null)
             {
-                return;
+                return heartRateHaloMaterial;
             }
 
-            int pulseIndex = _nextRhythmPulseIndex % _rhythmPulses.Length;
-            float placementIndex = _nextRhythmPulseIndex;
-            _nextRhythmPulseIndex++;
-
-            float direction = signedIntensity < 0f ? -1f : 1f;
-            float clampedIntensity = Mathf.Clamp01(Mathf.Abs(signedIntensity));
-            _rhythmPulses[pulseIndex] = new RhythmPulse
+            if (_heartRateHaloMaterialInstance != null)
             {
-                Active = true,
-                Age = 0f,
-                Lifetime = Mathf.Max(0.1f, rhythmPulseLifetime) * Mathf.Lerp(1.15f, 0.85f, clampedIntensity),
-                Radius = Mathf.Max(0.01f, rhythmPulseRadius) * Mathf.Lerp(0.85f, 1.25f, clampedIntensity),
-                Intensity = Mathf.Lerp(0.35f, 1f, clampedIntensity),
-                PhaseSeed = placementIndex * 1.6180339f,
-                Direction = direction
+                return _heartRateHaloMaterialInstance;
+            }
+
+            Shader shader = Shader.Find("Sprites/Default");
+            if (shader == null)
+            {
+                shader = Shader.Find("Universal Render Pipeline/Particles/Unlit");
+            }
+
+            if (shader == null)
+            {
+                return null;
+            }
+
+            _heartRateHaloMaterialInstance = new Material(shader)
+            {
+                name = "Heart Rate Halo Runtime Material",
+                hideFlags = HideFlags.DontSave
             };
+            return _heartRateHaloMaterialInstance;
+        }
+
+        private void UpdateHeartRateHalo()
+        {
+            EnsureHeartRateHalo();
+            if (heartRateHaloRoot == null ||
+                _heartRateReferenceHalo == null ||
+                _heartRateActiveHalo == null ||
+                _heartRateHaloUnitCircle == null)
+            {
+                return;
+            }
+
+            Camera viewingCamera = Camera.main;
+            heartRateHaloRoot.position = transform.position;
+            heartRateHaloRoot.rotation = viewingCamera != null
+                ? viewingCamera.transform.rotation
+                : transform.rotation * Quaternion.Euler(90f, 0f, 0f);
+
+            float referenceRadius = visualScale * heartRateHaloRadiusMultiplier;
+            _heartRateHaloResponse = HeartRateHaloResponseMapper.Resolve(
+                referenceRadius,
+                in _heartRateVisualResponse,
+                in _heartRatePulseEnvelope,
+                heartRateVisualSettings);
+
+            UpdateHeartRateHaloLine(_heartRateReferenceHalo, _heartRateHaloResponse.ReferenceRadius, 0f);
+            UpdateHeartRateHaloLine(_heartRateActiveHalo, _heartRateHaloResponse.ActiveRadius, -0.002f);
+
+            Color referenceColor = heartRateHaloReferenceColor;
+            _heartRateReferenceHalo.startColor = referenceColor;
+            _heartRateReferenceHalo.endColor = referenceColor;
+            _heartRateReferenceHalo.startWidth = heartRateHaloReferenceWidth;
+            _heartRateReferenceHalo.endWidth = heartRateHaloReferenceWidth;
+
+            Color activeColor = heartRateHaloActiveColor;
+            activeColor.a *= Mathf.Lerp(0.62f, 1f, _heartRateHaloResponse.PulseEnergy);
+            activeColor.a *= _heartRateDataFreshness;
+            float activeWidth = heartRateHaloActiveWidth *
+                (1f + _heartRateHaloResponse.PulseEnergy * heartRateHaloPulseWidthBoost);
+            _heartRateActiveHalo.startColor = activeColor;
+            _heartRateActiveHalo.endColor = activeColor;
+            _heartRateActiveHalo.startWidth = activeWidth;
+            _heartRateActiveHalo.endWidth = activeWidth;
+
+            _heartRateReferenceHalo.enabled = true;
+            _heartRateActiveHalo.enabled = true;
+        }
+
+        private void UpdateHeartRateHaloLine(LineRenderer line, float radius, float depthOffset)
+        {
+            if (line == null || _heartRateHaloUnitCircle == null)
+            {
+                return;
+            }
+
+            for (int i = 0; i < _heartRateHaloUnitCircle.Length; i++)
+            {
+                Vector3 position = _heartRateHaloUnitCircle[i] * radius;
+                position.z = depthOffset;
+                line.SetPosition(i, position);
+            }
+        }
+
+        private void ClearHeartRateHalo()
+        {
+            if (_heartRateReferenceHalo != null)
+            {
+                _heartRateReferenceHalo.enabled = false;
+            }
+
+            if (_heartRateActiveHalo != null)
+            {
+                _heartRateActiveHalo.enabled = false;
+            }
         }
 
         private void EnsureTemperatureTrendWaveCapacity()
@@ -1669,55 +1835,11 @@ namespace AmpPortableDataViz.Presentation.Visualization
             var shape = _particleSystem.shape;
             shape.enabled = false;
 
-            ApplyParticleRendererGlow(0f);
-
             _particleSystem.Clear();
             if (renderParticles && _particles != null)
             {
                 _particleSystem.SetParticles(_particles, _particles.Length);
             }
-        }
-
-        private void ApplyParticleRendererGlow(float glowAmount)
-        {
-            if (_particleRenderer == null)
-            {
-                return;
-            }
-
-            Material material = _particleRenderer.sharedMaterial;
-            if (material == null)
-            {
-                return;
-            }
-
-            bool hasBaseColor = material.HasProperty(BaseColorPropertyId);
-            bool hasColor = material.HasProperty(ColorPropertyId);
-            if (!hasBaseColor && !hasColor)
-            {
-                return;
-            }
-
-            _particlePropertyBlock ??= new MaterialPropertyBlock();
-            _particleRenderer.GetPropertyBlock(_particlePropertyBlock);
-
-            float brightness = Mathf.Lerp(1f, Mathf.Max(1f, temperatureTrendParticleGlowBrightness), Mathf.Clamp01(glowAmount));
-            Color rendererColor = hasBaseColor ? material.GetColor(BaseColorPropertyId) : material.GetColor(ColorPropertyId);
-            float alpha = rendererColor.a;
-            rendererColor *= brightness;
-            rendererColor.a = alpha;
-
-            if (hasBaseColor)
-            {
-                _particlePropertyBlock.SetColor(BaseColorPropertyId, rendererColor);
-            }
-
-            if (hasColor)
-            {
-                _particlePropertyBlock.SetColor(ColorPropertyId, rendererColor);
-            }
-
-            _particleRenderer.SetPropertyBlock(_particlePropertyBlock);
         }
 
         private void ReceiveSample(in ParticleMeshSignalSample sample, long timestampTicksUtc, int sequenceId)
@@ -1727,6 +1849,15 @@ namespace AmpPortableDataViz.Presentation.Visualization
             _targetScrFrequency = sample.SkinConductanceResponseFrequencyStdDev;
             _targetHeartRate = sample.HeartRateStdDev;
             _targetEngagement = sample.Engagement;
+
+            if (timestampTicksUtc > 0L &&
+                (!_hasHeartRateSample || timestampTicksUtc != _lastHeartRateTimestampTicks))
+            {
+                _hasHeartRateSample = true;
+                _lastHeartRateTimestampTicks = timestampTicksUtc;
+                _secondsSinceHeartRateSample = 0f;
+                _heartRateDataFreshness = 1f;
+            }
 
             if (!logReceivedSamples || !ShouldLogNow())
             {
@@ -1756,44 +1887,30 @@ namespace AmpPortableDataViz.Presentation.Visualization
             }
 
             float tonicMagnitude = Mathf.Abs(_tonicEda);
-            float temperatureMagnitude = Mathf.Abs(_temperatureRate);
-            float scrMagnitude = Mathf.Abs(_scrFrequency);
-            float heartMagnitude = Mathf.Abs(_heartRate);
             float formCompression = Mathf.Lerp(1f, _tonicEda >= 0f ? 0.62f : 1.45f, tonicMagnitude);
             float formLift = Mathf.Lerp(0.02f, _tonicEda >= 0f ? 0.2f : -0.08f, tonicMagnitude);
-            float contourAmplitude = Mathf.Lerp(0.025f, 0.38f, temperatureMagnitude);
-            float contourFrequency = Mathf.Lerp(0.35f, 1.25f, temperatureMagnitude);
-            float contourDirection = _temperatureRate < 0f ? -1f : 1f;
-            float contourDrift = _localTime * contourDirection * Mathf.Lerp(0.015f, 0.12f, temperatureMagnitude);
             float engagementSolidity = Mathf.Clamp01(_engagement);
             float engagementLooseness = 1f - engagementSolidity;
             float loosenessResponse = Mathf.Pow(engagementLooseness, Mathf.Max(0.25f, engagementRigidityPower));
             float coherence = Mathf.Clamp01((engagementSolidity * meshCoherence * engagementMeshSurfaceStrength) + 0.15f);
             float noiseAmount = turbulenceStrength * motionTurbulence * Mathf.Lerp(1f, 0.65f, coherence);
             float morphSmoothTime = baseMorphSmoothTime * morphSmoothMultiplier;
-            float engagementAlpha = Mathf.Lerp(lowEngagementAlpha, highEngagementAlpha, engagementSolidity);
-            float engagementParticleScale = Mathf.Lerp(lowEngagementParticleScale, highEngagementParticleScale, engagementSolidity);
-            float temperatureTrendParticleGlow = ResolveTemperatureTrendParticleGlow();
-            ApplyParticleRendererGlow(temperatureTrendParticleGlow);
-
             for (int i = 0; i < _vertices.Length; i++)
             {
                 float u = _uValues[i];
                 float v = _vValues[i];
-                Vector3 slowForm = BuildSlowFormTarget(u, v, formCompression, formLift, contourAmplitude, contourFrequency, contourDrift);
+                Vector3 slowForm = BuildSlowFormTarget(u, v, formCompression, formLift);
                 Vector3 scrEventOffset = BuildScrEventOffset(u, v, out float scrEventEnergy);
-                Vector3 rhythm = BuildRhythmPulseOffset(u, v, out float rhythmEnergy);
                 Vector3 turbulence = BuildTurbulence(i, u, v, noiseAmount, motionSpeed);
                 Vector3 loosenessDrift = BuildEngagementDriftOffset(i, u, v, loosenessResponse);
 
-                Vector3 lockedTarget = (slowForm + scrEventOffset + rhythm) * visualScale;
+                Vector3 lockedTarget = (slowForm + scrEventOffset) * visualScale;
                 Vector3 target = lockedTarget + turbulence + loosenessDrift;
 
                 _vertices[i] = Vector3.SmoothDamp(_vertices[i], target, ref _velocities[i], Mathf.Max(0.01f, morphSmoothTime), Mathf.Infinity, deltaTime);
 
-                float localEnergy = Mathf.Clamp01(0.25f + heartMagnitude * 0.25f + scrMagnitude * 0.25f);
-                Color vertexColor = Color.Lerp(neutralColor, Color.white, Mathf.Clamp01(localEnergy * 0.25f + rhythmEnergy * 0.35f + scrEventEnergy * 0.65f));
-                vertexColor.a = Mathf.Lerp(engagementAlpha, highEngagementAlpha, Mathf.Max(rhythmEnergy * 0.25f, scrEventEnergy * 0.35f));
+                Color vertexColor = Color.Lerp(neutralColor, Color.white, Mathf.Clamp01(scrEventEnergy * 0.65f));
+                vertexColor.a = neutralColor.a;
                 float temperatureTrendEnergy = ResolveTemperatureTrendWaveEnergy(u, out Color temperatureTrendColor);
                 if (temperatureTrendEnergy > 0f)
                 {
@@ -1808,14 +1925,14 @@ namespace AmpPortableDataViz.Presentation.Visualization
                 Color particleColor = vertexColor;
                 if (temperatureTrendEnergy > 0f)
                 {
-                    float particleAlpha = particleColor.a;
                     particleColor = Color.Lerp(particleColor, temperatureTrendColor, temperatureTrendEnergy * temperatureTrendParticleTintStrength);
-                    particleColor.a = Mathf.Clamp01(Mathf.Max(particleAlpha, temperatureTrendColor.a) + temperatureTrendEnergy * temperatureTrendParticleAlphaBoost);
                 }
 
-                float temperatureTrendParticleScale = Mathf.Lerp(1f, temperatureTrendParticleSizeBoost, temperatureTrendEnergy);
-                _particles[i].startColor = particleColor;
-                _particles[i].startSize = particleSize * engagementParticleScale * Mathf.Lerp(0.75f, 1.8f, localEnergy) * Mathf.Lerp(1f, 1.8f, rhythmEnergy) * Mathf.Lerp(1f, 2.4f, scrEventEnergy) * temperatureTrendParticleScale;
+                _particles[i].startColor = HeartRateParticleAppearanceMapper.ResolveColor(particleColor, minimumParticleAlpha);
+                _particles[i].startSize = HeartRateParticleAppearanceMapper.ResolveSize(
+                    particleSize,
+                    in _heartRateVisualResponse,
+                    in _heartRatePulseEnvelope);
                 _particles[i].startLifetime = float.MaxValue;
                 _particles[i].remainingLifetime = float.MaxValue;
             }
@@ -1842,19 +1959,13 @@ namespace AmpPortableDataViz.Presentation.Visualization
             float u,
             float v,
             float formCompression,
-            float formLift,
-            float contourAmplitude,
-            float contourFrequency,
-            float contourDrift)
+            float formLift)
         {
             float x = (u - 0.5f) * 2f;
             float z = (v - 0.5f) * 2f;
-            float firstContour = Mathf.Sin((x * contourFrequency + contourDrift) * Tau);
-            float secondContour = Mathf.Cos((z * contourFrequency * 0.7f - contourDrift * 0.6f) * Tau);
             float edgeDistance = Mathf.Clamp01(Mathf.Max(Mathf.Abs(x), Mathf.Abs(z)));
             float pressureLift = formLift * (1f - edgeDistance);
-            float y = ((firstContour * 0.65f) + (secondContour * 0.35f)) * contourAmplitude + pressureLift;
-            return new Vector3(x * formCompression, y, z * formCompression);
+            return new Vector3(x * formCompression, pressureLift, z * formCompression);
         }
 
         private Vector3 BuildScrEventOffset(float u, float v, out float eventEnergy)
@@ -1907,59 +2018,6 @@ namespace AmpPortableDataViz.Presentation.Visualization
             return offset;
         }
 
-        private Vector3 BuildRhythmPulseOffset(float u, float v, out float rhythmEnergy)
-        {
-            rhythmEnergy = 0f;
-
-            float x = u - 0.5f;
-            float z = v - 0.5f;
-            float distance = Mathf.Sqrt((x * x) + (z * z));
-            float pulseScale = Mathf.Clamp(pulseStrength / 0.2f, 0f, 3f);
-            float breathPhase = _rhythmPhase;
-            float heartMagnitude = Mathf.Abs(_heartRate);
-            float breathEnergy = Mathf.Clamp01(Mathf.Sin(breathPhase * Tau) * 0.5f + 0.5f) * Mathf.Lerp(0.25f, 1f, heartMagnitude);
-            Vector3 radialDirection = distance > 0.0001f
-                ? new Vector3(x / distance, 0f, z / distance)
-                : Vector3.zero;
-            Vector3 offset = radialDirection * breathEnergy * rhythmBreathDisplacement * pulseScale;
-
-            if (_rhythmPulses == null || _rhythmPulses.Length == 0)
-            {
-                rhythmEnergy = breathEnergy * 0.35f;
-                return offset;
-            }
-
-            for (int i = 0; i < _rhythmPulses.Length; i++)
-            {
-                if (!_rhythmPulses[i].Active)
-                {
-                    continue;
-                }
-
-                float normalizedAge = Mathf.Clamp01(_rhythmPulses[i].Age / Mathf.Max(0.0001f, _rhythmPulses[i].Lifetime));
-                float localAge = normalizedAge;
-                float pulseDirection = _rhythmPulses[i].Direction < 0f ? -1f : 1f;
-                float ringProgress = pulseDirection < 0f ? 1f - localAge : localAge;
-                float ringRadius = _rhythmPulses[i].Radius * ringProgress;
-                float ringWidth = Mathf.Lerp(0.025f, 0.075f, _rhythmPulses[i].Intensity);
-                float ring = 1f - Mathf.Clamp01(Mathf.Abs(distance - ringRadius) / ringWidth);
-                float envelope = Mathf.Sin(localAge * Mathf.PI) * (1f - localAge * 0.2f);
-                float energy = ring * envelope * _rhythmPulses[i].Intensity;
-
-                Vector3 pulseOffsetDirection = pulseDirection < 0f
-                    ? Vector3.down + (-radialDirection * 0.65f)
-                    : Vector3.up;
-                offset += pulseOffsetDirection * energy * rhythmPulseDisplacement * pulseScale;
-                if (energy > rhythmEnergy)
-                {
-                    rhythmEnergy = energy;
-                }
-            }
-
-            rhythmEnergy = Mathf.Clamp01(Mathf.Max(rhythmEnergy, breathEnergy * 0.35f));
-            return offset;
-        }
-
         private float ResolveTemperatureTrendWaveEnergy(float u, out Color trendColor)
         {
             trendColor = neutralColor;
@@ -2002,34 +2060,6 @@ namespace AmpPortableDataViz.Presentation.Visualization
             }
 
             return Mathf.Clamp01(strongestEnergy);
-        }
-
-        private float ResolveTemperatureTrendParticleGlow()
-        {
-            if (_temperatureTrendWaves == null || _temperatureTrendWaves.Length == 0)
-            {
-                return 0f;
-            }
-
-            float strongestGlow = 0f;
-            for (int i = 0; i < _temperatureTrendWaves.Length; i++)
-            {
-                if (!_temperatureTrendWaves[i].Active)
-                {
-                    continue;
-                }
-
-                float lifetime = Mathf.Max(0.0001f, _temperatureTrendWaves[i].Lifetime);
-                float normalizedAge = Mathf.Clamp01(_temperatureTrendWaves[i].Age / lifetime);
-                float envelope = Mathf.Sin(normalizedAge * Mathf.PI);
-                float glow = envelope * _temperatureTrendWaves[i].Intensity;
-                if (glow > strongestGlow)
-                {
-                    strongestGlow = glow;
-                }
-            }
-
-            return Mathf.Clamp01(strongestGlow);
         }
 
         private Vector3 BuildEngagementDriftOffset(int index, float u, float v, float loosenessResponse)

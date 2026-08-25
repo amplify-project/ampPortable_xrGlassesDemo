@@ -6,42 +6,24 @@ This document explains what the abstract visualisation is showing.
 
 The mesh is a dynamic surface driven by audience physiology and behavioural data:
 
-- **Shape** shows slow bodily pressure and temperature movement.
-- **Pulse** shows heart rhythm and rhythm instability.
-- **Sparks and sudden rings** show skin conductance responses.
-- **Colour** shows emotional valence.
-- **Motion intensity** shows arousal.
-- **Solidity and coherence** shows engagement.
+- **Slow global shape** shows tonic electrodermal activity.
+- **Particle colour and directional trails** show temperature rate of change.
+- **Local sparks and short local deformations** show skin conductance responses.
+- **Global particle size, unison pulse, and the perimeter halo** show heart rate.
+- **Spatial dispersion, mesh coherence, and lattice solidity** show engagement.
 
-The physiological inputs are standard-deviation signals. In practice, they describe how much a metric is varying. Values near `0` are calm or baseline. Larger positive or negative values create stronger visual changes. Positive and negative values are used as directions.
+Each stream owns a separate visual channel so one stream does not suppress another. The physiological inputs are signed standardized signals. Values near `0` represent baseline. Positive and negative values represent position relative to that baseline, not necessarily the frame-to-frame direction of travel.
 
-## Affect Signals
-
-### Valence
-
-Valence controls the base colour of the mesh.
-
-- **Low valence**: red/orange tones.
-- **Neutral valence**: green/cyan tones.
-- **High valence**: yellow/gold tones.
-
-This represents the emotional tone of the audience response.
-
-### Arousal
-
-Arousal controls how active the mesh feels.
-
-- **Low arousal**: slower, smoother, calmer movement.
-- **High arousal**: faster motion, more turbulence, sharper changes, stronger trails.
-
-This represents audience activation or intensity.
+## Behavioural Signal
 
 ### Engagement
 
 Engagement controls how solid or dispersed the mesh is.
 
-- **Low engagement**: the mesh becomes looser, dimmer, smaller, and more drifting.
-- **High engagement**: the mesh becomes brighter, larger, more coherent, and more solid.
+- **Low engagement**: particles disperse and drift while the mesh loses coherence.
+- **High engagement**: particles become spatially coherent and the lattice becomes more solid.
+
+Engagement does not reduce the main particles' size or minimum visibility. This preserves the readability of heart-rate cues at low engagement.
 
 This represents how strongly the audience is collectively held by the performance.
 
@@ -58,12 +40,13 @@ This represents slow bodily tension or release.
 
 ### Temperature Rate-of-Change Standard Deviation
 
-This controls contour waves across the surface.
+This controls particle hue and directional trails or travelling colour waves.
 
-- **Larger magnitude** creates taller, more frequent surface contours.
 - **Positive movement** appears as warm red/orange wave activity moving from left to right.
 - **Negative movement** appears as cool blue wave activity moving from right to left.
 - Strong changes can trigger short bursts of travelling colour waves.
+
+Temperature does not change the slow global mesh form, main-particle size, or main-particle opacity.
 
 This represents thermal change becoming a visible wave or wash through the audience body.
 
@@ -78,24 +61,20 @@ This controls sudden events: rings, sparks, and local shocks in the mesh.
 
 This represents moments of audience reaction, surprise, stress, or heightened attention.
 
+SCR events do not change the global size of the main particles.
+
 ### Heart Rate Standard Deviation
 
-This controls the rhythmic pulse layer.
+This controls the global size and synchronized pulse of every main particle, plus a two-ring halo around the visualisation.
 
-- **Positive values** quicken the pulse rate.
-- **Negative values** slow the pulse rate.
-- **Larger magnitude** makes the breathing/pulse layer more visible and energetic.
+- **Positive values** enlarge every particle, quicken the pulse, and place the active halo outside the neutral reference ring.
+- **Negative values** reduce every particle, slow the pulse, and place the active halo inside the neutral reference ring.
+- **Positive pulses** expand outward; **negative pulses** contract inward.
+- The active halo never crosses the neutral reference ring, so its sign remains unambiguous during a pulse.
+- Every particle and the active halo share one pulse clock and remain in unison.
+- If heart-rate data becomes stale, the particles return to neutral and the active halo fades away while the reference remains.
 
 
 This represents the visible tempo of audience physiology.
-
-### Inter-Beat Interval Standard Deviation
-
-This controls how regular or broken the pulse rings feel.
-
-- **Positive values** make pulse rings broader and more spacious.
-- **Negative values** make pulse rings tighter, more segmented, and more broken.
-
-This represents rhythmic stability versus fragmentation.
 
 
