@@ -34,39 +34,39 @@ PrefabInstance:
       objectReference: {fileID: 2100000, guid: 72558d4b97c34224ab088264be7d1563, type: 2}
     - target: {fileID: 5099490702948499052, guid: 74e05b7be47103748b0057db90b75d78, type: 3}
       propertyPath: arousal
-      value: 0.76343995
+      value: 0.5334402
       objectReference: {fileID: 0}
     - target: {fileID: 5099490702948499052, guid: 74e05b7be47103748b0057db90b75d78, type: 3}
       propertyPath: valence
-      value: 0.6686527
+      value: 1.5454404
       objectReference: {fileID: 0}
     - target: {fileID: 5099490702948499052, guid: 74e05b7be47103748b0057db90b75d78, type: 3}
       propertyPath: engagement
-      value: 0.4444311
+      value: 0.36065584
       objectReference: {fileID: 0}
     - target: {fileID: 5099490702948499052, guid: 74e05b7be47103748b0057db90b75d78, type: 3}
       propertyPath: noiseOffset
-      value: 584.73413
+      value: 587.9564
       objectReference: {fileID: 0}
     - target: {fileID: 5099490702948499052, guid: 74e05b7be47103748b0057db90b75d78, type: 3}
       propertyPath: heartRateStdDev
-      value: 0.9198482
+      value: -1.2449595
       objectReference: {fileID: 0}
     - target: {fileID: 5099490702948499052, guid: 74e05b7be47103748b0057db90b75d78, type: 3}
       propertyPath: interBeatIntervalStdDev
-      value: -1.2090273
+      value: -1.6001306
       objectReference: {fileID: 0}
     - target: {fileID: 5099490702948499052, guid: 74e05b7be47103748b0057db90b75d78, type: 3}
       propertyPath: temperatureRateOfChangeStdDev
-      value: 0.8395572
+      value: -1.583982
       objectReference: {fileID: 0}
     - target: {fileID: 5099490702948499052, guid: 74e05b7be47103748b0057db90b75d78, type: 3}
       propertyPath: tonicElectrodermalActivityStdDev
-      value: -0.35363495
+      value: -0.15325516
       objectReference: {fileID: 0}
     - target: {fileID: 5099490702948499052, guid: 74e05b7be47103748b0057db90b75d78, type: 3}
       propertyPath: skinConductanceResponseFrequencyStdDev
-      value: -0.57628495
+      value: 0.58306754
       objectReference: {fileID: 0}
     - target: {fileID: 7649927837592745194, guid: 74e05b7be47103748b0057db90b75d78, type: 3}
       propertyPath: m_Materials.Array.data[0]
@@ -136,6 +136,10 @@ PrefabInstance:
       propertyPath: lowEngagementAlpha
       value: 0.75
       objectReference: {fileID: 0}
+    - target: {fileID: 8489548096852947066, guid: 74e05b7be47103748b0057db90b75d78, type: 3}
+      propertyPath: heartRateHaloMaterial
+      value: 
+      objectReference: {fileID: 2100000, guid: 9e3e5118b74854448b8f968ee8a8edeb, type: 2}
     - target: {fileID: 8489548096852947066, guid: 74e05b7be47103748b0057db90b75d78, type: 3}
       propertyPath: temperatureTrailStride
       value: 1

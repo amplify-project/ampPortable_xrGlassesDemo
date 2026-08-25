@@ -10,6 +10,24 @@ namespace AmpPortableDataViz.Tests.PlayMode
 {
     public class ParticleMeshVisualizerOrthogonalityTests
     {
+        [TestCase(5, 4, 0, 4, 15, 19)]
+        [TestCase(10, 10, 0, 9, 90, 99)]
+        public void CornerIndices_ResolveAllFourGridCorners(
+            int width,
+            int height,
+            int expectedBottomLeft,
+            int expectedBottomRight,
+            int expectedTopLeft,
+            int expectedTopRight)
+        {
+            ParticleMeshCornerIndices corners = ParticleMeshCornerIndexMapper.Resolve(width, height);
+
+            Assert.AreEqual(expectedBottomLeft, corners.BottomLeft);
+            Assert.AreEqual(expectedBottomRight, corners.BottomRight);
+            Assert.AreEqual(expectedTopLeft, corners.TopLeft);
+            Assert.AreEqual(expectedTopRight, corners.TopRight);
+        }
+
         [UnityTest]
         public IEnumerator MainParticleSizeAndVisibility_DoNotDependOnOtherStreams()
         {
@@ -46,7 +64,43 @@ namespace AmpPortableDataViz.Tests.PlayMode
         }
 
         [UnityTest]
-        public IEnumerator GlobalHalo_KeepsNegativeInsideAndPositiveOutsideNeutralReference()
+        public IEnumerator CornerHalos_AreCreatedAtRenderedCornerParticles()
+        {
+            GameObject visualizerObject = CreateVisualizer("corner-heart-rate");
+
+            try
+            {
+                var visualizer = visualizerObject.GetComponent<ParticleMeshVisualizer>();
+                SetPrivateField(visualizer, "heartRateCornerHaloCenterSmoothTime", 0f);
+                visualizer.Apply(
+                    new ParticleMeshSignalSample("device-a", 0f, 0f, 0f, 1f, 0f),
+                    1L);
+
+                yield return null;
+                yield return null;
+
+                Vector3[] renderedVertices = ReadPrivateField<Vector3[]>(visualizer, "_vertices");
+                int builtWidth = ReadPrivateField<int>(visualizer, "_builtGridWidth");
+                int builtHeight = ReadPrivateField<int>(visualizer, "_builtGridHeight");
+                Assert.AreEqual(builtWidth * builtHeight, renderedVertices.Length);
+
+                ParticleMeshCornerIndices corners = ParticleMeshCornerIndexMapper.Resolve(builtWidth, builtHeight);
+                AssertCornerHaloCenter(visualizerObject, "Heart Rate Corner Bottom Left", renderedVertices[corners.BottomLeft]);
+                AssertCornerHaloCenter(visualizerObject, "Heart Rate Corner Bottom Right", renderedVertices[corners.BottomRight]);
+                AssertCornerHaloCenter(visualizerObject, "Heart Rate Corner Top Left", renderedVertices[corners.TopLeft]);
+                AssertCornerHaloCenter(visualizerObject, "Heart Rate Corner Top Right", renderedVertices[corners.TopRight]);
+
+                Assert.AreEqual(4, CountHaloLines(visualizerObject, "Heart Rate Neutral Reference"));
+                Assert.AreEqual(4, CountHaloLines(visualizerObject, "Heart Rate Active Halo"));
+            }
+            finally
+            {
+                Object.Destroy(visualizerObject);
+            }
+        }
+
+        [UnityTest]
+        public IEnumerator CornerHalos_StaySynchronizedWithNegativeInsideAndPositiveOutside()
         {
             GameObject negativeObject = CreateVisualizer("negative-heart-rate");
             GameObject positiveObject = CreateVisualizer("positive-heart-rate");
@@ -63,13 +117,25 @@ namespace AmpPortableDataViz.Tests.PlayMode
                 yield return null;
                 yield return null;
 
-                float negativeReferenceRadius = ReadHaloRadius(negativeObject, "Heart Rate Neutral Reference");
-                float negativeActiveRadius = ReadHaloRadius(negativeObject, "Heart Rate Active Halo");
-                float positiveReferenceRadius = ReadHaloRadius(positiveObject, "Heart Rate Neutral Reference");
-                float positiveActiveRadius = ReadHaloRadius(positiveObject, "Heart Rate Active Halo");
+                LineRenderer[] negativeReferences = FindHaloLines(negativeObject, "Heart Rate Neutral Reference");
+                LineRenderer[] negativeActives = FindHaloLines(negativeObject, "Heart Rate Active Halo");
+                LineRenderer[] positiveReferences = FindHaloLines(positiveObject, "Heart Rate Neutral Reference");
+                LineRenderer[] positiveActives = FindHaloLines(positiveObject, "Heart Rate Active Halo");
 
+                float negativeReferenceRadius = ReadHaloRadius(negativeReferences[0]);
+                float negativeActiveRadius = ReadHaloRadius(negativeActives[0]);
+                float positiveReferenceRadius = ReadHaloRadius(positiveReferences[0]);
+                float positiveActiveRadius = ReadHaloRadius(positiveActives[0]);
                 Assert.Less(negativeActiveRadius, negativeReferenceRadius);
                 Assert.Greater(positiveActiveRadius, positiveReferenceRadius);
+
+                for (int i = 1; i < ParticleMeshCornerIndexMapper.CornerCount; i++)
+                {
+                    Assert.AreEqual(negativeReferenceRadius, ReadHaloRadius(negativeReferences[i]), 0.0001f);
+                    Assert.AreEqual(negativeActiveRadius, ReadHaloRadius(negativeActives[i]), 0.0001f);
+                    Assert.AreEqual(positiveReferenceRadius, ReadHaloRadius(positiveReferences[i]), 0.0001f);
+                    Assert.AreEqual(positiveActiveRadius, ReadHaloRadius(positiveActives[i]), 0.0001f);
+                }
             }
             finally
             {
@@ -79,7 +145,7 @@ namespace AmpPortableDataViz.Tests.PlayMode
         }
 
         [UnityTest]
-        public IEnumerator GlobalHalo_WhenHeartDataBecomesStale_FadesActiveRing()
+        public IEnumerator CornerHalos_WhenHeartDataBecomesStale_FadeAllActiveRings()
         {
             GameObject visualizerObject = CreateVisualizer("stale-heart-rate");
 
@@ -94,12 +160,18 @@ namespace AmpPortableDataViz.Tests.PlayMode
 
                 yield return null;
 
-                LineRenderer activeHalo = FindHaloLine(visualizerObject, "Heart Rate Active Halo");
-                Assert.Greater(activeHalo.startColor.a, 0f);
+                LineRenderer[] activeHalos = FindHaloLines(visualizerObject, "Heart Rate Active Halo");
+                for (int i = 0; i < activeHalos.Length; i++)
+                {
+                    Assert.Greater(activeHalos[i].startColor.a, 0f);
+                }
 
                 yield return new WaitForSeconds(0.1f);
 
-                Assert.AreEqual(0f, activeHalo.startColor.a, 0.01f);
+                for (int i = 0; i < activeHalos.Length; i++)
+                {
+                    Assert.AreEqual(0f, activeHalos[i].startColor.a, 0.01f);
+                }
             }
             finally
             {
@@ -108,7 +180,7 @@ namespace AmpPortableDataViz.Tests.PlayMode
         }
 
         [UnityTest]
-        public IEnumerator GlobalHalo_WhenPhysiologyTimestampIsMissing_DoesNotShowActiveRing()
+        public IEnumerator CornerHalos_WhenPhysiologyTimestampIsMissing_HideAllActiveRings()
         {
             GameObject visualizerObject = CreateVisualizer("missing-heart-rate");
 
@@ -120,8 +192,41 @@ namespace AmpPortableDataViz.Tests.PlayMode
 
                 yield return null;
 
-                LineRenderer activeHalo = FindHaloLine(visualizerObject, "Heart Rate Active Halo");
-                Assert.AreEqual(0f, activeHalo.startColor.a, 0.01f);
+                LineRenderer[] activeHalos = FindHaloLines(visualizerObject, "Heart Rate Active Halo");
+                for (int i = 0; i < activeHalos.Length; i++)
+                {
+                    Assert.AreEqual(0f, activeHalos[i].startColor.a, 0.01f);
+                }
+            }
+            finally
+            {
+                Object.Destroy(visualizerObject);
+            }
+        }
+
+        [UnityTest]
+        public IEnumerator CornerHalos_WhenGridDimensionsChange_RetargetNewCorners()
+        {
+            GameObject visualizerObject = CreateVisualizer("resized-corner-heart-rate");
+
+            try
+            {
+                var visualizer = visualizerObject.GetComponent<ParticleMeshVisualizer>();
+                SetPrivateField(visualizer, "heartRateCornerHaloCenterSmoothTime", 0f);
+                SetPrivateField(visualizer, "gridWidth", 5);
+                SetPrivateField(visualizer, "gridHeight", 4);
+                SetPrivateField(visualizer, "_needsRebuild", true);
+
+                yield return null;
+                yield return null;
+
+                Vector3[] renderedVertices = ReadPrivateField<Vector3[]>(visualizer, "_vertices");
+                ParticleMeshCornerIndices corners = ParticleMeshCornerIndexMapper.Resolve(5, 4);
+                Assert.AreEqual(20, renderedVertices.Length);
+                AssertCornerHaloCenter(visualizerObject, "Heart Rate Corner Bottom Left", renderedVertices[corners.BottomLeft]);
+                AssertCornerHaloCenter(visualizerObject, "Heart Rate Corner Bottom Right", renderedVertices[corners.BottomRight]);
+                AssertCornerHaloCenter(visualizerObject, "Heart Rate Corner Top Left", renderedVertices[corners.TopLeft]);
+                AssertCornerHaloCenter(visualizerObject, "Heart Rate Corner Top Right", renderedVertices[corners.TopRight]);
             }
             finally
             {
@@ -147,26 +252,58 @@ namespace AmpPortableDataViz.Tests.PlayMode
             return particles[0];
         }
 
-        private static float ReadHaloRadius(GameObject visualizerObject, string lineName)
+        private static float ReadHaloRadius(LineRenderer line)
         {
-            LineRenderer line = FindHaloLine(visualizerObject, lineName);
             Vector3 firstPosition = line.GetPosition(0);
             return new Vector2(firstPosition.x, firstPosition.y).magnitude;
         }
 
-        private static LineRenderer FindHaloLine(GameObject visualizerObject, string lineName)
+        private static void AssertCornerHaloCenter(
+            GameObject visualizerObject,
+            string cornerName,
+            Vector3 expectedLocalPosition)
         {
+            Transform corner = visualizerObject.transform.Find($"Heart Rate Corner Halos/{cornerName}");
+            Assert.IsNotNull(corner, $"Could not find corner halo '{cornerName}'.");
+            Vector3 expectedWorldPosition = visualizerObject.transform.TransformPoint(expectedLocalPosition);
+            Assert.AreEqual(expectedWorldPosition.x, corner.position.x, 0.0001f);
+            Assert.AreEqual(expectedWorldPosition.y, corner.position.y, 0.0001f);
+            Assert.AreEqual(expectedWorldPosition.z, corner.position.z, 0.0001f);
+        }
+
+        private static int CountHaloLines(GameObject visualizerObject, string lineName)
+        {
+            int count = 0;
             LineRenderer[] lines = visualizerObject.GetComponentsInChildren<LineRenderer>(true);
             for (int i = 0; i < lines.Length; i++)
             {
                 if (lines[i].name == lineName)
                 {
-                    return lines[i];
+                    count++;
                 }
             }
 
-            Assert.Fail($"Could not find halo line '{lineName}'.");
-            return null;
+            return count;
+        }
+
+        private static LineRenderer[] FindHaloLines(GameObject visualizerObject, string lineName)
+        {
+            LineRenderer[] allLines = visualizerObject.GetComponentsInChildren<LineRenderer>(true);
+            var matches = new LineRenderer[ParticleMeshCornerIndexMapper.CornerCount];
+            int matchCount = 0;
+            for (int i = 0; i < allLines.Length; i++)
+            {
+                if (allLines[i].name != lineName)
+                {
+                    continue;
+                }
+
+                Assert.Less(matchCount, matches.Length, $"Found too many halo lines named '{lineName}'.");
+                matches[matchCount++] = allLines[i];
+            }
+
+            Assert.AreEqual(matches.Length, matchCount, $"Expected four halo lines named '{lineName}'.");
+            return matches;
         }
 
         private static void SetPrivateField<T>(ParticleMeshVisualizer visualizer, string fieldName, T value)
@@ -176,6 +313,15 @@ namespace AmpPortableDataViz.Tests.PlayMode
                 BindingFlags.Instance | BindingFlags.NonPublic);
             Assert.IsNotNull(field, $"Could not find field '{fieldName}'.");
             field.SetValue(visualizer, value);
+        }
+
+        private static T ReadPrivateField<T>(ParticleMeshVisualizer visualizer, string fieldName)
+        {
+            FieldInfo field = typeof(ParticleMeshVisualizer).GetField(
+                fieldName,
+                BindingFlags.Instance | BindingFlags.NonPublic);
+            Assert.IsNotNull(field, $"Could not find field '{fieldName}'.");
+            return (T)field.GetValue(visualizer);
         }
     }
 }

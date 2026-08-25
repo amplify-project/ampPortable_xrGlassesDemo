@@ -9,7 +9,7 @@ The mesh is a dynamic surface driven by audience physiology and behavioural data
 - **Slow global shape** shows tonic electrodermal activity.
 - **Particle colour and directional trails** show temperature rate of change.
 - **Local sparks and short local deformations** show skin conductance responses.
-- **Global particle size, unison pulse, and the perimeter halo** show heart rate.
+- **Global particle size, unison pulse, and four corner halos** show heart rate.
 - **Spatial dispersion, mesh coherence, and lattice solidity** show engagement.
 
 Each stream owns a separate visual channel so one stream does not suppress another. The physiological inputs are signed standardized signals. Values near `0` represent baseline. Positive and negative values represent position relative to that baseline, not necessarily the frame-to-frame direction of travel.
@@ -65,14 +65,15 @@ SCR events do not change the global size of the main particles.
 
 ### Heart Rate Standard Deviation
 
-This controls the global size and synchronized pulse of every main particle, plus a two-ring halo around the visualisation.
+This controls the global size and synchronized pulse of every main particle, plus a two-ring halo centred on each of the four corner particles.
 
-- **Positive values** enlarge every particle, quicken the pulse, and place the active halo outside the neutral reference ring.
-- **Negative values** reduce every particle, slow the pulse, and place the active halo inside the neutral reference ring.
+- **Positive values** enlarge every particle, quicken the pulse, and place each active halo outside its neutral reference ring.
+- **Negative values** reduce every particle, slow the pulse, and place each active halo inside its neutral reference ring.
 - **Positive pulses** expand outward; **negative pulses** contract inward.
-- The active halo never crosses the neutral reference ring, so its sign remains unambiguous during a pulse.
-- Every particle and the active halo share one pulse clock and remain in unison.
-- If heart-rate data becomes stale, the particles return to neutral and the active halo fades away while the reference remains.
+- The active halos never cross their neutral reference rings, so the sign remains unambiguous during a pulse.
+- All particles and all four active halos share one pulse clock and remain in unison.
+- Each halo follows its rendered corner particle with slight centre smoothing, while the pulse itself remains unsmoothed.
+- If heart-rate data becomes stale, the particles return to neutral and all active halos fade away while the references remain.
 
 
 This represents the visible tempo of audience physiology.

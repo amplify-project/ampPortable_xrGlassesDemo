@@ -62,12 +62,13 @@ namespace AmpPortableDataViz.Presentation.Visualization
         [SerializeField, Range(0.1f, 30f)] private float heartRateStaleAfterSeconds = 5f;
         [SerializeField, Range(0.1f, 5f)] private float heartRateStaleFadeSeconds = 1f;
 
-        [Header("Heart Rate Halo")]
+        [Header("Heart Rate Corner Halos")]
         [SerializeField] private bool renderHeartRateHalo = true;
         [SerializeField] private Transform heartRateHaloRoot;
         [SerializeField] private Material heartRateHaloMaterial;
         [SerializeField, Range(24, 192)] private int heartRateHaloSegments = 96;
-        [SerializeField, Range(1f, 2.5f)] private float heartRateHaloRadiusMultiplier = 1.55f;
+        [SerializeField, Range(1.5f, 8f)] private float heartRateCornerHaloRadiusMultiplier = 3.2f;
+        [SerializeField, Range(0f, 0.5f)] private float heartRateCornerHaloCenterSmoothTime = 0.06f;
         [SerializeField, Range(0.0005f, 0.04f)] private float heartRateHaloReferenceWidth = 0.005f;
         [SerializeField, Range(0.0005f, 0.06f)] private float heartRateHaloActiveWidth = 0.011f;
         [SerializeField, Range(0f, 1f)] private float heartRateHaloPulseWidthBoost = 0.35f;
@@ -211,8 +212,16 @@ namespace AmpPortableDataViz.Presentation.Visualization
         private long _lastHeartRateTimestampTicks;
         private float _secondsSinceHeartRateSample;
         private float _heartRateDataFreshness;
-        private LineRenderer _heartRateReferenceHalo;
-        private LineRenderer _heartRateActiveHalo;
+        private sealed class HeartRateCornerHalo
+        {
+            public Transform Root;
+            public LineRenderer ReferenceLine;
+            public LineRenderer ActiveLine;
+            public Vector3 CenterVelocity;
+            public bool HasPosition;
+        }
+
+        private HeartRateCornerHalo[] _heartRateCornerHalos;
         private Material _heartRateHaloMaterialInstance;
         private Vector3[] _heartRateHaloUnitCircle;
         private int _builtHeartRateHaloSegments;
@@ -311,7 +320,7 @@ namespace AmpPortableDataViz.Presentation.Visualization
             UpdateGeometry(deltaTime);
             if (renderHeartRateHalo)
             {
-                UpdateHeartRateHalo();
+                UpdateHeartRateHalo(deltaTime);
             }
             else
             {
@@ -431,7 +440,8 @@ namespace AmpPortableDataViz.Presentation.Visualization
             heartRateStaleAfterSeconds = Mathf.Clamp(heartRateStaleAfterSeconds, 0.1f, 30f);
             heartRateStaleFadeSeconds = Mathf.Clamp(heartRateStaleFadeSeconds, 0.1f, 5f);
             heartRateHaloSegments = Mathf.Clamp(heartRateHaloSegments, 24, 192);
-            heartRateHaloRadiusMultiplier = Mathf.Clamp(heartRateHaloRadiusMultiplier, 1f, 2.5f);
+            heartRateCornerHaloRadiusMultiplier = Mathf.Clamp(heartRateCornerHaloRadiusMultiplier, 1.5f, 8f);
+            heartRateCornerHaloCenterSmoothTime = Mathf.Clamp(heartRateCornerHaloCenterSmoothTime, 0f, 0.5f);
             heartRateHaloReferenceWidth = Mathf.Clamp(heartRateHaloReferenceWidth, 0.0005f, 0.04f);
             heartRateHaloActiveWidth = Mathf.Clamp(heartRateHaloActiveWidth, 0.0005f, 0.06f);
             heartRateHaloPulseWidthBoost = Mathf.Clamp01(heartRateHaloPulseWidthBoost);
@@ -949,7 +959,7 @@ namespace AmpPortableDataViz.Presentation.Visualization
                     return;
                 }
 
-                var haloObject = new GameObject("Heart Rate Halo");
+                var haloObject = new GameObject("Heart Rate Corner Halos");
                 haloObject.transform.SetParent(transform, false);
                 heartRateHaloRoot = haloObject.transform;
             }
@@ -967,33 +977,68 @@ namespace AmpPortableDataViz.Presentation.Visualization
                 _builtHeartRateHaloSegments = segmentCount;
             }
 
-            if (_heartRateReferenceHalo == null)
+            if (_heartRateCornerHalos == null ||
+                _heartRateCornerHalos.Length != ParticleMeshCornerIndexMapper.CornerCount)
             {
-                _heartRateReferenceHalo = CreateHeartRateHaloLine("Heart Rate Neutral Reference");
+                _heartRateCornerHalos = new HeartRateCornerHalo[ParticleMeshCornerIndexMapper.CornerCount];
             }
 
-            if (_heartRateActiveHalo == null)
+            for (int i = 0; i < _heartRateCornerHalos.Length; i++)
             {
-                _heartRateActiveHalo = CreateHeartRateHaloLine("Heart Rate Active Halo");
-                if (_heartRateActiveHalo != null)
+                HeartRateCornerHalo cornerHalo = _heartRateCornerHalos[i];
+                if (cornerHalo == null || cornerHalo.Root == null)
                 {
-                    _heartRateActiveHalo.sortingOrder = 1;
+                    var cornerObject = new GameObject(ResolveHeartRateCornerName(i));
+                    cornerObject.transform.SetParent(heartRateHaloRoot, false);
+                    cornerHalo = new HeartRateCornerHalo
+                    {
+                        Root = cornerObject.transform
+                    };
+                    _heartRateCornerHalos[i] = cornerHalo;
                 }
-            }
 
-            ConfigureHeartRateHaloLine(_heartRateReferenceHalo, segmentCount);
-            ConfigureHeartRateHaloLine(_heartRateActiveHalo, segmentCount);
+                if (cornerHalo.ReferenceLine == null)
+                {
+                    cornerHalo.ReferenceLine = CreateHeartRateHaloLine(
+                        cornerHalo.Root,
+                        "Heart Rate Neutral Reference");
+                }
+
+                if (cornerHalo.ActiveLine == null)
+                {
+                    cornerHalo.ActiveLine = CreateHeartRateHaloLine(
+                        cornerHalo.Root,
+                        "Heart Rate Active Halo");
+                    if (cornerHalo.ActiveLine != null)
+                    {
+                        cornerHalo.ActiveLine.sortingOrder = 1;
+                    }
+                }
+
+                ConfigureHeartRateHaloLine(cornerHalo.ReferenceLine, segmentCount);
+                ConfigureHeartRateHaloLine(cornerHalo.ActiveLine, segmentCount);
+            }
         }
 
-        private LineRenderer CreateHeartRateHaloLine(string objectName)
+        private static string ResolveHeartRateCornerName(int cornerIndex)
         {
-            if (heartRateHaloRoot == null)
+            switch (cornerIndex)
             {
-                return null;
+                case 0:
+                    return "Heart Rate Corner Bottom Left";
+                case 1:
+                    return "Heart Rate Corner Bottom Right";
+                case 2:
+                    return "Heart Rate Corner Top Left";
+                default:
+                    return "Heart Rate Corner Top Right";
             }
+        }
 
+        private static LineRenderer CreateHeartRateHaloLine(Transform parent, string objectName)
+        {
             var lineObject = new GameObject(objectName);
-            lineObject.transform.SetParent(heartRateHaloRoot, false);
+            lineObject.transform.SetParent(parent, false);
             return lineObject.AddComponent<LineRenderer>();
         }
 
@@ -1052,51 +1097,94 @@ namespace AmpPortableDataViz.Presentation.Visualization
             return _heartRateHaloMaterialInstance;
         }
 
-        private void UpdateHeartRateHalo()
+        private void UpdateHeartRateHalo(float deltaTime)
         {
             EnsureHeartRateHalo();
             if (heartRateHaloRoot == null ||
-                _heartRateReferenceHalo == null ||
-                _heartRateActiveHalo == null ||
+                _heartRateCornerHalos == null ||
                 _heartRateHaloUnitCircle == null)
             {
                 return;
             }
 
             Camera viewingCamera = Camera.main;
-            heartRateHaloRoot.position = transform.position;
-            heartRateHaloRoot.rotation = viewingCamera != null
+            Quaternion haloRotation = viewingCamera != null
                 ? viewingCamera.transform.rotation
                 : transform.rotation * Quaternion.Euler(90f, 0f, 0f);
 
-            float referenceRadius = visualScale * heartRateHaloRadiusMultiplier;
+            float referenceRadius = particleSize * heartRateCornerHaloRadiusMultiplier;
             _heartRateHaloResponse = HeartRateHaloResponseMapper.Resolve(
                 referenceRadius,
                 in _heartRateVisualResponse,
                 in _heartRatePulseEnvelope,
                 heartRateVisualSettings);
 
-            UpdateHeartRateHaloLine(_heartRateReferenceHalo, _heartRateHaloResponse.ReferenceRadius, 0f);
-            UpdateHeartRateHaloLine(_heartRateActiveHalo, _heartRateHaloResponse.ActiveRadius, -0.002f);
-
             Color referenceColor = heartRateHaloReferenceColor;
-            _heartRateReferenceHalo.startColor = referenceColor;
-            _heartRateReferenceHalo.endColor = referenceColor;
-            _heartRateReferenceHalo.startWidth = heartRateHaloReferenceWidth;
-            _heartRateReferenceHalo.endWidth = heartRateHaloReferenceWidth;
-
             Color activeColor = heartRateHaloActiveColor;
             activeColor.a *= Mathf.Lerp(0.62f, 1f, _heartRateHaloResponse.PulseEnergy);
             activeColor.a *= _heartRateDataFreshness;
             float activeWidth = heartRateHaloActiveWidth *
                 (1f + _heartRateHaloResponse.PulseEnergy * heartRateHaloPulseWidthBoost);
-            _heartRateActiveHalo.startColor = activeColor;
-            _heartRateActiveHalo.endColor = activeColor;
-            _heartRateActiveHalo.startWidth = activeWidth;
-            _heartRateActiveHalo.endWidth = activeWidth;
 
-            _heartRateReferenceHalo.enabled = true;
-            _heartRateActiveHalo.enabled = true;
+            ParticleMeshCornerIndices cornerIndices = ParticleMeshCornerIndexMapper.Resolve(
+                _builtGridWidth,
+                _builtGridHeight);
+            for (int i = 0; i < _heartRateCornerHalos.Length; i++)
+            {
+                HeartRateCornerHalo cornerHalo = _heartRateCornerHalos[i];
+                int particleIndex = cornerIndices[i];
+                if (cornerHalo == null ||
+                    cornerHalo.Root == null ||
+                    cornerHalo.ReferenceLine == null ||
+                    cornerHalo.ActiveLine == null ||
+                    _vertices == null ||
+                    particleIndex < 0 ||
+                    particleIndex >= _vertices.Length)
+                {
+                    continue;
+                }
+
+                Vector3 targetCenter = transform.TransformPoint(_vertices[particleIndex]);
+                if (!cornerHalo.HasPosition || heartRateCornerHaloCenterSmoothTime <= 0f)
+                {
+                    cornerHalo.Root.position = targetCenter;
+                    cornerHalo.CenterVelocity = Vector3.zero;
+                    cornerHalo.HasPosition = true;
+                }
+                else
+                {
+                    cornerHalo.Root.position = Vector3.SmoothDamp(
+                        cornerHalo.Root.position,
+                        targetCenter,
+                        ref cornerHalo.CenterVelocity,
+                        heartRateCornerHaloCenterSmoothTime,
+                        Mathf.Infinity,
+                        Mathf.Max(0f, deltaTime));
+                }
+
+                cornerHalo.Root.rotation = haloRotation;
+                UpdateHeartRateHaloLine(
+                    cornerHalo.ReferenceLine,
+                    _heartRateHaloResponse.ReferenceRadius,
+                    0f);
+                UpdateHeartRateHaloLine(
+                    cornerHalo.ActiveLine,
+                    _heartRateHaloResponse.ActiveRadius,
+                    -0.002f);
+
+                cornerHalo.ReferenceLine.startColor = referenceColor;
+                cornerHalo.ReferenceLine.endColor = referenceColor;
+                cornerHalo.ReferenceLine.startWidth = heartRateHaloReferenceWidth;
+                cornerHalo.ReferenceLine.endWidth = heartRateHaloReferenceWidth;
+
+                cornerHalo.ActiveLine.startColor = activeColor;
+                cornerHalo.ActiveLine.endColor = activeColor;
+                cornerHalo.ActiveLine.startWidth = activeWidth;
+                cornerHalo.ActiveLine.endWidth = activeWidth;
+
+                cornerHalo.ReferenceLine.enabled = true;
+                cornerHalo.ActiveLine.enabled = true;
+            }
         }
 
         private void UpdateHeartRateHaloLine(LineRenderer line, float radius, float depthOffset)
@@ -1116,14 +1204,31 @@ namespace AmpPortableDataViz.Presentation.Visualization
 
         private void ClearHeartRateHalo()
         {
-            if (_heartRateReferenceHalo != null)
+            if (_heartRateCornerHalos == null)
             {
-                _heartRateReferenceHalo.enabled = false;
+                return;
             }
 
-            if (_heartRateActiveHalo != null)
+            for (int i = 0; i < _heartRateCornerHalos.Length; i++)
             {
-                _heartRateActiveHalo.enabled = false;
+                HeartRateCornerHalo cornerHalo = _heartRateCornerHalos[i];
+                if (cornerHalo == null)
+                {
+                    continue;
+                }
+
+                if (cornerHalo.ReferenceLine != null)
+                {
+                    cornerHalo.ReferenceLine.enabled = false;
+                }
+
+                if (cornerHalo.ActiveLine != null)
+                {
+                    cornerHalo.ActiveLine.enabled = false;
+                }
+
+                cornerHalo.CenterVelocity = Vector3.zero;
+                cornerHalo.HasPosition = false;
             }
         }
 
