@@ -82,6 +82,9 @@ namespace AmpPortableDataViz.Presentation.Visualization
 
         private Action<DataFrame<PhysioMetricsSample>> _physioHandler;
         private Action<DataFrame<float>> _engagementHandler;
+        private Action<DataFrame<SensorEngagementState>> _sensorEngagementHandler;
+        private IDataSource<PhysioMetricsSample> _runtimePhysioSource;
+        private ILatestDataSource<SensorEngagementState> _runtimeSensorEngagementSource;
 
         private bool _hasPhysio;
         private bool _hasEngagement;
@@ -141,6 +144,36 @@ namespace AmpPortableDataViz.Presentation.Visualization
 
             physioSource = newPhysioSource;
             engagementSource = newEngagementSource;
+            _runtimePhysioSource = newPhysioSource;
+            _runtimeSensorEngagementSource = null;
+
+            if (!string.IsNullOrWhiteSpace(overrideDeviceId))
+            {
+                deviceId = overrideDeviceId.Trim();
+            }
+
+            if (wasEnabled)
+            {
+                ResetState();
+                AttachSources();
+            }
+        }
+
+        public void ConfigureSensorSources(
+            IDataSource<PhysioMetricsSample> newPhysioSource,
+            ILatestDataSource<SensorEngagementState> newEngagementSource,
+            string overrideDeviceId)
+        {
+            bool wasEnabled = isActiveAndEnabled;
+            if (wasEnabled)
+            {
+                DetachSources();
+            }
+
+            physioSource = newPhysioSource as RedisPhysioMetricsPump;
+            engagementSource = null;
+            _runtimePhysioSource = newPhysioSource;
+            _runtimeSensorEngagementSource = newEngagementSource;
 
             if (!string.IsNullOrWhiteSpace(overrideDeviceId))
             {
@@ -169,26 +202,59 @@ namespace AmpPortableDataViz.Presentation.Visualization
 
         private void AttachSources()
         {
-            SubscribeToPhysioPump(physioSource, ref _physioHandler, OnPhysioFrame);
-            SubscribeToFloatPump(engagementSource, ref _engagementHandler, OnEngagementFrame, "engagement");
+            IDataSource<PhysioMetricsSample> selectedPhysioSource = _runtimePhysioSource ?? physioSource;
+            SubscribeToPhysioSource(selectedPhysioSource, ref _physioHandler, OnPhysioFrame);
+
+            if (_runtimeSensorEngagementSource != null)
+            {
+                SubscribeToSensorEngagementSource(
+                    _runtimeSensorEngagementSource,
+                    ref _sensorEngagementHandler,
+                    OnSensorEngagementFrame);
+
+                if (_runtimeSensorEngagementSource.HasLatestFrame)
+                {
+                    OnSensorEngagementFrame(_runtimeSensorEngagementSource.LatestFrame);
+                }
+            }
+            else
+            {
+                SubscribeToFloatPump(engagementSource, ref _engagementHandler, OnEngagementFrame, "engagement");
+            }
         }
 
         private void DetachSources()
         {
-            UnsubscribeFromPhysioPump(physioSource, ref _physioHandler);
+            UnsubscribeFromPhysioSource(_runtimePhysioSource ?? physioSource, ref _physioHandler);
             UnsubscribeFromFloatPump(engagementSource, ref _engagementHandler);
+            UnsubscribeFromSensorEngagementSource(_runtimeSensorEngagementSource, ref _sensorEngagementHandler);
         }
 
-        private void SubscribeToPhysioPump(RedisPhysioMetricsPump pump, ref Action<DataFrame<PhysioMetricsSample>> handler, Action<DataFrame<PhysioMetricsSample>> callback)
+        private void SubscribeToPhysioSource(IDataSource<PhysioMetricsSample> source, ref Action<DataFrame<PhysioMetricsSample>> handler, Action<DataFrame<PhysioMetricsSample>> callback)
         {
-            if (pump == null)
+            if (source == null)
             {
                 Debug.LogWarning($"AudienceSignalBinding[{ResolveDeviceId()}] is missing a physio Redis source.", this);
                 return;
             }
 
             handler ??= callback;
-            pump.OnFrame += handler;
+            source.OnFrame += handler;
+        }
+
+        private void SubscribeToSensorEngagementSource(
+            ILatestDataSource<SensorEngagementState> source,
+            ref Action<DataFrame<SensorEngagementState>> handler,
+            Action<DataFrame<SensorEngagementState>> callback)
+        {
+            if (source == null)
+            {
+                Debug.LogWarning($"AudienceSignalBinding[{ResolveDeviceId()}] is missing a sensor engagement source.", this);
+                return;
+            }
+
+            handler ??= callback;
+            source.OnFrame += handler;
         }
 
         private void SubscribeToFloatPump(RedisDataPump pump, ref Action<DataFrame<float>> handler, Action<DataFrame<float>> callback, string label)
@@ -203,11 +269,23 @@ namespace AmpPortableDataViz.Presentation.Visualization
             pump.OnFrame += handler;
         }
 
-        private void UnsubscribeFromPhysioPump(RedisPhysioMetricsPump pump, ref Action<DataFrame<PhysioMetricsSample>> handler)
+        private void UnsubscribeFromPhysioSource(IDataSource<PhysioMetricsSample> source, ref Action<DataFrame<PhysioMetricsSample>> handler)
         {
-            if (pump != null && handler != null)
+            if (source != null && handler != null)
             {
-                pump.OnFrame -= handler;
+                source.OnFrame -= handler;
+            }
+
+            handler = null;
+        }
+
+        private void UnsubscribeFromSensorEngagementSource(
+            ILatestDataSource<SensorEngagementState> source,
+            ref Action<DataFrame<SensorEngagementState>> handler)
+        {
+            if (source != null && handler != null)
+            {
+                source.OnFrame -= handler;
             }
 
             handler = null;
@@ -250,6 +328,30 @@ namespace AmpPortableDataViz.Presentation.Visualization
             if (logRawInputs)
             {
                 Debug.Log($"AudienceSignalBinding[{ResolveDeviceId()}] engagement={_latestEngagement:F4} seq={frame.SequenceId} ts={frame.TimestampTicksUtc}", this);
+            }
+
+            AppendGraphSample(AudienceMetricKind.Engagement, _latestEngagement, frame.TimestampTicksUtc);
+            TryApplyParticleMesh();
+        }
+
+        private void OnSensorEngagementFrame(DataFrame<SensorEngagementState> frame)
+        {
+            SensorEngagementState state = frame.Payload;
+            if (!string.Equals(state.SensorId, ResolveDeviceId(), StringComparison.OrdinalIgnoreCase))
+            {
+                return;
+            }
+
+            _latestEngagement = state.Engagement;
+            _latestEngagementTimestamp = frame.TimestampTicksUtc;
+            _hasEngagement = true;
+
+            if (logRawInputs)
+            {
+                Debug.Log(
+                    $"AudienceSignalBinding[{ResolveDeviceId()}] sensor engagement={_latestEngagement:F4} status={state.Status} " +
+                    $"seq={frame.SequenceId} ts={frame.TimestampTicksUtc}",
+                    this);
             }
 
             AppendGraphSample(AudienceMetricKind.Engagement, _latestEngagement, frame.TimestampTicksUtc);
