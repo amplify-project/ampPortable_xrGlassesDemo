@@ -223,8 +223,8 @@ namespace AmpPortableDataViz.Presentation.Visualization
 
         private HeartRateCornerHalo[] _heartRateCornerHalos;
         private Material _heartRateHaloMaterialInstance;
-        private Vector3[] _heartRateHaloUnitCircle;
-        private int _builtHeartRateHaloSegments;
+        private Vector3[] _heartRateHaloUnitSemicircle;
+        private int _builtHeartRateHaloPointCount;
 
         private TemperatureTrendWave[] _temperatureTrendWaves;
         private int _nextTemperatureTrendWaveIndex;
@@ -964,17 +964,21 @@ namespace AmpPortableDataViz.Presentation.Visualization
                 heartRateHaloRoot = haloObject.transform;
             }
 
-            int segmentCount = Mathf.Clamp(heartRateHaloSegments, 24, 192);
-            if (_heartRateHaloUnitCircle == null || _builtHeartRateHaloSegments != segmentCount)
+            int pointCount = Mathf.Clamp(heartRateHaloSegments, 24, 192);
+            if (_heartRateHaloUnitSemicircle == null || _builtHeartRateHaloPointCount != pointCount)
             {
-                _heartRateHaloUnitCircle = new Vector3[segmentCount];
-                for (int i = 0; i < segmentCount; i++)
+                _heartRateHaloUnitSemicircle = new Vector3[pointCount];
+                for (int i = 0; i < pointCount; i++)
                 {
-                    float angle = Tau * i / segmentCount;
-                    _heartRateHaloUnitCircle[i] = new Vector3(Mathf.Cos(angle), Mathf.Sin(angle), 0f);
+                    float normalizedPosition = (float)i / (pointCount - 1);
+                    float angle = Mathf.PI * normalizedPosition;
+                    _heartRateHaloUnitSemicircle[i] = new Vector3(
+                        Mathf.Cos(angle),
+                        Mathf.Sin(angle),
+                        0f);
                 }
 
-                _builtHeartRateHaloSegments = segmentCount;
+                _builtHeartRateHaloPointCount = pointCount;
             }
 
             if (_heartRateCornerHalos == null ||
@@ -1015,8 +1019,8 @@ namespace AmpPortableDataViz.Presentation.Visualization
                     }
                 }
 
-                ConfigureHeartRateHaloLine(cornerHalo.ReferenceLine, segmentCount);
-                ConfigureHeartRateHaloLine(cornerHalo.ActiveLine, segmentCount);
+                ConfigureHeartRateHaloLine(cornerHalo.ReferenceLine, pointCount);
+                ConfigureHeartRateHaloLine(cornerHalo.ActiveLine, pointCount);
             }
         }
 
@@ -1042,7 +1046,7 @@ namespace AmpPortableDataViz.Presentation.Visualization
             return lineObject.AddComponent<LineRenderer>();
         }
 
-        private void ConfigureHeartRateHaloLine(LineRenderer line, int segmentCount)
+        private void ConfigureHeartRateHaloLine(LineRenderer line, int pointCount)
         {
             if (line == null)
             {
@@ -1050,10 +1054,10 @@ namespace AmpPortableDataViz.Presentation.Visualization
             }
 
             line.useWorldSpace = false;
-            line.loop = true;
-            line.positionCount = segmentCount;
+            line.loop = false;
+            line.positionCount = pointCount;
             line.widthMultiplier = 1f;
-            line.numCapVertices = 0;
+            line.numCapVertices = 4;
             line.numCornerVertices = 2;
             line.alignment = LineAlignment.View;
             line.shadowCastingMode = UnityEngine.Rendering.ShadowCastingMode.Off;
@@ -1102,7 +1106,7 @@ namespace AmpPortableDataViz.Presentation.Visualization
             EnsureHeartRateHalo();
             if (heartRateHaloRoot == null ||
                 _heartRateCornerHalos == null ||
-                _heartRateHaloUnitCircle == null)
+                _heartRateHaloUnitSemicircle == null)
             {
                 return;
             }
@@ -1189,14 +1193,14 @@ namespace AmpPortableDataViz.Presentation.Visualization
 
         private void UpdateHeartRateHaloLine(LineRenderer line, float radius, float depthOffset)
         {
-            if (line == null || _heartRateHaloUnitCircle == null)
+            if (line == null || _heartRateHaloUnitSemicircle == null)
             {
                 return;
             }
 
-            for (int i = 0; i < _heartRateHaloUnitCircle.Length; i++)
+            for (int i = 0; i < _heartRateHaloUnitSemicircle.Length; i++)
             {
-                Vector3 position = _heartRateHaloUnitCircle[i] * radius;
+                Vector3 position = _heartRateHaloUnitSemicircle[i] * radius;
                 position.z = depthOffset;
                 line.SetPosition(i, position);
             }

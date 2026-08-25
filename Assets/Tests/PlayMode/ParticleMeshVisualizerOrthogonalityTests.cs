@@ -100,6 +100,33 @@ namespace AmpPortableDataViz.Tests.PlayMode
         }
 
         [UnityTest]
+        public IEnumerator CornerHalos_RenderOpenUpperSemicircles()
+        {
+            GameObject visualizerObject = CreateVisualizer("semicircle-heart-rate");
+
+            try
+            {
+                visualizerObject.GetComponent<ParticleMeshVisualizer>().Apply(
+                    new ParticleMeshSignalSample("device-a", 0f, 0f, 0f, 1f, 0.5f),
+                    1L);
+
+                yield return null;
+
+                LineRenderer[] referenceHalos = FindHaloLines(visualizerObject, "Heart Rate Neutral Reference");
+                LineRenderer[] activeHalos = FindHaloLines(visualizerObject, "Heart Rate Active Halo");
+                for (int i = 0; i < ParticleMeshCornerIndexMapper.CornerCount; i++)
+                {
+                    AssertUpperSemicircle(referenceHalos[i]);
+                    AssertUpperSemicircle(activeHalos[i]);
+                }
+            }
+            finally
+            {
+                Object.Destroy(visualizerObject);
+            }
+        }
+
+        [UnityTest]
         public IEnumerator CornerHalos_StaySynchronizedWithNegativeInsideAndPositiveOutside()
         {
             GameObject negativeObject = CreateVisualizer("negative-heart-rate");
@@ -256,6 +283,30 @@ namespace AmpPortableDataViz.Tests.PlayMode
         {
             Vector3 firstPosition = line.GetPosition(0);
             return new Vector2(firstPosition.x, firstPosition.y).magnitude;
+        }
+
+        private static void AssertUpperSemicircle(LineRenderer line)
+        {
+            Assert.IsFalse(line.loop);
+            Assert.GreaterOrEqual(line.positionCount, 3);
+            Assert.Greater(line.numCapVertices, 0);
+
+            Vector3 first = line.GetPosition(0);
+            Vector3 last = line.GetPosition(line.positionCount - 1);
+            Assert.Greater(first.x, 0f);
+            Assert.AreEqual(0f, first.y, 0.0001f);
+            Assert.Less(last.x, 0f);
+            Assert.AreEqual(0f, last.y, 0.0001f);
+
+            bool hasPointAboveCenter = false;
+            for (int i = 0; i < line.positionCount; i++)
+            {
+                Vector3 point = line.GetPosition(i);
+                Assert.GreaterOrEqual(point.y, -0.0001f);
+                hasPointAboveCenter |= point.y > 0.0001f;
+            }
+
+            Assert.IsTrue(hasPointAboveCenter);
         }
 
         private static void AssertCornerHaloCenter(

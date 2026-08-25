@@ -65,7 +65,7 @@ SCR events do not change the global size of the main particles.
 
 ### Heart Rate Standard Deviation
 
-This controls the global size and synchronized pulse of every main particle, plus a two-ring halo centred on each of the four corner particles.
+This controls the global size and synchronized pulse of every main particle, plus two upper semicircular halo arcs centred on each of the four corner particles.
 
 - **Positive values** enlarge every particle, quicken the pulse, and place each active halo outside its neutral reference ring.
 - **Negative values** reduce every particle, slow the pulse, and place each active halo inside its neutral reference ring.
