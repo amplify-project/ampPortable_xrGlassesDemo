@@ -5,6 +5,14 @@ namespace AmpPortableDataViz.Tests.PlayMode
     public class RedisSubscriberEngagementTests
     {
         [Test]
+        public void FormatSensorEngagementChannel_UsesExactSerialChannelFormat()
+        {
+            Assert.AreEqual(
+                "device:MD-V5-0000334:engagement",
+                RedisAudienceChannels.FormatSensorEngagementChannel("MD-V5-0000334"));
+        }
+
+        [Test]
         public void TryParsePayload_WhenNestedEngagementScoresPresent_AveragesDeviceScores()
         {
             const string payload = "{\"timestamp\":1710000000,\"scores\":{\"MD-A\":0.25,\"MD-B\":0.75}}";

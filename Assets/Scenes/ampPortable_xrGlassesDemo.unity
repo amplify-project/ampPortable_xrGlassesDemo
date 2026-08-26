@@ -1891,6 +1891,17 @@ MonoBehaviour:
   DeviceLabelFontSize: 0.22
   DeviceLabelColor: {r: 1, g: 1, b: 1, a: 1}
   AutoSpawnAudienceVisualsFromChannels: 1
+  UseIndividualSensorEngagement: 1
+  SensorEngagementChannelTemplate: device:{serial}:engagement
+  SensorEngagementChannelOverrides: []
+  SensorEngagementTimeoutSeconds: 10
+  SensorEngagementNeutralValue: 0.5
+  SensorEngagementPayloadFormat:
+    ItemsPropertyName:
+    SensorIdPropertyName: device
+    EngagementPropertyName: engagement
+    ConfirmationPropertyName: confirmed
+    TimestampPropertyName: timestamp
   UseSingleSelectedSensorStream: 1
   SensorHudCamera: {fileID: 567705655}
   SensorHudLocalPosition: {x: 0.3, y: 0.25, z: 2}
@@ -1929,16 +1940,10 @@ MonoBehaviour:
   GraphStackedOriginOffset: {x: 0, y: 0.1, z: 0}
   GraphStackedVerticalSpacing: 0.3
   GraphStackedHeightScale: 0.15
-  GraphValenceOffset: {x: 0, y: 0, z: 0}
-  GraphArousalOffset: {x: 0, y: -0.6, z: 0}
   GraphHeartRateOffset: {x: 0, y: -0.12, z: 0}
   GraphEdaOffset: {x: 0, y: -0.18, z: 0}
-  GraphValenceRange: {x: 0, y: 2}
-  GraphArousalRange: {x: 0, y: 2}
   GraphHeartRateRange: {x: 40, y: 200}
   GraphEdaRange: {x: 0.03, y: 5}
-  GraphValenceColor: {r: 0.2, g: 0.9, b: 0.4, a: 1}
-  GraphArousalColor: {r: 0.95, g: 0.65, b: 0.15, a: 1}
   GraphHeartRateColor: {r: 0.95, g: 0.2, b: 0.2, a: 1}
   GraphEdaColor: {r: 0.2, g: 0.8, b: 0.95, a: 1}
   GraphLineWidth: 0.01

@@ -80,8 +80,8 @@ namespace AmpPortableDataViz.Presentation.Bootstrap
 
         [Header("Individual Sensor Engagement")]
         public bool UseIndividualSensorEngagement = true;
-        [Tooltip("Use {sensorId} or {0} where the sensor ID belongs in the Redis channel name.")]
-        public string SensorEngagementChannelTemplate = string.Empty;
+        [Tooltip("Use {serial}, {sensorId}, or {0} where the sensor serial belongs in the Redis channel name.")]
+        public string SensorEngagementChannelTemplate = RedisAudienceChannels.SensorEngagementTemplate;
         public SensorEngagementChannelOverride[] SensorEngagementChannelOverrides =
             Array.Empty<SensorEngagementChannelOverride>();
         [Min(0f)]
@@ -1650,6 +1650,7 @@ namespace AmpPortableDataViz.Presentation.Bootstrap
 
             return SensorEngagementChannelTemplate
                 .Trim()
+                .Replace("{serial}", sensorId)
                 .Replace("{sensorId}", sensorId)
                 .Replace("{0}", sensorId);
         }
@@ -1663,7 +1664,8 @@ namespace AmpPortableDataViz.Presentation.Bootstrap
             return $"{RedisHost}:{RedisPort};enabled={UseIndividualSensorEngagement};timeout={SensorEngagementTimeoutSeconds:R};" +
                 $"neutral={SensorEngagementNeutralValue:R};sensors={sensorKey};routes={routeKey};" +
                 $"items={SensorEngagementPayloadFormat.ItemsPropertyName};sensor={SensorEngagementPayloadFormat.SensorIdPropertyName};" +
-                $"score={SensorEngagementPayloadFormat.EngagementPropertyName};confirmed={SensorEngagementPayloadFormat.ConfirmationPropertyName}";
+                $"score={SensorEngagementPayloadFormat.EngagementPropertyName};confirmed={SensorEngagementPayloadFormat.ConfirmationPropertyName};" +
+                $"timestamp={SensorEngagementPayloadFormat.TimestampPropertyName}";
         }
 
         private ILatestDataSource<SensorEngagementState> ResolveSensorEngagementSource(string sensorId)

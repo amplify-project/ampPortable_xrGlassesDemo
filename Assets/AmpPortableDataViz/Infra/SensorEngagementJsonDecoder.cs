@@ -14,15 +14,17 @@ namespace AmpPortableDataViz.Infra
         public string SensorIdPropertyName;
         public string EngagementPropertyName;
         public string ConfirmationPropertyName;
+        public string TimestampPropertyName;
 
         public static SensorEngagementJsonFormat CreateDefault()
         {
             return new SensorEngagementJsonFormat
             {
                 ItemsPropertyName = string.Empty,
-                SensorIdPropertyName = "sensor_id",
-                EngagementPropertyName = "score",
-                ConfirmationPropertyName = "confirmed"
+                SensorIdPropertyName = "device",
+                EngagementPropertyName = "engagement",
+                ConfirmationPropertyName = "confirmed",
+                TimestampPropertyName = "timestamp"
             };
         }
     }
@@ -138,7 +140,14 @@ namespace AmpPortableDataViz.Infra
             if (!TryGetProperty(item, _format.EngagementPropertyName, out JToken engagementToken) ||
                 !TryReadFloat(engagementToken, out float engagement) ||
                 !TryGetProperty(item, _format.ConfirmationPropertyName, out JToken confirmationToken) ||
-                !TryReadBinaryFlag(confirmationToken, out bool isConfirmed))
+                !TryReadConfirmation(confirmationToken, out bool isConfirmed))
+            {
+                return false;
+            }
+
+            long sourceTimestampTicksUtc = 0L;
+            if (TryGetProperty(item, _format.TimestampPropertyName, out JToken timestampToken) &&
+                !TryReadUnixTimestampTicksUtc(timestampToken, out sourceTimestampTicksUtc))
             {
                 return false;
             }
@@ -168,7 +177,11 @@ namespace AmpPortableDataViz.Infra
                 return false;
             }
 
-            observation = new SensorEngagementObservation(sensorId, engagement, isConfirmed);
+            observation = new SensorEngagementObservation(
+                sensorId,
+                engagement,
+                isConfirmed,
+                sourceTimestampTicksUtc);
             return true;
         }
 
@@ -199,9 +212,15 @@ namespace AmpPortableDataViz.Infra
             }
         }
 
-        private static bool TryReadBinaryFlag(JToken token, out bool isConfirmed)
+        private static bool TryReadConfirmation(JToken token, out bool isConfirmed)
         {
             isConfirmed = false;
+            if (token.Type == JTokenType.Boolean)
+            {
+                isConfirmed = token.Value<bool>();
+                return true;
+            }
+
             if (token.Type == JTokenType.Integer || token.Type == JTokenType.Float)
             {
                 double value = token.Value<double>();
@@ -239,6 +258,46 @@ namespace AmpPortableDataViz.Infra
             return false;
         }
 
+        private static bool TryReadUnixTimestampTicksUtc(JToken token, out long ticksUtc)
+        {
+            const long unixEpochTicks = 621355968000000000L;
+            ticksUtc = 0L;
+
+            double seconds;
+            if (token.Type == JTokenType.Integer || token.Type == JTokenType.Float)
+            {
+                seconds = token.Value<double>();
+            }
+            else if (token.Type == JTokenType.String &&
+                double.TryParse(
+                    token.Value<string>(),
+                    NumberStyles.Float,
+                    CultureInfo.InvariantCulture,
+                    out double parsedSeconds))
+            {
+                seconds = parsedSeconds;
+            }
+            else
+            {
+                return false;
+            }
+
+            if (double.IsNaN(seconds) || double.IsInfinity(seconds))
+            {
+                return false;
+            }
+
+            double elapsedTicks = seconds * TimeSpan.TicksPerSecond;
+            if (elapsedTicks < DateTime.MinValue.Ticks - unixEpochTicks ||
+                elapsedTicks > DateTime.MaxValue.Ticks - unixEpochTicks)
+            {
+                return false;
+            }
+
+            ticksUtc = unixEpochTicks + (long)Math.Round(elapsedTicks);
+            return true;
+        }
+
         private static SensorEngagementJsonFormat ResolveFormat(SensorEngagementJsonFormat format)
         {
             SensorEngagementJsonFormat defaults = SensorEngagementJsonFormat.CreateDefault();
@@ -257,10 +316,16 @@ namespace AmpPortableDataViz.Infra
                 format.ConfirmationPropertyName = defaults.ConfirmationPropertyName;
             }
 
+            if (string.IsNullOrWhiteSpace(format.TimestampPropertyName))
+            {
+                format.TimestampPropertyName = defaults.TimestampPropertyName;
+            }
+
             format.ItemsPropertyName = Normalize(format.ItemsPropertyName);
             format.SensorIdPropertyName = Normalize(format.SensorIdPropertyName);
             format.EngagementPropertyName = Normalize(format.EngagementPropertyName);
             format.ConfirmationPropertyName = Normalize(format.ConfirmationPropertyName);
+            format.TimestampPropertyName = Normalize(format.TimestampPropertyName);
             return format;
         }
 

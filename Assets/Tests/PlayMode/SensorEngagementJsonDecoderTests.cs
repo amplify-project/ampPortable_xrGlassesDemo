@@ -7,21 +7,42 @@ namespace AmpPortableDataViz.Tests.PlayMode
     public class SensorEngagementJsonDecoderTests
     {
         [Test]
-        public void TryDecode_PerSensorChannel_UsesExpectedSensorId()
+        public void TryDecode_ExactPerSensorPayload_UsesBooleanConfirmationAndUnixTimestamp()
         {
             var decoder = new SensorEngagementJsonDecoder(SensorEngagementJsonFormat.CreateDefault());
 
             bool parsed = decoder.TryDecode(
-                "device:sensor-a:engagement",
-                "sensor-a",
-                "{\"score\":0.72,\"confirmed\":1}",
+                "device:MD-V5-0000334:engagement",
+                "MD-V5-0000334",
+                "{\"device\":\"MD-V5-0000334\",\"engagement\":0.72,\"confirmed\":true," +
+                "\"confidence\":0.61,\"source\":\"face\",\"timestamp\":1756113600.0}",
                 out SensorEngagementObservation[] observations);
 
             Assert.IsTrue(parsed);
             Assert.AreEqual(1, observations.Length);
-            Assert.AreEqual("sensor-a", observations[0].SensorId);
+            Assert.AreEqual("MD-V5-0000334", observations[0].SensorId);
             Assert.AreEqual(0.72f, observations[0].Engagement, 0.0001f);
             Assert.IsTrue(observations[0].IsConfirmed);
+            Assert.AreEqual(
+                621355968000000000L + 1756113600L * System.TimeSpan.TicksPerSecond,
+                observations[0].SourceTimestampTicksUtc);
+        }
+
+        [Test]
+        public void TryDecode_ExactPerSensorPayload_AcceptsFalseConfirmation()
+        {
+            var decoder = new SensorEngagementJsonDecoder(SensorEngagementJsonFormat.CreateDefault());
+
+            bool parsed = decoder.TryDecode(
+                "device:MD-V5-0000334:engagement",
+                "MD-V5-0000334",
+                "{\"device\":\"MD-V5-0000334\",\"engagement\":0.21,\"confirmed\":false," +
+                "\"confidence\":0.22,\"source\":\"face\",\"timestamp\":1756113601.0}",
+                out SensorEngagementObservation[] observations);
+
+            Assert.IsTrue(parsed);
+            Assert.AreEqual(1, observations.Length);
+            Assert.IsFalse(observations[0].IsConfirmed);
         }
 
         [Test]
@@ -31,7 +52,8 @@ namespace AmpPortableDataViz.Tests.PlayMode
             {
                 SensorIdPropertyName = "device",
                 EngagementPropertyName = "engagement_value",
-                ConfirmationPropertyName = "identity_match"
+                ConfirmationPropertyName = "identity_match",
+                TimestampPropertyName = "observed_at"
             });
 
             bool parsed = decoder.TryDecode(
@@ -54,13 +76,14 @@ namespace AmpPortableDataViz.Tests.PlayMode
                 ItemsPropertyName = "readings",
                 SensorIdPropertyName = "sensor",
                 EngagementPropertyName = "score",
-                ConfirmationPropertyName = "certain"
+                ConfirmationPropertyName = "certain",
+                TimestampPropertyName = "observed_at"
             });
 
             bool parsed = decoder.TryDecode(
                 "individual-engagement",
                 string.Empty,
-                "{\"readings\":[{\"sensor\":\"a\",\"score\":0.2,\"certain\":1},{\"sensor\":\"b\",\"score\":0.8,\"certain\":0}]}",
+                "{\"readings\":[{\"sensor\":\"a\",\"score\":0.2,\"certain\":true},{\"sensor\":\"b\",\"score\":0.8,\"certain\":false}]}",
                 out SensorEngagementObservation[] observations);
 
             Assert.IsTrue(parsed);
@@ -70,16 +93,16 @@ namespace AmpPortableDataViz.Tests.PlayMode
         }
 
         [TestCase("2")]
-        [TestCase("true")]
         [TestCase("null")]
-        public void TryDecode_NonBinaryFlag_RejectsObservation(string flagJson)
+        [TestCase("\"yes\"")]
+        public void TryDecode_InvalidConfirmation_RejectsObservation(string flagJson)
         {
             var decoder = new SensorEngagementJsonDecoder(SensorEngagementJsonFormat.CreateDefault());
 
             bool parsed = decoder.TryDecode(
                 "device:sensor-a:engagement",
                 "sensor-a",
-                $"{{\"score\":0.72,\"confirmed\":{flagJson}}}",
+                $"{{\"device\":\"sensor-a\",\"engagement\":0.72,\"confirmed\":{flagJson}}}",
                 out SensorEngagementObservation[] observations);
 
             Assert.IsFalse(parsed);
@@ -94,7 +117,22 @@ namespace AmpPortableDataViz.Tests.PlayMode
             bool parsed = decoder.TryDecode(
                 "device:sensor-a:engagement",
                 "sensor-a",
-                "{\"sensor_id\":\"sensor-b\",\"score\":0.72,\"confirmed\":1}",
+                "{\"device\":\"sensor-b\",\"engagement\":0.72,\"confirmed\":true}",
+                out SensorEngagementObservation[] observations);
+
+            Assert.IsFalse(parsed);
+            Assert.AreEqual(0, observations.Length);
+        }
+
+        [Test]
+        public void TryDecode_InvalidUnixTimestamp_RejectsObservation()
+        {
+            var decoder = new SensorEngagementJsonDecoder(SensorEngagementJsonFormat.CreateDefault());
+
+            bool parsed = decoder.TryDecode(
+                "device:sensor-a:engagement",
+                "sensor-a",
+                "{\"device\":\"sensor-a\",\"engagement\":0.72,\"confirmed\":true,\"timestamp\":\"invalid\"}",
                 out SensorEngagementObservation[] observations);
 
             Assert.IsFalse(parsed);

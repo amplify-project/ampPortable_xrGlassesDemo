@@ -763,6 +763,7 @@ public static class RedisAudienceChannels
     public const string LegacyEngagementScoreChannel = "engagement_score";
     public const string AmplifyEngagementChannel = "amplify.engagement.engagement";
     public const string PhysioMetricsTemplate = "device:{0}:physio_metrics";
+    public const string SensorEngagementTemplate = "device:{serial}:engagement";
 
     public static bool IsEngagementScoresChannel(string channelName)
     {
@@ -785,6 +786,16 @@ public static class RedisAudienceChannels
         }
 
         return string.Format(CultureInfo.InvariantCulture, PhysioMetricsTemplate, deviceId.Trim());
+    }
+
+    public static string FormatSensorEngagementChannel(string? sensorSerial)
+    {
+        if (string.IsNullOrWhiteSpace(sensorSerial))
+        {
+            return string.Empty;
+        }
+
+        return SensorEngagementTemplate.Replace("{serial}", sensorSerial.Trim());
     }
 
     public static bool TryParsePhysioMetricsDeviceChannel(string channelName, out string deviceId)
