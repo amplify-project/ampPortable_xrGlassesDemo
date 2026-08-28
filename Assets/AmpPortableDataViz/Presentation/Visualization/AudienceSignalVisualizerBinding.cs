@@ -55,6 +55,10 @@ namespace AmpPortableDataViz.Presentation.Visualization
         [SerializeField, Range(0f, 120f)] private float graphWindowSeconds = 10f;
         [SerializeField, Range(16, 4096)] private int graphMaxSamples = 512;
 
+        [Header("Graph Temporal Smoothing")]
+        [SerializeField] private bool useGraphTemporalSmoothing = true;
+        [SerializeField, Range(0.01f, 2f)] private float graphSmoothingHalfLifeSeconds = 0.2f;
+
         [Header("Graph Dynamic Y Range")]
         [SerializeField] private bool useDynamicYRange = true;
         [SerializeField, Range(0.5f, 4f)] private float dynamicYRangeStdDevMultiplier = 2.5f;
@@ -73,6 +77,7 @@ namespace AmpPortableDataViz.Presentation.Visualization
         private long[] _graphStartTimestampTicks;
         private float[] _graphLatestXSeconds;
         private DynamicGraphYRangeTracker[] _graphYRangeTrackers;
+        private GraphTemporalSmoother[] _graphTemporalSmoothers;
         private int[] _graphSequenceIds;
 
         private Action<DataFrame<AudienceSignalSample>> _liveHandler;
@@ -346,7 +351,18 @@ namespace AmpPortableDataViz.Presentation.Visualization
             }
 
             float xSeconds = (float)((timestampTicksUtc - _graphStartTimestampTicks[index]) / (double)TimeSpan.TicksPerSecond);
-            samples.Add(new Vector2(xSeconds, value));
+            float displayValue = value;
+            if (_graphTemporalSmoothers != null && index >= 0 && index < _graphTemporalSmoothers.Length)
+            {
+                var smoother = _graphTemporalSmoothers[index];
+                if (smoother != null)
+                {
+                    float halfLifeSeconds = useGraphTemporalSmoothing ? graphSmoothingHalfLifeSeconds : 0f;
+                    displayValue = smoother.Apply(value, timestampTicksUtc, halfLifeSeconds);
+                }
+            }
+
+            samples.Add(new Vector2(xSeconds, displayValue));
 
             if (xSeconds > _graphLatestXSeconds[index])
             {
@@ -438,7 +454,9 @@ namespace AmpPortableDataViz.Presentation.Visualization
             if (_graphSamples != null &&
                 _graphSamples.Length == length &&
                 _graphYRangeTrackers != null &&
-                _graphYRangeTrackers.Length == length)
+                _graphYRangeTrackers.Length == length &&
+                _graphTemporalSmoothers != null &&
+                _graphTemporalSmoothers.Length == length)
             {
                 EnsureGraphSampleCapacities();
                 return;
@@ -449,6 +467,7 @@ namespace AmpPortableDataViz.Presentation.Visualization
             _graphStartTimestampTicks = new long[length];
             _graphLatestXSeconds = new float[length];
             _graphYRangeTrackers = new DynamicGraphYRangeTracker[length];
+            _graphTemporalSmoothers = new GraphTemporalSmoother[length];
             _graphSequenceIds = new int[length];
 
             for (int i = 0; i < length; i++)
@@ -456,6 +475,7 @@ namespace AmpPortableDataViz.Presentation.Visualization
                 _graphMappers[i] = new GraphSeriesToGraphParamsMapper(MakeGraphSettings(graphStreams[i]));
                 _graphSamples[i] = new List<Vector2>(Mathf.Max(16, graphMaxSamples));
                 _graphYRangeTrackers[i] = new DynamicGraphYRangeTracker();
+                _graphTemporalSmoothers[i] = new GraphTemporalSmoother();
             }
         }
 
@@ -528,6 +548,14 @@ namespace AmpPortableDataViz.Presentation.Visualization
                 for (int i = 0; i < _graphYRangeTrackers.Length; i++)
                 {
                     _graphYRangeTrackers[i]?.Reset();
+                }
+            }
+
+            if (_graphTemporalSmoothers != null)
+            {
+                for (int i = 0; i < _graphTemporalSmoothers.Length; i++)
+                {
+                    _graphTemporalSmoothers[i]?.Reset();
                 }
             }
         }

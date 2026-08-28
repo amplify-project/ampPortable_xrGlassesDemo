@@ -118,28 +118,28 @@ MonoBehaviour:
   - Metric: 0
     Visualizer: {fileID: 5610035945543791327}
     YRange: {x: 0.01, y: 0.5}
-    LineColor: {r: 1, g: 0, b: 0, a: 1}
-    LineWidth: 0.01
+    LineColor: {r: 0.10588236, g: 0.96470594, b: 0.7137255, a: 1}
+    LineWidth: 0.008
   - Metric: 1
     Visualizer: {fileID: 7872482145564960264}
     YRange: {x: 0.001, y: 0.1}
-    LineColor: {r: 0, g: 1, b: 0, a: 1}
-    LineWidth: 0.01
+    LineColor: {r: 0.75294125, g: 0.5019608, b: 0.31764707, a: 1}
+    LineWidth: 0.008
   - Metric: 2
     Visualizer: {fileID: 1863523893060289597}
     YRange: {x: 0.5, y: 5}
-    LineColor: {r: 0, g: 0, b: 1, a: 1}
-    LineWidth: 0.01
+    LineColor: {r: 0.9843138, g: 0.7019608, b: 0.43137258, a: 1}
+    LineWidth: 0.008
   - Metric: 3
     Visualizer: {fileID: 799524844568015476}
     YRange: {x: 1, y: 10}
-    LineColor: {r: 1, g: 0.92156863, b: 0.015686275, a: 1}
-    LineWidth: 0.01
+    LineColor: {r: 0, g: 0.6901961, b: 0.34117648, a: 1}
+    LineWidth: 0.008
   - Metric: 5
     Visualizer: {fileID: 7920079459635710226}
     YRange: {x: 0, y: 1}
-    LineColor: {r: 1, g: 0, b: 1, a: 1}
-    LineWidth: 0.01
+    LineColor: {r: 0.8941177, g: 0.47450984, b: 0.39607847, a: 1}
+    LineWidth: 0.008
   graphWindowSeconds: 10
   graphMaxSamples: 2048
   useDynamicYRange: 1
@@ -164,21 +164,21 @@ MonoBehaviour:
   m_EditorClassIdentifier: Amp::AmpPortableDataViz.Presentation.Visualization.AudienceDataManualDriver
   sourceId: audience-manual
   deviceId: 
-  tonicElectrodermalActivityStdDev: -1.2070177
-  temperatureRateOfChangeStdDev: 0.66701746
-  skinConductanceResponseFrequencyStdDev: -1.9112527
-  heartRateStdDev: -0.6469159
-  interBeatIntervalStdDev: 0.24184549
-  arousal: 1.330973
-  valence: 1.5204622
-  engagement: 0.10673507
+  tonicElectrodermalActivityStdDev: -1.5096805
+  temperatureRateOfChangeStdDev: 0.19960499
+  skinConductanceResponseFrequencyStdDev: -1.5650859
+  heartRateStdDev: -0.46501493
+  interBeatIntervalStdDev: -2.1796074
+  arousal: 1.0824391
+  valence: 0.65447956
+  engagement: 0.52450794
   sourceMode: 1
   autoEmit: 1
   animateProceduralNoise: 1
   timeScale: 0.35
   noiseFrequency: 0.75
   noiseSeed: 0.1234
-  noiseOffset: 80.026794
+  noiseOffset: 98.04877
   onSampleEmitted:
     m_PersistentCalls:
       m_Calls: []
@@ -241,30 +241,32 @@ MonoBehaviour:
   - Metric: 0
     Visualizer: {fileID: 5610035945543791327}
     YRange: {x: 0.01, y: 0.5}
-    LineColor: {r: 1, g: 0, b: 0, a: 1}
-    LineWidth: 0.02
+    LineColor: {r: 0.10588236, g: 0.96470594, b: 0.7137255, a: 1}
+    LineWidth: 0.008
   - Metric: 1
     Visualizer: {fileID: 7872482145564960264}
     YRange: {x: 0.001, y: 0.1}
-    LineColor: {r: 0, g: 1, b: 0, a: 1}
-    LineWidth: 0.02
+    LineColor: {r: 0.75294125, g: 0.5019608, b: 0.31764707, a: 1}
+    LineWidth: 0.008
   - Metric: 2
     Visualizer: {fileID: 1863523893060289597}
     YRange: {x: 0.5, y: 5}
-    LineColor: {r: 0, g: 0, b: 1, a: 1}
-    LineWidth: 0.02
+    LineColor: {r: 0.9843138, g: 0.7019608, b: 0.43137258, a: 1}
+    LineWidth: 0.008
   - Metric: 3
     Visualizer: {fileID: 799524844568015476}
     YRange: {x: 1, y: 10}
-    LineColor: {r: 1, g: 0.92156863, b: 0.015686275, a: 1}
-    LineWidth: 0.02
+    LineColor: {r: 0, g: 0.6901961, b: 0.34117648, a: 1}
+    LineWidth: 0.008
   - Metric: 5
     Visualizer: {fileID: 7920079459635710226}
     YRange: {x: 0, y: 1}
-    LineColor: {r: 1, g: 0, b: 1, a: 1}
-    LineWidth: 0.02
+    LineColor: {r: 0.8941177, g: 0.47450984, b: 0.39607847, a: 1}
+    LineWidth: 0.008
   graphWindowSeconds: 10
   graphMaxSamples: 2048
+  useGraphTemporalSmoothing: 1
+  graphSmoothingHalfLifeSeconds: 0.4
   useDynamicYRange: 1
   dynamicYRangeStdDevMultiplier: 2.5
   dynamicYRangeMinRangeFraction: 0.05
@@ -528,7 +530,7 @@ LineRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 2100000, guid: 67e56aaee4dc4c04485f150d72aa7389, type: 2}
+  - {fileID: 2100000, guid: abb49251ee27f2844825dd235b21d922, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -800,7 +802,7 @@ LineRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 2100000, guid: 67e56aaee4dc4c04485f150d72aa7389, type: 2}
+  - {fileID: 2100000, guid: abb49251ee27f2844825dd235b21d922, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -1513,7 +1515,7 @@ LineRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 2100000, guid: 67e56aaee4dc4c04485f150d72aa7389, type: 2}
+  - {fileID: 2100000, guid: abb49251ee27f2844825dd235b21d922, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -1677,7 +1679,7 @@ LineRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 2100000, guid: 67e56aaee4dc4c04485f150d72aa7389, type: 2}
+  - {fileID: 2100000, guid: abb49251ee27f2844825dd235b21d922, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -2187,7 +2189,7 @@ LineRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 2100000, guid: 67e56aaee4dc4c04485f150d72aa7389, type: 2}
+  - {fileID: 2100000, guid: abb49251ee27f2844825dd235b21d922, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
