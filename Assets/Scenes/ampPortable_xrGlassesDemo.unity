@@ -1184,6 +1184,7 @@ MonoBehaviour:
   - {fileID: 2056354646}
   - {fileID: 1165166119}
   - {fileID: 645856976}
+  - {fileID: 233017175}
   startIndex: 0
   applyStartupState: 1
 --- !u!114 &1076767362
@@ -1926,6 +1927,9 @@ MonoBehaviour:
   DeviceLabelFontSize: 0.22
   DeviceLabelColor: {r: 1, g: 1, b: 1, a: 1}
   AutoSpawnAudienceVisualsFromChannels: 1
+  AutoSpawnArtistVizFromChannels: 1
+  ArtistVizPrefab: {fileID: 8059361543654115388, guid: cc161b297d65a6d46bb6f1d60e597c1a, type: 3}
+  ArtistVizParent: {fileID: 233017176}
   UseIndividualSensorEngagement: 1
   SensorEngagementChannelTemplate: device:{serial}:engagement
   SensorEngagementChannelOverrides: []

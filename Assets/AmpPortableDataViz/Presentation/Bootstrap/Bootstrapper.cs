@@ -78,6 +78,11 @@ namespace AmpPortableDataViz.Presentation.Bootstrap
         [Header("Audience Signal Visual Settings")]
         public bool AutoSpawnAudienceVisualsFromChannels = true;
 
+        [Header("Artist Visual Settings")]
+        public bool AutoSpawnArtistVizFromChannels = true;
+        public GameObject ArtistVizPrefab;
+        public Transform ArtistVizParent;
+
         [Header("Individual Sensor Engagement")]
         public bool UseIndividualSensorEngagement = true;
         [Tooltip("Use {serial}, {sensorId}, or {0} where the sensor serial belongs in the Redis channel name.")]
@@ -222,6 +227,7 @@ namespace AmpPortableDataViz.Presentation.Bootstrap
         private RayNeoTempleSensorStreamCycler _sensorStreamCycler;
         private GameObject _selectedParticleVisual;
         private GameObject _selectedGraphVisual;
+        private GameObject _selectedArtistVisual;
         private GameObject _sensorHudObject;
 
         private void Awake()
@@ -540,8 +546,13 @@ namespace AmpPortableDataViz.Presentation.Bootstrap
             bool shouldSpawnAudienceVisuals = useRedis && hasRedisEndpoint && redisReady && AutoSpawnAudienceVisualsFromChannels && visualPrefabHasAudienceBinding;
             bool graphPrefabHasAudienceBinding = GraphPrefab != null && GraphPrefab.GetComponentInChildren<AudienceSignalBinding>() != null;
             bool shouldSpawnAudienceGraphVisuals = useRedis && hasRedisEndpoint && redisReady && AutoSpawnGraphVisualsFromChannels && graphPrefabHasAudienceBinding;
+            bool artistPrefabHasVisualizerBinding = ArtistVizPrefab != null &&
+                ArtistVizPrefab.GetComponentInChildren<AudienceSignalVisualizerBinding>(true) != null &&
+                ArtistVizPrefab.GetComponentInChildren<ArtistVizVisualizer>(true) != null;
+            bool shouldSpawnArtistViz = useRedis && hasRedisEndpoint && redisReady &&
+                UseSingleSelectedSensorStream && AutoSpawnArtistVizFromChannels && artistPrefabHasVisualizerBinding;
 
-            if (shouldSpawnAudienceVisuals || shouldSpawnAudienceGraphVisuals)
+            if (shouldSpawnAudienceVisuals || shouldSpawnAudienceGraphVisuals || shouldSpawnArtistViz)
             {
                 var sensorDefinitions = BuildAudienceDeviceChannelDefinitions(redisChannels);
                 sensorDefinitions = FilterAudienceToConfiguredDevices(sensorDefinitions, EmotionDeviceIds);
@@ -553,14 +564,18 @@ namespace AmpPortableDataViz.Presentation.Bootstrap
             }
 
             bool shouldUseSelectedSensorStream = UseSingleSelectedSensorStream &&
-                (shouldSpawnAudienceVisuals || shouldSpawnAudienceGraphVisuals);
+                (shouldSpawnAudienceVisuals || shouldSpawnAudienceGraphVisuals || shouldSpawnArtistViz);
             if (shouldUseSelectedSensorStream)
             {
                 ClearAudienceDeviceVisuals();
                 ClearAudienceGraphDeviceVisuals();
                 ClearEmotionDeviceVisuals();
                 ClearGraphDeviceVisuals();
-                EnsureSelectedSensorStreamMode(redisChannels, shouldSpawnAudienceVisuals, shouldSpawnAudienceGraphVisuals);
+                EnsureSelectedSensorStreamMode(
+                    redisChannels,
+                    shouldSpawnAudienceVisuals,
+                    shouldSpawnAudienceGraphVisuals,
+                    shouldSpawnArtistViz);
                 return;
             }
 
@@ -989,7 +1004,8 @@ namespace AmpPortableDataViz.Presentation.Bootstrap
         private void EnsureSelectedSensorStreamMode(
             string[] redisChannels,
             bool spawnParticleVisual,
-            bool spawnGraphVisual)
+            bool spawnGraphVisual,
+            bool spawnArtistVisual)
         {
             ClearSelectedSensorStreamMode();
 
@@ -1066,9 +1082,20 @@ namespace AmpPortableDataViz.Presentation.Bootstrap
                     isGraphVisual: true);
             }
 
+            if (spawnArtistVisual)
+            {
+                _selectedArtistVisual = SpawnSelectedSensorVisual(
+                    ArtistVizPrefab,
+                    ArtistVizParent,
+                    "SelectedSensor",
+                    isGraphVisual: false,
+                    positionAtParentOrigin: true);
+            }
+
             var visualizerBindings = new List<AudienceSignalVisualizerBinding>();
             AddVisualizerBindings(_selectedParticleVisual, visualizerBindings);
             AddVisualizerBindings(_selectedGraphVisual, visualizerBindings);
+            AddVisualizerBindings(_selectedArtistVisual, visualizerBindings);
 
             EnsureSensorStreamPresentation(
                 _selectedSensorSources.Select(source => source.Binding),
@@ -1081,7 +1108,8 @@ namespace AmpPortableDataViz.Presentation.Bootstrap
             GameObject prefab,
             Transform parent,
             string suffix,
-            bool isGraphVisual)
+            bool isGraphVisual,
+            bool positionAtParentOrigin = false)
         {
             if (prefab == null)
             {
@@ -1092,7 +1120,11 @@ namespace AmpPortableDataViz.Presentation.Bootstrap
             var instance = hasCustomParent ? Instantiate(prefab, parent) : Instantiate(prefab);
             instance.name = $"{prefab.name}_{suffix}";
 
-            if (isGraphVisual)
+            if (positionAtParentOrigin)
+            {
+                PositionAtParentOrigin(instance.transform, hasCustomParent);
+            }
+            else if (isGraphVisual)
             {
                 PositionGraphGroup(instance.transform, 0, hasCustomParent);
             }
@@ -1128,6 +1160,24 @@ namespace AmpPortableDataViz.Presentation.Bootstrap
             }
 
             return instance;
+        }
+
+        private void PositionAtParentOrigin(Transform target, bool useLocalSpace)
+        {
+            if (target == null)
+            {
+                return;
+            }
+
+            if (useLocalSpace)
+            {
+                target.localPosition = Vector3.zero;
+                target.localRotation = Quaternion.identity;
+                return;
+            }
+
+            target.position = AnchorPosition;
+            target.rotation = Quaternion.Euler(AnchorRotationEuler);
         }
 
         private void EnsureSensorStreamPresentation(
@@ -2055,6 +2105,12 @@ namespace AmpPortableDataViz.Presentation.Bootstrap
             {
                 Destroy(_selectedGraphVisual);
                 _selectedGraphVisual = null;
+            }
+
+            if (_selectedArtistVisual != null)
+            {
+                Destroy(_selectedArtistVisual);
+                _selectedArtistVisual = null;
             }
 
             if (_sensorHudObject != null)

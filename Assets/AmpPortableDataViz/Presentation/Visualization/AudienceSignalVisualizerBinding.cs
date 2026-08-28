@@ -46,6 +46,11 @@ namespace AmpPortableDataViz.Presentation.Visualization
         [SerializeField] private AudienceSignalToParticleMeshMapper.Settings particleMapperSettings =
             AudienceSignalToParticleMeshMapper.CreateDefaultSettings();
 
+        [Header("Artist Viz Target")]
+        [SerializeField] private ArtistVizVisualizer artistVizVisualizer;
+        [SerializeField] private AudienceSignalToArtistVizMapper.Settings artistVizMapperSettings =
+            AudienceSignalToArtistVizMapper.CreateDefaultSettings();
+
         [Header("Particle Mesh Dynamic Physio Amplification")]
         [SerializeField] private ParticleMeshPhysioAmplificationSettings particlePhysioAmplificationSettings =
             ParticleMeshPhysioAmplificationSettings.CreateDefault();
@@ -71,6 +76,7 @@ namespace AmpPortableDataViz.Presentation.Visualization
         [SerializeField] private bool logReceivedSamples;
 
         private IMapper<AudienceSignalSample, ParticleMeshSignalSample> _particleMapper;
+        private IMapper<AudienceSignalSample, ArtistVizParams> _artistVizMapper;
         private readonly ParticleMeshPhysioAmplifier _particlePhysioAmplifier = new ParticleMeshPhysioAmplifier();
         private GraphSeriesToGraphParamsMapper[] _graphMappers;
         private List<Vector2>[] _graphSamples;
@@ -172,6 +178,11 @@ namespace AmpPortableDataViz.Presentation.Visualization
             particleMeshVisualizer = visualizer;
         }
 
+        public void ConfigureArtistVizTarget(ArtistVizVisualizer visualizer)
+        {
+            artistVizVisualizer = visualizer;
+        }
+
         private void ResolveReferences()
         {
             if (liveSource == null)
@@ -192,6 +203,11 @@ namespace AmpPortableDataViz.Presentation.Visualization
             if (particleMeshVisualizer == null)
             {
                 particleMeshVisualizer = GetComponent<ParticleMeshVisualizer>();
+            }
+
+            if (artistVizVisualizer == null)
+            {
+                artistVizVisualizer = GetComponent<ArtistVizVisualizer>();
             }
         }
 
@@ -295,6 +311,7 @@ namespace AmpPortableDataViz.Presentation.Visualization
             }
 
             ApplyParticleMesh(frame);
+            ApplyArtistViz(frame);
             ApplyGraphStreams(frame);
         }
 
@@ -313,6 +330,17 @@ namespace AmpPortableDataViz.Presentation.Visualization
             ParticleMeshSignalSample parameters = _particleMapper.Map(in frame);
             parameters = _particlePhysioAmplifier.Apply(parameters, frame.TimestampTicksUtc, particlePhysioAmplificationSettings);
             particleMeshVisualizer.Apply(parameters, frame.TimestampTicksUtc);
+        }
+
+        private void ApplyArtistViz(DataFrame<AudienceSignalSample> frame)
+        {
+            if (artistVizVisualizer == null || _artistVizMapper == null)
+            {
+                return;
+            }
+
+            ArtistVizParams parameters = _artistVizMapper.Map(in frame);
+            artistVizVisualizer.Apply(parameters, frame.TimestampTicksUtc);
         }
 
         private void ApplyGraphStreams(DataFrame<AudienceSignalSample> frame)
@@ -445,6 +473,12 @@ namespace AmpPortableDataViz.Presentation.Visualization
             if (_particleMapper is AudienceSignalToParticleMeshMapper particleMapper)
             {
                 particleMapper.CurrentSettings = particleMapperSettings;
+            }
+
+            _artistVizMapper ??= new AudienceSignalToArtistVizMapper(artistVizMapperSettings);
+            if (_artistVizMapper is AudienceSignalToArtistVizMapper artistVizMapper)
+            {
+                artistVizMapper.CurrentSettings = artistVizMapperSettings;
             }
         }
 
