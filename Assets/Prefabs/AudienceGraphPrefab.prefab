@@ -164,21 +164,21 @@ MonoBehaviour:
   m_EditorClassIdentifier: Amp::AmpPortableDataViz.Presentation.Visualization.AudienceDataManualDriver
   sourceId: audience-manual
   deviceId: 
-  tonicElectrodermalActivityStdDev: -1.5096805
-  temperatureRateOfChangeStdDev: 0.19960499
-  skinConductanceResponseFrequencyStdDev: -1.5650859
-  heartRateStdDev: -0.46501493
-  interBeatIntervalStdDev: -2.1796074
-  arousal: 1.0824391
-  valence: 0.65447956
-  engagement: 0.52450794
+  tonicElectrodermalActivityStdDev: 1.3437567
+  temperatureRateOfChangeStdDev: -1.3297244
+  skinConductanceResponseFrequencyStdDev: 0.7437415
+  heartRateStdDev: -0.11146027
+  interBeatIntervalStdDev: 1.8923521
+  arousal: 1.100171
+  valence: 1.6060402
+  engagement: 0.29190424
   sourceMode: 1
   autoEmit: 1
   animateProceduralNoise: 1
   timeScale: 0.35
   noiseFrequency: 0.75
   noiseSeed: 0.1234
-  noiseOffset: 98.04877
+  noiseOffset: 108.28531
   onSampleEmitted:
     m_PersistentCalls:
       m_Calls: []
@@ -634,7 +634,7 @@ MonoBehaviour:
   showValueLabel: 1
   valueLabel: {fileID: 0}
   valueLabelOffset: {x: 0.08, y: 0, z: 0}
-  valueLabelFontSize: 0.8
+  valueLabelFontSize: 1
   valueLabelColor: {r: 1, g: 1, b: 1, a: 1}
   valueLabelUseLineColor: 1
   valueLabelFormat: 0.00
@@ -906,7 +906,7 @@ MonoBehaviour:
   showValueLabel: 1
   valueLabel: {fileID: 0}
   valueLabelOffset: {x: 0.08, y: 0, z: 0}
-  valueLabelFontSize: 0.8
+  valueLabelFontSize: 1
   valueLabelColor: {r: 1, g: 1, b: 1, a: 1}
   valueLabelUseLineColor: 1
   valueLabelFormat: 0.00
@@ -1073,8 +1073,8 @@ MonoBehaviour:
   m_faceColor:
     serializedVersion: 2
     rgba: 4294967295
-  m_fontSize: 0.8
-  m_fontSizeBase: 0.8
+  m_fontSize: 1
+  m_fontSizeBase: 1
   m_fontWeight: 400
   m_enableAutoSizing: 0
   m_fontSizeMin: 18
@@ -1244,8 +1244,8 @@ MonoBehaviour:
   m_faceColor:
     serializedVersion: 2
     rgba: 4294967295
-  m_fontSize: 0.8
-  m_fontSizeBase: 0.8
+  m_fontSize: 1
+  m_fontSizeBase: 1
   m_fontWeight: 400
   m_enableAutoSizing: 0
   m_fontSizeMin: 18
@@ -1415,8 +1415,8 @@ MonoBehaviour:
   m_faceColor:
     serializedVersion: 2
     rgba: 4294967295
-  m_fontSize: 0.8
-  m_fontSizeBase: 0.8
+  m_fontSize: 1
+  m_fontSizeBase: 1
   m_fontWeight: 400
   m_enableAutoSizing: 0
   m_fontSizeMin: 18
@@ -1619,7 +1619,7 @@ MonoBehaviour:
   showValueLabel: 1
   valueLabel: {fileID: 0}
   valueLabelOffset: {x: 0.08, y: 0, z: 0}
-  valueLabelFontSize: 0.8
+  valueLabelFontSize: 1
   valueLabelColor: {r: 1, g: 1, b: 1, a: 1}
   valueLabelUseLineColor: 1
   valueLabelFormat: 0.00
@@ -1783,7 +1783,7 @@ MonoBehaviour:
   showValueLabel: 1
   valueLabel: {fileID: 0}
   valueLabelOffset: {x: 0.08, y: 0, z: 0}
-  valueLabelFontSize: 0.8
+  valueLabelFontSize: 1
   valueLabelColor: {r: 1, g: 1, b: 1, a: 1}
   valueLabelUseLineColor: 1
   valueLabelFormat: 0.00
@@ -1914,8 +1914,8 @@ MonoBehaviour:
   m_faceColor:
     serializedVersion: 2
     rgba: 4294967295
-  m_fontSize: 0.8
-  m_fontSizeBase: 0.8
+  m_fontSize: 1
+  m_fontSizeBase: 1
   m_fontWeight: 400
   m_enableAutoSizing: 0
   m_fontSizeMin: 18
@@ -2085,8 +2085,8 @@ MonoBehaviour:
   m_faceColor:
     serializedVersion: 2
     rgba: 4294967295
-  m_fontSize: 0.8
-  m_fontSizeBase: 0.8
+  m_fontSize: 1
+  m_fontSizeBase: 1
   m_fontWeight: 400
   m_enableAutoSizing: 0
   m_fontSizeMin: 18
@@ -2293,7 +2293,7 @@ MonoBehaviour:
   showValueLabel: 1
   valueLabel: {fileID: 0}
   valueLabelOffset: {x: 0.08, y: 0, z: 0}
-  valueLabelFontSize: 0.8
+  valueLabelFontSize: 1
   valueLabelColor: {r: 1, g: 1, b: 1, a: 1}
   valueLabelUseLineColor: 1
   valueLabelFormat: 0.00
