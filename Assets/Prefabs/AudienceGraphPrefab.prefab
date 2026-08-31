@@ -118,27 +118,27 @@ MonoBehaviour:
   - Metric: 0
     Visualizer: {fileID: 5610035945543791327}
     YRange: {x: 0.01, y: 0.5}
-    LineColor: {r: 0.10588236, g: 0.96470594, b: 0.7137255, a: 1}
+    LineColor: {r: 0.078431375, g: 0.94509804, b: 0.75686276, a: 1}
     LineWidth: 0.008
   - Metric: 1
     Visualizer: {fileID: 7872482145564960264}
     YRange: {x: 0.001, y: 0.1}
-    LineColor: {r: 0.75294125, g: 0.5019608, b: 0.31764707, a: 1}
+    LineColor: {r: 1, g: 0.54901963, b: 0.25882354, a: 1}
     LineWidth: 0.008
   - Metric: 2
     Visualizer: {fileID: 1863523893060289597}
     YRange: {x: 0.5, y: 5}
-    LineColor: {r: 0.9843138, g: 0.7019608, b: 0.43137258, a: 1}
+    LineColor: {r: 1, g: 0.8392157, b: 0.3529412, a: 1}
     LineWidth: 0.008
   - Metric: 3
     Visualizer: {fileID: 799524844568015476}
     YRange: {x: 1, y: 10}
-    LineColor: {r: 0, g: 0.6901961, b: 0.34117648, a: 1}
+    LineColor: {r: 0.40784314, g: 0.9490196, b: 0.2901961, a: 1}
     LineWidth: 0.008
   - Metric: 5
     Visualizer: {fileID: 7920079459635710226}
     YRange: {x: 0, y: 1}
-    LineColor: {r: 0.8941177, g: 0.47450984, b: 0.39607847, a: 1}
+    LineColor: {r: 1, g: 0.36078432, b: 0.47843137, a: 1}
     LineWidth: 0.008
   graphWindowSeconds: 10
   graphMaxSamples: 2048
@@ -164,21 +164,21 @@ MonoBehaviour:
   m_EditorClassIdentifier: Amp::AmpPortableDataViz.Presentation.Visualization.AudienceDataManualDriver
   sourceId: audience-manual
   deviceId: 
-  tonicElectrodermalActivityStdDev: 1.3437567
-  temperatureRateOfChangeStdDev: -1.3297244
-  skinConductanceResponseFrequencyStdDev: 0.7437415
-  heartRateStdDev: -0.11146027
-  interBeatIntervalStdDev: 1.8923521
-  arousal: 1.100171
-  valence: 1.6060402
-  engagement: 0.29190424
+  tonicElectrodermalActivityStdDev: -1.2266641
+  temperatureRateOfChangeStdDev: -1.2304635
+  skinConductanceResponseFrequencyStdDev: 1.5505571
+  heartRateStdDev: -0.1477232
+  interBeatIntervalStdDev: 0.40767324
+  arousal: 0.35583746
+  valence: 0.88706
+  engagement: 0.5001398
   sourceMode: 1
   autoEmit: 1
   animateProceduralNoise: 1
   timeScale: 0.35
   noiseFrequency: 0.75
   noiseSeed: 0.1234
-  noiseOffset: 108.28531
+  noiseOffset: 135.02577
   onSampleEmitted:
     m_PersistentCalls:
       m_Calls: []
@@ -229,6 +229,13 @@ MonoBehaviour:
     TemperatureRateOfChangeRange: {x: 0, y: 3}
     SkinConductanceResponseFrequencyRange: {x: 0, y: 3}
     HeartRateRange: {x: 0, y: 3}
+  artistVizVisualizer: {fileID: 0}
+  artistVizMapperSettings:
+    PhysioZScoreRange: {x: -3, y: 3}
+    TonicElectrodermalActivityRange: {x: 0.01, y: 0.5}
+    TemperatureRateOfChangeRange: {x: 0.001, y: 0.1}
+    SkinConductanceResponseFrequencyRange: {x: 0.5, y: 5}
+    HeartRateRange: {x: 1, y: 10}
   particlePhysioAmplificationSettings:
     Enabled: 1
     WindowSeconds: 10
@@ -241,27 +248,27 @@ MonoBehaviour:
   - Metric: 0
     Visualizer: {fileID: 5610035945543791327}
     YRange: {x: 0.01, y: 0.5}
-    LineColor: {r: 0.10588236, g: 0.96470594, b: 0.7137255, a: 1}
+    LineColor: {r: 0.078431375, g: 0.94509804, b: 0.75686276, a: 1}
     LineWidth: 0.008
   - Metric: 1
     Visualizer: {fileID: 7872482145564960264}
     YRange: {x: 0.001, y: 0.1}
-    LineColor: {r: 0.75294125, g: 0.5019608, b: 0.31764707, a: 1}
+    LineColor: {r: 1, g: 0.54901963, b: 0.25882354, a: 1}
     LineWidth: 0.008
   - Metric: 2
     Visualizer: {fileID: 1863523893060289597}
     YRange: {x: 0.5, y: 5}
-    LineColor: {r: 0.9843138, g: 0.7019608, b: 0.43137258, a: 1}
+    LineColor: {r: 1, g: 0.8392157, b: 0.3529412, a: 1}
     LineWidth: 0.008
   - Metric: 3
     Visualizer: {fileID: 799524844568015476}
     YRange: {x: 1, y: 10}
-    LineColor: {r: 0, g: 0.6901961, b: 0.34117648, a: 1}
+    LineColor: {r: 0.40784314, g: 0.9490196, b: 0.2901961, a: 1}
     LineWidth: 0.008
   - Metric: 5
     Visualizer: {fileID: 7920079459635710226}
     YRange: {x: 0, y: 1}
-    LineColor: {r: 0.8941177, g: 0.47450984, b: 0.39607847, a: 1}
+    LineColor: {r: 1, g: 0.3607843, b: 0.47843137, a: 1}
     LineWidth: 0.008
   graphWindowSeconds: 10
   graphMaxSamples: 2048
