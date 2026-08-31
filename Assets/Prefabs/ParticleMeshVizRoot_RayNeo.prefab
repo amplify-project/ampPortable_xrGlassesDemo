@@ -34,39 +34,39 @@ PrefabInstance:
       objectReference: {fileID: 2100000, guid: 72558d4b97c34224ab088264be7d1563, type: 2}
     - target: {fileID: 5099490702948499052, guid: 74e05b7be47103748b0057db90b75d78, type: 3}
       propertyPath: arousal
-      value: 0.5334402
+      value: 0.59989303
       objectReference: {fileID: 0}
     - target: {fileID: 5099490702948499052, guid: 74e05b7be47103748b0057db90b75d78, type: 3}
       propertyPath: valence
-      value: 1.5454404
+      value: 0.26474687
       objectReference: {fileID: 0}
     - target: {fileID: 5099490702948499052, guid: 74e05b7be47103748b0057db90b75d78, type: 3}
       propertyPath: engagement
-      value: 0.36065584
+      value: 0.21718702
       objectReference: {fileID: 0}
     - target: {fileID: 5099490702948499052, guid: 74e05b7be47103748b0057db90b75d78, type: 3}
       propertyPath: noiseOffset
-      value: 587.9564
+      value: 592.0807
       objectReference: {fileID: 0}
     - target: {fileID: 5099490702948499052, guid: 74e05b7be47103748b0057db90b75d78, type: 3}
       propertyPath: heartRateStdDev
-      value: -1.2449595
+      value: -1.5641603
       objectReference: {fileID: 0}
     - target: {fileID: 5099490702948499052, guid: 74e05b7be47103748b0057db90b75d78, type: 3}
       propertyPath: interBeatIntervalStdDev
-      value: -1.6001306
+      value: 0.2790302
       objectReference: {fileID: 0}
     - target: {fileID: 5099490702948499052, guid: 74e05b7be47103748b0057db90b75d78, type: 3}
       propertyPath: temperatureRateOfChangeStdDev
-      value: -1.583982
+      value: -0.4740799
       objectReference: {fileID: 0}
     - target: {fileID: 5099490702948499052, guid: 74e05b7be47103748b0057db90b75d78, type: 3}
       propertyPath: tonicElectrodermalActivityStdDev
-      value: -0.15325516
+      value: 0.378837
       objectReference: {fileID: 0}
     - target: {fileID: 5099490702948499052, guid: 74e05b7be47103748b0057db90b75d78, type: 3}
       propertyPath: skinConductanceResponseFrequencyStdDev
-      value: 0.58306754
+      value: -0.039689183
       objectReference: {fileID: 0}
     - target: {fileID: 7649927837592745194, guid: 74e05b7be47103748b0057db90b75d78, type: 3}
       propertyPath: m_Materials.Array.data[0]
@@ -162,7 +162,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 8489548096852947066, guid: 74e05b7be47103748b0057db90b75d78, type: 3}
       propertyPath: temperatureTrailLineWidth
-      value: 0.055
+      value: 0.0253
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
