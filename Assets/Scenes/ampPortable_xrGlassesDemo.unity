@@ -748,6 +748,10 @@ PrefabInstance:
       propertyPath: m_TrackingStateInput.m_Action.m_Name
       value: Tracking State Input
       objectReference: {fileID: 0}
+    - target: {fileID: 1925591498, guid: f82accd910f54e44cb54d6e87ad284d6, type: 3}
+      propertyPath: useCustomRay
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 8340958969312374639, guid: f82accd910f54e44cb54d6e87ad284d6, type: 3}
       propertyPath: m_Name
       value: XR Plugin
