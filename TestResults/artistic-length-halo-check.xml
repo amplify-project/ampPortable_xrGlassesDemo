@@ -1,0 +1,117 @@
+<?xml version="1.0" encoding="utf-8"?>
+<test-run id="2" testcasecount="9" result="Passed" total="9" passed="9" failed="0" inconclusive="0" skipped="0" asserts="0" engine-version="3.5.0.0" clr-version="4.0.30319.42000" start-time="2026-10-13 12:06:13Z" end-time="2026-10-13 12:06:13Z" duration="0.2505693">
+  <test-suite type="TestSuite" id="1253" name="XR Score Viewer" fullname="XR Score Viewer" runstate="Runnable" testcasecount="196" result="Passed" start-time="2026-10-13 12:06:13Z" end-time="2026-10-13 12:06:13Z" duration="0.250569" total="9" passed="9" failed="0" inconclusive="0" skipped="0" asserts="0">
+    <properties>
+      <property name="platform" value="PlayMode" />
+    </properties>
+    <test-suite type="Assembly" id="1245" name="Tests.dll" fullname="C:/Users/Bryan Dunphy/Documents/UnityProjects/ampPortable_xrGlassesDemo/.utmp/artistic-elements-validation/Library/ScriptAssemblies/Tests.dll" runstate="Runnable" testcasecount="196" result="Passed" start-time="2026-10-13 12:06:13Z" end-time="2026-10-13 12:06:13Z" duration="0.243345" total="9" passed="9" failed="0" inconclusive="0" skipped="0" asserts="0">
+      <properties>
+        <property name="_PID" value="351304" />
+        <property name="_APPDOMAIN" value="Unity Child Domain" />
+        <property name="platform" value="PlayMode" />
+        <property name="EditorOnly" value="False" />
+      </properties>
+      <test-suite type="TestSuite" id="1246" name="AmpPortableDataViz" fullname="AmpPortableDataViz" runstate="Runnable" testcasecount="196" result="Passed" start-time="2026-10-13 12:06:13Z" end-time="2026-10-13 12:06:13Z" duration="0.240109" total="9" passed="9" failed="0" inconclusive="0" skipped="0" asserts="0">
+        <properties />
+        <test-suite type="TestSuite" id="1247" name="Tests" fullname="AmpPortableDataViz.Tests" runstate="Runnable" testcasecount="196" result="Passed" start-time="2026-10-13 12:06:13Z" end-time="2026-10-13 12:06:13Z" duration="0.237291" total="9" passed="9" failed="0" inconclusive="0" skipped="0" asserts="0">
+          <properties />
+          <test-suite type="TestSuite" id="1250" name="PlayMode" fullname="AmpPortableDataViz.Tests.PlayMode" runstate="Runnable" testcasecount="160" result="Passed" start-time="2026-10-13 12:06:13Z" end-time="2026-10-13 12:06:13Z" duration="0.234317" total="9" passed="9" failed="0" inconclusive="0" skipped="0" asserts="0">
+            <properties />
+            <test-suite type="TestFixture" id="1158" name="ParticleMeshVisualizerOrthogonalityTests" fullname="AmpPortableDataViz.Tests.PlayMode.ParticleMeshVisualizerOrthogonalityTests" classname="AmpPortableDataViz.Tests.PlayMode.ParticleMeshVisualizerOrthogonalityTests" runstate="Runnable" testcasecount="9" result="Passed" start-time="2026-10-13 12:06:13Z" end-time="2026-10-13 12:06:13Z" duration="0.230608" total="9" passed="9" failed="0" inconclusive="0" skipped="0" asserts="0">
+              <properties />
+              <test-case id="1163" name="CornerHalos_AreCreatedAtRenderedCornerParticles" fullname="AmpPortableDataViz.Tests.PlayMode.ParticleMeshVisualizerOrthogonalityTests.CornerHalos_AreCreatedAtRenderedCornerParticles" methodname="CornerHalos_AreCreatedAtRenderedCornerParticles" classname="AmpPortableDataViz.Tests.PlayMode.ParticleMeshVisualizerOrthogonalityTests" runstate="Runnable" seed="1707041177" result="Passed" start-time="2026-10-13 12:06:13Z" end-time="2026-10-13 12:06:13Z" duration="0.051562" asserts="0">
+                <properties>
+                  <property name="_JOINTYPE" value="UnityCombinatorial" />
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+                <output><![CDATA[SendMessage cannot be called during Awake, CheckConsistency, or OnValidate (corner-heart-rate: OnMeshFilterChanged)
+ParticleMeshVisualizer received seq=n/a ts=1 Device=device-a, TonicEDA=0.000, TempRate=0.000, SCRFreq=0.000, HeartRate=1.000, Engagement=0.000
+]]></output>
+              </test-case>
+              <test-case id="1164" name="CornerHalos_RenderOpenUpperSemicircles" fullname="AmpPortableDataViz.Tests.PlayMode.ParticleMeshVisualizerOrthogonalityTests.CornerHalos_RenderOpenUpperSemicircles" methodname="CornerHalos_RenderOpenUpperSemicircles" classname="AmpPortableDataViz.Tests.PlayMode.ParticleMeshVisualizerOrthogonalityTests" runstate="Runnable" seed="489317589" result="Passed" start-time="2026-10-13 12:06:13Z" end-time="2026-10-13 12:06:13Z" duration="0.013157" asserts="0">
+                <properties>
+                  <property name="_JOINTYPE" value="UnityCombinatorial" />
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+                <output><![CDATA[SendMessage cannot be called during Awake, CheckConsistency, or OnValidate (semicircle-heart-rate: OnMeshFilterChanged)
+ParticleMeshVisualizer received seq=n/a ts=1 Device=device-a, TonicEDA=0.000, TempRate=0.000, SCRFreq=0.000, HeartRate=1.000, Engagement=0.500
+]]></output>
+              </test-case>
+              <test-case id="1165" name="CornerHalos_StaySynchronizedWithNegativeInsideAndPositiveOutside" fullname="AmpPortableDataViz.Tests.PlayMode.ParticleMeshVisualizerOrthogonalityTests.CornerHalos_StaySynchronizedWithNegativeInsideAndPositiveOutside" methodname="CornerHalos_StaySynchronizedWithNegativeInsideAndPositiveOutside" classname="AmpPortableDataViz.Tests.PlayMode.ParticleMeshVisualizerOrthogonalityTests" runstate="Runnable" seed="1126251365" result="Passed" start-time="2026-10-13 12:06:13Z" end-time="2026-10-13 12:06:13Z" duration="0.014819" asserts="0">
+                <properties>
+                  <property name="_JOINTYPE" value="UnityCombinatorial" />
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+                <output><![CDATA[SendMessage cannot be called during Awake, CheckConsistency, or OnValidate (negative-heart-rate: OnMeshFilterChanged)
+SendMessage cannot be called during Awake, CheckConsistency, or OnValidate (positive-heart-rate: OnMeshFilterChanged)
+ParticleMeshVisualizer received seq=n/a ts=1 Device=device-a, TonicEDA=0.000, TempRate=0.000, SCRFreq=0.000, HeartRate=-1.000, Engagement=0.000
+ParticleMeshVisualizer received seq=n/a ts=1 Device=device-b, TonicEDA=0.000, TempRate=0.000, SCRFreq=0.000, HeartRate=1.000, Engagement=1.000
+]]></output>
+              </test-case>
+              <test-case id="1168" name="CornerHalos_WhenGridDimensionsChange_RetargetNewCorners" fullname="AmpPortableDataViz.Tests.PlayMode.ParticleMeshVisualizerOrthogonalityTests.CornerHalos_WhenGridDimensionsChange_RetargetNewCorners" methodname="CornerHalos_WhenGridDimensionsChange_RetargetNewCorners" classname="AmpPortableDataViz.Tests.PlayMode.ParticleMeshVisualizerOrthogonalityTests" runstate="Runnable" seed="528091968" result="Passed" start-time="2026-10-13 12:06:13Z" end-time="2026-10-13 12:06:13Z" duration="0.007383" asserts="0">
+                <properties>
+                  <property name="_JOINTYPE" value="UnityCombinatorial" />
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+                <output><![CDATA[SendMessage cannot be called during Awake, CheckConsistency, or OnValidate (resized-corner-heart-rate: OnMeshFilterChanged)
+]]></output>
+              </test-case>
+              <test-case id="1166" name="CornerHalos_WhenHeartDataBecomesStale_FadeAllActiveRings" fullname="AmpPortableDataViz.Tests.PlayMode.ParticleMeshVisualizerOrthogonalityTests.CornerHalos_WhenHeartDataBecomesStale_FadeAllActiveRings" methodname="CornerHalos_WhenHeartDataBecomesStale_FadeAllActiveRings" classname="AmpPortableDataViz.Tests.PlayMode.ParticleMeshVisualizerOrthogonalityTests" runstate="Runnable" seed="1671899682" result="Passed" start-time="2026-10-13 12:06:13Z" end-time="2026-10-13 12:06:13Z" duration="0.106685" asserts="0">
+                <properties>
+                  <property name="_JOINTYPE" value="UnityCombinatorial" />
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+                <output><![CDATA[SendMessage cannot be called during Awake, CheckConsistency, or OnValidate (stale-heart-rate: OnMeshFilterChanged)
+ParticleMeshVisualizer received seq=n/a ts=1 Device=device-a, TonicEDA=0.000, TempRate=0.000, SCRFreq=0.000, HeartRate=1.000, Engagement=0.500
+]]></output>
+              </test-case>
+              <test-case id="1167" name="CornerHalos_WhenPhysiologyTimestampIsMissing_HideAllActiveRings" fullname="AmpPortableDataViz.Tests.PlayMode.ParticleMeshVisualizerOrthogonalityTests.CornerHalos_WhenPhysiologyTimestampIsMissing_HideAllActiveRings" methodname="CornerHalos_WhenPhysiologyTimestampIsMissing_HideAllActiveRings" classname="AmpPortableDataViz.Tests.PlayMode.ParticleMeshVisualizerOrthogonalityTests" runstate="Runnable" seed="1515046916" result="Passed" start-time="2026-10-13 12:06:13Z" end-time="2026-10-13 12:06:13Z" duration="0.006036" asserts="0">
+                <properties>
+                  <property name="_JOINTYPE" value="UnityCombinatorial" />
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+                <output><![CDATA[SendMessage cannot be called during Awake, CheckConsistency, or OnValidate (missing-heart-rate: OnMeshFilterChanged)
+ParticleMeshVisualizer received seq=n/a ts=0 Device=device-a, TonicEDA=0.000, TempRate=0.000, SCRFreq=0.000, HeartRate=1.000, Engagement=0.500
+]]></output>
+              </test-case>
+              <test-suite type="ParameterizedMethod" id="1161" name="CornerIndices_ResolveAllFourGridCorners" fullname="AmpPortableDataViz.Tests.PlayMode.ParticleMeshVisualizerOrthogonalityTests.CornerIndices_ResolveAllFourGridCorners" classname="AmpPortableDataViz.Tests.PlayMode.ParticleMeshVisualizerOrthogonalityTests" runstate="Runnable" testcasecount="2" result="Passed" start-time="2026-10-13 12:06:13Z" end-time="2026-10-13 12:06:13Z" duration="0.003551" total="2" passed="2" failed="0" inconclusive="0" skipped="0" asserts="0">
+                <properties />
+                <test-case id="1159" name="CornerIndices_ResolveAllFourGridCorners(5,4,0,4,15,19)" fullname="AmpPortableDataViz.Tests.PlayMode.ParticleMeshVisualizerOrthogonalityTests.CornerIndices_ResolveAllFourGridCorners(5,4,0,4,15,19)" methodname="CornerIndices_ResolveAllFourGridCorners" classname="AmpPortableDataViz.Tests.PlayMode.ParticleMeshVisualizerOrthogonalityTests" runstate="Runnable" seed="645323387" result="Passed" start-time="2026-10-13 12:06:13Z" end-time="2026-10-13 12:06:13Z" duration="0.001648" asserts="0">
+                  <properties>
+                    <property name="retryIteration" value="0" />
+                    <property name="repeatIteration" value="0" />
+                  </properties>
+                </test-case>
+                <test-case id="1160" name="CornerIndices_ResolveAllFourGridCorners(10,10,0,9,90,99)" fullname="AmpPortableDataViz.Tests.PlayMode.ParticleMeshVisualizerOrthogonalityTests.CornerIndices_ResolveAllFourGridCorners(10,10,0,9,90,99)" methodname="CornerIndices_ResolveAllFourGridCorners" classname="AmpPortableDataViz.Tests.PlayMode.ParticleMeshVisualizerOrthogonalityTests" runstate="Runnable" seed="1247940220" result="Passed" start-time="2026-10-13 12:06:13Z" end-time="2026-10-13 12:06:13Z" duration="0.000085" asserts="0">
+                  <properties>
+                    <property name="retryIteration" value="0" />
+                    <property name="repeatIteration" value="0" />
+                  </properties>
+                </test-case>
+              </test-suite>
+              <test-case id="1162" name="MainParticleSizeAndVisibility_DoNotDependOnOtherStreams" fullname="AmpPortableDataViz.Tests.PlayMode.ParticleMeshVisualizerOrthogonalityTests.MainParticleSizeAndVisibility_DoNotDependOnOtherStreams" methodname="MainParticleSizeAndVisibility_DoNotDependOnOtherStreams" classname="AmpPortableDataViz.Tests.PlayMode.ParticleMeshVisualizerOrthogonalityTests" runstate="Runnable" seed="1810719462" result="Passed" start-time="2026-10-13 12:06:13Z" end-time="2026-10-13 12:06:13Z" duration="0.014060" asserts="0">
+                <properties>
+                  <property name="_JOINTYPE" value="UnityCombinatorial" />
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+                <output><![CDATA[SendMessage cannot be called during Awake, CheckConsistency, or OnValidate (low-engagement: OnMeshFilterChanged)
+SendMessage cannot be called during Awake, CheckConsistency, or OnValidate (high-engagement: OnMeshFilterChanged)
+ParticleMeshVisualizer received seq=n/a ts=1 Device=device-a, TonicEDA=-1.000, TempRate=-1.000, SCRFreq=-1.000, HeartRate=0.600, Engagement=0.000
+ParticleMeshVisualizer received seq=n/a ts=1 Device=device-b, TonicEDA=1.000, TempRate=1.000, SCRFreq=1.000, HeartRate=0.600, Engagement=1.000
+Saving results to: C:\Users\Bryan Dunphy\Documents\UnityProjects\ampPortable_xrGlassesDemo\TestResults\artistic-length-halo-check.xml
+]]></output>
+              </test-case>
+            </test-suite>
+          </test-suite>
+        </test-suite>
+      </test-suite>
+    </test-suite>
+  </test-suite>
+</test-run>
