@@ -1,0 +1,14 @@
+{
+  "verified_utc": "2026-10-30T14:12:00.500707+00:00",
+  "changed_source_paths": [
+    "Assets/Tests/PlayMode/ArtisticElementsSceneTests.cs"
+  ],
+  "all_other_input_files_unchanged": 1816,
+  "metadata_unchanged": true,
+  "assertion_lines_preserved": 55,
+  "test_source_sha256": "1e485a0e9c15389eb2cfa30d537bfa6c7f252e7f53a6c84600a68963139474ae",
+  "isolated_test_matches_source": true,
+  "preview_artifact_unchanged": true,
+  "runtime_build_repeat_required": false,
+  "note": "Only Editor test code changed; runtime application, packages and renderer settings are unchanged."
+}

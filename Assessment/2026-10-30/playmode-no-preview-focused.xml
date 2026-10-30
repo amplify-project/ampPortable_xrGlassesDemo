@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="utf-8"?>
+<test-run id="2" testcasecount="1" result="Passed" total="1" passed="1" failed="0" inconclusive="0" skipped="0" asserts="0" engine-version="3.5.0.0" clr-version="4.0.30319.42000" start-time="2026-10-30 14:08:07Z" end-time="2026-10-30 14:08:07Z" duration="0.2732696">
+  <test-suite type="TestSuite" id="1253" name="XR Score Viewer" fullname="XR Score Viewer" runstate="Runnable" testcasecount="196" result="Passed" start-time="2026-10-30 14:08:07Z" end-time="2026-10-30 14:08:07Z" duration="0.273270" total="1" passed="1" failed="0" inconclusive="0" skipped="0" asserts="0">
+    <properties>
+      <property name="platform" value="PlayMode" />
+    </properties>
+    <test-suite type="Assembly" id="1245" name="Tests.dll" fullname="C:/Users/Bryan Dunphy/AppData/Local/Temp/rnc1030/project/Library/ScriptAssemblies/Tests.dll" runstate="Runnable" testcasecount="196" result="Passed" start-time="2026-10-30 14:08:07Z" end-time="2026-10-30 14:08:07Z" duration="0.265891" total="1" passed="1" failed="0" inconclusive="0" skipped="0" asserts="0">
+      <properties>
+        <property name="_PID" value="23900" />
+        <property name="_APPDOMAIN" value="Unity Child Domain" />
+        <property name="platform" value="PlayMode" />
+        <property name="EditorOnly" value="False" />
+      </properties>
+      <test-suite type="TestSuite" id="1246" name="AmpPortableDataViz" fullname="AmpPortableDataViz" runstate="Runnable" testcasecount="196" result="Passed" start-time="2026-10-30 14:08:07Z" end-time="2026-10-30 14:08:07Z" duration="0.263517" total="1" passed="1" failed="0" inconclusive="0" skipped="0" asserts="0">
+        <properties />
+        <test-suite type="TestSuite" id="1247" name="Tests" fullname="AmpPortableDataViz.Tests" runstate="Runnable" testcasecount="196" result="Passed" start-time="2026-10-30 14:08:07Z" end-time="2026-10-30 14:08:07Z" duration="0.260344" total="1" passed="1" failed="0" inconclusive="0" skipped="0" asserts="0">
+          <properties />
+          <test-suite type="TestSuite" id="1250" name="PlayMode" fullname="AmpPortableDataViz.Tests.PlayMode" runstate="Runnable" testcasecount="160" result="Passed" start-time="2026-10-30 14:08:07Z" end-time="2026-10-30 14:08:07Z" duration="0.258473" total="1" passed="1" failed="0" inconclusive="0" skipped="0" asserts="0">
+            <properties />
+            <test-suite type="TestFixture" id="1092" name="ArtisticElementsSceneTests" fullname="AmpPortableDataViz.Tests.PlayMode.ArtisticElementsSceneTests" classname="AmpPortableDataViz.Tests.PlayMode.ArtisticElementsSceneTests" runstate="Runnable" testcasecount="3" result="Passed" start-time="2026-10-30 14:08:07Z" end-time="2026-10-30 14:08:07Z" duration="0.254783" total="1" passed="1" failed="0" inconclusive="0" skipped="0" asserts="0">
+              <properties />
+              <test-case id="1093" name="SavedScene_ControlsAllFiveImportedElementsAndRestoresAuthoredAppearance" fullname="AmpPortableDataViz.Tests.PlayMode.ArtisticElementsSceneTests.SavedScene_ControlsAllFiveImportedElementsAndRestoresAuthoredAppearance" methodname="SavedScene_ControlsAllFiveImportedElementsAndRestoresAuthoredAppearance" classname="AmpPortableDataViz.Tests.PlayMode.ArtisticElementsSceneTests" runstate="Runnable" seed="1045245893" result="Passed" start-time="2026-10-30 14:08:07Z" end-time="2026-10-30 14:08:07Z" duration="0.242842" asserts="0">
+                <properties>
+                  <property name="_JOINTYPE" value="UnityCombinatorial" />
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+                <output><![CDATA[Saving results to: C:\Users\Bryan Dunphy\Documents\UnityProjects\ampPortable_xrGlassesDemo\Temp\PreMergeAssessment-20261030\playmode-no-preview-focused.xml
+]]></output>
+              </test-case>
+            </test-suite>
+          </test-suite>
+        </test-suite>
+      </test-suite>
+    </test-suite>
+  </test-suite>
+</test-run>

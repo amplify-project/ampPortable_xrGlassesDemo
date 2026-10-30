@@ -4,13 +4,13 @@
 
 This is a Unity XR glasses proof-of-concept for real-time audience data visualization. Visualizations act as abstract graphical scores and engagement/emotion displays.
 
-Current working branch: `rayNeoPort`
+Primary branch: `main`. Port development branch: `rayNeoPort`.
 
-Current branch goal: port the XR Score Viewer app from XREAL Air 2 Ultra glasses to RayNeo X3 Pro glasses.
+Current baseline: the XR Score Viewer app ported from XREAL Air 2 Ultra glasses to RayNeo X3 Pro glasses.
 
-Unity version for `rayNeoPort`: `2022.3.36f1`
+Unity version for `main` and `rayNeoPort`: `2022.3.36f1`
 
-Main branch Unity version: `6000.3.10f1`
+The previous XREAL / Unity `6000.3.10f1` main baseline is preserved by the annotated tag `xreal-unity6-pre-rayneo`.
 
 Primary project code lives in:
 

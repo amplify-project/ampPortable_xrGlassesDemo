@@ -1,0 +1,26 @@
+{
+  "install": "Success (adb install -r; no uninstall or data clear)",
+  "launch": "Status ok; COLD; com.rayneo.openxradapter.UnityOpenXrActivity; TotalTime310ms",
+  "installed_apk_sha256": "ea7c8fa11cef7df446d8642a66e2a8240c99d32b1d5a60c8bec380d8a207af19",
+  "matches_assessed_apk": true,
+  "pid_after_launch": "3835",
+  "gesture_and_comfort_checks": "Pass reported by user for requested on-device acceptance checks",
+  "redis_live_stream_check": "User reports app working as expected; initial captured startup logged a stale-endpoint timeout. Real publisher payloads were not independently captured.",
+  "observed_utc": "2026-10-30T13:36:54.766932+00:00",
+  "openxr_state": "XR_SESSION_STATE_FOCUSED observed in app PID log",
+  "score_rendering": "Stereo device mirror screenshot shows the configured notation PNG in both views",
+  "screenshot": "Temp/PreMergeAssessment-20261030/device-screen.png",
+  "startup_managed_fatal_exception": "None observed in captured app startup log",
+  "log": "Temp/PreMergeAssessment-20261030/device-logcat.txt",
+  "wearer_confirmation": {
+    "recorded_utc": "2026-10-30T13:39:49.347620+00:00",
+    "source": "User reply to device acceptance checklist",
+    "statement": "I tested the app on the glasses. Everything is working as expected.",
+    "result": "Pass reported by user"
+  },
+  "process_after_user_test": {
+    "pid": "",
+    "exit_code": 1,
+    "note": "No PID after testing is consistent with testing Quit; not classified as a crash."
+  }
+}

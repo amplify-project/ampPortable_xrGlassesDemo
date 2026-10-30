@@ -1,0 +1,13 @@
+{
+  "test_file": "Assets/Tests/PlayMode/ArtisticElementsSceneTests.cs",
+  "original_sha256": "b6d7a1423cef22e94f3ee99373d3db6225b53563b39cf1521a712e85f33891d9",
+  "updated_sha256": "1e485a0e9c15389eb2cfa30d537bfa6c7f252e7f53a6c84600a68963139474ae",
+  "assertion_lines_preserved": 55,
+  "test_meta_sha256": "17c6192567525762ea04c9b4fecc7d1855829f7162d42c077cc321aea227dedd",
+  "preview_before": {
+    "exists": true,
+    "mtime_ns": 1793363795675875900,
+    "sha256": "1dfd0c3292c31fbee4044c74257c0ad1c02b595d47e31ddc5865edfb81cad7b9"
+  },
+  "project": "C:\\Users\\Bryan Dunphy\\AppData\\Local\\Temp\\rnc1030\\project"
+}

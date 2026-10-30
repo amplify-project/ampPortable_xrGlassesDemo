@@ -1,0 +1,25 @@
+﻿{
+    "stage":  "PlayMode",
+    "attempt":  "playmode-canonical",
+    "started_utc":  "2026-10-30T12:32:45.8690883Z",
+    "finished_utc":  "2026-10-30T12:36:38.3813777Z",
+    "exit_code":  2,
+    "editor":  "C:\\Program Files\\Unity\\Hub\\Editor\\2022.3.36f1\\Editor\\Unity.exe",
+    "arguments":  [
+                      "-batchmode",
+                      "-projectPath",
+                      "\"C:\\Users\\Bryan Dunphy\\AppData\\Local\\Temp\\rnc1030\\project\"",
+                      "-buildTarget",
+                      "Android",
+                      "-logFile",
+                      "\"C:\\Users\\Bryan Dunphy\\Documents\\UnityProjects\\ampPortable_xrGlassesDemo\\Temp\\PreMergeAssessment-20261030\\playmode-canonical.log\"",
+                      "-forgetProjectPath",
+                      "-runTests",
+                      "-testPlatform",
+                      "PlayMode",
+                      "-testResults",
+                      "\"C:\\Users\\Bryan Dunphy\\Documents\\UnityProjects\\ampPortable_xrGlassesDemo\\Temp\\PreMergeAssessment-20261030\\playmode-canonical.xml\""
+                  ],
+    "process_git_longpaths":  true,
+    "log":  "C:\\Users\\Bryan Dunphy\\Documents\\UnityProjects\\ampPortable_xrGlassesDemo\\Temp\\PreMergeAssessment-20261030\\playmode-canonical.log"
+}

@@ -1,0 +1,20 @@
+{
+  "connected": true,
+  "model": "ARGF20",
+  "android_release": "12",
+  "android_api": "32",
+  "build_display": "SKQ1.250204.001 release-keys",
+  "build_incremental": "3G2R",
+  "app_id": "com.TUS.RayNeoXRScoreViewer",
+  "installed_app_fields": [
+    "versionCode=1 minSdk=30 targetSdk=30",
+    "versionName=v0.1.0-alpha.3",
+    "firstInstallTime=2026-06-18 16:53:46",
+    "lastUpdateTime=2026-08-31 16:16:35"
+  ],
+  "existing_apk_backup": {
+    "path": "Temp/PreMergeAssessment-20261030/installed-before.apk",
+    "bytes": 204976078,
+    "sha256": "45f536649539c57357e3cc9535a9d6446c3aac4086f79fda4d3c46995108e297"
+  }
+}

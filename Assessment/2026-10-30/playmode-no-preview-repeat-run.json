@@ -1,0 +1,27 @@
+﻿{
+    "stage":  "PlayMode",
+    "attempt":  "playmode-no-preview-repeat",
+    "started_utc":  "2026-10-30T14:11:16.9986761Z",
+    "finished_utc":  "2026-10-30T14:11:43.0971418Z",
+    "exit_code":  0,
+    "editor":  "C:\\Program Files\\Unity\\Hub\\Editor\\2022.3.36f1\\Editor\\Unity.exe",
+    "arguments":  [
+                      "-batchmode",
+                      "-projectPath",
+                      "\"C:\\Users\\Bryan Dunphy\\AppData\\Local\\Temp\\rnc1030\\project\"",
+                      "-buildTarget",
+                      "Android",
+                      "-logFile",
+                      "\"C:\\Users\\Bryan Dunphy\\Documents\\UnityProjects\\ampPortable_xrGlassesDemo\\Temp\\PreMergeAssessment-20261030\\playmode-no-preview-repeat.log\"",
+                      "-forgetProjectPath",
+                      "-runTests",
+                      "-testPlatform",
+                      "PlayMode",
+                      "-testResults",
+                      "\"C:\\Users\\Bryan Dunphy\\Documents\\UnityProjects\\ampPortable_xrGlassesDemo\\Temp\\PreMergeAssessment-20261030\\playmode-no-preview-repeat.xml\""
+                  ],
+    "process_git_longpaths":  true,
+    "process_java_windows_trust":  false,
+    "java_trust_store_path":  null,
+    "log":  "C:\\Users\\Bryan Dunphy\\Documents\\UnityProjects\\ampPortable_xrGlassesDemo\\Temp\\PreMergeAssessment-20261030\\playmode-no-preview-repeat.log"
+}

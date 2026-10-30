@@ -1,0 +1,25 @@
+﻿{
+    "stage":  "Build",
+    "attempt":  "android-file-trust",
+    "started_utc":  "2026-10-30T13:29:36.0400004Z",
+    "finished_utc":  "2026-10-30T13:30:58.2310930Z",
+    "exit_code":  0,
+    "editor":  "C:\\Program Files\\Unity\\Hub\\Editor\\2022.3.36f1\\Editor\\Unity.exe",
+    "arguments":  [
+                      "-batchmode",
+                      "-projectPath",
+                      "\"C:\\Users\\Bryan Dunphy\\AppData\\Local\\Temp\\rnc1030\\project\"",
+                      "-buildTarget",
+                      "Android",
+                      "-logFile",
+                      "\"C:\\Users\\Bryan Dunphy\\Documents\\UnityProjects\\ampPortable_xrGlassesDemo\\Temp\\PreMergeAssessment-20261030\\android-file-trust.log\"",
+                      "-forgetProjectPath",
+                      "-executeMethod",
+                      "PreMergeValidation.InspectAndBuildAndroid",
+                      "-quit"
+                  ],
+    "process_git_longpaths":  true,
+    "process_java_windows_trust":  true,
+    "java_trust_store_path":  "C:\\Users\\BRYAND~1\\AppData\\Local\\Temp\\rnc1030\\windows-roots.p12",
+    "log":  "C:\\Users\\Bryan Dunphy\\Documents\\UnityProjects\\ampPortable_xrGlassesDemo\\Temp\\PreMergeAssessment-20261030\\android-file-trust.log"
+}

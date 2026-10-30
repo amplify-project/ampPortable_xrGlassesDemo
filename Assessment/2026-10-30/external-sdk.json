@@ -1,0 +1,10 @@
+{
+  "captured_utc": "2026-10-30T12:15:20.009924+00:00",
+  "path": "C:\\Users\\Bryan Dunphy\\Documents\\RayNeoSDK\\RayNeo OpenXR Unity ARDK\\RayNeo OpenXR Unity ARDK",
+  "name": "com.unity.xr.rayneo.openxr",
+  "version": "1.1.2",
+  "files": 444,
+  "total_bytes": 2250199,
+  "manifest_sha256": "74b4a961345a0e5746eb88666657455f5300cb7ebdcd6fce4caea13de59ff72d",
+  "note": "Read-only fingerprint of the external package; not vendored, updated or independently device-certified."
+}

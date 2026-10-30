@@ -1,0 +1,2222 @@
+[
+  {
+    "path": "Extension~/com.rayneo.ext.recorder/package.json",
+    "size": 215,
+    "sha256": "fc13ccc9eb73d68d731a044b619b31e9d75a5ae88227822e957d17a719df92ac"
+  },
+  {
+    "path": "Extension~/com.rayneo.ext.recorder/package.json.meta",
+    "size": 165,
+    "sha256": "102be6f2c42a483737b2e2f1910d1490345c26194314353d70ff425c6f50e74b"
+  },
+  {
+    "path": "Extension~/com.rayneo.ext.recorder/Plugins/Android/NatCorder.aar",
+    "size": 52188,
+    "sha256": "fdb8fdf159af0eb2a1a487fdab4f40a4147dce80d73bcb807e6b6c71092f5197"
+  },
+  {
+    "path": "Extension~/com.rayneo.ext.recorder/Plugins/Android/NatCorder.aar.meta",
+    "size": 640,
+    "sha256": "8da79bd2fc10631105481a5bc1cecb8a7ff08c32f608067245de32930412cc42"
+  },
+  {
+    "path": "Extension~/com.rayneo.ext.recorder/Plugins/Android/NatRender.aar",
+    "size": 32355,
+    "sha256": "20d7f91fa868a16942cdc1f84231fd6647621c2a0628732bfcc9caccc63ba3a1"
+  },
+  {
+    "path": "Extension~/com.rayneo.ext.recorder/Plugins/Android/NatRender.aar.meta",
+    "size": 640,
+    "sha256": "15bf7cbf2723e8182815ec5cbfe918dd8d72992e24475a8e91222f298ec7d56a"
+  },
+  {
+    "path": "Extension~/com.rayneo.ext.recorder/Plugins/Android.meta",
+    "size": 180,
+    "sha256": "679161429ac4b33737399ddd5f175f737a941a0abe51a6efdbb433472b04091a"
+  },
+  {
+    "path": "Extension~/com.rayneo.ext.recorder/Plugins/Managed/Recorders/Changelog.md.meta",
+    "size": 165,
+    "sha256": "a28f9f96c200ef91e721910c99e265ff072fd8b32808d62c2ac7ef7255860dce"
+  },
+  {
+    "path": "Extension~/com.rayneo.ext.recorder/Plugins/Managed/Recorders/Clocks/FixedIntervalClock.cs",
+    "size": 2121,
+    "sha256": "17bdd6c76d8b79027579fa072e0de35f37f1aa4030f9267870199f04e10d6d6d"
+  },
+  {
+    "path": "Extension~/com.rayneo.ext.recorder/Plugins/Managed/Recorders/Clocks/FixedIntervalClock.cs.meta",
+    "size": 254,
+    "sha256": "3743ec06ff1a0736db8ad64f4c20a96e29cab6916e52258b7eb7763e7332fef7"
+  },
+  {
+    "path": "Extension~/com.rayneo.ext.recorder/Plugins/Managed/Recorders/Clocks/IClock.cs",
+    "size": 541,
+    "sha256": "e24a4944c05fb6f76bcde575a96a05e6183b61c1fc24aee47a78c7b38c5f12bf"
+  },
+  {
+    "path": "Extension~/com.rayneo.ext.recorder/Plugins/Managed/Recorders/Clocks/IClock.cs.meta",
+    "size": 254,
+    "sha256": "e0070c82cb0f982c2daa1aba2d65ff25d0e17cf4e35456bad7c51a5f63424bc3"
+  },
+  {
+    "path": "Extension~/com.rayneo.ext.recorder/Plugins/Managed/Recorders/Clocks/RealtimeClock.cs",
+    "size": 1398,
+    "sha256": "f1a3f00957e52e65b22f4e038ab88e3d86b81f7003f2744dc109c2154ae02d05"
+  },
+  {
+    "path": "Extension~/com.rayneo.ext.recorder/Plugins/Managed/Recorders/Clocks/RealtimeClock.cs.meta",
+    "size": 299,
+    "sha256": "76fe81f8505cd77664c3f3a8d0d6b7dff4abc6f57f3b665e52442fbb58fe1e56"
+  },
+  {
+    "path": "Extension~/com.rayneo.ext.recorder/Plugins/Managed/Recorders/Clocks.meta",
+    "size": 180,
+    "sha256": "5ba145fee390ac7dad1f41bf89c76395b56956ba714e4ec580003859291baf9a"
+  },
+  {
+    "path": "Extension~/com.rayneo.ext.recorder/Plugins/Managed/Recorders/GIFRecorder.cs",
+    "size": 2345,
+    "sha256": "11bfa14442a6549fe5fc435aace42ff8e4368cfd6b9fd3bf0a97f84a529b52e6"
+  },
+  {
+    "path": "Extension~/com.rayneo.ext.recorder/Plugins/Managed/Recorders/GIFRecorder.cs.meta",
+    "size": 254,
+    "sha256": "105c50341f3b8e96fea39e99e2fcab0f95e689ae1aae7d022477896cc7ea1d17"
+  },
+  {
+    "path": "Extension~/com.rayneo.ext.recorder/Plugins/Managed/Recorders/HEVCRecorder.cs",
+    "size": 3036,
+    "sha256": "dda75f8cdcbb35867422f3fdddec2072c9817394243caa42857bf12801a7019f"
+  },
+  {
+    "path": "Extension~/com.rayneo.ext.recorder/Plugins/Managed/Recorders/HEVCRecorder.cs.meta",
+    "size": 254,
+    "sha256": "70d4bc964b3529d872104b1e54bc7e95cda50e9b3195d63ae68446fccf6011a1"
+  },
+  {
+    "path": "Extension~/com.rayneo.ext.recorder/Plugins/Managed/Recorders/IMediaRecorder.cs",
+    "size": 1873,
+    "sha256": "9769461f0bda14afe7af7e4f766d985e6ab45a6697e6bbed7e209e02ea99b013"
+  },
+  {
+    "path": "Extension~/com.rayneo.ext.recorder/Plugins/Managed/Recorders/IMediaRecorder.cs.meta",
+    "size": 254,
+    "sha256": "f4c97376e3e24b3a75ec156d27e1931e10bbca5889dc1bfa1991a02dabe9a12c"
+  },
+  {
+    "path": "Extension~/com.rayneo.ext.recorder/Plugins/Managed/Recorders/Inputs/AudioInput.cs",
+    "size": 2798,
+    "sha256": "bb84d27a1822c06905d39c80175efd3b3609199bc36905370fed5b113aa60f3d"
+  },
+  {
+    "path": "Extension~/com.rayneo.ext.recorder/Plugins/Managed/Recorders/Inputs/AudioInput.cs.meta",
+    "size": 254,
+    "sha256": "7024f2cb6de91682c7400c6134eade71d7f07f18bdc278ba0ae466a22a2af9ee"
+  },
+  {
+    "path": "Extension~/com.rayneo.ext.recorder/Plugins/Managed/Recorders/Inputs/CameraInput.cs",
+    "size": 4198,
+    "sha256": "1c17f1f9d0e2c3329b10fe041d7496f58f30422328c9c58fe18193555ee6212e"
+  },
+  {
+    "path": "Extension~/com.rayneo.ext.recorder/Plugins/Managed/Recorders/Inputs/CameraInput.cs.meta",
+    "size": 254,
+    "sha256": "c0a057530fba4a6301096a871035598f36ab0231127da5e687c6cb9e54ac3df4"
+  },
+  {
+    "path": "Extension~/com.rayneo.ext.recorder/Plugins/Managed/Recorders/Inputs.meta",
+    "size": 180,
+    "sha256": "62c29ce1fd5e577d02e09d6deb6d94ccede83ad3a74328444e58a0309281fcaf"
+  },
+  {
+    "path": "Extension~/com.rayneo.ext.recorder/Plugins/Managed/Recorders/Internal/Bridge.cs",
+    "size": 2049,
+    "sha256": "0135eb096e8717c6389b4af9f24c536cf9eb3b498a99fdcaa4606e0782bb5d7b"
+  },
+  {
+    "path": "Extension~/com.rayneo.ext.recorder/Plugins/Managed/Recorders/Internal/Bridge.cs.meta",
+    "size": 254,
+    "sha256": "33eb194af462639ca853a9b726e0f9836bd775f21481eeb1300e017172ca295a"
+  },
+  {
+    "path": "Extension~/com.rayneo.ext.recorder/Plugins/Managed/Recorders/Internal/NativeRecorder.cs",
+    "size": 2281,
+    "sha256": "72d6e37220faa2f1ce44ebd408fe40549d1ff8952ca0a6ce016d40cf5d4d1720"
+  },
+  {
+    "path": "Extension~/com.rayneo.ext.recorder/Plugins/Managed/Recorders/Internal/NativeRecorder.cs.meta",
+    "size": 254,
+    "sha256": "f79210604df5492314d361f25425bc868869b2c2efcbb9d2b5918ea809555e21"
+  },
+  {
+    "path": "Extension~/com.rayneo.ext.recorder/Plugins/Managed/Recorders/Internal/Utility.cs",
+    "size": 824,
+    "sha256": "300b9141de91c6723c4306ce91f57c5b2aa8d5d102e7b43a8a3e9dbd65d32082"
+  },
+  {
+    "path": "Extension~/com.rayneo.ext.recorder/Plugins/Managed/Recorders/Internal/Utility.cs.meta",
+    "size": 254,
+    "sha256": "5ab961f0aa340938caa87d51b61a9f2f615e024c354ecf4ca90d31a67a806d15"
+  },
+  {
+    "path": "Extension~/com.rayneo.ext.recorder/Plugins/Managed/Recorders/Internal.meta",
+    "size": 180,
+    "sha256": "8bc6437c8ac6cf8fc70833c1535effa99a8eb707296c2f9427fcb9bb3079cf43"
+  },
+  {
+    "path": "Extension~/com.rayneo.ext.recorder/Plugins/Managed/Recorders/JPGRecorder.cs",
+    "size": 3569,
+    "sha256": "3460b511da207cfbf2abecb5df51889ac74dbb43b2c83a28d2d1118ac3255fb4"
+  },
+  {
+    "path": "Extension~/com.rayneo.ext.recorder/Plugins/Managed/Recorders/JPGRecorder.cs.meta",
+    "size": 254,
+    "sha256": "3eccf09373b32ec0a2c9b13d8b819573a9edaba54eb722bc51f68e7f11a59147"
+  },
+  {
+    "path": "Extension~/com.rayneo.ext.recorder/Plugins/Managed/Recorders/MP4Recorder.cs",
+    "size": 3033,
+    "sha256": "3743c3fd7ac8c56fb1977e0f087784d08acddffea529571773dc53d16dc3ea5c"
+  },
+  {
+    "path": "Extension~/com.rayneo.ext.recorder/Plugins/Managed/Recorders/MP4Recorder.cs.meta",
+    "size": 254,
+    "sha256": "7c70d91d5e2e449a3ca07c2aed45614c88d269a2a7c30287b77d8b8ccbd0be49"
+  },
+  {
+    "path": "Extension~/com.rayneo.ext.recorder/Plugins/Managed/Recorders/README.md.meta",
+    "size": 165,
+    "sha256": "df8b4bb2a6fdec65300489bfe10ebdbf537855e5620dc0e2f095b72ea6adf019"
+  },
+  {
+    "path": "Extension~/com.rayneo.ext.recorder/Plugins/Managed/Recorders/WAVRecorder.cs",
+    "size": 4183,
+    "sha256": "c61a6d303003302f0532b137d6c79df0d1e0540a6cfe8d016d119205ab7cffc5"
+  },
+  {
+    "path": "Extension~/com.rayneo.ext.recorder/Plugins/Managed/Recorders/WAVRecorder.cs.meta",
+    "size": 254,
+    "sha256": "6289a3189c61aea796136999b0bc3e5e0da2e613789447b43e99c94931a0c898"
+  },
+  {
+    "path": "Extension~/com.rayneo.ext.recorder/Plugins/Managed/Recorders/XRRecorders.asmdef",
+    "size": 30,
+    "sha256": "916b373d1d5e9682d18504c2c6ac1ead9d22e6c484484fc4b99e6c9ee630d989"
+  },
+  {
+    "path": "Extension~/com.rayneo.ext.recorder/Plugins/Managed/Recorders/XRRecorders.asmdef.meta",
+    "size": 173,
+    "sha256": "b7a15476efbc36f48c793d088ec3e261d014b09ea5f7f865e1c1a0c83decfccb"
+  },
+  {
+    "path": "Extension~/com.rayneo.ext.recorder/Plugins/Managed/Recorders.meta",
+    "size": 180,
+    "sha256": "de8776bcc146bfb8b4d6b756b6e350bbc1872d955cb8af2377e5b9e9a4f4115c"
+  },
+  {
+    "path": "Extension~/com.rayneo.ext.recorder/Plugins/Managed.meta",
+    "size": 225,
+    "sha256": "3f6e604f73dffafbe4d3c8194f0f8515099e3832888b8d1ebbc3ec0068821679"
+  },
+  {
+    "path": "Extension~/com.rayneo.ext.recorder/Plugins/Windows/NatCorder.dll",
+    "size": 26112,
+    "sha256": "09700710937b7a2e025c7e5b09f4875ac93e2ae2bb786bb82b82b69b1804e7a6"
+  },
+  {
+    "path": "Extension~/com.rayneo.ext.recorder/Plugins/Windows/NatCorder.dll.meta",
+    "size": 2036,
+    "sha256": "5f36c9b3bada7b9667721529975ff9e2f4e992ce2484bd7f9d365c4f381c0a75"
+  },
+  {
+    "path": "Extension~/com.rayneo.ext.recorder/Plugins/Windows.meta",
+    "size": 225,
+    "sha256": "68ee0570dd7fd8a1fa6f22ea9eaa50919cf679458b315f09352801eff2616e56"
+  },
+  {
+    "path": "Extension~/com.rayneo.ext.recorder/Plugins.meta",
+    "size": 180,
+    "sha256": "86674cdc65e89004cd2df99a7d6ab375280f6c8b1134763c59d4eec564a5058c"
+  },
+  {
+    "path": "Extension~/com.rayneo.ext.recorder/Resources/Record.meta",
+    "size": 180,
+    "sha256": "4e8c844ce7ec8adccb59c68e43aa9bc4a283603fdb4bec11b5f550f92411b7a8"
+  },
+  {
+    "path": "Extension~/com.rayneo.ext.recorder/Resources.meta",
+    "size": 180,
+    "sha256": "ee1575f0fca7a10b7737ff16f45204f388b578909b1d620dadbb35317193610c"
+  },
+  {
+    "path": "Extension~/com.rayneo.ext.recorder/Scenes.meta",
+    "size": 180,
+    "sha256": "c54d7376e4bd9f9f880d6602f058e21f8d0d07ec5dea4d803cbb61343af6a8b6"
+  },
+  {
+    "path": "Extension~/com.rayneo.ext.recorder/Scripts/RecordManager.cs",
+    "size": 1290,
+    "sha256": "d9fcf8c71b2a16d4a165353812699dee709373d1690f0a5f95a0b68b5525f0d2"
+  },
+  {
+    "path": "Extension~/com.rayneo.ext.recorder/Scripts/RecordManager.cs.meta",
+    "size": 254,
+    "sha256": "e2ac256633f2c33e50f4fcb201c41e7bc006e0a10f931435baee95ae46a3b9f8"
+  },
+  {
+    "path": "Extension~/com.rayneo.ext.recorder/Scripts.meta",
+    "size": 180,
+    "sha256": "87d91510df5538c585138c749e181a2a3d1b35435903efcc07f856b00893241f"
+  },
+  {
+    "path": "OXR/Editor/RayNeoOpenXRFeatureSet.cs",
+    "size": 751,
+    "sha256": "eb0f073538709a44b339b74af6ba23fd15b1a1564c42ff63c82ed0625d035b32"
+  },
+  {
+    "path": "OXR/Editor/RayNeoOpenXRFeatureSet.cs.meta",
+    "size": 243,
+    "sha256": "2ba906b2285c67793f3f87a543b4f0b0337690fc0a6ca4d2586a7fc00c7d52d2"
+  },
+  {
+    "path": "OXR/Editor/Unity.XR.RayNeo.OpenXR.Editor.asmdef",
+    "size": 474,
+    "sha256": "17c399ea322b3fc25e465f6cf46367e03a9257542bb8616ee8939c467f83edd5"
+  },
+  {
+    "path": "OXR/Editor/Unity.XR.RayNeo.OpenXR.Editor.asmdef.meta",
+    "size": 166,
+    "sha256": "03763788c688efffdeea9609e3115926d5243183674b02a3ab0081f2fa994530"
+  },
+  {
+    "path": "OXR/Editor.meta",
+    "size": 172,
+    "sha256": "a33593d0d7a721ec450226b185c2337c205614c178c4f32c6da4139f0700721d"
+  },
+  {
+    "path": "OXR/Runtime/Plugins/Android/RayNeoOpenXRLoader.aar",
+    "size": 130229,
+    "sha256": "36c36d54603570fff2cc069f6c37c5398829990a082bdf204a12961febf76fab"
+  },
+  {
+    "path": "OXR/Runtime/Plugins/Android/RayNeoOpenXRLoader.aar.meta",
+    "size": 608,
+    "sha256": "ee8060e2c96c4ec4724f6e0349e78814a68fd4e233e8aca05f3dee1ec2a7fbd3"
+  },
+  {
+    "path": "OXR/Runtime/Plugins/Android/RayNeoSDK-client.aar",
+    "size": 306748,
+    "sha256": "7deab5b1754065106065a5eea1fdab9dbf58f75c7226c8a60bef737141f7b28f"
+  },
+  {
+    "path": "OXR/Runtime/Plugins/Android/RayNeoSDK-client.aar.meta",
+    "size": 608,
+    "sha256": "b47a49674cf51658de2d020812bd9d74e9910fe6dbdad9961970e167e50758f4"
+  },
+  {
+    "path": "OXR/Runtime/Plugins/Android/RayNeoUnityAdapter.aar",
+    "size": 83004,
+    "sha256": "0df0472eb54c97c91ecf40243b022400406fcf0ea2bd4f998e3037bfc80c88a6"
+  },
+  {
+    "path": "OXR/Runtime/Plugins/Android/RayNeoUnityAdapter.aar.meta",
+    "size": 608,
+    "sha256": "cb4603d99495d9b37a12991433055b9c4066b459b916b1e8e4863719343e9274"
+  },
+  {
+    "path": "OXR/Runtime/Plugins/Android.meta",
+    "size": 172,
+    "sha256": "1894222f3832fda19cb5dcc181ada611662b3a43aa58ff85d7c896f5bb88fbd7"
+  },
+  {
+    "path": "OXR/Runtime/Plugins.meta",
+    "size": 172,
+    "sha256": "1fc6f5f3f7b0205291c8180ec0e1e1d0e785d6b0de42e3b67c43af0a4be826ad"
+  },
+  {
+    "path": "OXR/Runtime/Scripts/Extensions/private/calibration/XRMagCalibrator.cs",
+    "size": 3465,
+    "sha256": "d3a69328153483b19f64f9d1cd2f2743bd1016cb84f16b09292bcf1feea3fe64"
+  },
+  {
+    "path": "OXR/Runtime/Scripts/Extensions/private/calibration/XRMagCalibrator.cs.meta",
+    "size": 243,
+    "sha256": "9713ea23ee31099e349176d79e7524cb7bded9ee63d8d626a2eac5bbebbba7a6"
+  },
+  {
+    "path": "OXR/Runtime/Scripts/Extensions/private/calibration/XRVirtualRealityCalibrator.cs",
+    "size": 7852,
+    "sha256": "1e6aaf8d400b9589dbcd0c70f04be23176c273aa5d54328c78ea2f65a71c0b0c"
+  },
+  {
+    "path": "OXR/Runtime/Scripts/Extensions/private/calibration/XRVirtualRealityCalibrator.cs.meta",
+    "size": 243,
+    "sha256": "c89a4ec89e7aaa93811e09fce1709403036c298afeca46118c84735ddaa233a5"
+  },
+  {
+    "path": "OXR/Runtime/Scripts/Extensions/private/calibration.meta",
+    "size": 172,
+    "sha256": "878178695257d28fe1a87d747b6660d77ce3d0d1ab1e4ebf2c83bc227a02df8a"
+  },
+  {
+    "path": "OXR/Runtime/Scripts/Extensions/private.meta",
+    "size": 172,
+    "sha256": "ad7a2264fefedf1426bc88f0ad0d40d904a5b06a26c6eaf0873762306151bc18"
+  },
+  {
+    "path": "OXR/Runtime/Scripts/Extensions/public/algorithms/facedetector/XRFaceDetector.cs",
+    "size": 1261,
+    "sha256": "83d2d1faae7cf6078310d806ce1847f7d8b668f8a94801d888858f5a4f4ad088"
+  },
+  {
+    "path": "OXR/Runtime/Scripts/Extensions/public/algorithms/facedetector/XRFaceDetector.cs.meta",
+    "size": 243,
+    "sha256": "b52308a7b4555ad923eab6f16e506854d8d0419388282c1857f40161d22af7c6"
+  },
+  {
+    "path": "OXR/Runtime/Scripts/Extensions/public/algorithms/facedetector.meta",
+    "size": 172,
+    "sha256": "514a07e5e0392b0320b0e610eb624dc7011560a69a50679f0176db7e7ef583c4"
+  },
+  {
+    "path": "OXR/Runtime/Scripts/Extensions/public/algorithms.meta",
+    "size": 172,
+    "sha256": "c6a3d72c58ba7ce52527a066ad676e21a70f262d354028134fc10e9df8eed0c2"
+  },
+  {
+    "path": "OXR/Runtime/Scripts/Extensions/public/core/XRConstants.cs",
+    "size": 358,
+    "sha256": "cc8d11ab9a8fa6393e9ba34ddf8bbbec7a57c91d7bf3124b62c97a8372858c07"
+  },
+  {
+    "path": "OXR/Runtime/Scripts/Extensions/public/core/XRConstants.cs.meta",
+    "size": 243,
+    "sha256": "67794bfd295717c101e167788e01b61f862643361aa631744eb5dc4d53b57279"
+  },
+  {
+    "path": "OXR/Runtime/Scripts/Extensions/public/core/XRDefines.cs",
+    "size": 4201,
+    "sha256": "53ace565ec37096490b520e4145aa28a5935edc043a79c3bab8bd8994a109b78"
+  },
+  {
+    "path": "OXR/Runtime/Scripts/Extensions/public/core/XRDefines.cs.meta",
+    "size": 243,
+    "sha256": "ca05a673afc72462c47a4d469b7d3ce19630971c1920cf3d3e48891419f26a43"
+  },
+  {
+    "path": "OXR/Runtime/Scripts/Extensions/public/core/XRInterfaces.cs",
+    "size": 11065,
+    "sha256": "b585bf16010b92c8681b31bf4c2dbcfd3e0d909b9eed5f306b86c1a2f303a75c"
+  },
+  {
+    "path": "OXR/Runtime/Scripts/Extensions/public/core/XRInterfaces.cs.meta",
+    "size": 243,
+    "sha256": "b0c9312c1e97000982d1be9417af5ea9b67af0e6ed5afd022077ae1cd8c01768"
+  },
+  {
+    "path": "OXR/Runtime/Scripts/Extensions/public/core.meta",
+    "size": 172,
+    "sha256": "bdc910340c443c0d4f5e8b2b2e3eac36f07f0fe3203bcc9dbbb0189b4d960cea"
+  },
+  {
+    "path": "OXR/Runtime/Scripts/Extensions/public/device/XRCamera.cs",
+    "size": 16862,
+    "sha256": "b1e1f0bb2306dbeed0d2c329515924b9704f1d4bce048d4d0132c17baaa7ec99"
+  },
+  {
+    "path": "OXR/Runtime/Scripts/Extensions/public/device/XRCamera.cs.meta",
+    "size": 243,
+    "sha256": "5e1fe5111c7b00ff377a08b28cae3583b99ae8b6117c9d390021967a5d5ed63a"
+  },
+  {
+    "path": "OXR/Runtime/Scripts/Extensions/public/device/XRCameraHelper.cs",
+    "size": 1780,
+    "sha256": "21e0d2ea259f7f713dfb59a07e57fd2fe1498c8068f6a1d0588b284bf5532175"
+  },
+  {
+    "path": "OXR/Runtime/Scripts/Extensions/public/device/XRCameraHelper.cs.meta",
+    "size": 243,
+    "sha256": "e7b25eb50e2f7cf2d5aceed5cb3073b5ee64e5c07a505821544320ffb2e067b2"
+  },
+  {
+    "path": "OXR/Runtime/Scripts/Extensions/public/device.meta",
+    "size": 172,
+    "sha256": "439aacd1f83c7ab228b51ed34a6a5780e435e39bb270cb26c9dfb83bc24b7753"
+  },
+  {
+    "path": "OXR/Runtime/Scripts/Extensions/public/utils/MatrixExtensions.cs",
+    "size": 1644,
+    "sha256": "b9ab99036aede7165e74d0c82f067ef1e5f742bfad7b69e542d6ab2ed9da6c62"
+  },
+  {
+    "path": "OXR/Runtime/Scripts/Extensions/public/utils/MatrixExtensions.cs.meta",
+    "size": 243,
+    "sha256": "82b0984ee8b582cd1eb328bd510f616f0995c55838516a781c94b295090732db"
+  },
+  {
+    "path": "OXR/Runtime/Scripts/Extensions/public/utils/XRImageUtils.cs",
+    "size": 1717,
+    "sha256": "e0c73cf27fe64e5bfd9d75990445f56fcbc6f5239962f5f6f9eed0e7940feaf7"
+  },
+  {
+    "path": "OXR/Runtime/Scripts/Extensions/public/utils/XRImageUtils.cs.meta",
+    "size": 243,
+    "sha256": "29a1735e2152e34dff3c02867686d3d5646586447826e7be33aaa0fdd3c62be0"
+  },
+  {
+    "path": "OXR/Runtime/Scripts/Extensions/public/utils/XRMathUtils.cs",
+    "size": 2067,
+    "sha256": "680f2fc622acdfdee2f78acdccb5aa7dfd0af710602b3f81c72d37fda6c3bf79"
+  },
+  {
+    "path": "OXR/Runtime/Scripts/Extensions/public/utils/XRMathUtils.cs.meta",
+    "size": 243,
+    "sha256": "862a2735f29849323152eb807281c7ec8ad174e5d4cd5e4ec39019421876cd54"
+  },
+  {
+    "path": "OXR/Runtime/Scripts/Extensions/public/utils.meta",
+    "size": 172,
+    "sha256": "2f68b902407319c64a10213dbd828e1b73eded134efede86e94b27d505b195a0"
+  },
+  {
+    "path": "OXR/Runtime/Scripts/Extensions/public.meta",
+    "size": 172,
+    "sha256": "7e3140516843356de40df993cc61e2b86210b0eb8e6d192af866396c488a228e"
+  },
+  {
+    "path": "OXR/Runtime/Scripts/Extensions.meta",
+    "size": 172,
+    "sha256": "84014bd03509eec6f0e57fb11adbac15db13a57bdef73b90aca575826b1b2dee"
+  },
+  {
+    "path": "OXR/Runtime/Scripts/OpenXR/EmptyFeatureTemplate.cs",
+    "size": 808,
+    "sha256": "95c04f3a799c03aaaa7eed36d23a2c484de6012512d0396d992f4ded40a7b508"
+  },
+  {
+    "path": "OXR/Runtime/Scripts/OpenXR/EmptyFeatureTemplate.cs.meta",
+    "size": 243,
+    "sha256": "19d9d553371b7c8c2a97b5f1eb797c71be7ce1ab0f2a039e9c25fdc01de1659e"
+  },
+  {
+    "path": "OXR/Runtime/Scripts/OpenXR/RayNeoControllerProfile.cs",
+    "size": 32267,
+    "sha256": "57a10a104f5ef2559c386c5fd4aa3a2ec4d8897afe0d62cc10c95b0d48d7e7d2"
+  },
+  {
+    "path": "OXR/Runtime/Scripts/OpenXR/RayNeoControllerProfile.cs.meta",
+    "size": 243,
+    "sha256": "ed652eab7f92bbfefa87e656aec6c4f088a2fbf8d4307464d32a30bf604883ba"
+  },
+  {
+    "path": "OXR/Runtime/Scripts/OpenXR/RayNeoOpenXRFeatureBase.cs",
+    "size": 4800,
+    "sha256": "c1d16552a572cbdf4faa61542565b84429d637c0855b6dfc5fe866c8f4154693"
+  },
+  {
+    "path": "OXR/Runtime/Scripts/OpenXR/RayNeoOpenXRFeatureBase.cs.meta",
+    "size": 243,
+    "sha256": "23fa5532cc17275508553af8395a685cde813790f64c9a10b482693c1bd20328"
+  },
+  {
+    "path": "OXR/Runtime/Scripts/OpenXR/RayNeoSupportFeature.cs",
+    "size": 7106,
+    "sha256": "c8cfeaa1f0418974f24b564756fbd20a62aaaccd8fc8c76c64b7cdf740340a38"
+  },
+  {
+    "path": "OXR/Runtime/Scripts/OpenXR/RayNeoSupportFeature.cs.meta",
+    "size": 243,
+    "sha256": "62b20e75533492eabe85af7d5011afef229d625887ddeb099d1297e62239a74b"
+  },
+  {
+    "path": "OXR/Runtime/Scripts/OpenXR.meta",
+    "size": 172,
+    "sha256": "013cfd503477315086607305aa955c4ac4273565917b0ce28858a8bb7f9a8718"
+  },
+  {
+    "path": "OXR/Runtime/Scripts.meta",
+    "size": 172,
+    "sha256": "9505ca41d8f14c6a4a3b79b78fc7adf250a35a117002834b7831e3d2d80950e9"
+  },
+  {
+    "path": "OXR/Runtime/Unity.XR.RayNeo.OpenXR.asmdef",
+    "size": 474,
+    "sha256": "bc7965dbbca9600dd371bfa535cd68e8a4eef880ecb340fad81ef3f54996bf27"
+  },
+  {
+    "path": "OXR/Runtime/Unity.XR.RayNeo.OpenXR.asmdef.meta",
+    "size": 166,
+    "sha256": "71655cbd21fc56efc8aea7ec62350262111e2953b7cf7b9b7b8a777a1085c4fd"
+  },
+  {
+    "path": "OXR/Runtime.meta",
+    "size": 172,
+    "sha256": "c1c1c642b693428b13ffd8f1fea584669249cde3a5798ebce214b8269452cb76"
+  },
+  {
+    "path": "OXR.meta",
+    "size": 172,
+    "sha256": "1f781c9427051493521989b49324f107e37c0d28c8bcc456f50aab6f6845b4e5"
+  },
+  {
+    "path": "package.json",
+    "size": 585,
+    "sha256": "3a62beb542eb8a4f5cfb1016347a5954a1f4bc7e40f85b1abd68b6cc3d5721b3"
+  },
+  {
+    "path": "package.json.meta",
+    "size": 165,
+    "sha256": "038ba9daec68a96a71ed4711654f84f3a07e7b3d796ce6b5f327cca4babe85a5"
+  },
+  {
+    "path": "Samples~/HelloRayNeo/Res/Algorithm/Common/border.png",
+    "size": 4228,
+    "sha256": "5dc17c555cf4ef6e30d566b6b820c266efeb669f58de47629fea402ccec0c68e"
+  },
+  {
+    "path": "Samples~/HelloRayNeo/Res/Algorithm/Common/border.png.meta",
+    "size": 3322,
+    "sha256": "3e3fc6ac6c091afe2c393417a691cd1e3241c6bf8a4dea47200415029bba9878"
+  },
+  {
+    "path": "Samples~/HelloRayNeo/Res/Algorithm/Common/customRayFocus.png",
+    "size": 4533,
+    "sha256": "9867c0e71f3591cae353b92caff15a805c7c9af77e7f0b610e7fde5e1ae95004"
+  },
+  {
+    "path": "Samples~/HelloRayNeo/Res/Algorithm/Common/customRayFocus.png.meta",
+    "size": 2268,
+    "sha256": "a85b39a73919791352b18f5f527d272659e644983d0e7cc4c390557a92ca41fe"
+  },
+  {
+    "path": "Samples~/HelloRayNeo/Res/Algorithm/Common/customRayNormal.png",
+    "size": 4124,
+    "sha256": "87d858262e860675a16d1d4fa6f5bcd3d3fd07bc68f593b4314ed9d75b3522d9"
+  },
+  {
+    "path": "Samples~/HelloRayNeo/Res/Algorithm/Common/customRayNormal.png.meta",
+    "size": 2268,
+    "sha256": "066c7f7a0ead186483f14e2b47ce5ae6e8dc3d0faafce5ec0b470963cf4823f9"
+  },
+  {
+    "path": "Samples~/HelloRayNeo/Res/Algorithm/Common.meta",
+    "size": 180,
+    "sha256": "c5e803413910df2418e8ac8ad0720bfb5908d553b2c395a72e4d4f963c9cdbcc"
+  },
+  {
+    "path": "Samples~/HelloRayNeo/Res/Algorithm/Face/FaceFrame.png",
+    "size": 1436,
+    "sha256": "b2d217fa51b0ec6ae5fd1e586c5e658fccc66e0ecbd3f417ba15930c67626ce6"
+  },
+  {
+    "path": "Samples~/HelloRayNeo/Res/Algorithm/Face/FaceFrame.png.meta",
+    "size": 3673,
+    "sha256": "648bef9e224cdee9ec74e124d29ff7dc1a81a9bd0854083c05311545010ccb1c"
+  },
+  {
+    "path": "Samples~/HelloRayNeo/Res/Algorithm/Face.meta",
+    "size": 180,
+    "sha256": "9e08a40f9c8bddee416e5a1ffcd9f60adb5c041ff7e2eaaae390021a5a2424ce"
+  },
+  {
+    "path": "Samples~/HelloRayNeo/Res/Algorithm/Facial/Cube01.mat",
+    "size": 2186,
+    "sha256": "99496f45a3fae28f721c1b46e6f0c0c1f475bf9c20331e293d478551e411a9f5"
+  },
+  {
+    "path": "Samples~/HelloRayNeo/Res/Algorithm/Facial/Cube01.mat.meta",
+    "size": 196,
+    "sha256": "710d7ce28bc41194b1c9cb745fff160f0e398a08897eaa924e220558de43dc36"
+  },
+  {
+    "path": "Samples~/HelloRayNeo/Res/Algorithm/Facial/Cube02.mat",
+    "size": 2187,
+    "sha256": "171fdc280101912b920c6576c4469aaa5217a933db570d3314388a4d40a64613"
+  },
+  {
+    "path": "Samples~/HelloRayNeo/Res/Algorithm/Facial/Cube02.mat.meta",
+    "size": 196,
+    "sha256": "3d68421053b608b57dbd7610c24db039d966688d7ff0eac77050931cc25550e4"
+  },
+  {
+    "path": "Samples~/HelloRayNeo/Res/Algorithm/Facial/Cube03.mat",
+    "size": 2187,
+    "sha256": "58beff3c2eeb90fcf33e93d7c2c7052ef5dedd487cb484947f96940b3bef1f70"
+  },
+  {
+    "path": "Samples~/HelloRayNeo/Res/Algorithm/Facial/Cube03.mat.meta",
+    "size": 196,
+    "sha256": "f4d305397d3dd6fb18141e891ccc1aa386bfbc286cb77a25834f62c22624b0d4"
+  },
+  {
+    "path": "Samples~/HelloRayNeo/Res/Algorithm/Facial/Cube04.mat",
+    "size": 2185,
+    "sha256": "3002f9ef0d1a891173947e9eb49d82750f5b851a47645752766cdbd8df3171ba"
+  },
+  {
+    "path": "Samples~/HelloRayNeo/Res/Algorithm/Facial/Cube04.mat.meta",
+    "size": 196,
+    "sha256": "d8a39f195f7978c61c6c3b31165fd5bb144d47831acfa101b38c225de78b48f6"
+  },
+  {
+    "path": "Samples~/HelloRayNeo/Res/Algorithm/Facial.meta",
+    "size": 180,
+    "sha256": "79bc0066a75e4ac7d956d8a05cd35cd8db76cbb759ed9af52144854efc17b5e3"
+  },
+  {
+    "path": "Samples~/HelloRayNeo/Res/Algorithm/PlaneDetection/GreenMat.mat",
+    "size": 2157,
+    "sha256": "d35512cd85241dd1c1b73ff73e1493fbae3a15d66b3d7165abfc3d96f0ef1bed"
+  },
+  {
+    "path": "Samples~/HelloRayNeo/Res/Algorithm/PlaneDetection/GreenMat.mat.meta",
+    "size": 196,
+    "sha256": "1ad62af7dee9b0f24adb1fd2280dce74fd260b506c2606d6354f2b94d751f00d"
+  },
+  {
+    "path": "Samples~/HelloRayNeo/Res/Algorithm/PlaneDetection.meta",
+    "size": 180,
+    "sha256": "6ae514a22a85085056ecff909ab3263cdb6dbeb6bd50063cea187d944d169875"
+  },
+  {
+    "path": "Samples~/HelloRayNeo/Res/Algorithm/Sensor/Image/Arrow.png",
+    "size": 25686,
+    "sha256": "257adb8f2c6487a5bee5873425dd4e14aa047ce55180f365695d8ec54f9a2162"
+  },
+  {
+    "path": "Samples~/HelloRayNeo/Res/Algorithm/Sensor/Image/Arrow.png.meta",
+    "size": 3673,
+    "sha256": "5d1643e52e8a1ac7b1ea36c2da30e948022f70bd70dc3c1fbe34f94b5360e0f6"
+  },
+  {
+    "path": "Samples~/HelloRayNeo/Res/Algorithm/Sensor/Image/Axis.jpg",
+    "size": 64820,
+    "sha256": "d3308885b5828494b876516505b4c932ab2ca4067ce9773c59915d00b822e9dd"
+  },
+  {
+    "path": "Samples~/HelloRayNeo/Res/Algorithm/Sensor/Image/Axis.jpg.meta",
+    "size": 2268,
+    "sha256": "83afcec59878d8298d3c5b98b77880b2754e79ccec2cbe7e0442382002f4adc3"
+  },
+  {
+    "path": "Samples~/HelloRayNeo/Res/Algorithm/Sensor/Image/Compass.renderTexture",
+    "size": 876,
+    "sha256": "65b5d5f7500389f3dc93b69a306e8f94f7d9e473a7da19b6c84651997acd1517"
+  },
+  {
+    "path": "Samples~/HelloRayNeo/Res/Algorithm/Sensor/Image/Compass.renderTexture.meta",
+    "size": 196,
+    "sha256": "1a352ef1d899a3c9ee9eb5cb8e252bf854c7aa101f172a742311ccec65e8d8f5"
+  },
+  {
+    "path": "Samples~/HelloRayNeo/Res/Algorithm/Sensor/Image.meta",
+    "size": 180,
+    "sha256": "f9982d6105a007dcd708ceca863e911e4d20110cd9b4dde1517b16e008608dce"
+  },
+  {
+    "path": "Samples~/HelloRayNeo/Res/Algorithm/Sensor/Material/Gray.mat",
+    "size": 2256,
+    "sha256": "b0ce590494801a71ac6e30c60857de29b6baec4e39773bf900fe0441e5d655d9"
+  },
+  {
+    "path": "Samples~/HelloRayNeo/Res/Algorithm/Sensor/Material/Gray.mat.meta",
+    "size": 196,
+    "sha256": "1670f9e8e9708018f9a741795b0809f42947da4baf718f5e1770d76353f6a282"
+  },
+  {
+    "path": "Samples~/HelloRayNeo/Res/Algorithm/Sensor/Material/Overlay.shader",
+    "size": 2102,
+    "sha256": "6aa9c50b61ed03d04003e010abdb71cab0bcb44d75cea7650595c993ef09bee2"
+  },
+  {
+    "path": "Samples~/HelloRayNeo/Res/Algorithm/Sensor/Material/Overlay.shader.meta",
+    "size": 240,
+    "sha256": "daf117491b3abcd8a4085cd201a3763f06f7d7b8b997891d8a20cb35cc3b12cd"
+  },
+  {
+    "path": "Samples~/HelloRayNeo/Res/Algorithm/Sensor/Material/Red.mat",
+    "size": 2270,
+    "sha256": "f50a57e1c331a2df5281473f845d4a8c906be7493239f0e877785b471ed14a15"
+  },
+  {
+    "path": "Samples~/HelloRayNeo/Res/Algorithm/Sensor/Material/Red.mat.meta",
+    "size": 196,
+    "sha256": "9f292cb961c7f840c3410c7dae98791b91ee473a2249cc3ed9bf9808e14aadac"
+  },
+  {
+    "path": "Samples~/HelloRayNeo/Res/Algorithm/Sensor/Material/White.mat",
+    "size": 2272,
+    "sha256": "c02d828fe7ac8b01bb9fe218e11ea510795f7595557f9e2dac7e63abd0701062"
+  },
+  {
+    "path": "Samples~/HelloRayNeo/Res/Algorithm/Sensor/Material/White.mat.meta",
+    "size": 196,
+    "sha256": "18bdbe8527c8fd95d3983bd26c142abfc8e3d4bbe19efec44313f2b8a4aeb602"
+  },
+  {
+    "path": "Samples~/HelloRayNeo/Res/Algorithm/Sensor/Material.meta",
+    "size": 180,
+    "sha256": "2cce5188aea93606c3748e523b1ee3aaa7caa24096127bb66a04026284edb866"
+  },
+  {
+    "path": "Samples~/HelloRayNeo/Res/Algorithm/Sensor/Prefabs/CompassPointer.prefab",
+    "size": 2512,
+    "sha256": "60e8dbcce5f1939f89e1bfea6fc611d7f144c9147beeb46f24b81788d5b7d37b"
+  },
+  {
+    "path": "Samples~/HelloRayNeo/Res/Algorithm/Sensor/Prefabs/CompassPointer.prefab.meta",
+    "size": 161,
+    "sha256": "daeef0c750ede178f4c300cc31c6902c543e87395a174f79c246b02edee1353f"
+  },
+  {
+    "path": "Samples~/HelloRayNeo/Res/Algorithm/Sensor/Prefabs.meta",
+    "size": 180,
+    "sha256": "ca60844f9a71af21511e0785757955cd51f1ac2ca959131413c9ec9d4c043152"
+  },
+  {
+    "path": "Samples~/HelloRayNeo/Res/Algorithm/Sensor.meta",
+    "size": 180,
+    "sha256": "141700420706e22483e505d1269f8c00953fcdde4a78ab600e6df1037398b487"
+  },
+  {
+    "path": "Samples~/HelloRayNeo/Res/Algorithm/Slam/MapSlam.shader",
+    "size": 2117,
+    "sha256": "ba12a072f61f46bb74f29e9afdb06d903dda556fef6d9c602f29264968d4ab68"
+  },
+  {
+    "path": "Samples~/HelloRayNeo/Res/Algorithm/Slam/MapSlam.shader.meta",
+    "size": 240,
+    "sha256": "6398db84f6e081607a66d234545309d504da020d125aad00ae39f867cf201033"
+  },
+  {
+    "path": "Samples~/HelloRayNeo/Res/Algorithm/Slam/SlamCubeRandomColor.mat",
+    "size": 2306,
+    "sha256": "3f9d0065890394f4270c1365f05aaaf282cee36bde957a6d30df27cdd326f665"
+  },
+  {
+    "path": "Samples~/HelloRayNeo/Res/Algorithm/Slam/SlamCubeRandomColor.mat.meta",
+    "size": 196,
+    "sha256": "aad7d6d212bcf184eacc492fbeaa8067e1a1f8c57d45bfed92d7381019e682e1"
+  },
+  {
+    "path": "Samples~/HelloRayNeo/Res/Algorithm/Slam.meta",
+    "size": 180,
+    "sha256": "b39f13084a3907df5815912037ec0827662630f48d4b5a62bef3f3d7784cb5c7"
+  },
+  {
+    "path": "Samples~/HelloRayNeo/Res/Algorithm.meta",
+    "size": 180,
+    "sha256": "59a980beb6c573065c53539f85e49f9b6ddb8194c4a68cc86d28538de5427fc8"
+  },
+  {
+    "path": "Samples~/HelloRayNeo/Res/Common/DualeyeDiffrentDisplay/07\u03c3\u00e0\u2502\u00b5\u00a3\u2551L.png",
+    "size": 17811,
+    "sha256": "8a95e0c8c42bc90fc23081b21c560a44f25887a93f1470ee8ba1f9e84d7fd40c"
+  },
+  {
+    "path": "Samples~/HelloRayNeo/Res/Common/DualeyeDiffrentDisplay/07\u03c3\u00e0\u2502\u00b5\u00a3\u2551L.png.meta",
+    "size": 3344,
+    "sha256": "cef90704e2208d5935cce6c7803770eed7125b550104cfed8097d2f0843a7209"
+  },
+  {
+    "path": "Samples~/HelloRayNeo/Res/Common/DualeyeDiffrentDisplay/07\u03c3\u00e0\u2502\u00b5\u00a3\u2551R.png",
+    "size": 17804,
+    "sha256": "9794b7fe29847518e9c05bc84b3155d4e32dd99c9c2ecdb988b1af9bf9d38644"
+  },
+  {
+    "path": "Samples~/HelloRayNeo/Res/Common/DualeyeDiffrentDisplay/07\u03c3\u00e0\u2502\u00b5\u00a3\u2551R.png.meta",
+    "size": 3344,
+    "sha256": "0b8f3cb8f90a244ffe36fca714a9796ebc2f84237bb9fff563880a317db901b8"
+  },
+  {
+    "path": "Samples~/HelloRayNeo/Res/Common/DualeyeDiffrentDisplay/Custom_DualeyeDiffrentDisplayLeft.mat",
+    "size": 2445,
+    "sha256": "06485ea6bb2e3f7834268bd36c5db6f14a38d97f687b081f84fe67a908946e58"
+  },
+  {
+    "path": "Samples~/HelloRayNeo/Res/Common/DualeyeDiffrentDisplay/Custom_DualeyeDiffrentDisplayLeft.mat.meta",
+    "size": 190,
+    "sha256": "5701f6f68988aa6684e78a13b5df26346937acb87ab71aed214aaa1fb8b81d5b"
+  },
+  {
+    "path": "Samples~/HelloRayNeo/Res/Common/DualeyeDiffrentDisplay/Custom_DualeyeDiffrentDisplayRight.mat",
+    "size": 2454,
+    "sha256": "c5a6a6c4eff1d955a3b7520a4f68d0e7585b8b7a69b246599f0f46a2b5e1edfe"
+  },
+  {
+    "path": "Samples~/HelloRayNeo/Res/Common/DualeyeDiffrentDisplay/Custom_DualeyeDiffrentDisplayRight.mat.meta",
+    "size": 190,
+    "sha256": "a447724924bd94cad37ddd7e46e89287831a6e63b2f34f2f9b3dde236757a3bc"
+  },
+  {
+    "path": "Samples~/HelloRayNeo/Res/Common/DualeyeDiffrentDisplay/DualeyeDiffrentDisplay.shader",
+    "size": 3357,
+    "sha256": "c4a7aed1f90932f3fd4efe543f8f3ea99d38950226a5f5650d501f91d7b490e8"
+  },
+  {
+    "path": "Samples~/HelloRayNeo/Res/Common/DualeyeDiffrentDisplay/DualeyeDiffrentDisplay.shader.meta",
+    "size": 240,
+    "sha256": "c9b75cf138e69a387a61f2f186a4a81112190e1b75439100bde83b9a4641765d"
+  },
+  {
+    "path": "Samples~/HelloRayNeo/Res/Common/DualeyeDiffrentDisplay.meta",
+    "size": 180,
+    "sha256": "89b600545a5ad09062c235ff8b76b60095e9c35def0bbb9b825416767888e434"
+  },
+  {
+    "path": "Samples~/HelloRayNeo/Res/Common.meta",
+    "size": 180,
+    "sha256": "5ed67e748f8af433985c2482e79452476dd75e6f7c92aaa585eb8276dab01998"
+  },
+  {
+    "path": "Samples~/HelloRayNeo/Res.meta",
+    "size": 180,
+    "sha256": "ba4c947047fae5ade3861fc7a63278dd6cc421ed39f1fbbbae01a470c994acbf"
+  },
+  {
+    "path": "Samples~/HelloRayNeo/Scenes/Algorithm/FacialRecog.unity",
+    "size": 59155,
+    "sha256": "089e23c6ff9f02c6171c559c3a3a3735862dc22b63fa3f4734afa2ea8b7389e1"
+  },
+  {
+    "path": "Samples~/HelloRayNeo/Scenes/Algorithm/FacialRecog.unity.meta",
+    "size": 162,
+    "sha256": "9e1bed7867cb4dfc1fc952fe4003a469674dcb9ec222fe77dac228dde0a6a1ea"
+  },
+  {
+    "path": "Samples~/HelloRayNeo/Scenes/Algorithm/PlaneDetection.unity",
+    "size": 17714,
+    "sha256": "06742e9fd71c62e873ca4cdfa347e61d4d5779b5ddeef25c1fa1233ac809586a"
+  },
+  {
+    "path": "Samples~/HelloRayNeo/Scenes/Algorithm/PlaneDetection.unity.meta",
+    "size": 162,
+    "sha256": "2578714edaddbed44fc90f56f8e39a5706dd570dab9519eeef84b5dd18d0509b"
+  },
+  {
+    "path": "Samples~/HelloRayNeo/Scenes/Algorithm/SensorTrans.unity",
+    "size": 42349,
+    "sha256": "26684ad8b51066cb435ea15c393dcf9753fd515a4a47592f3e781402f1f6b832"
+  },
+  {
+    "path": "Samples~/HelloRayNeo/Scenes/Algorithm/SensorTrans.unity.meta",
+    "size": 162,
+    "sha256": "9484bc3569eac43ae572fe95c5fb7a5b570fffccd411f575848728b880375c99"
+  },
+  {
+    "path": "Samples~/HelloRayNeo/Scenes/Algorithm/Slam.unity",
+    "size": 14669,
+    "sha256": "9127fdc1d60ae3742538bada9a78bda9edf0ed455eb75497cd6072aac5698d3e"
+  },
+  {
+    "path": "Samples~/HelloRayNeo/Scenes/Algorithm/Slam.unity.meta",
+    "size": 162,
+    "sha256": "cf21b2b8075574f38e35cecfa9bc2a394c01567295685a8d36435207fe0d7849"
+  },
+  {
+    "path": "Samples~/HelloRayNeo/Scenes/Algorithm.meta",
+    "size": 180,
+    "sha256": "2720cb538bca676ea6066957484b2a115e18d6bae7d1104f11a7fcb70b705998"
+  },
+  {
+    "path": "Samples~/HelloRayNeo/Scenes/Common/DualeyeDiffrentDisplay.unity",
+    "size": 14718,
+    "sha256": "d919621caa8bb36bf0bd52c1f363422d524ac8bddf53efb86e85178152e9c3e7"
+  },
+  {
+    "path": "Samples~/HelloRayNeo/Scenes/Common/DualeyeDiffrentDisplay.unity.meta",
+    "size": 162,
+    "sha256": "1052487e995f484606beb944bd21bc33f4977b81a3ae556198e475e0b869a5e1"
+  },
+  {
+    "path": "Samples~/HelloRayNeo/Scenes/Common/RayNeoInfoDeviceName.unity",
+    "size": 13382,
+    "sha256": "7bad0510b4a48141fa0edf84309f848e109a0effb9688ffe20e17c902446ee0a"
+  },
+  {
+    "path": "Samples~/HelloRayNeo/Scenes/Common/RayNeoInfoDeviceName.unity.meta",
+    "size": 162,
+    "sha256": "1bd78dc38bbb9f053ad1effd07efb406d0c23921355e7dfa684e1d0b58747a0c"
+  },
+  {
+    "path": "Samples~/HelloRayNeo/Scenes/Common/ShareCamera.unity",
+    "size": 27083,
+    "sha256": "af696567c460813108adc2f83664010ef87d146eb60398a179d3d820db57390e"
+  },
+  {
+    "path": "Samples~/HelloRayNeo/Scenes/Common/ShareCamera.unity.meta",
+    "size": 162,
+    "sha256": "c233ecac819ac3cee032bc13e28ae6636dc62ff085fdf43fd71baa0091f323a8"
+  },
+  {
+    "path": "Samples~/HelloRayNeo/Scenes/Common.meta",
+    "size": 180,
+    "sha256": "b038f67322f6fe11100389c8c18fd4df5cf1270c6806e36a8c12f1e4a0f1b261"
+  },
+  {
+    "path": "Samples~/HelloRayNeo/Scenes/Entry.unity",
+    "size": 123711,
+    "sha256": "1e184ee210021a0c71a5ad1a25380f85fa14deb91659a154168eb9d861250c14"
+  },
+  {
+    "path": "Samples~/HelloRayNeo/Scenes/Entry.unity.meta",
+    "size": 162,
+    "sha256": "38492e1330faa682053e5bd101e4bde3f800aaba6d4cdba09c4498c9879aa0cb"
+  },
+  {
+    "path": "Samples~/HelloRayNeo/Scenes/Interactive/BaseInteraction.unity",
+    "size": 90539,
+    "sha256": "ced5cc5206ce84a38d1198a97784225c02b8e7e19e987aedf667c9ca95cd4833"
+  },
+  {
+    "path": "Samples~/HelloRayNeo/Scenes/Interactive/BaseInteraction.unity.meta",
+    "size": 162,
+    "sha256": "a70a2978580f02a7bb80a1e584f0a5ed1459f00a2876408aa00d54aefa674066"
+  },
+  {
+    "path": "Samples~/HelloRayNeo/Scenes/Interactive/CustomRayPoint.unity",
+    "size": 27965,
+    "sha256": "5a6b687fdaa5fcdffac908e7034f4e6b66078c7e4a8cb5c7376778fcca6502f2"
+  },
+  {
+    "path": "Samples~/HelloRayNeo/Scenes/Interactive/CustomRayPoint.unity.meta",
+    "size": 162,
+    "sha256": "18f4835156f7f1b7d6676e569978f1062c97a84651d543e633d32bf5e1653bbc"
+  },
+  {
+    "path": "Samples~/HelloRayNeo/Scenes/Interactive/GazeActive.unity",
+    "size": 24638,
+    "sha256": "aa880361bbbc3386c8b0f21bafca11ec72c5e68e73926ffbd39bf6f15b151445"
+  },
+  {
+    "path": "Samples~/HelloRayNeo/Scenes/Interactive/GazeActive.unity.meta",
+    "size": 162,
+    "sha256": "1d8d7d559040449d68e87dafeb64ab8d0e36750cdb6d131d897a854b270cfe3c"
+  },
+  {
+    "path": "Samples~/HelloRayNeo/Scenes/Interactive/IPC.unity",
+    "size": 39320,
+    "sha256": "396c52e87c81719f7adfa97fa2809e59b09f32326e556967ff59e86f6b61102e"
+  },
+  {
+    "path": "Samples~/HelloRayNeo/Scenes/Interactive/IPC.unity.meta",
+    "size": 162,
+    "sha256": "22c44368fa2be2fb341fcccb44d7147f02496d8293c1f3945967ee87300b2ce3"
+  },
+  {
+    "path": "Samples~/HelloRayNeo/Scenes/Interactive/Lattice.unity",
+    "size": 76476,
+    "sha256": "9e5500090e7934f22aae853537d7b59c1ccb95d6f877cc4a6d904a10b4d0ff08"
+  },
+  {
+    "path": "Samples~/HelloRayNeo/Scenes/Interactive/Lattice.unity.meta",
+    "size": 162,
+    "sha256": "de07c6edcb6c4a3d0cee2dcc4ca1754ae2544d104e565654a85e6deea63070b4"
+  },
+  {
+    "path": "Samples~/HelloRayNeo/Scenes/Interactive/TouchEvent.unity",
+    "size": 53315,
+    "sha256": "56550957cb4a5e944c706f1dd9460a71d2c065c16e32f061ad2fa755fa8fd186"
+  },
+  {
+    "path": "Samples~/HelloRayNeo/Scenes/Interactive/TouchEvent.unity.meta",
+    "size": 162,
+    "sha256": "a0dd9d0c293f89560cff5c650340c990d4f0a07192718f5646d1fa1c504f4e69"
+  },
+  {
+    "path": "Samples~/HelloRayNeo/Scenes/Interactive.meta",
+    "size": 180,
+    "sha256": "e54994276440ce3f3b25ac9fd48c47544efaeaeccf56b727502bd013b7ff5b07"
+  },
+  {
+    "path": "Samples~/HelloRayNeo/Scenes.meta",
+    "size": 180,
+    "sha256": "cb6966973a95079be894334b88c083ddadc6e9c7c684552464fad7a6117ffb9f"
+  },
+  {
+    "path": "Samples~/HelloRayNeo/Scripts/Algorithm/Facial/CreateCube.cs",
+    "size": 1753,
+    "sha256": "ecb066eb370b253ebfa4c8cca585616aae638c41ed9ceedfda4b8a398de0561f"
+  },
+  {
+    "path": "Samples~/HelloRayNeo/Scripts/Algorithm/Facial/CreateCube.cs.meta",
+    "size": 254,
+    "sha256": "16e1d2807c48ead73fd7c0374134d030fab8beefa74eacc5de90e3118321182c"
+  },
+  {
+    "path": "Samples~/HelloRayNeo/Scripts/Algorithm/Facial/TestRuntimeFacial.cs",
+    "size": 970,
+    "sha256": "f3e8bfe48832b6ef7b6904dc6018791f5013e109491160e8eaac6927c0337ec4"
+  },
+  {
+    "path": "Samples~/HelloRayNeo/Scripts/Algorithm/Facial/TestRuntimeFacial.cs.meta",
+    "size": 254,
+    "sha256": "8dc2c3cfd80c4a6635da16f3f241b4e67e8dc698f7890d93e9bbc9ffaa76fc0e"
+  },
+  {
+    "path": "Samples~/HelloRayNeo/Scripts/Algorithm/Facial.meta",
+    "size": 180,
+    "sha256": "6c7a4428cd4e5543190ee0e550663d14dddb84f0c76eef41ad510dd7dad487ee"
+  },
+  {
+    "path": "Samples~/HelloRayNeo/Scripts/Algorithm/PlaneDective.meta",
+    "size": 180,
+    "sha256": "71beb5a5fa0225f36289415043a6bc19e4a303eaf14ce85bc12c0b45f4ddb75b"
+  },
+  {
+    "path": "Samples~/HelloRayNeo/Scripts/Algorithm/PlaneDetection/TestPlaneDetection.cs",
+    "size": 3051,
+    "sha256": "43fa737ccb35a116b09e8d7ebe2000c0766ea5123484b9014aa7978f690df077"
+  },
+  {
+    "path": "Samples~/HelloRayNeo/Scripts/Algorithm/PlaneDetection/TestPlaneDetection.cs.meta",
+    "size": 254,
+    "sha256": "e5962f2e7c7509d0d7f75babfae037795407552a9351a6df2c91dc079d2b996c"
+  },
+  {
+    "path": "Samples~/HelloRayNeo/Scripts/Algorithm/PlaneDetection.meta",
+    "size": 180,
+    "sha256": "b5be80d44a04c646b3c4bb8be7f17032629e3568803a3cf83d61a4951726b9d3"
+  },
+  {
+    "path": "Samples~/HelloRayNeo/Scripts/Algorithm/Sensor/CompassMgr/CompassGenerate.cs",
+    "size": 1906,
+    "sha256": "45a46195795bf1648ba39b54f6b5abfc4b734a3a36f67560e296a06e1a8b8b77"
+  },
+  {
+    "path": "Samples~/HelloRayNeo/Scripts/Algorithm/Sensor/CompassMgr/CompassGenerate.cs.meta",
+    "size": 254,
+    "sha256": "cb46a2cad80cdda927bd7aa3b100a6239daaafedc06af596414e6d572b79a6b6"
+  },
+  {
+    "path": "Samples~/HelloRayNeo/Scripts/Algorithm/Sensor/CompassMgr.meta",
+    "size": 180,
+    "sha256": "b64a24cda6f590f9adc8e9d48ae4bea93a10992f67087ee642f3cdbb393ce86c"
+  },
+  {
+    "path": "Samples~/HelloRayNeo/Scripts/Algorithm/Sensor/TestSensorAlgorithm.cs",
+    "size": 683,
+    "sha256": "715ece2a9f9716a054a067a113c18653ec99fc70ce9fcf65d52f69d0e2e5ed36"
+  },
+  {
+    "path": "Samples~/HelloRayNeo/Scripts/Algorithm/Sensor/TestSensorAlgorithm.cs.meta",
+    "size": 254,
+    "sha256": "26881d0e8c472ff3ba423648c3525b3cd834f01bfc95021405edd214bb227510"
+  },
+  {
+    "path": "Samples~/HelloRayNeo/Scripts/Algorithm/Sensor.meta",
+    "size": 180,
+    "sha256": "70f7164091b5c76bb923c5e03afa34c185d8cda2e1deea7645c7907687b42f3a"
+  },
+  {
+    "path": "Samples~/HelloRayNeo/Scripts/Algorithm/SlamDemoCtrl.cs",
+    "size": 1228,
+    "sha256": "a4dfa903fc77fc9523808414a3f46beeffc02c1303f599e76463c6c99a3c5364"
+  },
+  {
+    "path": "Samples~/HelloRayNeo/Scripts/Algorithm/SlamDemoCtrl.cs.meta",
+    "size": 254,
+    "sha256": "44e7bf048cd67196c35ef124bd69c38f86fb76b191d0edbc8e192a89d7c6031b"
+  },
+  {
+    "path": "Samples~/HelloRayNeo/Scripts/Algorithm.meta",
+    "size": 180,
+    "sha256": "faa6040d45ff2ec39c27b4e51abaf1e1c79df3f204ff988f6486d67d78f77426"
+  },
+  {
+    "path": "Samples~/HelloRayNeo/Scripts/DoubleTabBackSceneCtrl.cs",
+    "size": 559,
+    "sha256": "f90b9008b16dd23db911c2a04d8ebe877c4d620427a9ab5c3ff44eeca00cf472"
+  },
+  {
+    "path": "Samples~/HelloRayNeo/Scripts/DoubleTabBackSceneCtrl.cs.meta",
+    "size": 254,
+    "sha256": "a204953b0984953b780e8c15d6d5517ae9fabc81d06bbc9c5a0bb064a6507b89"
+  },
+  {
+    "path": "Samples~/HelloRayNeo/Scripts/Interactive/BaseInteraction.cs",
+    "size": 342,
+    "sha256": "42f47858380c3909888dae0b18ed09630c25b5b2942d0b4323ea752f08e09429"
+  },
+  {
+    "path": "Samples~/HelloRayNeo/Scripts/Interactive/BaseInteraction.cs.meta",
+    "size": 254,
+    "sha256": "de9a68a9c25d2d1e6d50138f9f1dd2928df09db3cfcccf79b99873cfb1ebd94f"
+  },
+  {
+    "path": "Samples~/HelloRayNeo/Scripts/Interactive/RingTouchCube.cs",
+    "size": 1306,
+    "sha256": "cfbbf14a294c815a0146ab30364b158fa1c3b6566735303f07a4a1711ff20a64"
+  },
+  {
+    "path": "Samples~/HelloRayNeo/Scripts/Interactive/RingTouchCube.cs.meta",
+    "size": 254,
+    "sha256": "e8c59ecdf0b57bd8e8aa5cd3271abef7aa51cffb30481c555bc63d9329022142"
+  },
+  {
+    "path": "Samples~/HelloRayNeo/Scripts/Interactive/ShareCameraCtrl.cs",
+    "size": 2227,
+    "sha256": "b38bf67bb6f4fef73ce7647e69aba4b84b492935636b30e801c436adfee661a0"
+  },
+  {
+    "path": "Samples~/HelloRayNeo/Scripts/Interactive/ShareCameraCtrl.cs.meta",
+    "size": 254,
+    "sha256": "c41e61245719728c648a69c9ee676d497dc88a28ccb6908176545fdfd76aad22"
+  },
+  {
+    "path": "Samples~/HelloRayNeo/Scripts/Interactive/TestIPC.cs",
+    "size": 3192,
+    "sha256": "0d5e108ec7d05d97af24ece764e2ca8b726baa2bca38b8ef5b64f8e7a610890b"
+  },
+  {
+    "path": "Samples~/HelloRayNeo/Scripts/Interactive/TestIPC.cs.meta",
+    "size": 254,
+    "sha256": "68404d61bdec22f191121bc9c01c6949292a475556fe4c6fb5a7bd4d7b56ca77"
+  },
+  {
+    "path": "Samples~/HelloRayNeo/Scripts/Interactive/TestTouchEvent.cs",
+    "size": 2312,
+    "sha256": "2165e93cfb8afa5ed8fc5b39baa130856335a46401c35c6d635f2d3677e921bc"
+  },
+  {
+    "path": "Samples~/HelloRayNeo/Scripts/Interactive/TestTouchEvent.cs.meta",
+    "size": 254,
+    "sha256": "f4536fe0c1b555f6bf1ef47fada4476303e2d69f9101ec2dc29d5c2b8424ff6d"
+  },
+  {
+    "path": "Samples~/HelloRayNeo/Scripts/Interactive.meta",
+    "size": 180,
+    "sha256": "25eee63600cdf00d045e92bd13e1470703f64713c0e7a669f7f3b963540bbeb2"
+  },
+  {
+    "path": "Samples~/HelloRayNeo/Scripts/KillSelf.cs",
+    "size": 553,
+    "sha256": "889c6c5f2a58e819d794962ddcc53b5ae14519cb6f2fae4d6114c0530702e69c"
+  },
+  {
+    "path": "Samples~/HelloRayNeo/Scripts/KillSelf.cs.meta",
+    "size": 254,
+    "sha256": "66841ebd1fdec35e2110802ae44322be2cabadf54bcdb8e592ccdb9fec380747"
+  },
+  {
+    "path": "Samples~/HelloRayNeo/Scripts/ResetHeadTrack.cs",
+    "size": 963,
+    "sha256": "32d82d15082d1116f83a9c8d7970dfce226e3818a7d19aaed0884a9745c0bf81"
+  },
+  {
+    "path": "Samples~/HelloRayNeo/Scripts/ResetHeadTrack.cs.meta",
+    "size": 254,
+    "sha256": "ca34803f5a022d2e115e6f4af4cdf3a49013dee129baf6d4f9e918e605816df9"
+  },
+  {
+    "path": "Samples~/HelloRayNeo/Scripts/SampleScene/RayNeoInfo/TestRayNeoInfoExtension.cs",
+    "size": 254,
+    "sha256": "241ad69e8f42cbfc5fe4c350743caa757b907b5eeb91b30fbbf562c1684a56a7"
+  },
+  {
+    "path": "Samples~/HelloRayNeo/Scripts/SampleScene/RayNeoInfo/TestRayNeoInfoExtension.cs.meta",
+    "size": 254,
+    "sha256": "083017c9275e3ecfaac30df20f8e985022faeb5c98f6722e3f63970cb4e5a6a9"
+  },
+  {
+    "path": "Samples~/HelloRayNeo/Scripts/SampleScene/RayNeoInfo.meta",
+    "size": 180,
+    "sha256": "98f4f8bbcbd01c7af1c709e6c9fd7e4989363e82ae0042c5226a1ec7568fed9c"
+  },
+  {
+    "path": "Samples~/HelloRayNeo/Scripts/SampleScene/SampleCubeCtrl.cs",
+    "size": 1091,
+    "sha256": "6517fc8a115009a01bb706944b6fee08997279fc2520bf30e77df9b0fe50c9e4"
+  },
+  {
+    "path": "Samples~/HelloRayNeo/Scripts/SampleScene/SampleCubeCtrl.cs.meta",
+    "size": 254,
+    "sha256": "bb6bb8e8a35869700121e3e3ccf4759fe7fa749ea2b025455b64dd38b68d1a78"
+  },
+  {
+    "path": "Samples~/HelloRayNeo/Scripts/SampleScene/SampleSceneCtrl.cs",
+    "size": 757,
+    "sha256": "d5c4a91ce41d114b3c38406579903eea1a3031c3444843fba1eeca54d0faa50d"
+  },
+  {
+    "path": "Samples~/HelloRayNeo/Scripts/SampleScene/SampleSceneCtrl.cs.meta",
+    "size": 254,
+    "sha256": "5b6324b8592549de1cacd973eeb8e90544e5b762017f5b540d0959182091b1dd"
+  },
+  {
+    "path": "Samples~/HelloRayNeo/Scripts/SampleScene.meta",
+    "size": 180,
+    "sha256": "146abcb4c22d095c52011be7154aacb9cd61b5514c76cca9099916a82f6ede45"
+  },
+  {
+    "path": "Samples~/HelloRayNeo/Scripts/Scene1Ctrl.cs",
+    "size": 2176,
+    "sha256": "5a7756b1d7eaa5091c3727efcbf1e39bad6cde0ecabaf29695f2626514edf4af"
+  },
+  {
+    "path": "Samples~/HelloRayNeo/Scripts/Scene1Ctrl.cs.meta",
+    "size": 254,
+    "sha256": "b6ed56960f4e42f60132831c73d483ed6fcb866ac8887e9718f911f0caa4d523"
+  },
+  {
+    "path": "Samples~/HelloRayNeo/Scripts/Tool/CameraPermissionRequest.cs",
+    "size": 302,
+    "sha256": "1f01e6e2d20fd62a5799461cc9db6811e8c5bdc9dfd601bd71c834d9d4a3db72"
+  },
+  {
+    "path": "Samples~/HelloRayNeo/Scripts/Tool/CameraPermissionRequest.cs.meta",
+    "size": 254,
+    "sha256": "4a2ac0ea27cdb98a63c59fec935d59ad1c693f617620971f92a9d7e77981071b"
+  },
+  {
+    "path": "Samples~/HelloRayNeo/Scripts/Tool/GetDeviceInfo.cs",
+    "size": 1767,
+    "sha256": "67aef57a40b2d579bde0822ac2dc46289eb0bc667e81c80031d9ae8dc2ccc2fe"
+  },
+  {
+    "path": "Samples~/HelloRayNeo/Scripts/Tool/GetDeviceInfo.cs.meta",
+    "size": 254,
+    "sha256": "9390832e98e3e73fde8504fea9b99e438c38c0584bba2e4059e8040408b97409"
+  },
+  {
+    "path": "Samples~/HelloRayNeo/Scripts/Tool/SetCanvasOverlay.cs",
+    "size": 510,
+    "sha256": "9c3d2723488a3cff757a864cf495a5fb4d2a8903174bf1b37cbc380f275fa78c"
+  },
+  {
+    "path": "Samples~/HelloRayNeo/Scripts/Tool/SetCanvasOverlay.cs.meta",
+    "size": 254,
+    "sha256": "bcdb8bfb9d9adb186e0c7a8e6844b4ca9134bd85e37118a5fec70761e8c1a6a2"
+  },
+  {
+    "path": "Samples~/HelloRayNeo/Scripts/Tool/ShowFps.cs",
+    "size": 1353,
+    "sha256": "fe4c04185021dadee7c94fe8953c64f50c7e56529bb1054dbe786fbc41c432db"
+  },
+  {
+    "path": "Samples~/HelloRayNeo/Scripts/Tool/ShowFps.cs.meta",
+    "size": 254,
+    "sha256": "edc3fce12e394f9fe4a6eaf11abbb75bd316d1c40c9fa81aa1399278f7d3cd92"
+  },
+  {
+    "path": "Samples~/HelloRayNeo/Scripts/Tool.meta",
+    "size": 180,
+    "sha256": "9601fadc57f6aac7f4f14b47b8f7a4ca352818a2e8b313d69c55d3f9a79e3e7e"
+  },
+  {
+    "path": "Samples~/HelloRayNeo/Scripts.meta",
+    "size": 180,
+    "sha256": "4400a7313237777ed65627075b1eb298d2c51a21c53c66efcb4331083316d81e"
+  },
+  {
+    "path": "Samples~/HelloRayNeo.meta",
+    "size": 180,
+    "sha256": "27a9ba9dc8c4a58060e0c46bc312b19d023954ffe53f27f03bc58245f4c240e3"
+  },
+  {
+    "path": "SDK/Runtime/Circle.meta",
+    "size": 180,
+    "sha256": "a2b1cb9d72650db4639f51a6ec010ca3d1acd485a05e9c6e305da013e4f76b44"
+  },
+  {
+    "path": "SDK/Runtime/Editor/DebugWindow.cs",
+    "size": 17007,
+    "sha256": "eb5cb64bd97fddff559f71cbfcfedfb7250a0520ac1f2cc1a93e7a1b60231b04"
+  },
+  {
+    "path": "SDK/Runtime/Editor/DebugWindow.cs.meta",
+    "size": 254,
+    "sha256": "5655de2c32a3d55415c051ee9081448417b03c20f23ff60c408016cb029fc2b3"
+  },
+  {
+    "path": "SDK/Runtime/Editor/EditorTool.cs",
+    "size": 3355,
+    "sha256": "9bdc845f1d396429be96357274298316a1a49c8dda43c29de50a04cfb3f053db"
+  },
+  {
+    "path": "SDK/Runtime/Editor/EditorTool.cs.meta",
+    "size": 254,
+    "sha256": "f8e976d7eefe95acb17ea369fb09d2f9b30f402f2476e6b3faba1c0d57b70c04"
+  },
+  {
+    "path": "SDK/Runtime/Editor/GameViewResolution.cs",
+    "size": 8711,
+    "sha256": "9e23151246fcb18bcf8143f8d5d1513bf12068cf40bfb9d992f1220086f849cb"
+  },
+  {
+    "path": "SDK/Runtime/Editor/GameViewResolution.cs.meta",
+    "size": 254,
+    "sha256": "52c562b3d50ce9747677bc1857a622767c12a3563bd0b88568e84beea807fe64"
+  },
+  {
+    "path": "SDK/Runtime/Editor/ProjectSetting/BaseSettingGUI.cs",
+    "size": 2866,
+    "sha256": "881f5ae4fecdfab9dac2ef2208fbb8f0425a62094ff8c5d51135053bd8d1842d"
+  },
+  {
+    "path": "SDK/Runtime/Editor/ProjectSetting/BaseSettingGUI.cs.meta",
+    "size": 254,
+    "sha256": "9c41262906ec50332035ba6ff3a98f01ebe441fc9a0bbdc4a3353ebaa8fc49eb"
+  },
+  {
+    "path": "SDK/Runtime/Editor/ProjectSetting/ExtensionGUI.cs",
+    "size": 5718,
+    "sha256": "27d3cd574a8e01ea6be0011c24d90d191cdb2829ed9bb269b4a9305365e15702"
+  },
+  {
+    "path": "SDK/Runtime/Editor/ProjectSetting/ExtensionGUI.cs.meta",
+    "size": 254,
+    "sha256": "1e49d5371a098ce9dd63d78a4506fa5a60f1b5a087eac52a56a08d584b257a8c"
+  },
+  {
+    "path": "SDK/Runtime/Editor/ProjectSetting/RayNeoProjectSetting.cs",
+    "size": 6323,
+    "sha256": "da2d1c4099d68020f4125391b25deff654dcf262e1281c236a9b0679319eee60"
+  },
+  {
+    "path": "SDK/Runtime/Editor/ProjectSetting/RayNeoProjectSetting.cs.meta",
+    "size": 254,
+    "sha256": "a658b0d9fea27c33574fda8cefe5dca45044d58fc1f5a6c76f8c556474b8e67c"
+  },
+  {
+    "path": "SDK/Runtime/Editor/ProjectSetting/RayNeoProjectSettingGUIBase.cs",
+    "size": 304,
+    "sha256": "415f296ab079a349f13c7a78bbe33bbd46c9cd2c9bb9d3fb081aa58b3f6a8488"
+  },
+  {
+    "path": "SDK/Runtime/Editor/ProjectSetting/RayNeoProjectSettingGUIBase.cs.meta",
+    "size": 254,
+    "sha256": "35c9ed33a45541d278793971717a9485169dd71c17c81738133031bcb3addbb9"
+  },
+  {
+    "path": "SDK/Runtime/Editor/ProjectSetting/SimpleTouchSettingGUI.cs",
+    "size": 3106,
+    "sha256": "7a87635b7f63ff80c1ddf7d9a8dee8f1223f2a341f60c791cd40def6e019a6a3"
+  },
+  {
+    "path": "SDK/Runtime/Editor/ProjectSetting/SimpleTouchSettingGUI.cs.meta",
+    "size": 254,
+    "sha256": "eaed723d81eabb4ef3392b033c11a643318991b8111766d5601bcbaf73b9870e"
+  },
+  {
+    "path": "SDK/Runtime/Editor/ProjectSetting/SimulatorGUI.cs",
+    "size": 1021,
+    "sha256": "b5e8f06808e4ff9d0ace347fa59a4ddfa7f4002871c7169cf3b22e7709853a9d"
+  },
+  {
+    "path": "SDK/Runtime/Editor/ProjectSetting/SimulatorGUI.cs.meta",
+    "size": 254,
+    "sha256": "fa42a4a4a9c49192100db38013d2357310ebffb1819dcc3e01e0001ea5454abf"
+  },
+  {
+    "path": "SDK/Runtime/Editor/ProjectSetting.meta",
+    "size": 180,
+    "sha256": "d5cfed97d8e99573f34c13e9f8aee9f7eab7922070c57532667228ed019131f5"
+  },
+  {
+    "path": "SDK/Runtime/Editor/RayNeo.OpenXR.ARDK.Editor.asmdef",
+    "size": 540,
+    "sha256": "085ce1f10ccfcc1d6fb80d579dba083d77ae891f12b104967e8e613546ac9232"
+  },
+  {
+    "path": "SDK/Runtime/Editor/RayNeo.OpenXR.ARDK.Editor.asmdef.meta",
+    "size": 173,
+    "sha256": "3586da107f5443fb9e33f7050771fa938e88421ca9a8fadb84ff1f215742b6ab"
+  },
+  {
+    "path": "SDK/Runtime/Editor/RayNeoSettingGenerator.cs",
+    "size": 406,
+    "sha256": "3fd1f9f93bf65151b378ade0a231b46380842010183d9e717df0ae3f81b3bc13"
+  },
+  {
+    "path": "SDK/Runtime/Editor/RayNeoSettingGenerator.cs.meta",
+    "size": 254,
+    "sha256": "14593dff67a874cbf678102e7802b46c92cdf7584815fbed9836d97a3233315b"
+  },
+  {
+    "path": "SDK/Runtime/Editor/Textures/LOGO.png",
+    "size": 12589,
+    "sha256": "035075248b02c2a46e51d5a8938de6924f049720b78dc6d9ecc2e3621d2e6e3e"
+  },
+  {
+    "path": "SDK/Runtime/Editor/Textures/LOGO.png.meta",
+    "size": 2212,
+    "sha256": "4d1198f9aaabf5c0bf3a7cb489e4cede9b00a97cb0871116620550496a798a65"
+  },
+  {
+    "path": "SDK/Runtime/Editor/Textures.meta",
+    "size": 180,
+    "sha256": "d11835379541263ed1746af716fb940e6c7c7eb08448eecfdcdaff51817723e6"
+  },
+  {
+    "path": "SDK/Runtime/Editor/XRSDKCoreDllImport.cs",
+    "size": 1291,
+    "sha256": "9cae07729ddaf9d212049c0c307a8e3df7129c2f003db39416498aa37f7fe3c3"
+  },
+  {
+    "path": "SDK/Runtime/Editor/XRSDKCoreDllImport.cs.meta",
+    "size": 254,
+    "sha256": "4abc13f428096bcab82838f6507405f239f492c7dbb0fc5b4fc7c73692a84b79"
+  },
+  {
+    "path": "SDK/Runtime/Editor.meta",
+    "size": 180,
+    "sha256": "34b75f193e3eeb8a01c444c952b49f2b48427934fb1e8440a134f24469a39254"
+  },
+  {
+    "path": "SDK/Runtime/Plugins/Android/ipc-release.aar",
+    "size": 48865,
+    "sha256": "afc5300cbcf5b60d792357d8c26f4c2cd3c78868531b2ccbb9f52adcb3965bb8"
+  },
+  {
+    "path": "SDK/Runtime/Plugins/Android/ipc-release.aar.meta",
+    "size": 640,
+    "sha256": "4670f94901cf57c73350036512be665b7a254d2ce6e9db57a3724deec62fdee1"
+  },
+  {
+    "path": "SDK/Runtime/Plugins/Android/Unity-Adapter.aar",
+    "size": 35348,
+    "sha256": "ea5933a1f0385f5198ec066afadb0310156f70b57e237b4df91adbdf576b1d2f"
+  },
+  {
+    "path": "SDK/Runtime/Plugins/Android/Unity-Adapter.aar.meta",
+    "size": 608,
+    "sha256": "6e03b0a6e4dffc816e52214341442a6aa0522cf3530d39e2150951e44fe48a87"
+  },
+  {
+    "path": "SDK/Runtime/Plugins/Android.meta",
+    "size": 180,
+    "sha256": "54491bac6bb8b30e89a8a582df2c8286e246fe6dbcb25702f5b2bc617c279618"
+  },
+  {
+    "path": "SDK/Runtime/Plugins/LitJson.dll",
+    "size": 52224,
+    "sha256": "a1ae6f42ffcf6e1b8fd70b726758e28d8a24bea5fde56ae56a35bf48f89569aa"
+  },
+  {
+    "path": "SDK/Runtime/Plugins/LitJson.dll.meta",
+    "size": 678,
+    "sha256": "06302144e4f130a306d17616d41e128507b1a7719c2562b47bc483e80b5fea08"
+  },
+  {
+    "path": "SDK/Runtime/Plugins/UnityXRSDKCore.dll",
+    "size": 40448,
+    "sha256": "1343035899ffe3702a9a197899761fe5f72a6befa5d22d74bc0105b42da678b3"
+  },
+  {
+    "path": "SDK/Runtime/Plugins/UnityXRSDKCore.dll.meta",
+    "size": 678,
+    "sha256": "c8e8158da80414b5edea97adea6eaf634522b8ff5fa2957753467227ef7ef1d1"
+  },
+  {
+    "path": "SDK/Runtime/Plugins.meta",
+    "size": 180,
+    "sha256": "5cff0e22b11350ab85e73bc08143871c1062432d1176769e47da1c67afd1ad2b"
+  },
+  {
+    "path": "SDK/Runtime/Resources/Pointer/PointerMat.mat",
+    "size": 814,
+    "sha256": "faf9aa2eea77893efac416a65a0819f7a116c1cebe3bbf69be8a0d0fd3ea8770"
+  },
+  {
+    "path": "SDK/Runtime/Resources/Pointer/PointerMat.mat.meta",
+    "size": 190,
+    "sha256": "6308bb5e3f2a2e341a7222ae00ff389a3224cb5be2e4f7c93aa5ebbbe7eb4e9f"
+  },
+  {
+    "path": "SDK/Runtime/Resources/Pointer/PointerProgress.mat",
+    "size": 2455,
+    "sha256": "9f06cee5d53a985f2238057c30ea3a3c88cf53de6b8a9b40a6dedd46fcd1a6fd"
+  },
+  {
+    "path": "SDK/Runtime/Resources/Pointer/PointerProgress.mat.meta",
+    "size": 196,
+    "sha256": "26ea03bc24330ede67979f25c3c61f68ee6dd8cdb9f9ccc91a7511411dc463c4"
+  },
+  {
+    "path": "SDK/Runtime/Resources/Pointer/PointerProgressShader.shader",
+    "size": 1652,
+    "sha256": "cd868b3e0636f234b36f50cf73fe90766769e5590fd8ac8f7d945d29bc057c74"
+  },
+  {
+    "path": "SDK/Runtime/Resources/Pointer/PointerProgressShader.shader.meta",
+    "size": 240,
+    "sha256": "953d3f706a2dbca476220a05586d0e158e5f48718e6380ef78b5b1f330b1ba6c"
+  },
+  {
+    "path": "SDK/Runtime/Resources/Pointer/PointerShader.shader",
+    "size": 1520,
+    "sha256": "08ed00d06ded812bf1023fd6e801dffd1b74e846a25ed943d4b977047267b933"
+  },
+  {
+    "path": "SDK/Runtime/Resources/Pointer/PointerShader.shader.meta",
+    "size": 240,
+    "sha256": "7555020602ff9da90f76e7be70729c76f33a87c79b096d5a787cea909dc237fb"
+  },
+  {
+    "path": "SDK/Runtime/Resources/Pointer/RayMat.mat",
+    "size": 2389,
+    "sha256": "cbe25f3dde373c9e0cd42f6f45c9c71398559c29d8bb6b1fa2601458aa04468a"
+  },
+  {
+    "path": "SDK/Runtime/Resources/Pointer/RayMat.mat.meta",
+    "size": 196,
+    "sha256": "db6d97c1749da8aea0cb21201c98477dd9bfd9ffa0e5c863bce721c533449e96"
+  },
+  {
+    "path": "SDK/Runtime/Resources/Pointer/TexturePointerMat.mat",
+    "size": 2498,
+    "sha256": "9ef1330b51000280f93cd6aa240589f54860d62531e6319f6e17b539e868d0c2"
+  },
+  {
+    "path": "SDK/Runtime/Resources/Pointer/TexturePointerMat.mat.meta",
+    "size": 196,
+    "sha256": "957d733c91c20aa1da796e35b9440bce1ea1254016600619ccccd7a2e45b647f"
+  },
+  {
+    "path": "SDK/Runtime/Resources/Pointer/TexturePointerShader.shader",
+    "size": 1346,
+    "sha256": "59719e0bcf217c86b3f341cfdb0e9a713dae24e3ce3dcbd0dd40079327fb4040"
+  },
+  {
+    "path": "SDK/Runtime/Resources/Pointer/TexturePointerShader.shader.meta",
+    "size": 240,
+    "sha256": "8caefbbb37a322d49285aad93800fd63af7e60e47d81caca4b678bc93ecc4e7f"
+  },
+  {
+    "path": "SDK/Runtime/Resources/Pointer.meta",
+    "size": 180,
+    "sha256": "ac734f90fd960186a59a1eba1276ccf9ce03024bfcdafc5a711a52b52d40c780"
+  },
+  {
+    "path": "SDK/Runtime/Resources/Prefab/TipsWindow.prefab",
+    "size": 11285,
+    "sha256": "1b2ff7f5188c86453bd8ddbf96d3496dac3156a5995ab4d4081d696d01bd99f3"
+  },
+  {
+    "path": "SDK/Runtime/Resources/Prefab/TipsWindow.prefab.meta",
+    "size": 161,
+    "sha256": "1bad94d4b57e0f79bc7c926157b3222245bfb4afdef7b154702a77112f9a155c"
+  },
+  {
+    "path": "SDK/Runtime/Resources/Prefab/XR Plugin Gaze.prefab",
+    "size": 24331,
+    "sha256": "fc907a210243da96f523ed402f3e4124e9bdd3eb080b11311f59b57396cf3c4a"
+  },
+  {
+    "path": "SDK/Runtime/Resources/Prefab/XR Plugin Gaze.prefab.meta",
+    "size": 161,
+    "sha256": "71ad6d000cc2341de862675b96f2f8b49682ca4de05701160da63e215afa0b1f"
+  },
+  {
+    "path": "SDK/Runtime/Resources/Prefab/XR Plugin Texture.prefab",
+    "size": 26909,
+    "sha256": "9c2e0b5c75d19dc500863537e538ee645f03465285e304cdd83a90aa2537463c"
+  },
+  {
+    "path": "SDK/Runtime/Resources/Prefab/XR Plugin Texture.prefab.meta",
+    "size": 161,
+    "sha256": "5ff4dc4f757f1ca5739d8e7ee9adac5d65cdfefb1ec662d9cd8aebc986a83678"
+  },
+  {
+    "path": "SDK/Runtime/Resources/Prefab/XR Plugin.prefab",
+    "size": 18658,
+    "sha256": "8dc29a6c8211fe7fe1728612228432e8c385fd38ee0525bcbd1fc0d54c22323f"
+  },
+  {
+    "path": "SDK/Runtime/Resources/Prefab/XR Plugin.prefab.meta",
+    "size": 161,
+    "sha256": "badddaf0f2c000c2afe1614c1b7dc59721f656ad43c19211f9e4a2ac9cd551fd"
+  },
+  {
+    "path": "SDK/Runtime/Resources/Prefab.meta",
+    "size": 180,
+    "sha256": "78718b3e3d6ae09d51d348afbbeb7f1cc3b6bc1f1d84d5672490be0957b36d7f"
+  },
+  {
+    "path": "SDK/Runtime/Resources.meta",
+    "size": 180,
+    "sha256": "64b56caff579a94442bb0e57bc21277c01bb9bc950606e5ed2dd1379f891110c"
+  },
+  {
+    "path": "SDK/Runtime/Scripts/APIs/Algorithm.cs",
+    "size": 8724,
+    "sha256": "2b108451a53412c35e9156796f9c24adfcd140555b77b95c2f18561dd39c3c12"
+  },
+  {
+    "path": "SDK/Runtime/Scripts/APIs/Algorithm.cs.meta",
+    "size": 254,
+    "sha256": "7959d954b013c1a83cd669eb00752dff8aed7b427936a261166448d1ed67b981"
+  },
+  {
+    "path": "SDK/Runtime/Scripts/APIs/Algorithm.meta",
+    "size": 180,
+    "sha256": "b30bfb9d5c0d68c82ebcace893c02a15f184926e0321179f704395bfbd2cb19d"
+  },
+  {
+    "path": "SDK/Runtime/Scripts/APIs/AudioFocus.cs",
+    "size": 2575,
+    "sha256": "0de4a87b3c940912f6150e3e52bfcdde8d90a68e814237793ffbf21614a26c82"
+  },
+  {
+    "path": "SDK/Runtime/Scripts/APIs/AudioFocus.cs.meta",
+    "size": 254,
+    "sha256": "9522d6787f573f279bb110aae4c71e2f0a447302b90e96eaf12880d5178e845b"
+  },
+  {
+    "path": "SDK/Runtime/Scripts/APIs/CalibratorManager.cs",
+    "size": 2904,
+    "sha256": "0f254291bc63ff9c2506f22b02e9427a1fd503af20a81793427cad7ce52ba748"
+  },
+  {
+    "path": "SDK/Runtime/Scripts/APIs/CalibratorManager.cs.meta",
+    "size": 254,
+    "sha256": "8acfe661f0eea14dc309a4a2712e723267f4965e44511d07e4bb552c9bb7c825"
+  },
+  {
+    "path": "SDK/Runtime/Scripts/APIs/FaceDetectorManager.cs",
+    "size": 2181,
+    "sha256": "7f346ebd8f0a801b920410bb36c9516df8ec18ffb2c58eed4f4f49b84dd3db3b"
+  },
+  {
+    "path": "SDK/Runtime/Scripts/APIs/FaceDetectorManager.cs.meta",
+    "size": 254,
+    "sha256": "30794c8f3a4ab2707d4f2c2498333f05781f3a907f30b30bac6aaa5937753709"
+  },
+  {
+    "path": "SDK/Runtime/Scripts/APIs/GlassSystemAudioEffectManager/Base/BaseGlassSystemAudioEffectManager.cs",
+    "size": 4285,
+    "sha256": "4b710bf645a79399e90bb7e186a7f8a6d76e3b678cb0c3315992b2ca2098d0b6"
+  },
+  {
+    "path": "SDK/Runtime/Scripts/APIs/GlassSystemAudioEffectManager/Base/BaseGlassSystemAudioEffectManager.cs.meta",
+    "size": 254,
+    "sha256": "62349a93c4d5dcf53cec647cffefb80116470213147efc3b1446f43396066db8"
+  },
+  {
+    "path": "SDK/Runtime/Scripts/APIs/GlassSystemAudioEffectManager/Base/IGlassSystemAudioEffectManager.cs",
+    "size": 643,
+    "sha256": "0cb11cbc773ebc7e85da6390e57b02d5360d5cf20de39135386cdd22c3b07c37"
+  },
+  {
+    "path": "SDK/Runtime/Scripts/APIs/GlassSystemAudioEffectManager/Base/IGlassSystemAudioEffectManager.cs.meta",
+    "size": 254,
+    "sha256": "4f9033847ee1cab4cf8bcd511cdd97a4b29de468bf8feaebc499ed92332789d8"
+  },
+  {
+    "path": "SDK/Runtime/Scripts/APIs/GlassSystemAudioEffectManager/Base.meta",
+    "size": 180,
+    "sha256": "9e9522f6d386c5bc731b36042097eeac6edca259cacf52a3efc4164f29abcffd"
+  },
+  {
+    "path": "SDK/Runtime/Scripts/APIs/GlassSystemAudioEffectManager/GlassSystemAudioEffectManager.cs",
+    "size": 1137,
+    "sha256": "1c041cd0e2892b02831c79fc8383bff866d25644c0ea4f5f26ea4ae70f3f3a2c"
+  },
+  {
+    "path": "SDK/Runtime/Scripts/APIs/GlassSystemAudioEffectManager/GlassSystemAudioEffectManager.cs.meta",
+    "size": 254,
+    "sha256": "33d265fd0ce69903d5898a8f2558c9737e5625727c2126601a7e87ada5ef5712"
+  },
+  {
+    "path": "SDK/Runtime/Scripts/APIs/GlassSystemAudioEffectManager/Test/TestGlassSystemAudioEffectManager.cs",
+    "size": 549,
+    "sha256": "7cb8d2a7bcd22ab024c2268f811d70c193f3d87a25c0065c123a17a1cc6e40cb"
+  },
+  {
+    "path": "SDK/Runtime/Scripts/APIs/GlassSystemAudioEffectManager/Test/TestGlassSystemAudioEffectManager.cs.meta",
+    "size": 254,
+    "sha256": "8357a746a61dd35f882c6e408bf27d31fd85316526c2821ec56ca6b2864a4f3e"
+  },
+  {
+    "path": "SDK/Runtime/Scripts/APIs/GlassSystemAudioEffectManager/Test.meta",
+    "size": 180,
+    "sha256": "4b4a23dc054b32cebfd7df06877d0a9f659dad90fbc3fcbd025c4d3de4cc9ae0"
+  },
+  {
+    "path": "SDK/Runtime/Scripts/APIs/GlassSystemAudioEffectManager.meta",
+    "size": 180,
+    "sha256": "6ecdb38eb77c7d1449353ead69de4ad22fa839172bf052e80adb92f131673eba"
+  },
+  {
+    "path": "SDK/Runtime/Scripts/APIs/IPC.cs",
+    "size": 2641,
+    "sha256": "7995c3ab4b016e1984ec72a6706fdd0b4bdb7f6981fb6d12e318d0453cba1f2b"
+  },
+  {
+    "path": "SDK/Runtime/Scripts/APIs/IPC.cs.meta",
+    "size": 254,
+    "sha256": "24b0c5fa30fc4a0a5219ab5ef2eeaa2162a10b9388e9565fd5f09993a318af6d"
+  },
+  {
+    "path": "SDK/Runtime/Scripts/APIs/PlatformAndroid.cs",
+    "size": 4910,
+    "sha256": "d7711410486151ab8ab2e6ca814d1995e12389bc060daa504824e81b9dd746ce"
+  },
+  {
+    "path": "SDK/Runtime/Scripts/APIs/PlatformAndroid.cs.meta",
+    "size": 254,
+    "sha256": "92184af80f104690c4539ce788da394d5275f0a89fb41bccc8a49dadaba3f833"
+  },
+  {
+    "path": "SDK/Runtime/Scripts/APIs/RayNeoInfo.cs",
+    "size": 2899,
+    "sha256": "c99888c80d1a2402fff4aa953fae73e81e0d0223a06767f62161f6e7ca672702"
+  },
+  {
+    "path": "SDK/Runtime/Scripts/APIs/RayNeoInfo.cs.meta",
+    "size": 254,
+    "sha256": "c0d4de7aaee967941985daa05aa08d66dd75e3256e8a746db0224d49d4736912"
+  },
+  {
+    "path": "SDK/Runtime/Scripts/APIs/RayNeoInfoExtension.cs",
+    "size": 1380,
+    "sha256": "176a151ffe7d42616b4e191df94f7bed607fdf44925e03d6d8f58df13b093943"
+  },
+  {
+    "path": "SDK/Runtime/Scripts/APIs/RayNeoInfoExtension.cs.meta",
+    "size": 254,
+    "sha256": "f482f52aa319feb79e48162dbc5bf09898d674569c05e06fca29ccd8925a6242"
+  },
+  {
+    "path": "SDK/Runtime/Scripts/APIs/RingManager.cs",
+    "size": 5945,
+    "sha256": "f72f0e1b931dc32a9f468347e74e3b1abe4f3a862cad36f5bb59fdfeb788ebd3"
+  },
+  {
+    "path": "SDK/Runtime/Scripts/APIs/RingManager.cs.meta",
+    "size": 254,
+    "sha256": "de74d13210299770af4b0ea4dfdf495824317ca0ed54244cdde05b110be79caa"
+  },
+  {
+    "path": "SDK/Runtime/Scripts/APIs/ShareCamera/ShareCamera.cs",
+    "size": 11030,
+    "sha256": "8cef0ddd4ef08598fec805e80f945973d7b0dace1dc0faba1e0bd8b23ab1bb88"
+  },
+  {
+    "path": "SDK/Runtime/Scripts/APIs/ShareCamera/ShareCamera.cs.meta",
+    "size": 254,
+    "sha256": "36e22d837e0a4a6fa6c5608010ecc83de56ff1e5a917d215e1089aa3df69afe2"
+  },
+  {
+    "path": "SDK/Runtime/Scripts/APIs/ShareCamera/XCameraParams.cs",
+    "size": 1584,
+    "sha256": "e7662aa0d4e279cbd5ce1752a46928837256f5cd2890ecc7b837303a6c00ab79"
+  },
+  {
+    "path": "SDK/Runtime/Scripts/APIs/ShareCamera/XCameraParams.cs.meta",
+    "size": 254,
+    "sha256": "f84e28ade1473c7858eade53d5865f64fbe9e3a1bf861147ab81b5b88f7c590d"
+  },
+  {
+    "path": "SDK/Runtime/Scripts/APIs/ShareCamera.meta",
+    "size": 180,
+    "sha256": "de02eb993d010a91b009e718eacfc48f34248e6f5fa4494b4eeb2d548e8ec4e6"
+  },
+  {
+    "path": "SDK/Runtime/Scripts/APIs/WatchGestureUtil.cs",
+    "size": 1408,
+    "sha256": "94494fc19b75a660f1d7c113ba778ee21a2e78826cea2f51c92051e67a9659e6"
+  },
+  {
+    "path": "SDK/Runtime/Scripts/APIs/WatchGestureUtil.cs.meta",
+    "size": 254,
+    "sha256": "28f9e3559d35392a5a57e434b4befbc848128e82fc82c08abd0726139b0e6609"
+  },
+  {
+    "path": "SDK/Runtime/Scripts/APIs.meta",
+    "size": 180,
+    "sha256": "b7b27c68b944c6e701e6a5037c5a1a37b7be6a7e6b350b66bdd410bf506b9326"
+  },
+  {
+    "path": "SDK/Runtime/Scripts/Comps/EventTriggerListener.cs",
+    "size": 3283,
+    "sha256": "460f3a54907efbbec5c122e5c0333253a779d44bdc907a4e48c4afcfb31025bc"
+  },
+  {
+    "path": "SDK/Runtime/Scripts/Comps/EventTriggerListener.cs.meta",
+    "size": 254,
+    "sha256": "ee2d0402a586f7a6d4774006437fa67fae06a54773aaf890a1136fb2163b24aa"
+  },
+  {
+    "path": "SDK/Runtime/Scripts/Comps/Inputs/Actions/RayNeoInput.cs",
+    "size": 62656,
+    "sha256": "193e33db20c9d3cba13666a40e34c6f3facfc5d3551d4335e736c2d9c02581a4"
+  },
+  {
+    "path": "SDK/Runtime/Scripts/Comps/Inputs/Actions/RayNeoInput.cs.meta",
+    "size": 254,
+    "sha256": "2cd09da5973a1cae60afb552e0c6548e69423b5b9540e4152e4b99c65c3e2e26"
+  },
+  {
+    "path": "SDK/Runtime/Scripts/Comps/Inputs/Actions/RayNeoInput.inputactions",
+    "size": 16249,
+    "sha256": "4bf249314bb6587cda1e90ae4a43a096e9b3662ac9ce7492e4d3710dc4f2321b"
+  },
+  {
+    "path": "SDK/Runtime/Scripts/Comps/Inputs/Actions/RayNeoInput.inputactions.meta",
+    "size": 390,
+    "sha256": "4715e8a2185c6bffe7aee98d5af95d63e0575add9fb83c31ff18178c5e8b7924"
+  },
+  {
+    "path": "SDK/Runtime/Scripts/Comps/Inputs/Actions.meta",
+    "size": 180,
+    "sha256": "0b233e93693744398548e8b9f3efd0393d5c819cc1116feea3148d25e634423e"
+  },
+  {
+    "path": "SDK/Runtime/Scripts/Comps/Inputs/HeadTrackedPoseDriver.cs",
+    "size": 4822,
+    "sha256": "1c959007eed52417254a6bb9de0514358d3bd7dd5ff5d20b21d77de7c9f902ba"
+  },
+  {
+    "path": "SDK/Runtime/Scripts/Comps/Inputs/HeadTrackedPoseDriver.cs.meta",
+    "size": 254,
+    "sha256": "dd3ddad7e33e8929bb0a9ad77479a41b7c46f83c9a10fc4949dd88611cc46a85"
+  },
+  {
+    "path": "SDK/Runtime/Scripts/Comps/Inputs/Ray/RayCellPhone.cs",
+    "size": 546,
+    "sha256": "46531fcab9ca46f8d30a1cabce966b12554a815059e30a4dbe6785910603dc09"
+  },
+  {
+    "path": "SDK/Runtime/Scripts/Comps/Inputs/Ray/RayCellPhone.cs.meta",
+    "size": 254,
+    "sha256": "472509455502b98c424d3ba665bfad6f8badab928110b232a980194fcace0fd6"
+  },
+  {
+    "path": "SDK/Runtime/Scripts/Comps/Inputs/Ray/RayDefault.cs",
+    "size": 350,
+    "sha256": "7cb0108d5cecce9ca3327f874af634a2ecafb341b0e3515e968b32236fbab97d"
+  },
+  {
+    "path": "SDK/Runtime/Scripts/Comps/Inputs/Ray/RayDefault.cs.meta",
+    "size": 254,
+    "sha256": "f2c9812de3c8f51725114ce238c0c03759e0aabc1d9a689f227858ebc0ed0bf5"
+  },
+  {
+    "path": "SDK/Runtime/Scripts/Comps/Inputs/Ray/RayInteractionBase.cs",
+    "size": 657,
+    "sha256": "8cac3a9bd0e9c15a5f3c1e8a09d4b58f4c3021f756bef5ea105df98f34320604"
+  },
+  {
+    "path": "SDK/Runtime/Scripts/Comps/Inputs/Ray/RayInteractionBase.cs.meta",
+    "size": 254,
+    "sha256": "9abc0799681e7247bf2d7f07d02b4aeb7e2b91d6540bd837c548579c3cc8b8bd"
+  },
+  {
+    "path": "SDK/Runtime/Scripts/Comps/Inputs/Ray/RayRing.cs",
+    "size": 1027,
+    "sha256": "4d42a50ed201ca2d11162b761b6333029c8726aaa2eda408754b9b95bef22c27"
+  },
+  {
+    "path": "SDK/Runtime/Scripts/Comps/Inputs/Ray/RayRing.cs.meta",
+    "size": 254,
+    "sha256": "03abc80671fcd37426c3f5d6042d387e6fc24711346d23c7a850120aa6fbef96"
+  },
+  {
+    "path": "SDK/Runtime/Scripts/Comps/Inputs/Ray/RayTrackedPoseDriver.cs",
+    "size": 3386,
+    "sha256": "60f454df94e0d44e3434e24a00aa148676a923d17716d319e47ed62e614ed573"
+  },
+  {
+    "path": "SDK/Runtime/Scripts/Comps/Inputs/Ray/RayTrackedPoseDriver.cs.meta",
+    "size": 254,
+    "sha256": "5b75e10e8b8dfc48e1024ecee3c75f035af8ede167808013665bbfe4df872dcb"
+  },
+  {
+    "path": "SDK/Runtime/Scripts/Comps/Inputs/Ray.meta",
+    "size": 180,
+    "sha256": "0ce4e8d09d64101493426ee705fc11f93474491e3e7ef850b20aae6b02eee198"
+  },
+  {
+    "path": "SDK/Runtime/Scripts/Comps/Inputs/RayNeoManager.cs",
+    "size": 1087,
+    "sha256": "96324f2984865c44135da21bffe1c44db8a0869df20a0ad579adb1dc0230b841"
+  },
+  {
+    "path": "SDK/Runtime/Scripts/Comps/Inputs/RayNeoManager.cs.meta",
+    "size": 254,
+    "sha256": "c85368344d0c2df0e050914146ac487e8dc9fe5bc209993e475d6c9dc734ae04"
+  },
+  {
+    "path": "SDK/Runtime/Scripts/Comps/Inputs/Ring/RingInputDevice.cs",
+    "size": 5754,
+    "sha256": "22a20851e93838345fd9c8d7e846d7e17e6d32934a5ee2322920586aa64ff7e4"
+  },
+  {
+    "path": "SDK/Runtime/Scripts/Comps/Inputs/Ring/RingInputDevice.cs.meta",
+    "size": 254,
+    "sha256": "c269012c09342bd2fa8136b7de24917d6efe400151d61f78b152596288ebddd9"
+  },
+  {
+    "path": "SDK/Runtime/Scripts/Comps/Inputs/Ring.meta",
+    "size": 180,
+    "sha256": "42a01ec29b20ce26a60a373773ed3ac2c0620482fd521b8f6ab4c4467a673903"
+  },
+  {
+    "path": "SDK/Runtime/Scripts/Comps/Inputs.meta",
+    "size": 180,
+    "sha256": "d6fbae9eb82b26c5a78ee7434713ae0695da4526fb5b0e08735f75f1c36d97c8"
+  },
+  {
+    "path": "SDK/Runtime/Scripts/Comps/LaserBeam/GazeLaserBeam.cs",
+    "size": 5147,
+    "sha256": "9e19e5015395df198fba042a4ff52fb141a16ce7680c448155198fe9d3a15f34"
+  },
+  {
+    "path": "SDK/Runtime/Scripts/Comps/LaserBeam/GazeLaserBeam.cs.meta",
+    "size": 254,
+    "sha256": "abca8e7d6aac46e99c2a34abe176845d2d1ee9d789fbf68eca0b3b2dc5d17c5e"
+  },
+  {
+    "path": "SDK/Runtime/Scripts/Comps/LaserBeam/TextureLaserBeam.cs",
+    "size": 2393,
+    "sha256": "ec87b9150bfa39c645ed62ca378973d027f6e314b52c989020fcaf6cba1cca53"
+  },
+  {
+    "path": "SDK/Runtime/Scripts/Comps/LaserBeam/TextureLaserBeam.cs.meta",
+    "size": 254,
+    "sha256": "64c0f5df6175c0f1b64ecc309790195e059f078e26a816891965c4f79d08f2de"
+  },
+  {
+    "path": "SDK/Runtime/Scripts/Comps/LaserBeam.meta",
+    "size": 180,
+    "sha256": "e26f1ffd1cf46a705dc24ab91f682db51a03a6e5ed31386fae73f85856876d0b"
+  },
+  {
+    "path": "SDK/Runtime/Scripts/Comps/LatticeInteraction/LatticeBrain.cs",
+    "size": 10613,
+    "sha256": "82cd9a35fc2cf010300bbd74375e09294e38850791e88e7b330b81a107358cb4"
+  },
+  {
+    "path": "SDK/Runtime/Scripts/Comps/LatticeInteraction/LatticeBrain.cs.meta",
+    "size": 254,
+    "sha256": "af464d039a6bb8e6ddae836990e797897a7074bfc7be304bbb1a04703f1f6596"
+  },
+  {
+    "path": "SDK/Runtime/Scripts/Comps/LatticeInteraction/LatticeButton.cs",
+    "size": 1490,
+    "sha256": "bebc09062daf6558c554a48f580d0f7f1854696a9e6fe102ef70a6746c2e8c1a"
+  },
+  {
+    "path": "SDK/Runtime/Scripts/Comps/LatticeInteraction/LatticeButton.cs.meta",
+    "size": 254,
+    "sha256": "57592fb96bc68d597dc74f857139c411f73e5d0b4d8b0a3093559d9ec5678b19"
+  },
+  {
+    "path": "SDK/Runtime/Scripts/Comps/LatticeInteraction.meta",
+    "size": 180,
+    "sha256": "df6b0adbfe022ca2e666fd1aca1e6a4d47de6a4890efc11c9fb785ce197b55d9"
+  },
+  {
+    "path": "SDK/Runtime/Scripts/Comps/MainThreadQueue.cs",
+    "size": 864,
+    "sha256": "02420039eec12c6072e38418c816575e45b5d6402fe20fef199bfad92af4f892"
+  },
+  {
+    "path": "SDK/Runtime/Scripts/Comps/MainThreadQueue.cs.meta",
+    "size": 254,
+    "sha256": "bc3b66bceb35374d4a219bcd23d2cdebf5908194b355c3d8a719891be53e28d8"
+  },
+  {
+    "path": "SDK/Runtime/Scripts/Comps/MonoSingleton.cs",
+    "size": 1768,
+    "sha256": "9dc36e7dce83a2ddfa4e8be1dc78c8152fc77628b8e6b22328dd4032c496eae6"
+  },
+  {
+    "path": "SDK/Runtime/Scripts/Comps/MonoSingleton.cs.meta",
+    "size": 254,
+    "sha256": "95cf199b382590d85470198b134e29df00a55cecf9d295145f266ad3bf385e46"
+  },
+  {
+    "path": "SDK/Runtime/Scripts/Comps/RayNeoXRPlugin.cs",
+    "size": 127,
+    "sha256": "9499e12403e0dcb03273f6df5f82fa057c543c33ca13eff023481b5d9d35fcce"
+  },
+  {
+    "path": "SDK/Runtime/Scripts/Comps/RayNeoXRPlugin.cs.meta",
+    "size": 254,
+    "sha256": "fee7f1fc856315d0bf88d068dfa1dd03c914828e6b08252581c4237a2e0411b1"
+  },
+  {
+    "path": "SDK/Runtime/Scripts/Comps/SimpleTouchForLite.cs",
+    "size": 29041,
+    "sha256": "443d79a857b804874191af1462dcae2c4dac36bbb47150081a8e5196d35f705a"
+  },
+  {
+    "path": "SDK/Runtime/Scripts/Comps/SimpleTouchForLite.cs.meta",
+    "size": 254,
+    "sha256": "487542f0662478947efc3bcd9e176fefddb38aa5a13349b7198ee9087fc28084"
+  },
+  {
+    "path": "SDK/Runtime/Scripts/Comps/UIHoverScaler.cs",
+    "size": 2738,
+    "sha256": "da9c59b0bda586f7312ae83bb19ba1620b8f8155b319ee0442699ca87971481d"
+  },
+  {
+    "path": "SDK/Runtime/Scripts/Comps/UIHoverScaler.cs.meta",
+    "size": 254,
+    "sha256": "d72accf5cdbd7c20edc86a0523cd952ff8020ee0e8e761a5f0a5d7c9ee35172d"
+  },
+  {
+    "path": "SDK/Runtime/Scripts/Comps/Updater.cs",
+    "size": 985,
+    "sha256": "80656f249c20f21f73479de4636e4a0e039c312d4f8bdc5b4ab72bfc9181b7ab"
+  },
+  {
+    "path": "SDK/Runtime/Scripts/Comps/Updater.cs.meta",
+    "size": 254,
+    "sha256": "1da0c0ad9878c15bbf8abaaabc3ed2be16c672bc3bb61595e2267bcc3cea42f4"
+  },
+  {
+    "path": "SDK/Runtime/Scripts/Comps.meta",
+    "size": 180,
+    "sha256": "ca68bb4804c451c7f0de964fd26803a44590130938f5dd496a5ea0086e41a8e9"
+  },
+  {
+    "path": "SDK/Runtime/Scripts/Frames/DebugMidway.cs",
+    "size": 2297,
+    "sha256": "789ebfe35863979d5db7a5413ea4e793eec51eac8bf4955a60c10260aa5d9895"
+  },
+  {
+    "path": "SDK/Runtime/Scripts/Frames/DebugMidway.cs.meta",
+    "size": 254,
+    "sha256": "6221b06fc520ab014f3c718e548370f09b7901879129790287ddb422b6277139"
+  },
+  {
+    "path": "SDK/Runtime/Scripts/Frames/RayNeoExtensionInfo.cs",
+    "size": 431,
+    "sha256": "cea79e9dc31d149910864195674ff0d5f6a7fb4ee4be5bc77de11a085dc4ac53"
+  },
+  {
+    "path": "SDK/Runtime/Scripts/Frames/RayNeoExtensionInfo.cs.meta",
+    "size": 254,
+    "sha256": "e8a1e1df2b565e6ea12f4da95345645ba27970402912244f33304325a26f8fdc"
+  },
+  {
+    "path": "SDK/Runtime/Scripts/Frames/RayNeoXRGeneralSettings.cs",
+    "size": 6740,
+    "sha256": "3eb38494f4135c05489509309cf622689d7be498c7ba189573b771c74a3646ff"
+  },
+  {
+    "path": "SDK/Runtime/Scripts/Frames/RayNeoXRGeneralSettings.cs.meta",
+    "size": 254,
+    "sha256": "62b55b5316c5607b38277827e502b42cfd1d76eb737d678ef8c74216597fd896"
+  },
+  {
+    "path": "SDK/Runtime/Scripts/Frames/XRSDK.cs",
+    "size": 514,
+    "sha256": "5ed3bfafdc8b23caa9ed3c4c8c569d033bbcc8320a452375f13997ca47d3fbfc"
+  },
+  {
+    "path": "SDK/Runtime/Scripts/Frames/XRSDK.cs.meta",
+    "size": 254,
+    "sha256": "c30fa6bdf7284d3d83e214ecd334676368198f8f71da5bc8d5bdd24c097f29a5"
+  },
+  {
+    "path": "SDK/Runtime/Scripts/Frames.meta",
+    "size": 180,
+    "sha256": "8aaab9e5c4dbb334c42f51f29f2c2328d6e5c67f9dd0df4f455964b26c180b1d"
+  },
+  {
+    "path": "SDK/Runtime/Scripts/RayNeo.OpenXR.ARDK.asmdef",
+    "size": 607,
+    "sha256": "be92728488b813463f29da22084dede11a83d6649793a117faa481fc808160ee"
+  },
+  {
+    "path": "SDK/Runtime/Scripts/RayNeo.OpenXR.ARDK.asmdef.meta",
+    "size": 173,
+    "sha256": "22d157737cfee522f72540c87ef7e1b957c3af1e62e51c21781f04e7e55e1f13"
+  },
+  {
+    "path": "SDK/Runtime/Scripts/TipsWindow/TipsWindowCtrl.cs",
+    "size": 273,
+    "sha256": "41dfcb7e8028960d767bfbe026f5a2ede4179ae0757540554b5ee9da7c625898"
+  },
+  {
+    "path": "SDK/Runtime/Scripts/TipsWindow/TipsWindowCtrl.cs.meta",
+    "size": 254,
+    "sha256": "4117392b67e20350260ecaa9acbcca97c95f23b38e05093be8551aafb9dea66c"
+  },
+  {
+    "path": "SDK/Runtime/Scripts/TipsWindow.meta",
+    "size": 180,
+    "sha256": "e2aaf4a7cc3d7f459ac6fedbe8d09098600ade6b1842ac4821f8071708a4f088"
+  },
+  {
+    "path": "SDK/Runtime/Scripts/Tool/CommonUtils.cs",
+    "size": 5003,
+    "sha256": "3c7763e0a77f815d2769115338eddccd39a5b57233599a7033a942f9295674a6"
+  },
+  {
+    "path": "SDK/Runtime/Scripts/Tool/CommonUtils.cs.meta",
+    "size": 254,
+    "sha256": "2425e1032707793103c8d1d7c151328bb13e8139a051faf3a726155d99c47a08"
+  },
+  {
+    "path": "SDK/Runtime/Scripts/Tool/MatrixExtensions.cs",
+    "size": 1523,
+    "sha256": "c3168cd66f487d4813b4198113ebadeb692fd592a29c1b763dc4bc22161e03a4"
+  },
+  {
+    "path": "SDK/Runtime/Scripts/Tool/MatrixExtensions.cs.meta",
+    "size": 254,
+    "sha256": "71b09fbc7b28a30e29ecbe708334f7db50a741ad97bbc29de25a35ea0264a2f4"
+  },
+  {
+    "path": "SDK/Runtime/Scripts/Tool/PermissionUtil.cs",
+    "size": 263,
+    "sha256": "19d0258f5363c8a32ee6de0cbac8e7e9585b9d6153403287cc1e556882db8c1a"
+  },
+  {
+    "path": "SDK/Runtime/Scripts/Tool/PermissionUtil.cs.meta",
+    "size": 254,
+    "sha256": "492d13dd0778d994a6e4d9b038bdef201a6e5c7e4ae92d2d4123e471346ac21e"
+  },
+  {
+    "path": "SDK/Runtime/Scripts/Tool/Timer/TimerInfo.cs",
+    "size": 502,
+    "sha256": "72a0a30fccca494eac269b2bc9f9307a32b78455eb21c710c012dc18e2ccdeea"
+  },
+  {
+    "path": "SDK/Runtime/Scripts/Tool/Timer/TimerInfo.cs.meta",
+    "size": 254,
+    "sha256": "3a88995279058de7a6f0d02a3330ec895bb7cddb155f2197e9ac92c4a4715729"
+  },
+  {
+    "path": "SDK/Runtime/Scripts/Tool/Timer/TimerSchedule.cs",
+    "size": 4841,
+    "sha256": "4417a0f4eb9214b44cc9fa6c731f5b267bcfb836200a78c3643dd3f6da954b6f"
+  },
+  {
+    "path": "SDK/Runtime/Scripts/Tool/Timer/TimerSchedule.cs.meta",
+    "size": 254,
+    "sha256": "a3ba4cdb9dd7ed4984d2bbc12e02c9a46cb2d01fe90664dd0e1fe1491504a60a"
+  },
+  {
+    "path": "SDK/Runtime/Scripts/Tool/Timer.meta",
+    "size": 180,
+    "sha256": "116b22b4351671e5661391363e54a2ea8f9f589bec63f7935fce50ec4c7e2748"
+  },
+  {
+    "path": "SDK/Runtime/Scripts/Tool.meta",
+    "size": 180,
+    "sha256": "906bdcd8571bf7990010bf554ca84cf620d48268f0bd62c1550dd1166d58af8a"
+  },
+  {
+    "path": "SDK/Runtime/Scripts.meta",
+    "size": 180,
+    "sha256": "b93ffb58dd15917aafd1ff01b822003929451fb279a23a23f80f65e803844414"
+  },
+  {
+    "path": "SDK/Runtime.meta",
+    "size": 180,
+    "sha256": "89bf5b43a45d243323531b7a915e68983a9b292b0809e6449989780f5fc03c4f"
+  },
+  {
+    "path": "SDK.meta",
+    "size": 172,
+    "sha256": "9ddab30c7c5b0a2a21e62a5886d591531df9deed4a1b92cf7e47cb09877e7154"
+  }
+]
