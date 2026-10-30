@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="utf-8"?>
+<test-run id="2" testcasecount="3" result="Passed" total="3" passed="3" failed="0" inconclusive="0" skipped="0" asserts="0" engine-version="3.5.0.0" clr-version="4.0.30319.42000" start-time="2026-10-30 15:49:01Z" end-time="2026-10-30 15:49:01Z" duration="0.1401599">
+  <test-suite type="TestSuite" id="1249" name="XR Score Viewer" fullname="XR Score Viewer" runstate="Runnable" testcasecount="193" result="Passed" start-time="2026-10-30 15:49:01Z" end-time="2026-10-30 15:49:01Z" duration="0.140160" total="3" passed="3" failed="0" inconclusive="0" skipped="0" asserts="0">
+    <properties>
+      <property name="platform" value="PlayMode" />
+    </properties>
+    <test-suite type="Assembly" id="1241" name="Tests.dll" fullname="C:/Users/Bryan Dunphy/AppData/Local/Temp/rnc1030/project/Library/ScriptAssemblies/Tests.dll" runstate="Runnable" testcasecount="193" result="Passed" start-time="2026-10-30 15:49:01Z" end-time="2026-10-30 15:49:01Z" duration="0.133673" total="3" passed="3" failed="0" inconclusive="0" skipped="0" asserts="0">
+      <properties>
+        <property name="_PID" value="14284" />
+        <property name="_APPDOMAIN" value="Unity Child Domain" />
+        <property name="platform" value="PlayMode" />
+        <property name="EditorOnly" value="False" />
+      </properties>
+      <test-suite type="TestSuite" id="1242" name="AmpPortableDataViz" fullname="AmpPortableDataViz" runstate="Runnable" testcasecount="193" result="Passed" start-time="2026-10-30 15:49:01Z" end-time="2026-10-30 15:49:01Z" duration="0.130493" total="3" passed="3" failed="0" inconclusive="0" skipped="0" asserts="0">
+        <properties />
+        <test-suite type="TestSuite" id="1243" name="Tests" fullname="AmpPortableDataViz.Tests" runstate="Runnable" testcasecount="193" result="Passed" start-time="2026-10-30 15:49:01Z" end-time="2026-10-30 15:49:01Z" duration="0.127932" total="3" passed="3" failed="0" inconclusive="0" skipped="0" asserts="0">
+          <properties />
+          <test-suite type="TestSuite" id="1246" name="PlayMode" fullname="AmpPortableDataViz.Tests.PlayMode" runstate="Runnable" testcasecount="157" result="Passed" start-time="2026-10-30 15:49:01Z" end-time="2026-10-30 15:49:01Z" duration="0.125416" total="3" passed="3" failed="0" inconclusive="0" skipped="0" asserts="0">
+            <properties />
+            <test-suite type="TestFixture" id="1119" name="BootstrapperRetainedGraphTests" fullname="AmpPortableDataViz.Tests.PlayMode.BootstrapperRetainedGraphTests" classname="AmpPortableDataViz.Tests.PlayMode.BootstrapperRetainedGraphTests" runstate="Runnable" testcasecount="3" result="Passed" start-time="2026-10-30 15:49:01Z" end-time="2026-10-30 15:49:01Z" duration="0.121986" total="3" passed="3" failed="0" inconclusive="0" skipped="0" asserts="0">
+              <properties />
+              <test-case id="1120" name="ManualGraphPrefab_RendersWithoutLiveSource" fullname="AmpPortableDataViz.Tests.PlayMode.BootstrapperRetainedGraphTests.ManualGraphPrefab_RendersWithoutLiveSource" methodname="ManualGraphPrefab_RendersWithoutLiveSource" classname="AmpPortableDataViz.Tests.PlayMode.BootstrapperRetainedGraphTests" runstate="Runnable" seed="1651128654" result="Passed" start-time="2026-10-30 15:49:01Z" end-time="2026-10-30 15:49:01Z" duration="0.084115" asserts="0">
+                <properties>
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+              </test-case>
+              <test-case id="1121" name="ManualMode_SpawnsGraphWithRedisEndpointUnconfirmed" fullname="AmpPortableDataViz.Tests.PlayMode.BootstrapperRetainedGraphTests.ManualMode_SpawnsGraphWithRedisEndpointUnconfirmed" methodname="ManualMode_SpawnsGraphWithRedisEndpointUnconfirmed" classname="AmpPortableDataViz.Tests.PlayMode.BootstrapperRetainedGraphTests" runstate="Runnable" seed="394635163" result="Passed" start-time="2026-10-30 15:49:01Z" end-time="2026-10-30 15:49:01Z" duration="0.005482" asserts="0">
+                <properties>
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+              </test-case>
+              <test-case id="1122" name="SelectedGraphPrefab_KeepsVisualizerBindingAndDisablesLocalSources" fullname="AmpPortableDataViz.Tests.PlayMode.BootstrapperRetainedGraphTests.SelectedGraphPrefab_KeepsVisualizerBindingAndDisablesLocalSources" methodname="SelectedGraphPrefab_KeepsVisualizerBindingAndDisablesLocalSources" classname="AmpPortableDataViz.Tests.PlayMode.BootstrapperRetainedGraphTests" runstate="Runnable" seed="870549767" result="Passed" start-time="2026-10-30 15:49:01Z" end-time="2026-10-30 15:49:01Z" duration="0.020109" asserts="0">
+                <properties>
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+                <output><![CDATA[Saving results to: C:\Users\Bryan Dunphy\Documents\UnityProjects\ampPortable_xrGlassesDemo\Assessment\2026-10-30\cleanup-step5\retained-graphs.xml
+]]></output>
+              </test-case>
+            </test-suite>
+          </test-suite>
+        </test-suite>
+      </test-suite>
+    </test-suite>
+  </test-suite>
+</test-run>

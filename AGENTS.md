@@ -65,7 +65,7 @@ Important packages include:
 - AR Foundation
 - OpenXR
 - URP
-- LiveKit Unity SDK
+- LiveKit Unity SDK remains declared pending dependency cleanup; its application integration is retired.
 - NuGetForUnity
 - RayNeo SDK / ARDK for the `rayNeoPort` branch
 

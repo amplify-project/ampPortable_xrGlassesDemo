@@ -12,7 +12,6 @@ GameObject:
   - component: {fileID: 2065732424397082909}
   - component: {fileID: 5001117135703966528}
   - component: {fileID: 8828575574408559041}
-  - component: {fileID: 8114644993198511344}
   m_Layer: 0
   m_Name: GraphPrefab
   m_TagString: Untagged
@@ -195,29 +194,3 @@ MonoBehaviour:
   manualPoints: []
   autoSortByX: 1
   autoBoundsFromPoints: 0
---- !u!114 &8114644993198511344
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 7697534865005704293}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 36c9f222d0b09484a85e71cc40cc79bd, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Amp::AmpPortableDataViz.Presentation.Visualization.GraphBinding
-  stream:
-    Label: Graph Stream
-    Source: {fileID: 0}
-    Visualizer: {fileID: 0}
-    YRange: {x: 0, y: 1}
-    LineColor: {r: 1, g: 1, b: 1, a: 1}
-    LineWidth: 0.01
-  layoutMode: 1
-  overlayLocalPosition: {x: 0, y: 0, z: 0}
-  overlayLocalScale: {x: 1, y: 1, z: 1}
-  stackedLocalPosition: {x: 0, y: 0, z: 0}
-  stackedLocalScale: {x: 1, y: 1, z: 1}
-  windowSeconds: 10
-  maxSamples: 512

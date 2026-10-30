@@ -1,0 +1,143 @@
+{
+  "generated_utc": "2026-10-30T15:55:32.875266+00:00",
+  "test_runs": {
+    "sources-hud": {
+      "results": {
+        "id": "2",
+        "testcasecount": "190",
+        "result": "Failed(Child)",
+        "total": "190",
+        "passed": "189",
+        "failed": "1",
+        "inconclusive": "0",
+        "skipped": "0",
+        "asserts": "0",
+        "engine-version": "3.5.0.0",
+        "clr-version": "4.0.30319.42000",
+        "start-time": "2026-10-30 15:44:44Z",
+        "end-time": "2026-10-30 15:44:45Z",
+        "duration": "0.9992798"
+      },
+      "process_exit_code": 2,
+      "failures": [
+        {
+          "fullname": "AmpPortableDataViz.Tests.PlayMode.ParticleMeshVisualizerOrthogonalityTests.CornerHalos_StaySynchronizedWithNegativeInsideAndPositiveOutside",
+          "message": "  Expected: less than 0.0800000057f\n  But was:  0.0800000057f\n",
+          "stack_trace": "at AmpPortableDataViz.Tests.PlayMode.ParticleMeshVisualizerOrthogonalityTests+<CornerHalos_StaySynchronizedWithNegativeInsideAndPositiveOutside>d__4.MoveNext () [0x0016b] in C:\\Users\\Bryan Dunphy\\AppData\\Local\\Temp\\rnc1030\\project\\Assets\\Tests\\PlayMode\\ParticleMeshVisualizerOrthogonalityTests.cs:156\nat UnityEngine.TestTools.TestEnumerator+<Execute>d__7.MoveNext () [0x0003a] in .\\Library\\PackageCache\\com.unity.test-framework@1.4.6\\UnityEngine.TestRunner\\NUnitExtensions\\Attributes\\TestEnumerator.cs:44\n"
+        }
+      ]
+    },
+    "retained-graphs": {
+      "results": {
+        "id": "2",
+        "testcasecount": "3",
+        "result": "Passed",
+        "total": "3",
+        "passed": "3",
+        "failed": "0",
+        "inconclusive": "0",
+        "skipped": "0",
+        "asserts": "0",
+        "engine-version": "3.5.0.0",
+        "clr-version": "4.0.30319.42000",
+        "start-time": "2026-10-30 15:49:01Z",
+        "end-time": "2026-10-30 15:49:01Z",
+        "duration": "0.1401599"
+      },
+      "process_exit_code": 0,
+      "failures": []
+    },
+    "full": {
+      "results": {
+        "id": "2",
+        "testcasecount": "193",
+        "result": "Passed",
+        "total": "193",
+        "passed": "193",
+        "failed": "0",
+        "inconclusive": "0",
+        "skipped": "0",
+        "asserts": "0",
+        "engine-version": "3.5.0.0",
+        "clr-version": "4.0.30319.42000",
+        "start-time": "2026-10-30 15:50:53Z",
+        "end-time": "2026-10-30 15:50:54Z",
+        "duration": "1.0477249"
+      },
+      "process_exit_code": 0,
+      "failures": []
+    }
+  },
+  "test_count_change": "196 original - 6 exclusively LiveKit tests + 3 preserved graph regressions = 193 final cases. All other retained tests and assertions unchanged.",
+  "intermittent_observation": "The first chunk passed189/190 with the previously recorded halo-radius assertion failing. No halo code or assertion changed. The final full suite passed193/193; earlier failure preserved and not considered fixed.",
+  "android_build": {
+    "result": "Succeeded",
+    "errors": 0,
+    "warnings": 20,
+    "durationSeconds": 121.12264769999999,
+    "scriptingBackend": "IL2CPP",
+    "architectures": "ARM64",
+    "graphicsApis": [
+      "OpenGLES3"
+    ]
+  },
+  "warning_comparison": {
+    "new_warnings": [],
+    "removed_warnings": [
+      "Assets\\AmpPortableDataViz\\Presentation\\Sources\\RedisManager.cs(3,7): warning CS0105: The using directive for 'System' appeared previously in this namespace",
+      "Assets\\AmpPortableDataViz\\Presentation\\Sources\\RedisManager.cs(5,7): warning CS0105: The using directive for 'System.Linq' appeared previously in this namespace"
+    ],
+    "note": "Only the two retired RedisManager duplicate-import warnings disappeared; remaining20 warning details were already present in step4."
+  },
+  "enabled_scene_inspection": {
+    "dependencyCount": 86,
+    "gameObjectsScanned": 87,
+    "componentsScanned": 248,
+    "prefabsScanned": 8,
+    "materialsScanned": 17,
+    "missingScriptCount": 0,
+    "brokenObjectReferenceCount": 0,
+    "blockerCount": 0,
+    "warningCount": 0
+  },
+  "apk": {
+    "path": "C:\\Users\\Bryan Dunphy\\Documents\\UnityProjects\\ampPortable_xrGlassesDemo\\Temp\\CleanupStep5-20261030\\android\\RayNeo-assessment.apk",
+    "bytes": 167542037,
+    "sha256": "6ed374ffd8a47cc20ae6112678379b68b588f9156a16a0d527996d3a2d1fa579",
+    "installed_on_device": false
+  },
+  "source_integrity": {
+    "source_file_count": 1702,
+    "expected_deletions": 50,
+    "expected_modified_inputs": 4,
+    "expected_added_inputs": 2,
+    "unchanged_input_count": 1696,
+    "snapshot_source_matches_checkout": true,
+    "validation_only_extra_files": [
+      "Assets/Editor.meta",
+      "Assets/Editor/MonoScriptProbe.cs",
+      "Assets/Editor/MonoScriptProbe.cs.meta",
+      "Assets/Editor/PreMergeValidation.cs",
+      "Assets/Editor/PreMergeValidation.cs.meta"
+    ]
+  },
+  "logs": [
+    {
+      "path": "Temp\\CleanupStep5-20261030\\android.log",
+      "sha256": "f1621aeaedc2632861a26b9292fef86217b4d100317d17d768d8fd8f0d708d09"
+    },
+    {
+      "path": "Temp\\CleanupStep5-20261030\\full.log",
+      "sha256": "e5b5e21d515f1f3c55a6b9ad555d7d3a309fa27e3b731e24623ec4aee3ca39e4"
+    },
+    {
+      "path": "Temp\\CleanupStep5-20261030\\retained-graphs.log",
+      "sha256": "e725ea4ffdaf6faa7f2218396b0167d35d02803d33472a8068486fc0458837eb"
+    },
+    {
+      "path": "Temp\\CleanupStep5-20261030\\sources-hud.log",
+      "sha256": "a514b210716a5324d97869d69b86cebdd8dbedd787a7d212109bbf79490fdc83"
+    }
+  ],
+  "stop_boundary": "Only authorized optional application features retired. Package manifests/lock, unrelated assets, supported manual tools, active RayNeo views retained. Step6 not started. No push."
+}

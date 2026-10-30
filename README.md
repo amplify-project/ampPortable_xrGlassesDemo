@@ -1,6 +1,6 @@
 # XR Score Viewer
 
-Unity XR proof-of-concept for viewing real-time audience data on RayNeo X3 Pro glasses. The app presents a score/image board, an abstract particle mesh, objective graphs, and an ArtistViz placeholder. Redis supplies the main live-data path; manual and alternate sources remain available in the project.
+Unity XR proof-of-concept for viewing real-time audience data on RayNeo X3 Pro glasses. The app presents a score/image board, an abstract particle mesh, objective graphs, and an ArtistViz placeholder. Redis supplies live data; local sine-wave and manual sources remain available in the project.
 
 ## Current baseline
 
@@ -37,4 +37,4 @@ The [30 October 2026 pre-merge assessment](Assessment/2026-10-30/RESULTS.md) rec
 
 `Assets/AmpPortableDataViz` separates domain contracts in `Core`, session orchestration in `Application`, concrete services in `Infra`, and Unity visualizers, bindings, input, and UI in `Presentation`.
 
-Obsolete-code cleanup is underway on `cleanup/obsolete-code`. The [scene-retirement report](Assessment/2026-10-30/cleanup-step4/README.md) records removal of historical recovery scenes, the plasma manual scene, and their unused recovery helpers. Shared code and optional runtime modes remain available.
+Obsolete-code cleanup is underway on `cleanup/obsolete-code`. Historical recovery/manual scenes and the optional LiveKit, plasma, legacy HUD/graph, and RedisManager application paths have been retired. The [optional-feature retirement report](Assessment/2026-10-30/cleanup-step5/README.md) records the changes and validation. Current RayNeo views, ArtisticElements, audience/particle/graph manual tools, shared graph contracts, and session fallbacks remain. Package-manifest and unrelated asset pruning are deferred.

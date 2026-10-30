@@ -1,0 +1,19 @@
+{
+  "before_total": "196",
+  "after_total": "193",
+  "removed_tests": [
+    "AmpPortableDataViz.Tests.PlayMode.LiveKitTelemetryReceiverTests.OnTelemetryReceived_IncrementsSequenceId",
+    "AmpPortableDataViz.Tests.PlayMode.LiveKitTelemetryReceiverTests.OnTelemetryReceived_RaisesDataFrameWithClockTimestamp",
+    "AmpPortableDataViz.Tests.PlayMode.LiveKitTelemetryReceiverTests.SourceId_FallsBackToGameObjectName_WhenIdentityMissing",
+    "AmpPortableDataViz.Tests.PlayMode.LiveKitTelemetryServiceTests.TryProcessTelemetryJson_WhenJsonEmpty_ReturnsFalse",
+    "AmpPortableDataViz.Tests.PlayMode.LiveKitTelemetryServiceTests.TryProcessTelemetryJson_WhenPayloadInvalid_ReturnsFalseAndDoesNotRaiseEvent",
+    "AmpPortableDataViz.Tests.PlayMode.LiveKitTelemetryServiceTests.TryProcessTelemetryJson_WhenPayloadValid_RaisesEventAndReturnsTrue"
+  ],
+  "added_tests": [
+    "AmpPortableDataViz.Tests.PlayMode.BootstrapperRetainedGraphTests.ManualGraphPrefab_RendersWithoutLiveSource",
+    "AmpPortableDataViz.Tests.PlayMode.BootstrapperRetainedGraphTests.ManualMode_SpawnsGraphWithRedisEndpointUnconfirmed",
+    "AmpPortableDataViz.Tests.PlayMode.BootstrapperRetainedGraphTests.SelectedGraphPrefab_KeepsVisualizerBindingAndDisablesLocalSources"
+  ],
+  "all_other_test_names_retained": true,
+  "retained_assertions_unchanged": true
+}

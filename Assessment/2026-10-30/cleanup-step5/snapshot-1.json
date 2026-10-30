@@ -1,0 +1,37 @@
+{
+  "generated_utc": "2026-10-30T15:44:15.178855+00:00",
+  "project": "C:\\Users\\Bryan Dunphy\\AppData\\Local\\Temp\\rnc1030\\project",
+  "verified_source_files": 1734,
+  "all_source_bytes_match_before_unity": true,
+  "removed_files": [
+    "Assets/AmpPortableDataViz/Infra/LiveKitTelemetryService.cs",
+    "Assets/AmpPortableDataViz/Infra/LiveKitTelemetryService.cs.meta",
+    "Assets/AmpPortableDataViz/Presentation/Mapping/EngagementToHudSideMapper.cs",
+    "Assets/AmpPortableDataViz/Presentation/Mapping/EngagementToHudSideMapper.cs.meta",
+    "Assets/AmpPortableDataViz/Presentation/Sources/LiveKitTelemetryReceiver.cs",
+    "Assets/AmpPortableDataViz/Presentation/Sources/LiveKitTelemetryReceiver.cs.meta",
+    "Assets/AmpPortableDataViz/Presentation/Sources/RedisManager.cs",
+    "Assets/AmpPortableDataViz/Presentation/Sources/RedisManager.cs.meta",
+    "Assets/AmpPortableDataViz/Presentation/Visualization/ColourChangingHudSide.cs",
+    "Assets/AmpPortableDataViz/Presentation/Visualization/ColourChangingHudSide.cs.meta",
+    "Assets/AmpPortableDataViz/Presentation/Visualization/EngagementHudBinding.cs",
+    "Assets/AmpPortableDataViz/Presentation/Visualization/EngagementHudBinding.cs.meta",
+    "Assets/Tests/PlayMode/LiveKitTelemetryReceiverTests.cs",
+    "Assets/Tests/PlayMode/LiveKitTelemetryReceiverTests.cs.meta",
+    "Assets/Tests/PlayMode/LiveKitTelemetryServiceTests.cs",
+    "Assets/Tests/PlayMode/LiveKitTelemetryServiceTests.cs.meta"
+  ],
+  "synchronized_files": [
+    "Assets/AmpPortableDataViz/AmpPortableDataViz.asmdef",
+    "Assets/Scenes/ampPortable_xrGlassesDemo.unity",
+    "Assets/AmpPortableDataViz/Presentation/Bootstrap/Bootstrapper.cs"
+  ],
+  "validation_only_extra_files": [
+    "Assets/Editor.meta",
+    "Assets/Editor/MonoScriptProbe.cs",
+    "Assets/Editor/MonoScriptProbe.cs.meta",
+    "Assets/Editor/PreMergeValidation.cs",
+    "Assets/Editor/PreMergeValidation.cs.meta"
+  ],
+  "helper_sha256": "83ad143f5c5da45a9262193612b933c3d3c53525215c35e66bb101dca65369e5"
+}
