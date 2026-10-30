@@ -1,7 +1,6 @@
 #if UNITY_EDITOR
 using System.Collections;
 using System.Collections.Generic;
-using System.IO;
 using AmpPortableDataViz.Presentation.ArtisticElements;
 using NUnit.Framework;
 using UnityEditor.SceneManagement;
@@ -79,7 +78,6 @@ namespace AmpPortableDataViz.Tests.PlayMode
             Assert.IsNotEmpty(materials, "The model and PNG mesh renderers must have colour-capable materials.");
 
             Canvas.ForceUpdateCanvases();
-            yield return CapturePreview(panel);
 
             Color requested = new Color(0.15f, 0.65f, 0.95f);
             for (int i = 0; i < selection.ElementCount; i++)
@@ -236,58 +234,6 @@ namespace AmpPortableDataViz.Tests.PlayMode
             _scene = SceneManager.GetSceneByPath(ScenePath);
             Assert.IsTrue(_scene.IsValid() && _scene.isLoaded);
             yield return null;
-        }
-
-        private IEnumerator CapturePreview(ArtisticElementsControlPanel panel)
-        {
-            // ScreenCapture does not save GameView images in batch mode. Render the scene to a texture instead.
-            Camera camera = ComponentsInScene<Camera>()[0];
-            Canvas canvas = panel.GetComponentInChildren<Canvas>();
-            CanvasScaler scaler = canvas.GetComponent<CanvasScaler>();
-            RenderTexture originalTarget = camera.targetTexture;
-            RenderTexture originalActive = RenderTexture.active;
-            float originalAspect = camera.aspect;
-            RenderMode originalMode = canvas.renderMode;
-            Camera originalCanvasCamera = canvas.worldCamera;
-            float originalPlaneDistance = canvas.planeDistance;
-            float originalScale = canvas.scaleFactor;
-            bool originalScalerEnabled = scaler.enabled;
-            var target = new RenderTexture(1600, 900, 24);
-            var image = new Texture2D(1600, 900, TextureFormat.RGB24, false);
-            try
-            {
-                target.Create();
-                camera.targetTexture = target;
-                camera.aspect = 1600f / 900f;
-                scaler.enabled = false;
-                canvas.renderMode = RenderMode.ScreenSpaceCamera;
-                canvas.worldCamera = camera;
-                canvas.planeDistance = 1f;
-                canvas.scaleFactor = 1f;
-                Canvas.ForceUpdateCanvases();
-                yield return null;
-                yield return null;
-                RenderTexture.active = target;
-                image.ReadPixels(new Rect(0f, 0f, 1600f, 900f), 0, 0);
-                image.Apply();
-                string folder = Path.Combine(Directory.GetParent(UnityEngine.Application.dataPath).FullName, "TestResults");
-                Directory.CreateDirectory(folder);
-                File.WriteAllBytes(Path.Combine(folder, "artistic-panel-preview.png"), image.EncodeToPNG());
-            }
-            finally
-            {
-                RenderTexture.active = originalActive;
-                camera.targetTexture = originalTarget;
-                camera.aspect = originalAspect;
-                canvas.renderMode = originalMode;
-                canvas.worldCamera = originalCanvasCamera;
-                canvas.planeDistance = originalPlaneDistance;
-                scaler.enabled = originalScalerEnabled;
-                canvas.scaleFactor = originalScale;
-                target.Release();
-                Object.DestroyImmediate(target);
-                Object.DestroyImmediate(image);
-            }
         }
 
         private ArtisticElementsTestSetup GetSetup()
