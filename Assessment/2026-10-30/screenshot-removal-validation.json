@@ -1,0 +1,72 @@
+{
+  "recorded_utc": "2026-10-30T14:13:54.340577+00:00",
+  "change": "Removed optional screenshot generation and unused System.IO import from ArtisticElementsSceneTests; all assertions preserved",
+  "runs": {
+    "playmode-no-preview-focused": {
+      "id": "2",
+      "testcasecount": "1",
+      "result": "Passed",
+      "total": "1",
+      "passed": "1",
+      "failed": "0",
+      "inconclusive": "0",
+      "skipped": "0",
+      "asserts": "0",
+      "engine-version": "3.5.0.0",
+      "clr-version": "4.0.30319.42000",
+      "start-time": "2026-10-30 14:08:07Z",
+      "end-time": "2026-10-30 14:08:07Z",
+      "duration": "0.2732696"
+    },
+    "playmode-no-preview-full": {
+      "id": "2",
+      "testcasecount": "196",
+      "result": "Failed(Child)",
+      "total": "196",
+      "passed": "195",
+      "failed": "1",
+      "inconclusive": "0",
+      "skipped": "0",
+      "asserts": "0",
+      "engine-version": "3.5.0.0",
+      "clr-version": "4.0.30319.42000",
+      "start-time": "2026-10-30 14:08:47Z",
+      "end-time": "2026-10-30 14:08:48Z",
+      "duration": "1.0551341"
+    },
+    "playmode-halo-diagnostic": {
+      "id": "2",
+      "testcasecount": "1",
+      "result": "Passed",
+      "total": "1",
+      "passed": "1",
+      "failed": "0",
+      "inconclusive": "0",
+      "skipped": "0",
+      "asserts": "0",
+      "engine-version": "3.5.0.0",
+      "clr-version": "4.0.30319.42000",
+      "start-time": "2026-10-30 14:10:19Z",
+      "end-time": "2026-10-30 14:10:19Z",
+      "duration": "0.0975207"
+    },
+    "playmode-no-preview-repeat": {
+      "id": "2",
+      "testcasecount": "196",
+      "result": "Passed",
+      "total": "196",
+      "passed": "196",
+      "failed": "0",
+      "inconclusive": "0",
+      "skipped": "0",
+      "asserts": "0",
+      "engine-version": "3.5.0.0",
+      "clr-version": "4.0.30319.42000",
+      "start-time": "2026-10-30 14:11:39Z",
+      "end-time": "2026-10-30 14:11:40Z",
+      "duration": "0.9919148"
+    }
+  },
+  "intermittent_observation": "First full run failed CornerHalos_StaySynchronizedWithNegativeInsideAndPositiveOutside: expected negative active radius below neutral, but both were0.0800000057. That unchanged test passed in isolation and the unchanged full-suite rerun passed196/196. Prior failure retained.",
+  "runtime_or_renderer_changes": false
+}

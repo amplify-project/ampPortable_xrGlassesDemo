@@ -1,0 +1,24 @@
+﻿{
+    "started_utc":  "2026-10-30T12:32:41.0292438Z",
+    "finished_utc":  "2026-10-30T12:32:42.4857661Z",
+    "java":  "C:\\Program Files\\Unity\\Hub\\Editor\\2022.3.36f1\\Editor\\Data\\PlaybackEngines\\AndroidPlayer\\OpenJDK\\bin\\java.exe",
+    "java_version":  "openjdk version \"11.0.14.1\" 2022-02-08\nOpenJDK Runtime Environment Temurin-11.0.14.1+1 (build 11.0.14.1+1)\nOpenJDK 64-Bit Server VM Temurin-11.0.14.1+1 (build 11.0.14.1+1, mixed mode)",
+    "process_trust_flags":  [
+                                "-Djavax.net.ssl.trustStore=NONE",
+                                "-Djavax.net.ssl.trustStoreType=Windows-ROOT"
+                            ],
+    "method":  "HEAD",
+    "expected_checks":  2,
+    "checks":  [
+
+               ],
+    "exit_code":  1,
+    "passed":  false,
+    "output":  [
+                   "Exception in thread \"main\" java.lang.IllegalStateException: connection not yet open",
+                   "\tat java.base/sun.net.www.protocol.https.AbstractDelegateHttpsURLConnection.getCipherSuite(AbstractDelegateHttpsURLConnection.java:225)",
+                   "\tat java.base/sun.net.www.protocol.https.HttpsURLConnectionImpl.getCipherSuite(HttpsURLConnectionImpl.java:193)",
+                   "\tat WindowsRootTlsSmoke.main(WindowsRootTlsSmoke.java:13)"
+               ],
+    "trust_changes":  "None; reads existing Windows-ROOT via SunMSCAPI"
+}

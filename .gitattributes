@@ -1,0 +1,2 @@
+# Preserve the assessment's original patch bytes, including Unity YAML whitespace.
+Assessment/2026-10-30/initial-working-tree.patch -text -whitespace

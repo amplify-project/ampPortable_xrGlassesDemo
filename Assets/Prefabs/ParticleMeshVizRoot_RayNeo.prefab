@@ -1,0 +1,171 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!1001 &6515723144000308657
+PrefabInstance:
+  m_ObjectHideFlags: 0
+  serializedVersion: 2
+  m_Modification:
+    serializedVersion: 3
+    m_TransformParent: {fileID: 0}
+    m_Modifications:
+    - target: {fileID: 462658995576620322, guid: 74e05b7be47103748b0057db90b75d78, type: 3}
+      propertyPath: scalingMode
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 462658995576620322, guid: 74e05b7be47103748b0057db90b75d78, type: 3}
+      propertyPath: InitialModule.maxNumParticles
+      value: 25
+      objectReference: {fileID: 0}
+    - target: {fileID: 462658995576620322, guid: 74e05b7be47103748b0057db90b75d78, type: 3}
+      propertyPath: InitialModule.startSize.scalar
+      value: 0.015
+      objectReference: {fileID: 0}
+    - target: {fileID: 632910883045713548, guid: 74e05b7be47103748b0057db90b75d78, type: 3}
+      propertyPath: m_Materials.Array.data[0]
+      value: 
+      objectReference: {fileID: 2100000, guid: 7231b177775e0454ba21848ce41db794, type: 2}
+    - target: {fileID: 4067197417196135219, guid: 74e05b7be47103748b0057db90b75d78, type: 3}
+      propertyPath: m_Name
+      value: ParticleMeshVizRoot_RayNeo
+      objectReference: {fileID: 0}
+    - target: {fileID: 5049573012337638692, guid: 74e05b7be47103748b0057db90b75d78, type: 3}
+      propertyPath: m_Materials.Array.data[0]
+      value: 
+      objectReference: {fileID: 2100000, guid: 72558d4b97c34224ab088264be7d1563, type: 2}
+    - target: {fileID: 5099490702948499052, guid: 74e05b7be47103748b0057db90b75d78, type: 3}
+      propertyPath: arousal
+      value: 0.59989303
+      objectReference: {fileID: 0}
+    - target: {fileID: 5099490702948499052, guid: 74e05b7be47103748b0057db90b75d78, type: 3}
+      propertyPath: valence
+      value: 0.26474687
+      objectReference: {fileID: 0}
+    - target: {fileID: 5099490702948499052, guid: 74e05b7be47103748b0057db90b75d78, type: 3}
+      propertyPath: engagement
+      value: 0.21718702
+      objectReference: {fileID: 0}
+    - target: {fileID: 5099490702948499052, guid: 74e05b7be47103748b0057db90b75d78, type: 3}
+      propertyPath: noiseOffset
+      value: 592.0807
+      objectReference: {fileID: 0}
+    - target: {fileID: 5099490702948499052, guid: 74e05b7be47103748b0057db90b75d78, type: 3}
+      propertyPath: heartRateStdDev
+      value: -1.5641603
+      objectReference: {fileID: 0}
+    - target: {fileID: 5099490702948499052, guid: 74e05b7be47103748b0057db90b75d78, type: 3}
+      propertyPath: interBeatIntervalStdDev
+      value: 0.2790302
+      objectReference: {fileID: 0}
+    - target: {fileID: 5099490702948499052, guid: 74e05b7be47103748b0057db90b75d78, type: 3}
+      propertyPath: temperatureRateOfChangeStdDev
+      value: -0.4740799
+      objectReference: {fileID: 0}
+    - target: {fileID: 5099490702948499052, guid: 74e05b7be47103748b0057db90b75d78, type: 3}
+      propertyPath: tonicElectrodermalActivityStdDev
+      value: 0.378837
+      objectReference: {fileID: 0}
+    - target: {fileID: 5099490702948499052, guid: 74e05b7be47103748b0057db90b75d78, type: 3}
+      propertyPath: skinConductanceResponseFrequencyStdDev
+      value: -0.039689183
+      objectReference: {fileID: 0}
+    - target: {fileID: 7649927837592745194, guid: 74e05b7be47103748b0057db90b75d78, type: 3}
+      propertyPath: m_Materials.Array.data[0]
+      value: 
+      objectReference: {fileID: 2100000, guid: 6fd344480969d5c4aaacaa81b4d6eeb0, type: 2}
+    - target: {fileID: 7919801646832807489, guid: 74e05b7be47103748b0057db90b75d78, type: 3}
+      propertyPath: m_LocalPosition.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7919801646832807489, guid: 74e05b7be47103748b0057db90b75d78, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7919801646832807489, guid: 74e05b7be47103748b0057db90b75d78, type: 3}
+      propertyPath: m_LocalPosition.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7919801646832807489, guid: 74e05b7be47103748b0057db90b75d78, type: 3}
+      propertyPath: m_LocalRotation.w
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 7919801646832807489, guid: 74e05b7be47103748b0057db90b75d78, type: 3}
+      propertyPath: m_LocalRotation.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7919801646832807489, guid: 74e05b7be47103748b0057db90b75d78, type: 3}
+      propertyPath: m_LocalRotation.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7919801646832807489, guid: 74e05b7be47103748b0057db90b75d78, type: 3}
+      propertyPath: m_LocalRotation.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7919801646832807489, guid: 74e05b7be47103748b0057db90b75d78, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7919801646832807489, guid: 74e05b7be47103748b0057db90b75d78, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7919801646832807489, guid: 74e05b7be47103748b0057db90b75d78, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8489548096852947066, guid: 74e05b7be47103748b0057db90b75d78, type: 3}
+      propertyPath: gridWidth
+      value: 5
+      objectReference: {fileID: 0}
+    - target: {fileID: 8489548096852947066, guid: 74e05b7be47103748b0057db90b75d78, type: 3}
+      propertyPath: gridHeight
+      value: 5
+      objectReference: {fileID: 0}
+    - target: {fileID: 8489548096852947066, guid: 74e05b7be47103748b0057db90b75d78, type: 3}
+      propertyPath: visualScale
+      value: 0.275
+      objectReference: {fileID: 0}
+    - target: {fileID: 8489548096852947066, guid: 74e05b7be47103748b0057db90b75d78, type: 3}
+      propertyPath: particleSize
+      value: 0.015
+      objectReference: {fileID: 0}
+    - target: {fileID: 8489548096852947066, guid: 74e05b7be47103748b0057db90b75d78, type: 3}
+      propertyPath: neutralColor.b
+      value: 0.506
+      objectReference: {fileID: 0}
+    - target: {fileID: 8489548096852947066, guid: 74e05b7be47103748b0057db90b75d78, type: 3}
+      propertyPath: lowEngagementAlpha
+      value: 0.75
+      objectReference: {fileID: 0}
+    - target: {fileID: 8489548096852947066, guid: 74e05b7be47103748b0057db90b75d78, type: 3}
+      propertyPath: heartRateHaloMaterial
+      value: 
+      objectReference: {fileID: 2100000, guid: 9e3e5118b74854448b8f968ee8a8edeb, type: 2}
+    - target: {fileID: 8489548096852947066, guid: 74e05b7be47103748b0057db90b75d78, type: 3}
+      propertyPath: temperatureTrailStride
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 8489548096852947066, guid: 74e05b7be47103748b0057db90b75d78, type: 3}
+      propertyPath: temperatureTrailMaterial
+      value: 
+      objectReference: {fileID: 2100000, guid: d4607f21cf2283f4a970bb3644075398, type: 2}
+    - target: {fileID: 8489548096852947066, guid: 74e05b7be47103748b0057db90b75d78, type: 3}
+      propertyPath: temperatureTrailMaxAlpha
+      value: 0.9
+      objectReference: {fileID: 0}
+    - target: {fileID: 8489548096852947066, guid: 74e05b7be47103748b0057db90b75d78, type: 3}
+      propertyPath: engagementLatticeMaterial
+      value: 
+      objectReference: {fileID: 2100000, guid: 21bf74cb165f82545ad23077e60f1775, type: 2}
+    - target: {fileID: 8489548096852947066, guid: 74e05b7be47103748b0057db90b75d78, type: 3}
+      propertyPath: temperatureTrailFadeRange
+      value: 0.15
+      objectReference: {fileID: 0}
+    - target: {fileID: 8489548096852947066, guid: 74e05b7be47103748b0057db90b75d78, type: 3}
+      propertyPath: temperatureTrailLineWidth
+      value: 0.0253
+      objectReference: {fileID: 0}
+    m_RemovedComponents: []
+    m_RemovedGameObjects: []
+    m_AddedGameObjects: []
+    m_AddedComponents: []
+  m_SourcePrefab: {fileID: 100100000, guid: 74e05b7be47103748b0057db90b75d78, type: 3}

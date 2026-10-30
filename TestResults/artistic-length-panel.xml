@@ -1,0 +1,326 @@
+<?xml version="1.0" encoding="utf-8"?>
+<test-run id="2" testcasecount="44" result="Passed" total="44" passed="44" failed="0" inconclusive="0" skipped="0" asserts="0" engine-version="3.5.0.0" clr-version="4.0.30319.42000" start-time="2026-10-13 12:02:42Z" end-time="2026-10-13 12:02:42Z" duration="0.6171356">
+  <test-suite type="TestSuite" id="1253" name="XR Score Viewer" fullname="XR Score Viewer" runstate="Runnable" testcasecount="196" result="Passed" start-time="2026-10-13 12:02:42Z" end-time="2026-10-13 12:02:42Z" duration="0.617136" total="44" passed="44" failed="0" inconclusive="0" skipped="0" asserts="0">
+    <properties>
+      <property name="platform" value="PlayMode" />
+    </properties>
+    <test-suite type="Assembly" id="1245" name="Tests.dll" fullname="C:/Users/Bryan Dunphy/Documents/UnityProjects/ampPortable_xrGlassesDemo/.utmp/artistic-elements-validation/Library/ScriptAssemblies/Tests.dll" runstate="Runnable" testcasecount="196" result="Passed" start-time="2026-10-13 12:02:42Z" end-time="2026-10-13 12:02:42Z" duration="0.610664" total="44" passed="44" failed="0" inconclusive="0" skipped="0" asserts="0">
+      <properties>
+        <property name="_PID" value="329716" />
+        <property name="_APPDOMAIN" value="Unity Child Domain" />
+        <property name="platform" value="PlayMode" />
+        <property name="EditorOnly" value="False" />
+      </properties>
+      <test-suite type="TestSuite" id="1246" name="AmpPortableDataViz" fullname="AmpPortableDataViz" runstate="Runnable" testcasecount="196" result="Passed" start-time="2026-10-13 12:02:42Z" end-time="2026-10-13 12:02:42Z" duration="0.608459" total="44" passed="44" failed="0" inconclusive="0" skipped="0" asserts="0">
+        <properties />
+        <test-suite type="TestSuite" id="1247" name="Tests" fullname="AmpPortableDataViz.Tests" runstate="Runnable" testcasecount="196" result="Passed" start-time="2026-10-13 12:02:42Z" end-time="2026-10-13 12:02:42Z" duration="0.606489" total="44" passed="44" failed="0" inconclusive="0" skipped="0" asserts="0">
+          <properties />
+          <test-suite type="TestSuite" id="1250" name="PlayMode" fullname="AmpPortableDataViz.Tests.PlayMode" runstate="Runnable" testcasecount="160" result="Passed" start-time="2026-10-13 12:02:42Z" end-time="2026-10-13 12:02:42Z" duration="0.604443" total="44" passed="44" failed="0" inconclusive="0" skipped="0" asserts="0">
+            <properties />
+            <test-suite type="TestFixture" id="1049" name="ArtisticElementControllerTests" fullname="AmpPortableDataViz.Tests.PlayMode.ArtisticElementControllerTests" classname="AmpPortableDataViz.Tests.PlayMode.ArtisticElementControllerTests" runstate="Runnable" testcasecount="16" result="Passed" start-time="2026-10-13 12:02:42Z" end-time="2026-10-13 12:02:42Z" duration="0.055466" total="16" passed="16" failed="0" inconclusive="0" skipped="0" asserts="0">
+              <properties />
+              <test-case id="1058" name="ImageElement_ThicknessRequestsLeaveUniformScaleUnchanged" fullname="AmpPortableDataViz.Tests.PlayMode.ArtisticElementControllerTests.ImageElement_ThicknessRequestsLeaveUniformScaleUnchanged" methodname="ImageElement_ThicknessRequestsLeaveUniformScaleUnchanged" classname="AmpPortableDataViz.Tests.PlayMode.ArtisticElementControllerTests" runstate="Runnable" seed="1770311322" result="Passed" start-time="2026-10-13 12:02:42Z" end-time="2026-10-13 12:02:42Z" duration="0.024040" asserts="0">
+                <properties>
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+              </test-case>
+              <test-case id="1065" name="MeshColour_IsIndependentForElementsSharingMaterial" fullname="AmpPortableDataViz.Tests.PlayMode.ArtisticElementControllerTests.MeshColour_IsIndependentForElementsSharingMaterial" methodname="MeshColour_IsIndependentForElementsSharingMaterial" classname="AmpPortableDataViz.Tests.PlayMode.ArtisticElementControllerTests" runstate="Runnable" seed="1972134694" result="Passed" start-time="2026-10-13 12:02:42Z" end-time="2026-10-13 12:02:42Z" duration="0.002595" asserts="0">
+                <properties>
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+              </test-case>
+              <test-case id="1066" name="MeshColour_PreservesAndRestoresExistingPerSlotOverrides" fullname="AmpPortableDataViz.Tests.PlayMode.ArtisticElementControllerTests.MeshColour_PreservesAndRestoresExistingPerSlotOverrides" methodname="MeshColour_PreservesAndRestoresExistingPerSlotOverrides" classname="AmpPortableDataViz.Tests.PlayMode.ArtisticElementControllerTests" runstate="Runnable" seed="653389007" result="Passed" start-time="2026-10-13 12:02:42Z" end-time="2026-10-13 12:02:42Z" duration="0.001424" asserts="0">
+                <properties>
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+              </test-case>
+              <test-case id="1067" name="MeshColour_PreservesRendererWideTextureAcrossTintResetAndRetint" fullname="AmpPortableDataViz.Tests.PlayMode.ArtisticElementControllerTests.MeshColour_PreservesRendererWideTextureAcrossTintResetAndRetint" methodname="MeshColour_PreservesRendererWideTextureAcrossTintResetAndRetint" classname="AmpPortableDataViz.Tests.PlayMode.ArtisticElementControllerTests" runstate="Runnable" seed="1731289353" result="Passed" start-time="2026-10-13 12:02:42Z" end-time="2026-10-13 12:02:42Z" duration="0.001284" asserts="0">
+                <properties>
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+              </test-case>
+              <test-suite type="ParameterizedMethod" id="1062" name="Multipliers_ClampToPositiveUsableBounds" fullname="AmpPortableDataViz.Tests.PlayMode.ArtisticElementControllerTests.Multipliers_ClampToPositiveUsableBounds" classname="AmpPortableDataViz.Tests.PlayMode.ArtisticElementControllerTests" runstate="Runnable" testcasecount="3" result="Passed" start-time="2026-10-13 12:02:42Z" end-time="2026-10-13 12:02:42Z" duration="0.002891" total="3" passed="3" failed="0" inconclusive="0" skipped="0" asserts="0">
+                <properties />
+                <test-case id="1059" name="Multipliers_ClampToPositiveUsableBounds(-3.0f,0.05f)" fullname="AmpPortableDataViz.Tests.PlayMode.ArtisticElementControllerTests.Multipliers_ClampToPositiveUsableBounds(-3.0f,0.05f)" methodname="Multipliers_ClampToPositiveUsableBounds" classname="AmpPortableDataViz.Tests.PlayMode.ArtisticElementControllerTests" runstate="Runnable" seed="2034214345" result="Passed" start-time="2026-10-13 12:02:42Z" end-time="2026-10-13 12:02:42Z" duration="0.000534" asserts="0">
+                  <properties>
+                    <property name="retryIteration" value="0" />
+                    <property name="repeatIteration" value="0" />
+                  </properties>
+                </test-case>
+                <test-case id="1060" name="Multipliers_ClampToPositiveUsableBounds(0.0f,0.05f)" fullname="AmpPortableDataViz.Tests.PlayMode.ArtisticElementControllerTests.Multipliers_ClampToPositiveUsableBounds(0.0f,0.05f)" methodname="Multipliers_ClampToPositiveUsableBounds" classname="AmpPortableDataViz.Tests.PlayMode.ArtisticElementControllerTests" runstate="Runnable" seed="913589220" result="Passed" start-time="2026-10-13 12:02:42Z" end-time="2026-10-13 12:02:42Z" duration="0.000184" asserts="0">
+                  <properties>
+                    <property name="retryIteration" value="0" />
+                    <property name="repeatIteration" value="0" />
+                  </properties>
+                </test-case>
+                <test-case id="1061" name="Multipliers_ClampToPositiveUsableBounds(20.0f,5.0f)" fullname="AmpPortableDataViz.Tests.PlayMode.ArtisticElementControllerTests.Multipliers_ClampToPositiveUsableBounds(20.0f,5.0f)" methodname="Multipliers_ClampToPositiveUsableBounds" classname="AmpPortableDataViz.Tests.PlayMode.ArtisticElementControllerTests" runstate="Runnable" seed="359493961" result="Passed" start-time="2026-10-13 12:02:42Z" end-time="2026-10-13 12:02:42Z" duration="0.000218" asserts="0">
+                  <properties>
+                    <property name="retryIteration" value="0" />
+                    <property name="repeatIteration" value="0" />
+                  </properties>
+                </test-case>
+              </test-suite>
+              <test-case id="1063" name="NonFiniteInputs_KeepLastValidTransformAndColour" fullname="AmpPortableDataViz.Tests.PlayMode.ArtisticElementControllerTests.NonFiniteInputs_KeepLastValidTransformAndColour" methodname="NonFiniteInputs_KeepLastValidTransformAndColour" classname="AmpPortableDataViz.Tests.PlayMode.ArtisticElementControllerTests" runstate="Runnable" seed="379571969" result="Passed" start-time="2026-10-13 12:02:42Z" end-time="2026-10-13 12:02:42Z" duration="0.003873" asserts="0">
+                <properties>
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+              </test-case>
+              <test-suite type="ParameterizedMethod" id="1057" name="ScaleAndThickness_ComposeForEachLocalAxisInEitherOrder" fullname="AmpPortableDataViz.Tests.PlayMode.ArtisticElementControllerTests.ScaleAndThickness_ComposeForEachLocalAxisInEitherOrder" classname="AmpPortableDataViz.Tests.PlayMode.ArtisticElementControllerTests" runstate="Runnable" testcasecount="6" result="Passed" start-time="2026-10-13 12:02:42Z" end-time="2026-10-13 12:02:42Z" duration="0.003678" total="6" passed="6" failed="0" inconclusive="0" skipped="0" asserts="0">
+                <properties />
+                <test-case id="1051" name="ScaleAndThickness_ComposeForEachLocalAxisInEitherOrder(X,False)" fullname="AmpPortableDataViz.Tests.PlayMode.ArtisticElementControllerTests.ScaleAndThickness_ComposeForEachLocalAxisInEitherOrder(X,False)" methodname="ScaleAndThickness_ComposeForEachLocalAxisInEitherOrder" classname="AmpPortableDataViz.Tests.PlayMode.ArtisticElementControllerTests" runstate="Runnable" seed="1750845564" result="Passed" start-time="2026-10-13 12:02:42Z" end-time="2026-10-13 12:02:42Z" duration="0.000966" asserts="0">
+                  <properties>
+                    <property name="retryIteration" value="0" />
+                    <property name="repeatIteration" value="0" />
+                  </properties>
+                </test-case>
+                <test-case id="1052" name="ScaleAndThickness_ComposeForEachLocalAxisInEitherOrder(Y,False)" fullname="AmpPortableDataViz.Tests.PlayMode.ArtisticElementControllerTests.ScaleAndThickness_ComposeForEachLocalAxisInEitherOrder(Y,False)" methodname="ScaleAndThickness_ComposeForEachLocalAxisInEitherOrder" classname="AmpPortableDataViz.Tests.PlayMode.ArtisticElementControllerTests" runstate="Runnable" seed="1316106628" result="Passed" start-time="2026-10-13 12:02:42Z" end-time="2026-10-13 12:02:42Z" duration="0.000207" asserts="0">
+                  <properties>
+                    <property name="retryIteration" value="0" />
+                    <property name="repeatIteration" value="0" />
+                  </properties>
+                </test-case>
+                <test-case id="1053" name="ScaleAndThickness_ComposeForEachLocalAxisInEitherOrder(Z,False)" fullname="AmpPortableDataViz.Tests.PlayMode.ArtisticElementControllerTests.ScaleAndThickness_ComposeForEachLocalAxisInEitherOrder(Z,False)" methodname="ScaleAndThickness_ComposeForEachLocalAxisInEitherOrder" classname="AmpPortableDataViz.Tests.PlayMode.ArtisticElementControllerTests" runstate="Runnable" seed="1815181586" result="Passed" start-time="2026-10-13 12:02:42Z" end-time="2026-10-13 12:02:42Z" duration="0.000187" asserts="0">
+                  <properties>
+                    <property name="retryIteration" value="0" />
+                    <property name="repeatIteration" value="0" />
+                  </properties>
+                </test-case>
+                <test-case id="1054" name="ScaleAndThickness_ComposeForEachLocalAxisInEitherOrder(X,True)" fullname="AmpPortableDataViz.Tests.PlayMode.ArtisticElementControllerTests.ScaleAndThickness_ComposeForEachLocalAxisInEitherOrder(X,True)" methodname="ScaleAndThickness_ComposeForEachLocalAxisInEitherOrder" classname="AmpPortableDataViz.Tests.PlayMode.ArtisticElementControllerTests" runstate="Runnable" seed="695918665" result="Passed" start-time="2026-10-13 12:02:42Z" end-time="2026-10-13 12:02:42Z" duration="0.000274" asserts="0">
+                  <properties>
+                    <property name="retryIteration" value="0" />
+                    <property name="repeatIteration" value="0" />
+                  </properties>
+                </test-case>
+                <test-case id="1055" name="ScaleAndThickness_ComposeForEachLocalAxisInEitherOrder(Y,True)" fullname="AmpPortableDataViz.Tests.PlayMode.ArtisticElementControllerTests.ScaleAndThickness_ComposeForEachLocalAxisInEitherOrder(Y,True)" methodname="ScaleAndThickness_ComposeForEachLocalAxisInEitherOrder" classname="AmpPortableDataViz.Tests.PlayMode.ArtisticElementControllerTests" runstate="Runnable" seed="1501800621" result="Passed" start-time="2026-10-13 12:02:42Z" end-time="2026-10-13 12:02:42Z" duration="0.000235" asserts="0">
+                  <properties>
+                    <property name="retryIteration" value="0" />
+                    <property name="repeatIteration" value="0" />
+                  </properties>
+                </test-case>
+                <test-case id="1056" name="ScaleAndThickness_ComposeForEachLocalAxisInEitherOrder(Z,True)" fullname="AmpPortableDataViz.Tests.PlayMode.ArtisticElementControllerTests.ScaleAndThickness_ComposeForEachLocalAxisInEitherOrder(Z,True)" methodname="ScaleAndThickness_ComposeForEachLocalAxisInEitherOrder" classname="AmpPortableDataViz.Tests.PlayMode.ArtisticElementControllerTests" runstate="Runnable" seed="1114043434" result="Passed" start-time="2026-10-13 12:02:42Z" end-time="2026-10-13 12:02:42Z" duration="0.000191" asserts="0">
+                  <properties>
+                    <property name="retryIteration" value="0" />
+                    <property name="repeatIteration" value="0" />
+                  </properties>
+                </test-case>
+              </test-suite>
+              <test-case id="1064" name="SpriteColour_PreservesOpacityClampsRgbAndRestoresDefaults" fullname="AmpPortableDataViz.Tests.PlayMode.ArtisticElementControllerTests.SpriteColour_PreservesOpacityClampsRgbAndRestoresDefaults" methodname="SpriteColour_PreservesOpacityClampsRgbAndRestoresDefaults" classname="AmpPortableDataViz.Tests.PlayMode.ArtisticElementControllerTests" runstate="Runnable" seed="364915895" result="Passed" start-time="2026-10-13 12:02:42Z" end-time="2026-10-13 12:02:42Z" duration="0.000567" asserts="0">
+                <properties>
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+              </test-case>
+              <test-case id="1050" name="TransformControls_PreserveAuthoredProportionsRotationAndPosition" fullname="AmpPortableDataViz.Tests.PlayMode.ArtisticElementControllerTests.TransformControls_PreserveAuthoredProportionsRotationAndPosition" methodname="TransformControls_PreserveAuthoredProportionsRotationAndPosition" classname="AmpPortableDataViz.Tests.PlayMode.ArtisticElementControllerTests" runstate="Runnable" seed="152068244" result="Passed" start-time="2026-10-13 12:02:42Z" end-time="2026-10-13 12:02:42Z" duration="0.001151" asserts="0">
+                <properties>
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+              </test-case>
+            </test-suite>
+            <test-suite type="TestFixture" id="1068" name="ArtisticElementLengthTests" fullname="AmpPortableDataViz.Tests.PlayMode.ArtisticElementLengthTests" classname="AmpPortableDataViz.Tests.PlayMode.ArtisticElementLengthTests" runstate="Runnable" testcasecount="10" result="Passed" start-time="2026-10-13 12:02:42Z" end-time="2026-10-13 12:02:42Z" duration="0.012715" total="10" passed="10" failed="0" inconclusive="0" skipped="0" asserts="0">
+              <properties />
+              <test-case id="1072" name="ConfigureAndReset_PreserveAuthoredChildAndRootTransforms" fullname="AmpPortableDataViz.Tests.PlayMode.ArtisticElementLengthTests.ConfigureAndReset_PreserveAuthoredChildAndRootTransforms" methodname="ConfigureAndReset_PreserveAuthoredChildAndRootTransforms" classname="AmpPortableDataViz.Tests.PlayMode.ArtisticElementLengthTests" runstate="Runnable" seed="258621003" result="Passed" start-time="2026-10-13 12:02:42Z" end-time="2026-10-13 12:02:42Z" duration="0.003271" asserts="0">
+                <properties>
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+              </test-case>
+              <test-case id="1080" name="DisableLength_RestoresLengthKeepsScaleAndDepthAndIgnoresRequests" fullname="AmpPortableDataViz.Tests.PlayMode.ArtisticElementLengthTests.DisableLength_RestoresLengthKeepsScaleAndDepthAndIgnoresRequests" methodname="DisableLength_RestoresLengthKeepsScaleAndDepthAndIgnoresRequests" classname="AmpPortableDataViz.Tests.PlayMode.ArtisticElementLengthTests" runstate="Runnable" seed="1128118784" result="Passed" start-time="2026-10-13 12:02:42Z" end-time="2026-10-13 12:02:42Z" duration="0.001180" asserts="0">
+                <properties>
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+              </test-case>
+              <test-suite type="ParameterizedMethod" id="1079" name="Length_ClampsBoundsAndIgnoresNonFiniteRequests" fullname="AmpPortableDataViz.Tests.PlayMode.ArtisticElementLengthTests.Length_ClampsBoundsAndIgnoresNonFiniteRequests" classname="AmpPortableDataViz.Tests.PlayMode.ArtisticElementLengthTests" runstate="Runnable" testcasecount="3" result="Passed" start-time="2026-10-13 12:02:42Z" end-time="2026-10-13 12:02:42Z" duration="0.002348" total="3" passed="3" failed="0" inconclusive="0" skipped="0" asserts="0">
+                <properties />
+                <test-case id="1076" name="Length_ClampsBoundsAndIgnoresNonFiniteRequests(-3.0f,0.05f)" fullname="AmpPortableDataViz.Tests.PlayMode.ArtisticElementLengthTests.Length_ClampsBoundsAndIgnoresNonFiniteRequests(-3.0f,0.05f)" methodname="Length_ClampsBoundsAndIgnoresNonFiniteRequests" classname="AmpPortableDataViz.Tests.PlayMode.ArtisticElementLengthTests" runstate="Runnable" seed="1811777818" result="Passed" start-time="2026-10-13 12:02:42Z" end-time="2026-10-13 12:02:42Z" duration="0.000514" asserts="0">
+                  <properties>
+                    <property name="retryIteration" value="0" />
+                    <property name="repeatIteration" value="0" />
+                  </properties>
+                </test-case>
+                <test-case id="1077" name="Length_ClampsBoundsAndIgnoresNonFiniteRequests(0.0f,0.05f)" fullname="AmpPortableDataViz.Tests.PlayMode.ArtisticElementLengthTests.Length_ClampsBoundsAndIgnoresNonFiniteRequests(0.0f,0.05f)" methodname="Length_ClampsBoundsAndIgnoresNonFiniteRequests" classname="AmpPortableDataViz.Tests.PlayMode.ArtisticElementLengthTests" runstate="Runnable" seed="188942079" result="Passed" start-time="2026-10-13 12:02:42Z" end-time="2026-10-13 12:02:42Z" duration="0.000314" asserts="0">
+                  <properties>
+                    <property name="retryIteration" value="0" />
+                    <property name="repeatIteration" value="0" />
+                  </properties>
+                </test-case>
+                <test-case id="1078" name="Length_ClampsBoundsAndIgnoresNonFiniteRequests(20.0f,5.0f)" fullname="AmpPortableDataViz.Tests.PlayMode.ArtisticElementLengthTests.Length_ClampsBoundsAndIgnoresNonFiniteRequests(20.0f,5.0f)" methodname="Length_ClampsBoundsAndIgnoresNonFiniteRequests" classname="AmpPortableDataViz.Tests.PlayMode.ArtisticElementLengthTests" runstate="Runnable" seed="347734536" result="Passed" start-time="2026-10-13 12:02:42Z" end-time="2026-10-13 12:02:42Z" duration="0.000332" asserts="0">
+                  <properties>
+                    <property name="retryIteration" value="0" />
+                    <property name="repeatIteration" value="0" />
+                  </properties>
+                </test-case>
+              </test-suite>
+              <test-suite type="ParameterizedMethod" id="1075" name="Length_ComposesWithUniformScaleAndDepthInEitherOrder" fullname="AmpPortableDataViz.Tests.PlayMode.ArtisticElementLengthTests.Length_ComposesWithUniformScaleAndDepthInEitherOrder" classname="AmpPortableDataViz.Tests.PlayMode.ArtisticElementLengthTests" runstate="Runnable" testcasecount="2" result="Passed" start-time="2026-10-13 12:02:42Z" end-time="2026-10-13 12:02:42Z" duration="0.001432" total="2" passed="2" failed="0" inconclusive="0" skipped="0" asserts="0">
+                <properties />
+                <test-case id="1073" name="Length_ComposesWithUniformScaleAndDepthInEitherOrder(False)" fullname="AmpPortableDataViz.Tests.PlayMode.ArtisticElementLengthTests.Length_ComposesWithUniformScaleAndDepthInEitherOrder(False)" methodname="Length_ComposesWithUniformScaleAndDepthInEitherOrder" classname="AmpPortableDataViz.Tests.PlayMode.ArtisticElementLengthTests" runstate="Runnable" seed="1510698778" result="Passed" start-time="2026-10-13 12:02:42Z" end-time="2026-10-13 12:02:42Z" duration="0.000514" asserts="0">
+                  <properties>
+                    <property name="retryIteration" value="0" />
+                    <property name="repeatIteration" value="0" />
+                  </properties>
+                </test-case>
+                <test-case id="1074" name="Length_ComposesWithUniformScaleAndDepthInEitherOrder(True)" fullname="AmpPortableDataViz.Tests.PlayMode.ArtisticElementLengthTests.Length_ComposesWithUniformScaleAndDepthInEitherOrder(True)" methodname="Length_ComposesWithUniformScaleAndDepthInEitherOrder" classname="AmpPortableDataViz.Tests.PlayMode.ArtisticElementLengthTests" runstate="Runnable" seed="182604113" result="Passed" start-time="2026-10-13 12:02:42Z" end-time="2026-10-13 12:02:42Z" duration="0.000207" asserts="0">
+                  <properties>
+                    <property name="retryIteration" value="0" />
+                    <property name="repeatIteration" value="0" />
+                  </properties>
+                </test-case>
+              </test-suite>
+              <test-suite type="ParameterizedMethod" id="1071" name="Length_StretchesSlantedLongEdgeAndPreservesWidthAndDepth" fullname="AmpPortableDataViz.Tests.PlayMode.ArtisticElementLengthTests.Length_StretchesSlantedLongEdgeAndPreservesWidthAndDepth" classname="AmpPortableDataViz.Tests.PlayMode.ArtisticElementLengthTests" runstate="Runnable" testcasecount="2" result="Passed" start-time="2026-10-13 12:02:42Z" end-time="2026-10-13 12:02:42Z" duration="0.001647" total="2" passed="2" failed="0" inconclusive="0" skipped="0" asserts="0">
+                <properties />
+                <test-case id="1069" name="Length_StretchesSlantedLongEdgeAndPreservesWidthAndDepth(0.25f)" fullname="AmpPortableDataViz.Tests.PlayMode.ArtisticElementLengthTests.Length_StretchesSlantedLongEdgeAndPreservesWidthAndDepth(0.25f)" methodname="Length_StretchesSlantedLongEdgeAndPreservesWidthAndDepth" classname="AmpPortableDataViz.Tests.PlayMode.ArtisticElementLengthTests" runstate="Runnable" seed="1799892591" result="Passed" start-time="2026-10-13 12:02:42Z" end-time="2026-10-13 12:02:42Z" duration="0.000602" asserts="0">
+                  <properties>
+                    <property name="retryIteration" value="0" />
+                    <property name="repeatIteration" value="0" />
+                  </properties>
+                </test-case>
+                <test-case id="1070" name="Length_StretchesSlantedLongEdgeAndPreservesWidthAndDepth(3.0f)" fullname="AmpPortableDataViz.Tests.PlayMode.ArtisticElementLengthTests.Length_StretchesSlantedLongEdgeAndPreservesWidthAndDepth(3.0f)" methodname="Length_StretchesSlantedLongEdgeAndPreservesWidthAndDepth" classname="AmpPortableDataViz.Tests.PlayMode.ArtisticElementLengthTests" runstate="Runnable" seed="1033333038" result="Passed" start-time="2026-10-13 12:02:42Z" end-time="2026-10-13 12:02:42Z" duration="0.000246" asserts="0">
+                  <properties>
+                    <property name="retryIteration" value="0" />
+                    <property name="repeatIteration" value="0" />
+                  </properties>
+                </test-case>
+              </test-suite>
+              <test-case id="1081" name="RepeatedConfiguration_ReusesHierarchyAndPreservesGeometry" fullname="AmpPortableDataViz.Tests.PlayMode.ArtisticElementLengthTests.RepeatedConfiguration_ReusesHierarchyAndPreservesGeometry" methodname="RepeatedConfiguration_ReusesHierarchyAndPreservesGeometry" classname="AmpPortableDataViz.Tests.PlayMode.ArtisticElementLengthTests" runstate="Runnable" seed="1880490155" result="Passed" start-time="2026-10-13 12:02:42Z" end-time="2026-10-13 12:02:42Z" duration="0.001069" asserts="0">
+                <properties>
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+              </test-case>
+            </test-suite>
+            <test-suite type="TestFixture" id="1082" name="ArtisticElementsControlPanelTests" fullname="AmpPortableDataViz.Tests.PlayMode.ArtisticElementsControlPanelTests" classname="AmpPortableDataViz.Tests.PlayMode.ArtisticElementsControlPanelTests" runstate="Runnable" testcasecount="9" result="Passed" start-time="2026-10-13 12:02:42Z" end-time="2026-10-13 12:02:42Z" duration="0.224674" total="9" passed="9" failed="0" inconclusive="0" skipped="0" asserts="0">
+              <properties />
+              <test-case id="1086" name="LengthRow_ControlsOnlyBlockLengthAndRetainsItsValueAcrossSelection" fullname="AmpPortableDataViz.Tests.PlayMode.ArtisticElementsControlPanelTests.LengthRow_ControlsOnlyBlockLengthAndRetainsItsValueAcrossSelection" methodname="LengthRow_ControlsOnlyBlockLengthAndRetainsItsValueAcrossSelection" classname="AmpPortableDataViz.Tests.PlayMode.ArtisticElementsControlPanelTests" runstate="Runnable" seed="834725760" result="Passed" start-time="2026-10-13 12:02:42Z" end-time="2026-10-13 12:02:42Z" duration="0.097650" asserts="0">
+                <properties>
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+              </test-case>
+              <test-case id="1089" name="Panel_ReusesProvidedEventSystemWithoutCreatingDuplicate" fullname="AmpPortableDataViz.Tests.PlayMode.ArtisticElementsControlPanelTests.Panel_ReusesProvidedEventSystemWithoutCreatingDuplicate" methodname="Panel_ReusesProvidedEventSystemWithoutCreatingDuplicate" classname="AmpPortableDataViz.Tests.PlayMode.ArtisticElementsControlPanelTests" runstate="Runnable" seed="736011928" result="Passed" start-time="2026-10-13 12:02:42Z" end-time="2026-10-13 12:02:42Z" duration="0.008548" asserts="0">
+                <properties>
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+              </test-case>
+              <test-case id="1090" name="PanelLifecycle_HidesDisabledUiRefreshesOnEnableAndCleansUpOnRemoval" fullname="AmpPortableDataViz.Tests.PlayMode.ArtisticElementsControlPanelTests.PanelLifecycle_HidesDisabledUiRefreshesOnEnableAndCleansUpOnRemoval" methodname="PanelLifecycle_HidesDisabledUiRefreshesOnEnableAndCleansUpOnRemoval" classname="AmpPortableDataViz.Tests.PlayMode.ArtisticElementsControlPanelTests" runstate="Runnable" seed="908695225" result="Passed" start-time="2026-10-13 12:02:42Z" end-time="2026-10-13 12:02:42Z" duration="0.017500" asserts="0">
+                <properties>
+                  <property name="_JOINTYPE" value="UnityCombinatorial" />
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+              </test-case>
+              <test-case id="1087" name="ResetButtons_RestoreAuthoredValuesAndRefreshSelectedControls" fullname="AmpPortableDataViz.Tests.PlayMode.ArtisticElementsControlPanelTests.ResetButtons_RestoreAuthoredValuesAndRefreshSelectedControls" methodname="ResetButtons_RestoreAuthoredValuesAndRefreshSelectedControls" classname="AmpPortableDataViz.Tests.PlayMode.ArtisticElementsControlPanelTests" runstate="Runnable" seed="171987640" result="Passed" start-time="2026-10-13 12:02:42Z" end-time="2026-10-13 12:02:42Z" duration="0.008969" asserts="0">
+                <properties>
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+              </test-case>
+              <test-case id="1084" name="SelectionButtons_RefreshControlsWithoutOverwritingElementSettings" fullname="AmpPortableDataViz.Tests.PlayMode.ArtisticElementsControlPanelTests.SelectionButtons_RefreshControlsWithoutOverwritingElementSettings" methodname="SelectionButtons_RefreshControlsWithoutOverwritingElementSettings" classname="AmpPortableDataViz.Tests.PlayMode.ArtisticElementsControlPanelTests" runstate="Runnable" seed="858647223" result="Passed" start-time="2026-10-13 12:02:42Z" end-time="2026-10-13 12:02:42Z" duration="0.008430" asserts="0">
+                <properties>
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+              </test-case>
+              <test-case id="1083" name="Sliders_UpdateOnlySelectedColourRotationAndUniformScale" fullname="AmpPortableDataViz.Tests.PlayMode.ArtisticElementsControlPanelTests.Sliders_UpdateOnlySelectedColourRotationAndUniformScale" methodname="Sliders_UpdateOnlySelectedColourRotationAndUniformScale" classname="AmpPortableDataViz.Tests.PlayMode.ArtisticElementsControlPanelTests" runstate="Runnable" seed="1402642438" result="Passed" start-time="2026-10-13 12:02:42Z" end-time="2026-10-13 12:02:42Z" duration="0.007930" asserts="0">
+                <properties>
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+              </test-case>
+              <test-case id="1091" name="SliderTrackClickAndDrag_UseCanvasRaycastAndAffectOnlySelectedElement" fullname="AmpPortableDataViz.Tests.PlayMode.ArtisticElementsControlPanelTests.SliderTrackClickAndDrag_UseCanvasRaycastAndAffectOnlySelectedElement" methodname="SliderTrackClickAndDrag_UseCanvasRaycastAndAffectOnlySelectedElement" classname="AmpPortableDataViz.Tests.PlayMode.ArtisticElementsControlPanelTests" runstate="Runnable" seed="1614175097" result="Passed" start-time="2026-10-13 12:02:42Z" end-time="2026-10-13 12:02:42Z" duration="0.057024" asserts="0">
+                <properties>
+                  <property name="_JOINTYPE" value="UnityCombinatorial" />
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+              </test-case>
+              <test-case id="1085" name="ThicknessRow_OnlyShowsForBlockAndCombinesWithUniformScale" fullname="AmpPortableDataViz.Tests.PlayMode.ArtisticElementsControlPanelTests.ThicknessRow_OnlyShowsForBlockAndCombinesWithUniformScale" methodname="ThicknessRow_OnlyShowsForBlockAndCombinesWithUniformScale" classname="AmpPortableDataViz.Tests.PlayMode.ArtisticElementsControlPanelTests" runstate="Runnable" seed="190485779" result="Passed" start-time="2026-10-13 12:02:42Z" end-time="2026-10-13 12:02:42Z" duration="0.007989" asserts="0">
+                <properties>
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+              </test-case>
+              <test-case id="1088" name="ToggleControls_HidesOnlyPanelBodyAndCanReopenIt" fullname="AmpPortableDataViz.Tests.PlayMode.ArtisticElementsControlPanelTests.ToggleControls_HidesOnlyPanelBodyAndCanReopenIt" methodname="ToggleControls_HidesOnlyPanelBodyAndCanReopenIt" classname="AmpPortableDataViz.Tests.PlayMode.ArtisticElementsControlPanelTests" runstate="Runnable" seed="811472059" result="Passed" start-time="2026-10-13 12:02:42Z" end-time="2026-10-13 12:02:42Z" duration="0.008101" asserts="0">
+                <properties>
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+              </test-case>
+            </test-suite>
+            <test-suite type="TestFixture" id="1092" name="ArtisticElementsSceneTests" fullname="AmpPortableDataViz.Tests.PlayMode.ArtisticElementsSceneTests" classname="AmpPortableDataViz.Tests.PlayMode.ArtisticElementsSceneTests" runstate="Runnable" testcasecount="3" result="Passed" start-time="2026-10-13 12:02:42Z" end-time="2026-10-13 12:02:42Z" duration="0.300532" total="3" passed="3" failed="0" inconclusive="0" skipped="0" asserts="0">
+              <properties />
+              <test-case id="1095" name="Initialize_IsIdempotentAndDoesNotDuplicateControlsOrEventSystem" fullname="AmpPortableDataViz.Tests.PlayMode.ArtisticElementsSceneTests.Initialize_IsIdempotentAndDoesNotDuplicateControlsOrEventSystem" methodname="Initialize_IsIdempotentAndDoesNotDuplicateControlsOrEventSystem" classname="AmpPortableDataViz.Tests.PlayMode.ArtisticElementsSceneTests" runstate="Runnable" seed="785716334" result="Passed" start-time="2026-10-13 12:02:42Z" end-time="2026-10-13 12:02:42Z" duration="0.070418" asserts="0">
+                <properties>
+                  <property name="_JOINTYPE" value="UnityCombinatorial" />
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+              </test-case>
+              <test-case id="1093" name="SavedScene_ControlsAllFiveImportedElementsAndRestoresAuthoredAppearance" fullname="AmpPortableDataViz.Tests.PlayMode.ArtisticElementsSceneTests.SavedScene_ControlsAllFiveImportedElementsAndRestoresAuthoredAppearance" methodname="SavedScene_ControlsAllFiveImportedElementsAndRestoresAuthoredAppearance" classname="AmpPortableDataViz.Tests.PlayMode.ArtisticElementsSceneTests" runstate="Runnable" seed="1389281674" result="Passed" start-time="2026-10-13 12:02:42Z" end-time="2026-10-13 12:02:42Z" duration="0.210729" asserts="0">
+                <properties>
+                  <property name="_JOINTYPE" value="UnityCombinatorial" />
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+              </test-case>
+              <test-case id="1094" name="SavedScene_LengthSliderStretchesImportedModelWithoutChangingItsMesh" fullname="AmpPortableDataViz.Tests.PlayMode.ArtisticElementsSceneTests.SavedScene_LengthSliderStretchesImportedModelWithoutChangingItsMesh" methodname="SavedScene_LengthSliderStretchesImportedModelWithoutChangingItsMesh" classname="AmpPortableDataViz.Tests.PlayMode.ArtisticElementsSceneTests" runstate="Runnable" seed="41980996" result="Passed" start-time="2026-10-13 12:02:42Z" end-time="2026-10-13 12:02:42Z" duration="0.017682" asserts="0">
+                <properties>
+                  <property name="_JOINTYPE" value="UnityCombinatorial" />
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+              </test-case>
+            </test-suite>
+            <test-suite type="TestFixture" id="1096" name="ArtisticElementsSelectionTests" fullname="AmpPortableDataViz.Tests.PlayMode.ArtisticElementsSelectionTests" classname="AmpPortableDataViz.Tests.PlayMode.ArtisticElementsSelectionTests" runstate="Runnable" testcasecount="6" result="Passed" start-time="2026-10-13 12:02:42Z" end-time="2026-10-13 12:02:42Z" duration="0.007368" total="6" passed="6" failed="0" inconclusive="0" skipped="0" asserts="0">
+              <properties />
+              <test-case id="1101" name="ChangedEvent_ObserversSeeUpdatedSelectionControlsAndResets" fullname="AmpPortableDataViz.Tests.PlayMode.ArtisticElementsSelectionTests.ChangedEvent_ObserversSeeUpdatedSelectionControlsAndResets" methodname="ChangedEvent_ObserversSeeUpdatedSelectionControlsAndResets" classname="AmpPortableDataViz.Tests.PlayMode.ArtisticElementsSelectionTests" runstate="Runnable" seed="845976838" result="Passed" start-time="2026-10-13 12:02:42Z" end-time="2026-10-13 12:02:42Z" duration="0.001162" asserts="0">
+                <properties>
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+              </test-case>
+              <test-case id="1102" name="Configure_ClonesCallerArrayAndRejectsNullTargets" fullname="AmpPortableDataViz.Tests.PlayMode.ArtisticElementsSelectionTests.Configure_ClonesCallerArrayAndRejectsNullTargets" methodname="Configure_ClonesCallerArrayAndRejectsNullTargets" classname="AmpPortableDataViz.Tests.PlayMode.ArtisticElementsSelectionTests" runstate="Runnable" seed="1583484394" result="Passed" start-time="2026-10-13 12:02:42Z" end-time="2026-10-13 12:02:42Z" duration="0.001809" asserts="0">
+                <properties>
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+              </test-case>
+              <test-case id="1100" name="EmptySelection_HandlesActionsAndInvalidIndicesSafely" fullname="AmpPortableDataViz.Tests.PlayMode.ArtisticElementsSelectionTests.EmptySelection_HandlesActionsAndInvalidIndicesSafely" methodname="EmptySelection_HandlesActionsAndInvalidIndicesSafely" classname="AmpPortableDataViz.Tests.PlayMode.ArtisticElementsSelectionTests" runstate="Runnable" seed="404371329" result="Passed" start-time="2026-10-13 12:02:42Z" end-time="2026-10-13 12:02:42Z" duration="0.000585" asserts="0">
+                <properties>
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+              </test-case>
+              <test-case id="1098" name="PanelActions_OnlyAffectSelectedElementAndImageThicknessDoesNothing" fullname="AmpPortableDataViz.Tests.PlayMode.ArtisticElementsSelectionTests.PanelActions_OnlyAffectSelectedElementAndImageThicknessDoesNothing" methodname="PanelActions_OnlyAffectSelectedElementAndImageThicknessDoesNothing" classname="AmpPortableDataViz.Tests.PlayMode.ArtisticElementsSelectionTests" runstate="Runnable" seed="45955813" result="Passed" start-time="2026-10-13 12:02:42Z" end-time="2026-10-13 12:02:42Z" duration="0.000735" asserts="0">
+                <properties>
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+              </test-case>
+              <test-case id="1099" name="ResetSelectedAndResetAll_RestoreOnlyTheirIntendedElements" fullname="AmpPortableDataViz.Tests.PlayMode.ArtisticElementsSelectionTests.ResetSelectedAndResetAll_RestoreOnlyTheirIntendedElements" methodname="ResetSelectedAndResetAll_RestoreOnlyTheirIntendedElements" classname="AmpPortableDataViz.Tests.PlayMode.ArtisticElementsSelectionTests" runstate="Runnable" seed="57261684" result="Passed" start-time="2026-10-13 12:02:42Z" end-time="2026-10-13 12:02:42Z" duration="0.000977" asserts="0">
+                <properties>
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+              </test-case>
+              <test-case id="1097" name="SwitchingSelection_KeepsAllElementsVisibleAndRetainsTheirSettings" fullname="AmpPortableDataViz.Tests.PlayMode.ArtisticElementsSelectionTests.SwitchingSelection_KeepsAllElementsVisibleAndRetainsTheirSettings" methodname="SwitchingSelection_KeepsAllElementsVisibleAndRetainsTheirSettings" classname="AmpPortableDataViz.Tests.PlayMode.ArtisticElementsSelectionTests" runstate="Runnable" seed="1275143877" result="Passed" start-time="2026-10-13 12:02:42Z" end-time="2026-10-13 12:02:42Z" duration="0.000820" asserts="0">
+                <properties>
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+                <output><![CDATA[Saving results to: C:\Users\Bryan Dunphy\Documents\UnityProjects\ampPortable_xrGlassesDemo\TestResults\artistic-length-panel.xml
+]]></output>
+              </test-case>
+            </test-suite>
+          </test-suite>
+        </test-suite>
+      </test-suite>
+    </test-suite>
+  </test-suite>
+</test-run>

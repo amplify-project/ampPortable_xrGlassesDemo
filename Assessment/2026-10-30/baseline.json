@@ -1,0 +1,24 @@
+{
+  "captured_utc": "2026-10-30T11:55:48.528916+00:00",
+  "branch": "rayNeoPort",
+  "commit": "60e2ff9d0c7ee9c7604ebf1745e7b87202cc2a19",
+  "main_commit": "5ad3131453e9e8919358fa372d91de39afacb0e4",
+  "local_main_vs_branch_counts": "0\t43",
+  "initial_tracked_changes": [
+    " M \"Assets/Samples/LiveKit SDK/1.2.6/Basic/Assets/UniversalRenderPipelineGlobalSettings.asset\"",
+    " M Assets/Settings/UniversalRenderPipelineGlobalSettings.asset"
+  ],
+  "snapshot": "Temp/PreMergeAssessment-20261030/project",
+  "manifest": "Temp/PreMergeAssessment-20261030/source-manifest.json",
+  "manifest_sha256": "4631245f90db40c1cace51139b3afa19db4e7a97ebde7dfed60f8694d48a8c29",
+  "file_count": 1817,
+  "total_bytes": 154717404,
+  "scope_counts": {
+    "Assets": 1787,
+    "Packages": 2,
+    "ProjectSettings": 28
+  },
+  "version": "m_EditorVersion: 2022.3.36f1\nm_EditorVersionWithRevision: 2022.3.36f1 (95a4219250e5)",
+  "snapshot_includes_existing_URP_changes": true,
+  "note": "Working-tree baseline, not a clean-commit result. No branch switch, fetch, staging, or source edits."
+}

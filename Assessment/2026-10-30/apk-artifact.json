@@ -1,0 +1,14 @@
+{
+  "build_result": "Succeeded",
+  "errors": 0,
+  "warnings": 2,
+  "duration_seconds": 62.3197196,
+  "apk": "C:\\Users\\Bryan Dunphy\\Documents\\UnityProjects\\ampPortable_xrGlassesDemo\\Temp\\PreMergeAssessment-20261030\\android-file-trust\\RayNeo-assessment.apk",
+  "bytes": 167639837,
+  "sha256": "ea7c8fa11cef7df446d8642a66e2a8240c99d32b1d5a60c8bec380d8a207af19",
+  "android_manifest_present": true,
+  "classes_dex_present": true,
+  "arm64_native_library_count": 12,
+  "il2cpp_present": true,
+  "unity_present": true
+}

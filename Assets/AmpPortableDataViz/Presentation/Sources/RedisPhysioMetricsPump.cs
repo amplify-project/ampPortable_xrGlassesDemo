@@ -1,9 +1,10 @@
 using System;
 using System.Globalization;
-using System.Text.Json;
 using System.Threading.Tasks;
 using AmpPortableDataViz.Core;
 using AmpPortableDataViz.Infra;
+using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
 using UnityEngine;
 
 namespace AmpPortableDataViz.Presentation.Sources
@@ -183,8 +184,7 @@ namespace AmpPortableDataViz.Presentation.Sources
 
             try
             {
-                using var jsonDoc = JsonDocument.Parse(payload);
-                var root = jsonDoc.RootElement;
+                var root = JToken.Parse(payload);
 
                 return TryParseZScoreSample(root, deviceId, out sample);
             }
@@ -194,7 +194,7 @@ namespace AmpPortableDataViz.Presentation.Sources
             }
         }
 
-        private static bool TryParseZScoreSample(JsonElement root, string deviceId, out PhysioMetricsSample sample)
+        private static bool TryParseZScoreSample(JToken root, string deviceId, out PhysioMetricsSample sample)
         {
             sample = default;
 
@@ -230,13 +230,13 @@ namespace AmpPortableDataViz.Presentation.Sources
             return Mathf.Clamp(value, -3f, 3f);
         }
 
-        private static bool TryFindFloat(JsonElement element, string propertyName, out float value)
+        private static bool TryFindFloat(JToken element, string propertyName, out float value)
         {
             value = 0f;
 
-            if (element.ValueKind == JsonValueKind.Object)
+            if (element.Type == JTokenType.Object)
             {
-                foreach (var property in element.EnumerateObject())
+                foreach (var property in element.Children<JProperty>())
                 {
                     if (property.Name.Equals(propertyName, StringComparison.OrdinalIgnoreCase) &&
                         TryReadFloat(property.Value, out value))
@@ -244,16 +244,16 @@ namespace AmpPortableDataViz.Presentation.Sources
                         return true;
                     }
 
-                    if ((property.Value.ValueKind == JsonValueKind.Object || property.Value.ValueKind == JsonValueKind.Array) &&
+                    if ((property.Value.Type == JTokenType.Object || property.Value.Type == JTokenType.Array) &&
                         TryFindFloat(property.Value, propertyName, out value))
                     {
                         return true;
                     }
                 }
             }
-            else if (element.ValueKind == JsonValueKind.Array)
+            else if (element.Type == JTokenType.Array)
             {
-                foreach (var item in element.EnumerateArray())
+                foreach (var item in element.Children())
                 {
                     if (TryFindFloat(item, propertyName, out value))
                     {
@@ -265,24 +265,22 @@ namespace AmpPortableDataViz.Presentation.Sources
             return false;
         }
 
-        private static bool TryReadFloat(JsonElement element, out float value)
+        private static bool TryReadFloat(JToken element, out float value)
         {
             value = 0f;
 
             try
             {
-                switch (element.ValueKind)
+                switch (element.Type)
                 {
-                    case JsonValueKind.Number:
-                        value = (float)element.GetDouble();
+                    case JTokenType.Integer:
+                    case JTokenType.Float:
+                        value = element.Value<float>();
                         return true;
-                    case JsonValueKind.String:
-                        return float.TryParse(element.GetString(), NumberStyles.Float, CultureInfo.InvariantCulture, out value);
-                    case JsonValueKind.True:
-                        value = 1f;
-                        return true;
-                    case JsonValueKind.False:
-                        value = 0f;
+                    case JTokenType.String:
+                        return float.TryParse(element.Value<string>(), NumberStyles.Float, CultureInfo.InvariantCulture, out value);
+                    case JTokenType.Boolean:
+                        value = element.Value<bool>() ? 1f : 0f;
                         return true;
                     default:
                         return false;

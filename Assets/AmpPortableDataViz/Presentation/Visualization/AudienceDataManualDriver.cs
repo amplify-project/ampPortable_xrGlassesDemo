@@ -11,7 +11,7 @@ namespace AmpPortableDataViz.Presentation.Visualization
     [ExecuteAlways]
     [DisallowMultipleComponent]
     [AddComponentMenu("Amp Portable Data Viz/Visualization/Audience Data Manual Driver")]
-    public sealed class AudienceDataManualDriver : MonoBehaviour, IDataSource<AudienceSignalSample>
+    public sealed class AudienceDataManualDriver : MonoBehaviour, ILatestDataSource<AudienceSignalSample>
     {
         private const float PhysioZScoreMin = -3f;
         private const float PhysioZScoreMax = 3f;

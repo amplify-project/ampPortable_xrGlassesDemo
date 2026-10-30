@@ -1,0 +1,13 @@
+{
+  "checked_utc": "2026-10-30T12:18:52.974759+00:00",
+  "label": "after-playmode",
+  "changed_or_missing": [
+    {
+      "path": "Assets/Settings/PC_Renderer.asset",
+      "before": "4d014d52301d28d137390d573da215af6989b3151a5702c384b7a03e7023e1bd",
+      "after": "21158b06c5fe64b3caec79bd3903189d6eaf0d927ce64176ef31ed8cba85febc"
+    }
+  ],
+  "added": [],
+  "note": "Unity-generated changes and validation instrumentation are recorded, not copied back to source."
+}

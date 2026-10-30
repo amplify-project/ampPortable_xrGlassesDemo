@@ -1,0 +1,25 @@
+﻿{
+    "stage":  "PlayMode",
+    "attempt":  "playmode-shortpath",
+    "started_utc":  "2026-10-30T12:13:26.0824713Z",
+    "finished_utc":  "2026-10-30T12:18:27.2889072Z",
+    "exit_code":  2,
+    "editor":  "C:\\Program Files\\Unity\\Hub\\Editor\\2022.3.36f1\\Editor\\Unity.exe",
+    "arguments":  [
+                      "-batchmode",
+                      "-projectPath",
+                      "\"C:\\Users\\BRYAND~1\\AppData\\Local\\Temp\\rnp1030\\project\"",
+                      "-buildTarget",
+                      "Android",
+                      "-logFile",
+                      "\"C:\\Users\\Bryan Dunphy\\Documents\\UnityProjects\\ampPortable_xrGlassesDemo\\Temp\\PreMergeAssessment-20261030\\playmode-shortpath.log\"",
+                      "-forgetProjectPath",
+                      "-runTests",
+                      "-testPlatform",
+                      "PlayMode",
+                      "-testResults",
+                      "\"C:\\Users\\Bryan Dunphy\\Documents\\UnityProjects\\ampPortable_xrGlassesDemo\\Temp\\PreMergeAssessment-20261030\\playmode-shortpath.xml\""
+                  ],
+    "process_git_longpaths":  true,
+    "log":  "C:\\Users\\Bryan Dunphy\\Documents\\UnityProjects\\ampPortable_xrGlassesDemo\\Temp\\PreMergeAssessment-20261030\\playmode-shortpath.log"
+}

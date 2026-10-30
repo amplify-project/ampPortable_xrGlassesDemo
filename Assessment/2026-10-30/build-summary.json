@@ -1,0 +1,47 @@
+{
+    "generatedAtUtc": "2026-10-30T13:29:51.9635568Z",
+    "unityVersion": "2022.3.36f1",
+    "projectPath": "C:\\Users\\Bryan Dunphy\\AppData\\Local\\Temp\\rnc1030\\project",
+    "outputPath": "C:\\Users\\Bryan Dunphy\\Documents\\UnityProjects\\ampPortable_xrGlassesDemo\\Temp\\PreMergeAssessment-20261030\\android-file-trust\\RayNeo-assessment.apk",
+    "result": "Succeeded",
+    "buildAttempted": true,
+    "exception": "",
+    "target": "Android",
+    "options": "None",
+    "activeBuildTarget": "Android",
+    "applicationIdentifier": "com.TUS.RayNeoXRScoreViewer",
+    "scriptingBackend": "IL2CPP",
+    "architectures": "ARM64",
+    "minimumAndroidApi": "AndroidApiLevel30",
+    "targetAndroidApi": "AndroidApiLevel30",
+    "buildAppBundle": false,
+    "exportAsGoogleAndroidProject": false,
+    "automaticGraphicsApi": false,
+    "graphicsApis": [
+        "OpenGLES3"
+    ],
+    "scenes": [
+        "Assets/Scenes/ampPortable_xrGlassesDemo.unity"
+    ],
+    "inspectionHasBlockers": false,
+    "errors": 0,
+    "warnings": 2,
+    "durationSeconds": 62.3197196,
+    "sizeBytes": 1263794931,
+    "messages": [
+        {
+            "severity": "warning",
+            "kind": "build-message",
+            "asset": "Prepare For Build",
+            "objectPath": "",
+            "detail": "PlayerSettings->Active Input Handling is set to Both, this is unsupported on Android and might cause issues with input and application performance. Please choose only one active input handling."
+        },
+        {
+            "severity": "warning",
+            "kind": "build-message",
+            "asset": "Postprocess built player",
+            "objectPath": "",
+            "detail": "The USD package is not supported in non desktop builds. The USD plugins directory will not be included in the build."
+        }
+    ]
+}

@@ -1,0 +1,16 @@
+{
+  "copied_utc": "2026-10-30T12:32:42.111322+00:00",
+  "project": "C:\\Users\\Bryan Dunphy\\AppData\\Local\\Temp\\rnc1030\\project",
+  "verified_files": 1817,
+  "manifest_sha256": "4631245f90db40c1cace51139b3afa19db4e7a97ebde7dfed60f8694d48a8c29",
+  "previous_snapshot": {
+    "copied_utc": "2026-10-30T12:06:39.048788+00:00",
+    "project": "C:\\Users\\Bryan Dunphy\\AppData\\Local\\Temp\\rnp1030\\project",
+    "verified_files": 1817,
+    "manifest_sha256": "4631245f90db40c1cace51139b3afa19db4e7a97ebde7dfed60f8694d48a8c29",
+    "reason": "Reduce Windows path lengths for nested LiveKit Git submodules; identical assessment inputs, fresh Library.",
+    "initial_alias_project": "C:\\Users\\BRYAND~1\\AppData\\Local\\Temp\\rnp1030\\project",
+    "canonical_path_reason": "Probe found all imported MonoScript.GetClass results null; eliminate DOS8.3 versus canonical assembly-path mismatch without source or cache edits."
+  },
+  "reason": "Fresh Library at canonical Windows path; eliminate DOS8.3 alias as a cause of null MonoScript classes."
+}

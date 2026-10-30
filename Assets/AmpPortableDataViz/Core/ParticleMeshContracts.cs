@@ -5,7 +5,7 @@ namespace AmpPortableDataViz.Core
 {
     /// <summary>
     /// Combined normalized signal snapshot for the ParticleMesh visualizer.
-    /// Physiological channels are signed -1..1 values; emotion and engagement remain 0..1.
+    /// Physiological channels are signed -1..1 values; engagement remains 0..1.
     /// </summary>
     [Serializable]
     public readonly struct ParticleMeshSignalSample
@@ -15,9 +15,6 @@ namespace AmpPortableDataViz.Core
         public readonly float TemperatureRateOfChangeStdDev;
         public readonly float SkinConductanceResponseFrequencyStdDev;
         public readonly float HeartRateStdDev;
-        public readonly float InterBeatIntervalStdDev;
-        public readonly float FacialEmotionArousal;
-        public readonly float FacialEmotionValence;
         public readonly float Engagement;
 
         public ParticleMeshSignalSample(
@@ -26,9 +23,6 @@ namespace AmpPortableDataViz.Core
             float temperatureRateOfChangeStdDev,
             float skinConductanceResponseFrequencyStdDev,
             float heartRateStdDev,
-            float interBeatIntervalStdDev,
-            float facialEmotionArousal,
-            float facialEmotionValence,
             float engagement)
         {
             DeviceId = deviceId ?? string.Empty;
@@ -36,9 +30,6 @@ namespace AmpPortableDataViz.Core
             TemperatureRateOfChangeStdDev = ClampSigned(temperatureRateOfChangeStdDev);
             SkinConductanceResponseFrequencyStdDev = ClampSigned(skinConductanceResponseFrequencyStdDev);
             HeartRateStdDev = ClampSigned(heartRateStdDev);
-            InterBeatIntervalStdDev = ClampSigned(interBeatIntervalStdDev);
-            FacialEmotionArousal = Mathf.Clamp01(facialEmotionArousal);
-            FacialEmotionValence = Mathf.Clamp01(facialEmotionValence);
             Engagement = Mathf.Clamp01(engagement);
         }
 
@@ -49,9 +40,6 @@ namespace AmpPortableDataViz.Core
                 $"TempRate={TemperatureRateOfChangeStdDev:F3}, " +
                 $"SCRFreq={SkinConductanceResponseFrequencyStdDev:F3}, " +
                 $"HeartRate={HeartRateStdDev:F3}, " +
-                $"IBI={InterBeatIntervalStdDev:F3}, " +
-                $"FacialEmotionArousal={FacialEmotionArousal:F3}, " +
-                $"FacialEmotionValence={FacialEmotionValence:F3}, " +
                 $"Engagement={Engagement:F3}";
         }
 

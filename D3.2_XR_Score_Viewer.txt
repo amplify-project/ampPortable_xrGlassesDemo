@@ -1,0 +1,15 @@
+D3.2 - XR Score Viewer
+
+Technological Advances
+
+XR Score Viewer turns live audience physiological and engagement data into visual material for performers wearing AR glasses. Compared with the earlier XREAL Air 2 Ultra/Beam Pro version, the current prototype runs on standalone RayNeo X3 Pro glasses with head-anchored displays and temple-touchpad controls. Five streams have distinct visual mappings: electrodermal activity shapes the mesh, temperature changes colour and trails, skin conductance responses produce local sparks, heart rate drives synchronized pulses, and engagement controls particle coherence. Objective graphs add adaptive ranges and smoothing. Shared sensor selection keeps the views aligned, while automatic Redis discovery reduces manual network setup.
+
+Licensing & Open Source
+
+The source repository is https://github.com/amplify-project/ampPortable_xrGlassesDemo. Download by cloning it and selecting the rayNeoPort branch; access may be required. No application-wide licence was found, so the application's open-source release status requires confirmation. Dependencies include StackExchange.Redis and NuGetForUnity (MIT), and LiveKit's Unity SDK (Apache-2.0), available from https://github.com/StackExchange/StackExchange.Redis, https://github.com/GlitchEnzo/NuGetForUnity and https://github.com/livekit/client-sdk-unity respectively. Unity and its XR packages have separate licence terms. Public RayNeo ARDK source lists MIT at https://github.com/github-for-rayneo/OpenXR-Unity-ARDK/blob/main/LICENSE; the installed SDK distribution's terms require confirmation.
+
+Assets/Docs/README_v010-alpha9.md covers prerequisites, APK building and installation, Redis configuration and troubleshooting. The controls and mapping guides in Assets/Docs explain how performers select sensors, switch views, resize/reposition visuals and interpret the data. These materials can support CPL setup; which instructions were supplied to CPL and any examples of actual user trials should be confirmed for D3.2.
+
+AI Disclosure
+
+The reviewed viewer code uses deterministic data mapping, smoothing and rendering; no model training or inference was identified. Engagement scores arrive from an external service, whose use of AI is not established here. Any upstream AI should be disclosed by the responsible partner, including its model, inputs, purpose and provider/deployer roles, and assessed using https://ai-act-service-desk.ec.europa.eu/en/eu-ai-act-compliance-checker. No completed assessment is recorded in the reviewed materials. AI assistance was used to draft this summary; wider use during development requires confirmation.

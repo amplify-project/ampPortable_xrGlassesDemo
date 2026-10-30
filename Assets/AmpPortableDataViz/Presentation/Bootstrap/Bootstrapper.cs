@@ -6,13 +6,13 @@ using AmpPortableDataViz.Application;
 using AmpPortableDataViz.Core;
 using AmpPortableDataViz.Infra;
 using AmpPortableDataViz.Presentation.Anchors;
+using AmpPortableDataViz.Presentation.Interaction;
 using AmpPortableDataViz.Presentation.Mapping;
 using AmpPortableDataViz.Presentation.Sources;
 using AmpPortableDataViz.Presentation.Utility;
 using AmpPortableDataViz.Presentation.Visualization;
 using TMPro;
 using UnityEngine;
-using UnityEngine.XR.Interaction.Toolkit.Interactables;
 
 namespace AmpPortableDataViz.Presentation.Bootstrap
 {
@@ -78,6 +78,34 @@ namespace AmpPortableDataViz.Presentation.Bootstrap
         [Header("Audience Signal Visual Settings")]
         public bool AutoSpawnAudienceVisualsFromChannels = true;
 
+        [Header("Artist Visual Settings")]
+        public bool AutoSpawnArtistVizFromChannels = true;
+        public GameObject ArtistVizPrefab;
+        public Transform ArtistVizParent;
+
+        [Header("Individual Sensor Engagement")]
+        public bool UseIndividualSensorEngagement = true;
+        [Tooltip("Use {serial}, {sensorId}, or {0} where the sensor serial belongs in the Redis channel name.")]
+        public string SensorEngagementChannelTemplate = RedisAudienceChannels.SensorEngagementTemplate;
+        public SensorEngagementChannelOverride[] SensorEngagementChannelOverrides =
+            Array.Empty<SensorEngagementChannelOverride>();
+        [Min(0f)]
+        public float SensorEngagementTimeoutSeconds = 10f;
+        [Range(0f, 1f)]
+        public float SensorEngagementNeutralValue = 0.5f;
+        public SensorEngagementJsonFormat SensorEngagementPayloadFormat =
+            SensorEngagementJsonFormat.CreateDefault();
+
+        [Header("RayNeo Selected Sensor Stream")]
+        public bool UseSingleSelectedSensorStream = true;
+        public Camera SensorHudCamera;
+        public Vector3 SensorHudLocalPosition = new Vector3(0f, -0.22f, 1.2f);
+        [Min(0.0001f)]
+        public float SensorHudLocalScale = 0.01f;
+        [Min(0.01f)]
+        public float SensorHudFontSize = 2f;
+        public Color SensorHudColor = Color.white;
+
         [Header("Graph Visual Settings")]
         public bool AutoSpawnGraphVisualsFromChannels = true;
         public GameObject GraphPrefab;
@@ -134,41 +162,20 @@ namespace AmpPortableDataViz.Presentation.Bootstrap
         public float GraphStackedHeightScale = 0.6f;
 
         [Header("Legacy Graph Channel Offsets")]
-        public Vector3 GraphValenceOffset = new Vector3(-0.6f, 0f, 0f);
-        public Vector3 GraphArousalOffset = Vector3.zero;
         public Vector3 GraphHeartRateOffset = new Vector3(0.6f, 0f, 0f);
         public Vector3 GraphEdaOffset = new Vector3(0.6f, -0.6f, 0f);
 
         [Header("Legacy Graph Stream Settings")]
-        public Vector2 GraphValenceRange = new Vector2(0f, 1f);
-        public Vector2 GraphArousalRange = new Vector2(0f, 1f);
         public Vector2 GraphHeartRateRange = new Vector2(40f, 200f);
         public Vector2 GraphEdaRange = new Vector2(0f, 10f);
-        public Color GraphValenceColor = new Color(0.2f, 0.9f, 0.4f, 1f);
-        public Color GraphArousalColor = new Color(0.95f, 0.65f, 0.15f, 1f);
         public Color GraphHeartRateColor = new Color(0.95f, 0.2f, 0.2f, 1f);
         public Color GraphEdaColor = new Color(0.2f, 0.8f, 0.95f, 1f);
         [Range(0.0001f, 0.05f)]
         public float GraphLineWidth = 0.01f;
 
-        [Header("Graph Group Interaction")]
-        public bool GraphGroupsGrabbable = true;
+        [Header("Graph Group Layout")]
         public Vector3 GraphItemBoundsSize = new Vector3(1f, 1f, 0.02f);
         public Vector3 GraphGroupBoundsPadding = new Vector3(0.05f, 0.05f, 0.05f);
-
-        [Header("Particle Mesh Interaction")]
-        public bool ParticleMeshesGrabbable = true;
-        public Vector3 ParticleMeshBoundsSize = new Vector3(2.8f, 1.2f, 2.8f);
-        public Vector3 ParticleMeshBoundsPadding = new Vector3(0.08f, 0.08f, 0.08f);
-
-        [Header("Grab Placement Facing")]
-        public bool FaceGrabbableVisualizationsToCamera = true;
-        public bool FaceVisualizationsWhileGrabbed = true;
-        public bool KeepPlacedVisualizationsFacingCamera = true;
-        public bool GrabFacingYawOnly = true;
-        public bool GrabFacingFlipForward;
-        [Min(0f)]
-        public float GrabFacingRotationSpeed = 18f;
 
         [Header("LiveKit Settings")]
         public string LiveKitTokenEndpoint = "https://cloud-api.livekit.io/api/sandbox/connection-details";
@@ -203,14 +210,25 @@ namespace AmpPortableDataViz.Presentation.Bootstrap
         private readonly List<AudienceDeviceInstance> _audienceDeviceInstances = new List<AudienceDeviceInstance>();
         private readonly List<GraphDeviceGroupInstance> _graphDeviceGroups = new List<GraphDeviceGroupInstance>();
         private readonly List<AudienceGraphDeviceGroupInstance> _audienceGraphDeviceGroups = new List<AudienceGraphDeviceGroupInstance>();
+        private readonly List<SelectedSensorSourceInstance> _selectedSensorSources = new List<SelectedSensorSourceInstance>();
         private readonly List<GameObject> _manualDriverInstances = new List<GameObject>();
         private readonly Dictionary<string, SharedPumpHandle> _sharedPumpsByChannel = new Dictionary<string, SharedPumpHandle>(StringComparer.Ordinal);
         private readonly Dictionary<string, SharedPhysioPumpHandle> _sharedPhysioPumpsByChannel = new Dictionary<string, SharedPhysioPumpHandle>(StringComparer.Ordinal);
         private RedisDataPump _engagementHudPump;
         private string _engagementHudChannel = string.Empty;
+        private GameObject _sensorEngagementBackendObject;
+        private RedisSensorEngagementPump _sensorEngagementPump;
+        private SensorEngagementCoordinator _sensorEngagementCoordinator;
+        private string _sensorEngagementConfigurationKey = string.Empty;
         private bool _redisEndpointReady;
         private Material _graphPanelMaterial;
         private Material _graphGroupPanelMaterial;
+        private SensorStreamCoordinator _sensorStreamCoordinator;
+        private RayNeoTempleSensorStreamCycler _sensorStreamCycler;
+        private GameObject _selectedParticleVisual;
+        private GameObject _selectedGraphVisual;
+        private GameObject _selectedArtistVisual;
+        private GameObject _sensorHudObject;
 
         private void Awake()
         {
@@ -323,6 +341,8 @@ namespace AmpPortableDataViz.Presentation.Bootstrap
             ClearAudienceDeviceVisuals();
             ClearGraphDeviceVisuals();
             ClearAudienceGraphDeviceVisuals();
+            ClearSelectedSensorStreamMode();
+            ClearSensorEngagementBackend();
             ClearManualDriverVisuals();
         }
 
@@ -341,6 +361,8 @@ namespace AmpPortableDataViz.Presentation.Bootstrap
             ClearAudienceDeviceVisuals();
             ClearGraphDeviceVisuals();
             ClearAudienceGraphDeviceVisuals();
+            ClearSelectedSensorStreamMode();
+            ClearSensorEngagementBackend();
             ClearManualDriverVisuals();
         }
 
@@ -522,6 +544,43 @@ namespace AmpPortableDataViz.Presentation.Bootstrap
 
             bool visualPrefabHasAudienceBinding = VisualPrefab != null && VisualPrefab.GetComponentInChildren<AudienceSignalBinding>() != null;
             bool shouldSpawnAudienceVisuals = useRedis && hasRedisEndpoint && redisReady && AutoSpawnAudienceVisualsFromChannels && visualPrefabHasAudienceBinding;
+            bool graphPrefabHasAudienceBinding = GraphPrefab != null && GraphPrefab.GetComponentInChildren<AudienceSignalBinding>() != null;
+            bool shouldSpawnAudienceGraphVisuals = useRedis && hasRedisEndpoint && redisReady && AutoSpawnGraphVisualsFromChannels && graphPrefabHasAudienceBinding;
+            bool artistPrefabHasVisualizerBinding = ArtistVizPrefab != null &&
+                ArtistVizPrefab.GetComponentInChildren<AudienceSignalVisualizerBinding>(true) != null &&
+                ArtistVizPrefab.GetComponentInChildren<ArtistVizVisualizer>(true) != null;
+            bool shouldSpawnArtistViz = useRedis && hasRedisEndpoint && redisReady &&
+                UseSingleSelectedSensorStream && AutoSpawnArtistVizFromChannels && artistPrefabHasVisualizerBinding;
+
+            if (shouldSpawnAudienceVisuals || shouldSpawnAudienceGraphVisuals || shouldSpawnArtistViz)
+            {
+                var sensorDefinitions = BuildAudienceDeviceChannelDefinitions(redisChannels);
+                sensorDefinitions = FilterAudienceToConfiguredDevices(sensorDefinitions, EmotionDeviceIds);
+                EnsureSensorEngagementBackend(sensorDefinitions.Select(definition => definition.DeviceId));
+            }
+            else
+            {
+                ClearSensorEngagementBackend();
+            }
+
+            bool shouldUseSelectedSensorStream = UseSingleSelectedSensorStream &&
+                (shouldSpawnAudienceVisuals || shouldSpawnAudienceGraphVisuals || shouldSpawnArtistViz);
+            if (shouldUseSelectedSensorStream)
+            {
+                ClearAudienceDeviceVisuals();
+                ClearAudienceGraphDeviceVisuals();
+                ClearEmotionDeviceVisuals();
+                ClearGraphDeviceVisuals();
+                EnsureSelectedSensorStreamMode(
+                    redisChannels,
+                    shouldSpawnAudienceVisuals,
+                    shouldSpawnAudienceGraphVisuals,
+                    shouldSpawnArtistViz);
+                return;
+            }
+
+            ClearSelectedSensorStreamMode();
+
             if (shouldSpawnAudienceVisuals)
             {
                 EnsureAudienceDeviceVisuals(redisChannels);
@@ -542,8 +601,6 @@ namespace AmpPortableDataViz.Presentation.Bootstrap
                 ClearEmotionDeviceVisuals();
             }
 
-            bool graphPrefabHasAudienceBinding = GraphPrefab != null && GraphPrefab.GetComponentInChildren<AudienceSignalBinding>() != null;
-            bool shouldSpawnAudienceGraphVisuals = useRedis && hasRedisEndpoint && redisReady && AutoSpawnGraphVisualsFromChannels && graphPrefabHasAudienceBinding;
             if (shouldSpawnAudienceGraphVisuals)
             {
                 EnsureAudienceGraphDeviceVisuals(redisChannels);
@@ -696,6 +753,8 @@ namespace AmpPortableDataViz.Presentation.Bootstrap
             ClearAudienceDeviceVisuals();
             ClearGraphDeviceVisuals();
             ClearAudienceGraphDeviceVisuals();
+            ClearSelectedSensorStreamMode();
+            ClearSensorEngagementBackend();
             EnsureManualDriverVisuals();
         }
 
@@ -743,17 +802,6 @@ namespace AmpPortableDataViz.Presentation.Bootstrap
             }
 
             ConfigureManualDriverInstance(instance);
-            if (isGraphPrefab)
-            {
-                if (GraphGroupsGrabbable)
-                {
-                    ConfigureGraphGroupGrab(instance, Array.Empty<Vector3>());
-                }
-            }
-            else if (ParticleMeshesGrabbable)
-            {
-                ConfigureParticleMeshGrab(instance);
-            }
             _manualDriverInstances.Add(instance);
         }
 
@@ -943,11 +991,6 @@ namespace AmpPortableDataViz.Presentation.Bootstrap
                     HeartRatePump = heartRatePump
                 });
 
-                if (ParticleMeshesGrabbable)
-                {
-                    ConfigureParticleMeshGrab(instance);
-                }
-
                 AttachDeviceLabel(instance, definition.DeviceId, deviceIndex);
                 deviceIndex++;
             }
@@ -955,6 +998,270 @@ namespace AmpPortableDataViz.Presentation.Bootstrap
             if (deviceIndex == 0)
             {
                 Debug.LogWarning("Bootstrapper: Unable to spawn emotion visuals because no device had both valence and arousal channels.");
+            }
+        }
+
+        private void EnsureSelectedSensorStreamMode(
+            string[] redisChannels,
+            bool spawnParticleVisual,
+            bool spawnGraphVisual,
+            bool spawnArtistVisual)
+        {
+            ClearSelectedSensorStreamMode();
+
+            var deviceDefinitions = BuildAudienceDeviceChannelDefinitions(redisChannels);
+            deviceDefinitions = FilterAudienceToConfiguredDevices(deviceDefinitions, EmotionDeviceIds);
+            if (deviceDefinitions.Count == 0)
+            {
+                Debug.LogWarning("Bootstrapper: No complete sensor streams are available for selected-stream mode.");
+                EnsureSensorStreamPresentation(Array.Empty<AudienceSignalBinding>(), Array.Empty<AudienceSignalVisualizerBinding>());
+                return;
+            }
+
+            foreach (var definition in deviceDefinitions)
+            {
+                if (!definition.HasVisualizationChannels)
+                {
+                    Debug.LogWarning($"Bootstrapper: Incomplete audience channel set for device '{definition.DeviceId}', skipping selectable stream.");
+                    continue;
+                }
+
+                var sourceObject = new GameObject($"SensorStreamSource_{definition.DeviceId}");
+                sourceObject.transform.SetParent(transform, false);
+                sourceObject.SetActive(false);
+
+                var binding = sourceObject.AddComponent<AudienceSignalBinding>();
+                var physioPump = AcquirePhysioPumpForChannel(definition.DeviceId, definition.PhysioMetricsChannel);
+                var engagementSource = ResolveSensorEngagementSource(definition.DeviceId);
+
+                if (physioPump == null || engagementSource == null)
+                {
+                    Debug.LogWarning($"Bootstrapper: Unable to create selectable stream for '{definition.DeviceId}'.");
+                    Destroy(sourceObject);
+                    ReleasePhysioPump(definition.PhysioMetricsChannel);
+                    continue;
+                }
+
+                binding.ConfigureSensorSources(
+                    physioPump,
+                    engagementSource,
+                    definition.DeviceId);
+                binding.ConfigureParticleTarget(null);
+                sourceObject.SetActive(true);
+
+                _selectedSensorSources.Add(new SelectedSensorSourceInstance
+                {
+                    SourceObject = sourceObject,
+                    Binding = binding,
+                    PhysioMetricsChannel = definition.PhysioMetricsChannel
+                });
+            }
+
+            if (_selectedSensorSources.Count == 0)
+            {
+                Debug.LogWarning("Bootstrapper: No complete sensor streams could be configured.");
+                EnsureSensorStreamPresentation(Array.Empty<AudienceSignalBinding>(), Array.Empty<AudienceSignalVisualizerBinding>());
+                return;
+            }
+
+            if (spawnParticleVisual)
+            {
+                _selectedParticleVisual = SpawnSelectedSensorVisual(
+                    VisualPrefab,
+                    EmotionVisualParent,
+                    "SelectedSensor",
+                    isGraphVisual: false);
+            }
+
+            if (spawnGraphVisual)
+            {
+                _selectedGraphVisual = SpawnSelectedSensorVisual(
+                    GraphPrefab,
+                    GraphGroupParent,
+                    "SelectedSensor",
+                    isGraphVisual: true);
+            }
+
+            if (spawnArtistVisual)
+            {
+                _selectedArtistVisual = SpawnSelectedSensorVisual(
+                    ArtistVizPrefab,
+                    ArtistVizParent,
+                    "SelectedSensor",
+                    isGraphVisual: false,
+                    positionAtParentOrigin: true);
+            }
+
+            var visualizerBindings = new List<AudienceSignalVisualizerBinding>();
+            AddVisualizerBindings(_selectedParticleVisual, visualizerBindings);
+            AddVisualizerBindings(_selectedGraphVisual, visualizerBindings);
+            AddVisualizerBindings(_selectedArtistVisual, visualizerBindings);
+
+            EnsureSensorStreamPresentation(
+                _selectedSensorSources.Select(source => source.Binding),
+                visualizerBindings);
+
+            Debug.Log($"Bootstrapper: Configured one persistent visualization target for {_selectedSensorSources.Count} selectable sensor streams.");
+        }
+
+        private GameObject SpawnSelectedSensorVisual(
+            GameObject prefab,
+            Transform parent,
+            string suffix,
+            bool isGraphVisual,
+            bool positionAtParentOrigin = false)
+        {
+            if (prefab == null)
+            {
+                return null;
+            }
+
+            bool hasCustomParent = parent != null;
+            var instance = hasCustomParent ? Instantiate(prefab, parent) : Instantiate(prefab);
+            instance.name = $"{prefab.name}_{suffix}";
+
+            if (positionAtParentOrigin)
+            {
+                PositionAtParentOrigin(instance.transform, hasCustomParent);
+            }
+            else if (isGraphVisual)
+            {
+                PositionGraphGroup(instance.transform, 0, hasCustomParent);
+            }
+            else
+            {
+                PositionEmotionVisual(instance.transform, 0, hasCustomParent);
+            }
+
+            DisableManualDrivers(instance);
+
+            foreach (var sourceBinding in instance.GetComponentsInChildren<AudienceSignalBinding>(true))
+            {
+                sourceBinding.enabled = false;
+                sourceBinding.ConfigureParticleTarget(null);
+            }
+
+            foreach (var legacyGraphBinding in instance.GetComponentsInChildren<GraphBinding>(true))
+            {
+                legacyGraphBinding.enabled = false;
+            }
+
+            var visualizerBindings = instance.GetComponentsInChildren<AudienceSignalVisualizerBinding>(true);
+            if (visualizerBindings.Length == 0)
+            {
+                Debug.LogWarning($"Bootstrapper: Selected-stream visual '{instance.name}' has no AudienceSignalVisualizerBinding.");
+                Destroy(instance);
+                return null;
+            }
+
+            foreach (var visualizerBinding in visualizerBindings)
+            {
+                visualizerBinding.enabled = true;
+            }
+
+            return instance;
+        }
+
+        private void PositionAtParentOrigin(Transform target, bool useLocalSpace)
+        {
+            if (target == null)
+            {
+                return;
+            }
+
+            if (useLocalSpace)
+            {
+                target.localPosition = Vector3.zero;
+                target.localRotation = Quaternion.identity;
+                return;
+            }
+
+            target.position = AnchorPosition;
+            target.rotation = Quaternion.Euler(AnchorRotationEuler);
+        }
+
+        private void EnsureSensorStreamPresentation(
+            IEnumerable<AudienceSignalBinding> sources,
+            IEnumerable<AudienceSignalVisualizerBinding> visualizerBindings)
+        {
+            if (_sensorStreamCoordinator == null)
+            {
+                _sensorStreamCoordinator = GetComponent<SensorStreamCoordinator>();
+                if (_sensorStreamCoordinator == null)
+                {
+                    _sensorStreamCoordinator = gameObject.AddComponent<SensorStreamCoordinator>();
+                }
+            }
+
+            _sensorStreamCoordinator.ConfigureVisualizerBindings(visualizerBindings);
+            _sensorStreamCoordinator.ConfigureSources(sources);
+
+            if (_sensorStreamCycler == null)
+            {
+                _sensorStreamCycler = GetComponent<RayNeoTempleSensorStreamCycler>();
+                if (_sensorStreamCycler == null)
+                {
+                    _sensorStreamCycler = gameObject.AddComponent<RayNeoTempleSensorStreamCycler>();
+                }
+            }
+
+            _sensorStreamCycler.Configure(_sensorStreamCoordinator);
+            EnsureSensorHud();
+        }
+
+        private void EnsureSensorHud()
+        {
+            if (_sensorHudObject != null || _sensorStreamCoordinator == null)
+            {
+                return;
+            }
+
+            Camera hudCamera = SensorHudCamera != null ? SensorHudCamera : Camera.main;
+            if (hudCamera == null)
+            {
+                hudCamera = FindFirstObjectByType<Camera>();
+            }
+
+            if (hudCamera == null)
+            {
+                Debug.LogWarning("Bootstrapper: No camera is available for the active sensor HUD.");
+                return;
+            }
+
+            _sensorHudObject = new GameObject("ActiveSensorHud");
+            _sensorHudObject.transform.SetParent(hudCamera.transform, false);
+            _sensorHudObject.transform.localPosition = SensorHudLocalPosition;
+            _sensorHudObject.transform.localRotation = Quaternion.identity;
+            _sensorHudObject.transform.localScale = Vector3.one * Mathf.Max(0.0001f, SensorHudLocalScale);
+
+            var label = _sensorHudObject.AddComponent<TextMeshPro>();
+            label.fontSize = Mathf.Max(0.01f, SensorHudFontSize);
+            label.color = SensorHudColor;
+            label.alignment = TextAlignmentOptions.Center;
+            label.enableWordWrapping = false;
+            label.richText = false;
+            label.sortingOrder = 100;
+            label.rectTransform.sizeDelta = new Vector2(60f, 8f);
+
+            var hudBinding = _sensorHudObject.AddComponent<ActiveSensorHudBinding>();
+            hudBinding.Configure(_sensorStreamCoordinator, label);
+        }
+
+        private static void AddVisualizerBindings(
+            GameObject instance,
+            ICollection<AudienceSignalVisualizerBinding> bindings)
+        {
+            if (instance == null || bindings == null)
+            {
+                return;
+            }
+
+            foreach (var binding in instance.GetComponentsInChildren<AudienceSignalVisualizerBinding>(true))
+            {
+                if (binding != null && !bindings.Contains(binding))
+                {
+                    bindings.Add(binding);
+                }
             }
         }
 
@@ -1001,7 +1308,7 @@ namespace AmpPortableDataViz.Presentation.Bootstrap
             int deviceIndex = 0;
             foreach (var definition in deviceDefinitions)
             {
-                if (!definition.HasRequiredChannels)
+                if (!definition.HasVisualizationChannels)
                 {
                     Debug.LogWarning($"Bootstrapper: Incomplete audience channel set for device '{definition.DeviceId}', skipping visual spawn.");
                     continue;
@@ -1026,18 +1333,13 @@ namespace AmpPortableDataViz.Presentation.Bootstrap
 
                 var particleMeshVisualizer = instance.GetComponentInChildren<ParticleMeshVisualizer>();
                 var physioPump = AcquirePhysioPumpForChannel(definition.DeviceId, definition.PhysioMetricsChannel);
-                var valencePump = AcquireRedisPumpForChannel(definition.DeviceId, EmotionChannelKind.Valence, definition.ValenceChannel);
-                var arousalPump = AcquireRedisPumpForChannel(definition.DeviceId, EmotionChannelKind.Arousal, definition.ArousalChannel);
-                var engagementPump = AcquireRedisPumpForChannel("global", EmotionChannelKind.Broadcast, definition.EngagementChannel);
+                var engagementSource = ResolveSensorEngagementSource(definition.DeviceId);
 
-                if (!TryConfigureAudienceBinding(binding, physioPump, valencePump, arousalPump, engagementPump, particleMeshVisualizer, definition.DeviceId))
+                if (!TryConfigureAudienceBinding(binding, physioPump, engagementSource, particleMeshVisualizer, definition.DeviceId))
                 {
                     Debug.LogWarning($"Bootstrapper: Unable to configure audience binding on '{instance.name}', skipping visual spawn.");
                     Destroy(instance);
                     ReleasePhysioPump(definition.PhysioMetricsChannel);
-                    ReleaseRedisPump(definition.ValenceChannel);
-                    ReleaseRedisPump(definition.ArousalChannel);
-                    ReleaseRedisPump(definition.EngagementChannel);
                     continue;
                 }
 
@@ -1047,19 +1349,8 @@ namespace AmpPortableDataViz.Presentation.Bootstrap
                     VisualInstance = instance,
                     Binding = binding,
                     PhysioMetricsChannel = definition.PhysioMetricsChannel,
-                    ValenceChannel = definition.ValenceChannel,
-                    ArousalChannel = definition.ArousalChannel,
-                    EngagementChannel = definition.EngagementChannel,
-                    PhysioPump = physioPump,
-                    ValencePump = valencePump,
-                    ArousalPump = arousalPump,
-                    EngagementPump = engagementPump
+                    PhysioPump = physioPump
                 });
-
-                if (ParticleMeshesGrabbable)
-                {
-                    ConfigureParticleMeshGrab(instance);
-                }
 
                 AttachDeviceLabel(instance, definition.DeviceId, deviceIndex);
                 deviceIndex++;
@@ -1130,7 +1421,7 @@ namespace AmpPortableDataViz.Presentation.Bootstrap
 
                 PositionGraphGroup(groupRoot.transform, deviceIndex, hasCustomParent);
 
-                var offsetsInUse = new List<Vector3>(4);
+                var offsetsInUse = new List<Vector3>(2);
                 var instance = new GraphDeviceGroupInstance
                 {
                     DeviceId = definition.DeviceId,
@@ -1139,58 +1430,8 @@ namespace AmpPortableDataViz.Presentation.Bootstrap
                 };
 
                 string deviceLabel = FormatDeviceLabel(definition.DeviceId, deviceIndex);
-                Vector3 valenceOffset = ResolveGraphChannelOffset(EmotionChannelKind.Valence);
-                Vector3 arousalOffset = ResolveGraphChannelOffset(EmotionChannelKind.Arousal);
                 Vector3 heartRateOffset = ResolveGraphChannelOffset(EmotionChannelKind.HeartRate);
                 Vector3 edaOffset = ResolveGraphChannelOffset(EmotionChannelKind.EdaFiltered);
-
-                if (!string.IsNullOrWhiteSpace(definition.ValenceChannel))
-                {
-                    string valenceChannel = definition.ValenceChannel;
-                    instance.ValenceGraph = SpawnGraphForChannel(
-                        groupRoot.transform,
-                        definition.DeviceId,
-                        EmotionChannelKind.Valence,
-                        valenceChannel,
-                        valenceOffset,
-                        GraphValenceRange,
-                        GraphValenceColor,
-                        GraphLineWidth,
-                        $"{deviceLabel} - Valence",
-                        out instance.ValencePump);
-                    if (instance.ValenceGraph != null)
-                    {
-                        instance.ValenceChannel = valenceChannel;
-                        offsetsInUse.Add(valenceOffset);
-                        ApplyGraphHeightScale(instance.ValenceGraph);
-                        AttachGraphPanel(instance.ValenceGraph);
-                        AttachGraphLabel(groupRoot, instance.ValenceGraph, valenceOffset, ResolveGraphChannelLabel(EmotionChannelKind.Valence));
-                    }
-                }
-
-                if (!string.IsNullOrWhiteSpace(definition.ArousalChannel))
-                {
-                    string arousalChannel = definition.ArousalChannel;
-                    instance.ArousalGraph = SpawnGraphForChannel(
-                        groupRoot.transform,
-                        definition.DeviceId,
-                        EmotionChannelKind.Arousal,
-                        arousalChannel,
-                        arousalOffset,
-                        GraphArousalRange,
-                        GraphArousalColor,
-                        GraphLineWidth,
-                        $"{deviceLabel} - Arousal",
-                        out instance.ArousalPump);
-                    if (instance.ArousalGraph != null)
-                    {
-                        instance.ArousalChannel = arousalChannel;
-                        offsetsInUse.Add(arousalOffset);
-                        ApplyGraphHeightScale(instance.ArousalGraph);
-                        AttachGraphPanel(instance.ArousalGraph);
-                        AttachGraphLabel(groupRoot, instance.ArousalGraph, arousalOffset, ResolveGraphChannelLabel(EmotionChannelKind.Arousal));
-                    }
-                }
 
                 if (!string.IsNullOrWhiteSpace(definition.HeartRateChannel))
                 {
@@ -1240,20 +1481,13 @@ namespace AmpPortableDataViz.Presentation.Bootstrap
                     }
                 }
 
-                if (instance.ValenceGraph == null && instance.ArousalGraph == null && instance.HeartRateGraph == null && instance.EdaGraph == null)
+                if (instance.HeartRateGraph == null && instance.EdaGraph == null)
                 {
                     Debug.LogWarning($"Bootstrapper: No graph channels found for device '{definition.DeviceId}', skipping group spawn.");
                     Destroy(groupRoot);
-                    ReleaseRedisPump(instance.ValenceChannel);
-                    ReleaseRedisPump(instance.ArousalChannel);
                     ReleaseRedisPump(instance.HeartRateChannel);
                     ReleaseRedisPump(instance.EdaChannel);
                     continue;
-                }
-
-                if (GraphGroupsGrabbable)
-                {
-                    ConfigureGraphGroupGrab(groupRoot, offsetsInUse);
                 }
 
                 AttachGraphGroupPanel(groupRoot, offsetsInUse);
@@ -1311,7 +1545,7 @@ namespace AmpPortableDataViz.Presentation.Bootstrap
             int deviceIndex = 0;
             foreach (var definition in deviceDefinitions)
             {
-                if (!definition.HasRequiredChannels)
+                if (!definition.HasVisualizationChannels)
                 {
                     Debug.LogWarning($"Bootstrapper: Incomplete audience channel set for device '{definition.DeviceId}', skipping graph spawn.");
                     continue;
@@ -1340,18 +1574,13 @@ namespace AmpPortableDataViz.Presentation.Bootstrap
                 }
 
                 var physioPump = AcquirePhysioPumpForChannel(definition.DeviceId, definition.PhysioMetricsChannel);
-                var valencePump = AcquireRedisPumpForChannel(definition.DeviceId, EmotionChannelKind.Valence, definition.ValenceChannel);
-                var arousalPump = AcquireRedisPumpForChannel(definition.DeviceId, EmotionChannelKind.Arousal, definition.ArousalChannel);
-                var engagementPump = AcquireRedisPumpForChannel("global", EmotionChannelKind.Broadcast, definition.EngagementChannel);
+                var engagementSource = ResolveSensorEngagementSource(definition.DeviceId);
 
-                if (!TryConfigureAudienceBinding(binding, physioPump, valencePump, arousalPump, engagementPump, null, definition.DeviceId))
+                if (!TryConfigureAudienceBinding(binding, physioPump, engagementSource, null, definition.DeviceId))
                 {
                     Debug.LogWarning($"Bootstrapper: Unable to configure audience graph binding on '{instance.name}', skipping graph spawn.");
                     Destroy(instance);
                     ReleasePhysioPump(definition.PhysioMetricsChannel);
-                    ReleaseRedisPump(definition.ValenceChannel);
-                    ReleaseRedisPump(definition.ArousalChannel);
-                    ReleaseRedisPump(definition.EngagementChannel);
                     continue;
                 }
 
@@ -1362,23 +1591,149 @@ namespace AmpPortableDataViz.Presentation.Bootstrap
                     GroupRoot = instance,
                     Binding = binding,
                     PhysioMetricsChannel = definition.PhysioMetricsChannel,
-                    ValenceChannel = definition.ValenceChannel,
-                    ArousalChannel = definition.ArousalChannel,
-                    EngagementChannel = definition.EngagementChannel,
-                    PhysioPump = physioPump,
-                    ValencePump = valencePump,
-                    ArousalPump = arousalPump,
-                    EngagementPump = engagementPump
+                    PhysioPump = physioPump
                 });
-
-                if (GraphGroupsGrabbable)
-                {
-                    ConfigureGraphGroupGrab(instance, Array.Empty<Vector3>());
-                }
 
                 AttachGraphGroupLabel(instance, definition.DeviceId, deviceIndex, Array.Empty<Vector3>());
                 deviceIndex++;
             }
+        }
+
+        private void EnsureSensorEngagementBackend(IEnumerable<string> sensorIds)
+        {
+            string[] normalizedSensorIds = sensorIds == null
+                ? Array.Empty<string>()
+                : sensorIds
+                    .Where(sensorId => !string.IsNullOrWhiteSpace(sensorId))
+                    .Select(sensorId => sensorId.Trim())
+                    .Distinct(StringComparer.OrdinalIgnoreCase)
+                    .OrderBy(sensorId => sensorId, StringComparer.OrdinalIgnoreCase)
+                    .ToArray();
+
+            if (normalizedSensorIds.Length == 0)
+            {
+                ClearSensorEngagementBackend();
+                return;
+            }
+
+            SensorEngagementChannelRoute[] routes = BuildSensorEngagementRoutes(normalizedSensorIds);
+            string configurationKey = BuildSensorEngagementConfigurationKey(normalizedSensorIds, routes);
+            if (_sensorEngagementBackendObject != null &&
+                _sensorEngagementCoordinator != null &&
+                string.Equals(_sensorEngagementConfigurationKey, configurationKey, StringComparison.Ordinal))
+            {
+                return;
+            }
+
+            ClearSensorEngagementBackend();
+
+            _sensorEngagementBackendObject = new GameObject("Sensor Engagement Backend");
+            _sensorEngagementBackendObject.transform.SetParent(transform, false);
+            _sensorEngagementBackendObject.SetActive(false);
+
+            _sensorEngagementPump = _sensorEngagementBackendObject.AddComponent<RedisSensorEngagementPump>();
+            _sensorEngagementCoordinator = _sensorEngagementBackendObject.AddComponent<SensorEngagementCoordinator>();
+
+            var decoder = new SensorEngagementJsonDecoder(SensorEngagementPayloadFormat);
+            _sensorEngagementPump.ConfigureConnection(
+                RedisHost,
+                RedisPort,
+                UseIndividualSensorEngagement ? routes : Array.Empty<SensorEngagementChannelRoute>(),
+                decoder);
+            _sensorEngagementCoordinator.Configure(
+                _sensorEngagementPump,
+                normalizedSensorIds,
+                SensorEngagementTimeoutSeconds,
+                SensorEngagementNeutralValue);
+
+            _sensorEngagementConfigurationKey = configurationKey;
+            _sensorEngagementBackendObject.SetActive(true);
+
+            if (UseIndividualSensorEngagement && routes.Length == 0)
+            {
+                Debug.LogWarning(
+                    "Bootstrapper: Individual sensor engagement is enabled, but no channel template or overrides are configured. " +
+                    "Sensor visualizations will use the neutral engagement value.",
+                    this);
+            }
+        }
+
+        private SensorEngagementChannelRoute[] BuildSensorEngagementRoutes(IEnumerable<string> sensorIds)
+        {
+            if (!UseIndividualSensorEngagement || sensorIds == null)
+            {
+                return Array.Empty<SensorEngagementChannelRoute>();
+            }
+
+            var routes = new List<SensorEngagementChannelRoute>();
+            foreach (string sensorId in sensorIds)
+            {
+                string channelName = ResolveSensorEngagementChannel(sensorId);
+                if (!string.IsNullOrWhiteSpace(channelName))
+                {
+                    routes.Add(new SensorEngagementChannelRoute(sensorId, channelName));
+                }
+            }
+
+            return routes.ToArray();
+        }
+
+        private string ResolveSensorEngagementChannel(string sensorId)
+        {
+            if (SensorEngagementChannelOverrides != null)
+            {
+                for (int i = 0; i < SensorEngagementChannelOverrides.Length; i++)
+                {
+                    SensorEngagementChannelOverride channelOverride = SensorEngagementChannelOverrides[i];
+                    if (string.Equals(channelOverride.SensorId?.Trim(), sensorId, StringComparison.OrdinalIgnoreCase) &&
+                        !string.IsNullOrWhiteSpace(channelOverride.ChannelName))
+                    {
+                        return channelOverride.ChannelName.Trim();
+                    }
+                }
+            }
+
+            if (string.IsNullOrWhiteSpace(SensorEngagementChannelTemplate))
+            {
+                return string.Empty;
+            }
+
+            return SensorEngagementChannelTemplate
+                .Trim()
+                .Replace("{serial}", sensorId)
+                .Replace("{sensorId}", sensorId)
+                .Replace("{0}", sensorId);
+        }
+
+        private string BuildSensorEngagementConfigurationKey(
+            IEnumerable<string> sensorIds,
+            IEnumerable<SensorEngagementChannelRoute> routes)
+        {
+            string sensorKey = string.Join("|", sensorIds);
+            string routeKey = string.Join("|", routes.Select(route => $"{route.SensorId}={route.ChannelName}"));
+            return $"{RedisHost}:{RedisPort};enabled={UseIndividualSensorEngagement};timeout={SensorEngagementTimeoutSeconds:R};" +
+                $"neutral={SensorEngagementNeutralValue:R};sensors={sensorKey};routes={routeKey};" +
+                $"items={SensorEngagementPayloadFormat.ItemsPropertyName};sensor={SensorEngagementPayloadFormat.SensorIdPropertyName};" +
+                $"score={SensorEngagementPayloadFormat.EngagementPropertyName};confirmed={SensorEngagementPayloadFormat.ConfirmationPropertyName};" +
+                $"timestamp={SensorEngagementPayloadFormat.TimestampPropertyName}";
+        }
+
+        private ILatestDataSource<SensorEngagementState> ResolveSensorEngagementSource(string sensorId)
+        {
+            return _sensorEngagementCoordinator?.GetSource(sensorId);
+        }
+
+        private void ClearSensorEngagementBackend()
+        {
+            if (_sensorEngagementBackendObject != null)
+            {
+                Destroy(_sensorEngagementBackendObject);
+            }
+
+            _sensorEngagementBackendObject = null;
+            _sensorEngagementPump = null;
+            _sensorEngagementCoordinator = null;
+            _sensorEngagementConfigurationKey = string.Empty;
         }
 
         private RedisDataPump AcquireRedisPumpForChannel(string deviceId, EmotionChannelKind channelKind, string channelName)
@@ -1554,18 +1909,16 @@ namespace AmpPortableDataViz.Presentation.Bootstrap
         private static bool TryConfigureAudienceBinding(
             AudienceSignalBinding binding,
             RedisPhysioMetricsPump physioPump,
-            RedisDataPump valencePump,
-            RedisDataPump arousalPump,
-            RedisDataPump engagementPump,
+            ILatestDataSource<SensorEngagementState> engagementSource,
             ParticleMeshVisualizer particleMeshVisualizer,
             string deviceId)
         {
-            if (binding == null || physioPump == null || valencePump == null || arousalPump == null || engagementPump == null)
+            if (binding == null || physioPump == null || engagementSource == null)
             {
                 return false;
             }
 
-            binding.ConfigureSources(physioPump, valencePump, arousalPump, engagementPump, deviceId);
+            binding.ConfigureSensorSources(physioPump, engagementSource, deviceId);
             if (particleMeshVisualizer != null)
             {
                 binding.ConfigureParticleTarget(particleMeshVisualizer);
@@ -1663,9 +2016,6 @@ namespace AmpPortableDataViz.Presentation.Bootstrap
                 }
 
                 ReleasePhysioPump(instance.PhysioMetricsChannel);
-                ReleaseRedisPump(instance.ValenceChannel);
-                ReleaseRedisPump(instance.ArousalChannel);
-                ReleaseRedisPump(instance.EngagementChannel);
             }
 
             _audienceDeviceInstances.Clear();
@@ -1686,14 +2036,10 @@ namespace AmpPortableDataViz.Presentation.Bootstrap
                 }
                 else
                 {
-                    if (instance.ValenceGraph != null) Destroy(instance.ValenceGraph);
-                    if (instance.ArousalGraph != null) Destroy(instance.ArousalGraph);
                     if (instance.HeartRateGraph != null) Destroy(instance.HeartRateGraph);
                     if (instance.EdaGraph != null) Destroy(instance.EdaGraph);
                 }
 
-                ReleaseRedisPump(instance.ValenceChannel);
-                ReleaseRedisPump(instance.ArousalChannel);
                 ReleaseRedisPump(instance.HeartRateChannel);
                 ReleaseRedisPump(instance.EdaChannel);
             }
@@ -1720,12 +2066,58 @@ namespace AmpPortableDataViz.Presentation.Bootstrap
                 }
 
                 ReleasePhysioPump(instance.PhysioMetricsChannel);
-                ReleaseRedisPump(instance.ValenceChannel);
-                ReleaseRedisPump(instance.ArousalChannel);
-                ReleaseRedisPump(instance.EngagementChannel);
             }
 
             _audienceGraphDeviceGroups.Clear();
+        }
+
+        private void ClearSelectedSensorStreamMode()
+        {
+            if (_sensorStreamCoordinator != null)
+            {
+                _sensorStreamCoordinator.ConfigureVisualizerBindings(Array.Empty<AudienceSignalVisualizerBinding>());
+                _sensorStreamCoordinator.ConfigureSources(Array.Empty<AudienceSignalBinding>());
+            }
+
+            foreach (var source in _selectedSensorSources)
+            {
+                if (source.SourceObject != null)
+                {
+                    Destroy(source.SourceObject);
+                }
+                else if (source.Binding != null)
+                {
+                    Destroy(source.Binding.gameObject);
+                }
+
+                ReleasePhysioPump(source.PhysioMetricsChannel);
+            }
+
+            _selectedSensorSources.Clear();
+
+            if (_selectedParticleVisual != null)
+            {
+                Destroy(_selectedParticleVisual);
+                _selectedParticleVisual = null;
+            }
+
+            if (_selectedGraphVisual != null)
+            {
+                Destroy(_selectedGraphVisual);
+                _selectedGraphVisual = null;
+            }
+
+            if (_selectedArtistVisual != null)
+            {
+                Destroy(_selectedArtistVisual);
+                _selectedArtistVisual = null;
+            }
+
+            if (_sensorHudObject != null)
+            {
+                Destroy(_sensorHudObject);
+                _sensorHudObject = null;
+            }
         }
 
         private void ClearManualDriverVisuals()
@@ -1762,6 +2154,8 @@ namespace AmpPortableDataViz.Presentation.Bootstrap
             ClearAudienceDeviceVisuals();
             ClearGraphDeviceVisuals();
             ClearAudienceGraphDeviceVisuals();
+            ClearSelectedSensorStreamMode();
+            ClearSensorEngagementBackend();
             ClearManualDriverVisuals();
         }
 
@@ -1883,8 +2277,6 @@ namespace AmpPortableDataViz.Presentation.Bootstrap
             {
                 return channelKind switch
                 {
-                    EmotionChannelKind.Valence => GraphValenceOffset,
-                    EmotionChannelKind.Arousal => GraphArousalOffset,
                     EmotionChannelKind.HeartRate => GraphHeartRateOffset,
                     EmotionChannelKind.EdaFiltered => GraphEdaOffset,
                     _ => Vector3.zero
@@ -1894,10 +2286,8 @@ namespace AmpPortableDataViz.Presentation.Bootstrap
             float spacing = Mathf.Max(0.01f, GraphStackedVerticalSpacing);
             float yOffset = channelKind switch
             {
-                EmotionChannelKind.Valence => spacing,
-                EmotionChannelKind.Arousal => 0f,
-                EmotionChannelKind.HeartRate => -spacing,
-                EmotionChannelKind.EdaFiltered => -spacing * 2f,
+                EmotionChannelKind.HeartRate => spacing * 0.5f,
+                EmotionChannelKind.EdaFiltered => -spacing * 0.5f,
                 _ => 0f
             };
 
@@ -1958,244 +2348,6 @@ namespace AmpPortableDataViz.Presentation.Bootstrap
             // Re-apply the channel offset so Bootstrapper-controlled layouts remain in effect.
             instance.transform.localPosition = localOffset;
             return instance;
-        }
-
-        private void ConfigureGraphGroupGrab(GameObject groupRoot, IReadOnlyList<Vector3> channelOffsets)
-        {
-            if (groupRoot == null)
-            {
-                return;
-            }
-
-            var rigidbody = groupRoot.GetComponent<Rigidbody>();
-            if (rigidbody == null)
-            {
-                rigidbody = groupRoot.AddComponent<Rigidbody>();
-            }
-
-            rigidbody.useGravity = false;
-            rigidbody.isKinematic = true;
-
-            var collider = groupRoot.GetComponent<BoxCollider>();
-            if (collider == null)
-            {
-                collider = groupRoot.AddComponent<BoxCollider>();
-            }
-
-            if (TryCalculateGraphGroupBounds(channelOffsets, out var center, out var size))
-            {
-                collider.center = center;
-                collider.size = size;
-            }
-
-            var grab = groupRoot.GetComponent<XRGrabInteractable>();
-            if (grab == null)
-            {
-                grab = groupRoot.AddComponent<XRGrabInteractable>();
-            }
-
-            grab.distanceCalculationMode = XRBaseInteractable.DistanceCalculationMode.ColliderPosition;
-            grab.selectMode = InteractableSelectMode.Multiple;
-            grab.focusMode = InteractableFocusMode.Multiple;
-            grab.movementType = XRBaseInteractable.MovementType.Kinematic;
-            grab.trackPosition = true;
-            grab.smoothPosition = true;
-            grab.smoothPositionAmount = 14f;
-            grab.tightenPosition = 0.1f;
-            grab.useDynamicAttach = true;
-            grab.matchAttachPosition = true;
-            grab.matchAttachRotation = true;
-            grab.snapToColliderVolume = true;
-            grab.reinitializeDynamicAttachEverySingleGrab = true;
-            grab.attachEaseInTime = 0.15f;
-
-            if (grab.colliders != null)
-            {
-                grab.colliders.Clear();
-                grab.colliders.Add(collider);
-            }
-
-            ConfigureGrabFacing(groupRoot);
-        }
-
-        private void ConfigureParticleMeshGrab(GameObject visualInstance)
-        {
-            if (visualInstance == null)
-            {
-                return;
-            }
-
-            var particleMesh = visualInstance.GetComponentInChildren<ParticleMeshVisualizer>(true);
-            if (particleMesh == null)
-            {
-                return;
-            }
-
-            var grab = particleMesh.GetComponentInParent<XRGrabInteractable>();
-            if (grab == null || !grab.transform.IsChildOf(visualInstance.transform))
-            {
-                grab = visualInstance.GetComponentInChildren<XRGrabInteractable>(true);
-            }
-
-            GameObject grabRoot = grab != null ? grab.gameObject : particleMesh.gameObject;
-            var rigidbody = grabRoot.GetComponent<Rigidbody>();
-            if (rigidbody == null)
-            {
-                rigidbody = grabRoot.AddComponent<Rigidbody>();
-            }
-
-            rigidbody.useGravity = false;
-            rigidbody.isKinematic = true;
-
-            bool needsGeneratedCollider = grab == null || grab.colliders == null || grab.colliders.Count == 0;
-            var collider = needsGeneratedCollider ? ResolveParticleMeshGrabCollider(grabRoot, particleMesh) : null;
-            if (grab == null)
-            {
-                grab = grabRoot.AddComponent<XRGrabInteractable>();
-            }
-
-            grab.distanceCalculationMode = XRBaseInteractable.DistanceCalculationMode.ColliderPosition;
-            grab.selectMode = InteractableSelectMode.Multiple;
-            grab.focusMode = InteractableFocusMode.Multiple;
-            grab.movementType = XRBaseInteractable.MovementType.Kinematic;
-            grab.trackPosition = true;
-            grab.smoothPosition = true;
-            grab.smoothPositionAmount = 14f;
-            grab.tightenPosition = 0.1f;
-            grab.useDynamicAttach = true;
-            grab.matchAttachPosition = true;
-            grab.matchAttachRotation = true;
-            grab.snapToColliderVolume = true;
-            grab.reinitializeDynamicAttachEverySingleGrab = true;
-            grab.attachEaseInTime = 0.15f;
-
-            if (collider != null && grab.colliders != null && grab.colliders.Count == 0)
-            {
-                grab.colliders.Add(collider);
-            }
-
-            ConfigureGrabFacing(grabRoot);
-        }
-
-        private Collider ResolveParticleMeshGrabCollider(GameObject grabRoot, ParticleMeshVisualizer particleMesh)
-        {
-            if (grabRoot == null || particleMesh == null)
-            {
-                return null;
-            }
-
-            var collider = grabRoot.GetComponent<BoxCollider>();
-            if (collider == null)
-            {
-                collider = grabRoot.AddComponent<BoxCollider>();
-            }
-
-            if (TryCalculateParticleMeshBounds(grabRoot.transform, particleMesh, out var center, out var size))
-            {
-                collider.center = center;
-                collider.size = size;
-            }
-
-            return collider;
-        }
-
-        private bool TryCalculateParticleMeshBounds(Transform boundsRoot, ParticleMeshVisualizer particleMesh, out Vector3 center, out Vector3 size)
-        {
-            center = Vector3.zero;
-            size = ParticleMeshBoundsSize;
-
-            if (boundsRoot == null || particleMesh == null)
-            {
-                return ParticleMeshBoundsSize.sqrMagnitude > 1e-6f;
-            }
-
-            Vector3 min = new Vector3(float.PositiveInfinity, float.PositiveInfinity, float.PositiveInfinity);
-            Vector3 max = new Vector3(float.NegativeInfinity, float.NegativeInfinity, float.NegativeInfinity);
-            bool hasBounds = false;
-
-            var renderers = particleMesh.GetComponentsInChildren<Renderer>(includeInactive: false);
-            foreach (var renderer in renderers)
-            {
-                if (renderer == null || !renderer.enabled)
-                {
-                    continue;
-                }
-
-                EncapsulateWorldBounds(boundsRoot, renderer.bounds, ref min, ref max, ref hasBounds);
-            }
-
-            if (!hasBounds)
-            {
-                return ParticleMeshBoundsSize.sqrMagnitude > 1e-6f;
-            }
-
-            center = (min + max) * 0.5f;
-            size = max - min;
-            size += ParticleMeshBoundsPadding * 2f;
-            size.x = Mathf.Max(size.x, ParticleMeshBoundsSize.x);
-            size.y = Mathf.Max(size.y, ParticleMeshBoundsSize.y);
-            size.z = Mathf.Max(size.z, ParticleMeshBoundsSize.z);
-            return size.sqrMagnitude > 1e-6f;
-        }
-
-        private static void EncapsulateWorldBounds(Transform localRoot, Bounds bounds, ref Vector3 min, ref Vector3 max, ref bool hasBounds)
-        {
-            Vector3 boundsMin = bounds.min;
-            Vector3 boundsMax = bounds.max;
-
-            EncapsulateLocalPoint(localRoot, new Vector3(boundsMin.x, boundsMin.y, boundsMin.z), ref min, ref max, ref hasBounds);
-            EncapsulateLocalPoint(localRoot, new Vector3(boundsMin.x, boundsMin.y, boundsMax.z), ref min, ref max, ref hasBounds);
-            EncapsulateLocalPoint(localRoot, new Vector3(boundsMin.x, boundsMax.y, boundsMin.z), ref min, ref max, ref hasBounds);
-            EncapsulateLocalPoint(localRoot, new Vector3(boundsMin.x, boundsMax.y, boundsMax.z), ref min, ref max, ref hasBounds);
-            EncapsulateLocalPoint(localRoot, new Vector3(boundsMax.x, boundsMin.y, boundsMin.z), ref min, ref max, ref hasBounds);
-            EncapsulateLocalPoint(localRoot, new Vector3(boundsMax.x, boundsMin.y, boundsMax.z), ref min, ref max, ref hasBounds);
-            EncapsulateLocalPoint(localRoot, new Vector3(boundsMax.x, boundsMax.y, boundsMin.z), ref min, ref max, ref hasBounds);
-            EncapsulateLocalPoint(localRoot, new Vector3(boundsMax.x, boundsMax.y, boundsMax.z), ref min, ref max, ref hasBounds);
-        }
-
-        private static void EncapsulateLocalPoint(Transform localRoot, Vector3 worldPoint, ref Vector3 min, ref Vector3 max, ref bool hasBounds)
-        {
-            Vector3 point = localRoot != null ? localRoot.InverseTransformPoint(worldPoint) : worldPoint;
-            if (!hasBounds)
-            {
-                min = point;
-                max = point;
-                hasBounds = true;
-                return;
-            }
-
-            min = Vector3.Min(min, point);
-            max = Vector3.Max(max, point);
-        }
-
-        private void ConfigureGrabFacing(GameObject grabRoot)
-        {
-            if (!FaceGrabbableVisualizationsToCamera || grabRoot == null)
-            {
-                return;
-            }
-
-            var facing = grabRoot.GetComponent<FaceUserOnGrabPlacement>();
-            if (facing == null)
-            {
-                facing = grabRoot.AddComponent<FaceUserOnGrabPlacement>();
-            }
-
-            Transform cameraTransform = null;
-            var mainCamera = Camera.main;
-            if (mainCamera != null)
-            {
-                cameraTransform = mainCamera.transform;
-            }
-
-            facing.Configure(
-                cameraTransform,
-                FaceVisualizationsWhileGrabbed,
-                KeepPlacedVisualizationsFacingCamera,
-                GrabFacingYawOnly,
-                GrabFacingFlipForward,
-                GrabFacingRotationSpeed);
-            facing.FaceNow();
         }
 
         private bool TryCalculateGraphGroupBounds(IReadOnlyList<Vector3> channelOffsets, out Vector3 center, out Vector3 size)
@@ -2310,7 +2462,6 @@ namespace AmpPortableDataViz.Presentation.Bootstrap
         {
             var orderedDeviceIds = new List<string>();
             var map = new Dictionary<string, AudienceDeviceChannelDefinition>(StringComparer.OrdinalIgnoreCase);
-            string engagementChannel = ResolveEngagementScoresChannel();
 
             foreach (var channel in redisChannels)
             {
@@ -2319,37 +2470,14 @@ namespace AmpPortableDataViz.Presentation.Bootstrap
                     continue;
                 }
 
-                string deviceId = string.Empty;
+                string deviceId;
                 AudienceDeviceChannelDefinition definition;
-                bool hasDeviceChannel = false;
 
                 if (RedisAudienceChannels.TryParsePhysioMetricsDeviceChannel(channel, out deviceId))
                 {
-                    hasDeviceChannel = true;
                     definition = GetOrCreateAudienceDefinition(deviceId, orderedDeviceIds, map);
                     definition.PhysioMetricsChannel = channel;
                     map[deviceId] = definition;
-                }
-                else if (RedisEmotionChannels.TryParseDeviceChannel(channel, out deviceId, out var kind))
-                {
-                    hasDeviceChannel = true;
-                    definition = GetOrCreateAudienceDefinition(deviceId, orderedDeviceIds, map);
-
-                    if (kind == EmotionChannelKind.Valence)
-                    {
-                        definition.ValenceChannel = channel;
-                    }
-                    else if (kind == EmotionChannelKind.Arousal)
-                    {
-                        definition.ArousalChannel = channel;
-                    }
-
-                    map[deviceId] = definition;
-                }
-
-                if (!hasDeviceChannel)
-                {
-                    continue;
                 }
             }
 
@@ -2361,7 +2489,7 @@ namespace AmpPortableDataViz.Presentation.Bootstrap
                     continue;
                 }
 
-                FillAudienceChannelDefaults(ref definition, engagementChannel);
+                FillAudienceChannelDefaults(ref definition);
                 ordered.Add(definition);
             }
 
@@ -2382,26 +2510,12 @@ namespace AmpPortableDataViz.Presentation.Bootstrap
             return definition;
         }
 
-        private static void FillAudienceChannelDefaults(ref AudienceDeviceChannelDefinition definition, string engagementChannel)
+        private static void FillAudienceChannelDefaults(ref AudienceDeviceChannelDefinition definition)
         {
             if (string.IsNullOrWhiteSpace(definition.PhysioMetricsChannel))
             {
                 definition.PhysioMetricsChannel = RedisAudienceChannels.FormatPhysioMetricsChannel(definition.DeviceId);
             }
-
-            if (string.IsNullOrWhiteSpace(definition.ValenceChannel))
-            {
-                RedisEmotionChannels.TryFormatChannel(EmotionChannelKind.Valence, definition.DeviceId, out definition.ValenceChannel);
-            }
-
-            if (string.IsNullOrWhiteSpace(definition.ArousalChannel))
-            {
-                RedisEmotionChannels.TryFormatChannel(EmotionChannelKind.Arousal, definition.DeviceId, out definition.ArousalChannel);
-            }
-
-            definition.EngagementChannel = string.IsNullOrWhiteSpace(engagementChannel)
-                ? RedisAudienceChannels.EngagementScoresChannel
-                : engagementChannel.Trim();
         }
 
         private static List<AudienceDeviceChannelDefinition> FilterAudienceToConfiguredDevices(IEnumerable<AudienceDeviceChannelDefinition> definitions, IEnumerable<string> configuredDeviceIds)
@@ -2609,28 +2723,10 @@ namespace AmpPortableDataViz.Presentation.Bootstrap
                     continue;
                 }
 
-                Vector3 valenceOffset = ResolveGraphChannelOffset(EmotionChannelKind.Valence);
-                Vector3 arousalOffset = ResolveGraphChannelOffset(EmotionChannelKind.Arousal);
                 Vector3 heartRateOffset = ResolveGraphChannelOffset(EmotionChannelKind.HeartRate);
                 Vector3 edaOffset = ResolveGraphChannelOffset(EmotionChannelKind.EdaFiltered);
 
-                var offsetsInUse = new List<Vector3>(4);
-
-                if (instance.ValenceGraph != null)
-                {
-                    instance.ValenceGraph.transform.localPosition = valenceOffset;
-                    offsetsInUse.Add(valenceOffset);
-                    ApplyGraphHeightScale(instance.ValenceGraph);
-                    UpdateGraphPanelSize(instance.ValenceGraph);
-                }
-
-                if (instance.ArousalGraph != null)
-                {
-                    instance.ArousalGraph.transform.localPosition = arousalOffset;
-                    offsetsInUse.Add(arousalOffset);
-                    ApplyGraphHeightScale(instance.ArousalGraph);
-                    UpdateGraphPanelSize(instance.ArousalGraph);
-                }
+                var offsetsInUse = new List<Vector3>(2);
 
                 if (instance.HeartRateGraph != null)
                 {
@@ -2649,16 +2745,6 @@ namespace AmpPortableDataViz.Presentation.Bootstrap
                 }
 
                 ClearGraphGroupDecorations(instance.GroupRoot.transform);
-
-                if (instance.ValenceGraph != null)
-                {
-                    AttachGraphLabel(instance.GroupRoot, instance.ValenceGraph, valenceOffset, ResolveGraphChannelLabel(EmotionChannelKind.Valence));
-                }
-
-                if (instance.ArousalGraph != null)
-                {
-                    AttachGraphLabel(instance.GroupRoot, instance.ArousalGraph, arousalOffset, ResolveGraphChannelLabel(EmotionChannelKind.Arousal));
-                }
 
                 if (instance.HeartRateGraph != null)
                 {
@@ -2948,8 +3034,6 @@ namespace AmpPortableDataViz.Presentation.Bootstrap
         {
             return channelKind switch
             {
-                EmotionChannelKind.Valence => "Valence",
-                EmotionChannelKind.Arousal => "Arousal",
                 EmotionChannelKind.HeartRate => "Heart Rate",
                 EmotionChannelKind.EdaFiltered => "EDA",
                 _ => channelKind.ToString()
@@ -3020,18 +3104,6 @@ namespace AmpPortableDataViz.Presentation.Bootstrap
             var particleMeshVisualizer = instance.GetComponentInChildren<ParticleMeshVisualizer>(true);
             if (particleMeshVisualizer != null)
             {
-                var grab = particleMeshVisualizer.GetComponentInParent<XRGrabInteractable>();
-                if (grab != null && grab.transform.IsChildOf(instance.transform))
-                {
-                    return grab.transform;
-                }
-
-                grab = instance.GetComponentInChildren<XRGrabInteractable>(true);
-                if (grab != null)
-                {
-                    return grab.transform;
-                }
-
                 return particleMeshVisualizer.transform;
             }
 
@@ -3073,13 +3145,7 @@ namespace AmpPortableDataViz.Presentation.Bootstrap
             public GameObject VisualInstance;
             public AudienceSignalBinding Binding;
             public string PhysioMetricsChannel;
-            public string ValenceChannel;
-            public string ArousalChannel;
-            public string EngagementChannel;
             public RedisPhysioMetricsPump PhysioPump;
-            public RedisDataPump ValencePump;
-            public RedisDataPump ArousalPump;
-            public RedisDataPump EngagementPump;
         }
 
         private sealed class GraphDeviceGroupInstance
@@ -3087,16 +3153,10 @@ namespace AmpPortableDataViz.Presentation.Bootstrap
             public string DeviceId;
             public int DeviceIndex;
             public GameObject GroupRoot;
-            public GameObject ValenceGraph;
-            public GameObject ArousalGraph;
             public GameObject HeartRateGraph;
             public GameObject EdaGraph;
-            public string ValenceChannel;
-            public string ArousalChannel;
             public string HeartRateChannel;
             public string EdaChannel;
-            public RedisDataPump ValencePump;
-            public RedisDataPump ArousalPump;
             public RedisDataPump HeartRatePump;
             public RedisDataPump EdaPump;
         }
@@ -3108,13 +3168,14 @@ namespace AmpPortableDataViz.Presentation.Bootstrap
             public GameObject GroupRoot;
             public AudienceSignalBinding Binding;
             public string PhysioMetricsChannel;
-            public string ValenceChannel;
-            public string ArousalChannel;
-            public string EngagementChannel;
             public RedisPhysioMetricsPump PhysioPump;
-            public RedisDataPump ValencePump;
-            public RedisDataPump ArousalPump;
-            public RedisDataPump EngagementPump;
+        }
+
+        private sealed class SelectedSensorSourceInstance
+        {
+            public GameObject SourceObject;
+            public AudienceSignalBinding Binding;
+            public string PhysioMetricsChannel;
         }
 
         private sealed class SharedPumpHandle
@@ -3148,16 +3209,17 @@ namespace AmpPortableDataViz.Presentation.Bootstrap
         {
             public string DeviceId;
             public string PhysioMetricsChannel;
-            public string ValenceChannel;
-            public string ArousalChannel;
-            public string EngagementChannel;
 
-            public bool HasRequiredChannels =>
+            public bool HasVisualizationChannels =>
                 !string.IsNullOrWhiteSpace(DeviceId) &&
-                !string.IsNullOrWhiteSpace(PhysioMetricsChannel) &&
-                !string.IsNullOrWhiteSpace(ValenceChannel) &&
-                !string.IsNullOrWhiteSpace(ArousalChannel) &&
-                !string.IsNullOrWhiteSpace(EngagementChannel);
+                !string.IsNullOrWhiteSpace(PhysioMetricsChannel);
+        }
+
+        [Serializable]
+        public struct SensorEngagementChannelOverride
+        {
+            public string SensorId;
+            public string ChannelName;
         }
 
         private bool ShouldInitializeSessionController()

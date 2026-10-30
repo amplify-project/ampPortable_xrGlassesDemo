@@ -1,0 +1,47 @@
+{
+  "checked_utc": "2026-10-30T12:38:03.933572+00:00",
+  "label": "canonical-after-playmode",
+  "changed_or_missing": [
+    {
+      "path": "Assets/Settings/PC_Renderer.asset",
+      "before": "4d014d52301d28d137390d573da215af6989b3151a5702c384b7a03e7023e1bd",
+      "after": "21158b06c5fe64b3caec79bd3903189d6eaf0d927ce64176ef31ed8cba85febc"
+    },
+    {
+      "path": "Assets/XR/Resources/XRSimulationRuntimeSettings.asset",
+      "before": "d5f37f8c45263776b00e63f705d7e91c9370117ac54638e1df312bd10d893e4e",
+      "after": null
+    },
+    {
+      "path": "Assets/XR/Resources/XRSimulationRuntimeSettings.asset.meta",
+      "before": "2fec6b9096163c8d5827ff68b848c96fbdb5f5f6ca6b0f8dd3775dca588b112f",
+      "after": null
+    },
+    {
+      "path": "Assets/XR/UserSimulationSettings/Resources/XRSimulationPreferences.asset",
+      "before": "2e7d8ebd46e0357f7fbf5b3ec7db6c5a6639c153cd471578cdbcc6fef6db6971",
+      "after": null
+    },
+    {
+      "path": "Assets/XR/UserSimulationSettings/Resources/XRSimulationPreferences.asset.meta",
+      "before": "7529eaf386b4aa7a14299414f59fb1c71cfef80c4b39f614a53b9bdb407db20e",
+      "after": null
+    },
+    {
+      "path": "ProjectSettings/ProjectSettings.asset",
+      "before": "ae77914effe1605529ea7138a6ab7d249d9ffe4b1fd3c72b37ec365ee7985d69",
+      "after": "3c0dec3a1f5f08c6809c4887dc236bd8c26dce1ccfcb3abebdb90fe647598a3d"
+    }
+  ],
+  "added": [
+    "Assets/Editor.meta",
+    "Assets/Editor/PreMergeValidation.cs",
+    "Assets/Editor/PreMergeValidation.cs.meta",
+    "Assets/XR/Temp.meta",
+    "Assets/XR/Temp/XRSimulationPreferences.asset",
+    "Assets/XR/Temp/XRSimulationPreferences.asset.meta",
+    "Assets/XR/Temp/XRSimulationRuntimeSettings.asset",
+    "Assets/XR/Temp/XRSimulationRuntimeSettings.asset.meta"
+  ],
+  "note": "Unity-generated changes and validation instrumentation are recorded, not copied back to source."
+}

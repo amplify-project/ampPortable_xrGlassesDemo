@@ -1,0 +1,13 @@
+{
+  "verified_utc": "2026-10-30T13:29:32.305999+00:00",
+  "source": "Existing Windows-ROOT public trusted certificates",
+  "source_private_keys_exported": false,
+  "temporary_file": "C:\\Users\\Bryan Dunphy\\AppData\\Local\\Temp\\rnc1030\\windows-roots.p12",
+  "type": "PKCS12",
+  "certificate_count": 72,
+  "sha256": "45ff7ac414628213c15fec6403a7e400bc7f6a1037a3d16198056ff51d32ae86",
+  "gradle_preflight": "Passed: Gradle7.2 help, BUILD SUCCESSFUL, 25s",
+  "log": "Temp/PreMergeAssessment-20261030/gradle-filetrust-quoted.log",
+  "system_trust_changes": false,
+  "tls_and_hostname_validation_disabled": false
+}

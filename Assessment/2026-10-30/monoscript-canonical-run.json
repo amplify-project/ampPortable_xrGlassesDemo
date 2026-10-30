@@ -1,0 +1,23 @@
+﻿{
+    "stage":  "Probe",
+    "attempt":  "monoscript-canonical",
+    "started_utc":  "2026-10-30T12:30:47.7184981Z",
+    "finished_utc":  "2026-10-30T12:31:33.8674841Z",
+    "exit_code":  0,
+    "editor":  "C:\\Program Files\\Unity\\Hub\\Editor\\2022.3.36f1\\Editor\\Unity.exe",
+    "arguments":  [
+                      "-batchmode",
+                      "-projectPath",
+                      "\"C:\\Users\\Bryan Dunphy\\AppData\\Local\\Temp\\rnp1030\\project\"",
+                      "-buildTarget",
+                      "Android",
+                      "-logFile",
+                      "\"C:\\Users\\Bryan Dunphy\\Documents\\UnityProjects\\ampPortable_xrGlassesDemo\\Temp\\PreMergeAssessment-20261030\\monoscript-canonical.log\"",
+                      "-forgetProjectPath",
+                      "-executeMethod",
+                      "MonoScriptProbe.Inspect",
+                      "-quit"
+                  ],
+    "process_git_longpaths":  true,
+    "log":  "C:\\Users\\Bryan Dunphy\\Documents\\UnityProjects\\ampPortable_xrGlassesDemo\\Temp\\PreMergeAssessment-20261030\\monoscript-canonical.log"
+}

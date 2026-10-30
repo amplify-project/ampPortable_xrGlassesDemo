@@ -22,9 +22,6 @@ namespace AmpPortableDataViz.Presentation.Visualization
         [Serializable]
         public sealed class ParticleMeshSignalSampleEvent : UnityEvent<ParticleMeshSignalSample> { }
 
-        [Serializable]
-        public sealed class Vector2Event : UnityEvent<Vector2> { }
-
         [Header("Identity")]
         [SerializeField] private string sourceId = "particle-mesh-manual";
         [SerializeField] private string deviceId;
@@ -34,11 +31,6 @@ namespace AmpPortableDataViz.Presentation.Visualization
         [SerializeField, Range(-1f, 1f)] private float temperatureRateOfChangeStdDev;
         [SerializeField, Range(-1f, 1f)] private float skinConductanceResponseFrequencyStdDev;
         [SerializeField, Range(-1f, 1f)] private float heartRateStdDev;
-        [SerializeField, Range(-1f, 1f)] private float interBeatIntervalStdDev;
-
-        [Header("Facial Emotion")]
-        [SerializeField, Range(0f, 1f)] private float facialEmotionArousal = 0.5f;
-        [SerializeField, Range(0f, 1f)] private float facialEmotionValence = 0.5f;
 
         [Header("Engagement")]
         [SerializeField, Range(0f, 1f)] private float engagement = 0.5f;
@@ -60,8 +52,6 @@ namespace AmpPortableDataViz.Presentation.Visualization
         [SerializeField] private UnityEvent<float> onTemperatureRateOfChange = new();
         [SerializeField] private UnityEvent<float> onSkinConductanceResponseFrequency = new();
         [SerializeField] private UnityEvent<float> onHeartRate = new();
-        [SerializeField] private UnityEvent<float> onInterBeatInterval = new();
-        [SerializeField] private Vector2Event onFacialEmotionArousalValence = new();
         [SerializeField] private UnityEvent<float> onEngagement = new();
 
         [Header("Diagnostics")]
@@ -126,8 +116,6 @@ namespace AmpPortableDataViz.Presentation.Visualization
             onTemperatureRateOfChange?.Invoke(sample.TemperatureRateOfChangeStdDev);
             onSkinConductanceResponseFrequency?.Invoke(sample.SkinConductanceResponseFrequencyStdDev);
             onHeartRate?.Invoke(sample.HeartRateStdDev);
-            onInterBeatInterval?.Invoke(sample.InterBeatIntervalStdDev);
-            onFacialEmotionArousalValence?.Invoke(new Vector2(sample.FacialEmotionArousal, sample.FacialEmotionValence));
             onEngagement?.Invoke(sample.Engagement);
 
             if (logEmittedSample)
@@ -141,9 +129,6 @@ namespace AmpPortableDataViz.Presentation.Visualization
             float temperatureRateOfChange,
             float skinConductanceResponseFrequency,
             float heartRate,
-            float interBeatInterval,
-            float facialEmotionArousalValue,
-            float facialEmotionValenceValue,
             float engagementValue)
         {
             sourceMode = SourceMode.Manual;
@@ -151,9 +136,6 @@ namespace AmpPortableDataViz.Presentation.Visualization
             temperatureRateOfChangeStdDev = Mathf.Clamp(temperatureRateOfChange, -1f, 1f);
             skinConductanceResponseFrequencyStdDev = Mathf.Clamp(skinConductanceResponseFrequency, -1f, 1f);
             heartRateStdDev = Mathf.Clamp(heartRate, -1f, 1f);
-            interBeatIntervalStdDev = Mathf.Clamp(interBeatInterval, -1f, 1f);
-            facialEmotionArousal = Mathf.Clamp01(facialEmotionArousalValue);
-            facialEmotionValence = Mathf.Clamp01(facialEmotionValenceValue);
             engagement = Mathf.Clamp01(engagementValue);
         }
 
@@ -167,9 +149,6 @@ namespace AmpPortableDataViz.Presentation.Visualization
                 temperatureRateOfChangeStdDev,
                 skinConductanceResponseFrequencyStdDev,
                 heartRateStdDev,
-                interBeatIntervalStdDev,
-                facialEmotionArousal,
-                facialEmotionValence,
                 engagement);
         }
 
@@ -179,9 +158,6 @@ namespace AmpPortableDataViz.Presentation.Visualization
             temperatureRateOfChangeStdDev = SampleNoise(1.37f);
             skinConductanceResponseFrequencyStdDev = SampleNoise(2.61f);
             heartRateStdDev = SampleNoise(3.89f);
-            interBeatIntervalStdDev = SampleNoise(5.23f);
-            facialEmotionArousal = SampleNoise(6.47f);
-            facialEmotionValence = SampleNoise(7.79f);
             engagement = SampleNoise(9.01f);
 
             return BuildManualSample();
@@ -205,9 +181,6 @@ namespace AmpPortableDataViz.Presentation.Visualization
             temperatureRateOfChangeStdDev = Mathf.Clamp(temperatureRateOfChangeStdDev, -1f, 1f);
             skinConductanceResponseFrequencyStdDev = Mathf.Clamp(skinConductanceResponseFrequencyStdDev, -1f, 1f);
             heartRateStdDev = Mathf.Clamp(heartRateStdDev, -1f, 1f);
-            interBeatIntervalStdDev = Mathf.Clamp(interBeatIntervalStdDev, -1f, 1f);
-            facialEmotionArousal = Mathf.Clamp01(facialEmotionArousal);
-            facialEmotionValence = Mathf.Clamp01(facialEmotionValence);
             engagement = Mathf.Clamp01(engagement);
         }
     }

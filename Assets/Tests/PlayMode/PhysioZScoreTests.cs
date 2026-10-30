@@ -1,7 +1,9 @@
 using AmpPortableDataViz.Core;
 using AmpPortableDataViz.Presentation.Mapping;
 using AmpPortableDataViz.Presentation.Sources;
+using AmpPortableDataViz.Presentation.Visualization;
 using NUnit.Framework;
+using UnityEngine;
 
 namespace AmpPortableDataViz.Tests.PlayMode
 {
@@ -94,7 +96,7 @@ namespace AmpPortableDataViz.Tests.PlayMode
             Assert.AreEqual(0f, mapped.TemperatureRateOfChangeStdDev);
             Assert.AreEqual(1f, mapped.SkinConductanceResponseFrequencyStdDev);
             Assert.AreEqual(0.5f, mapped.HeartRateStdDev);
-            Assert.AreEqual(-0.5f, mapped.InterBeatIntervalStdDev);
+            Assert.AreEqual(0.5f, mapped.Engagement);
         }
 
         [Test]
@@ -120,7 +122,115 @@ namespace AmpPortableDataViz.Tests.PlayMode
             Assert.AreEqual(1f, mapped.TemperatureRateOfChangeStdDev);
             Assert.AreEqual(1f, mapped.SkinConductanceResponseFrequencyStdDev);
             Assert.AreEqual(1f, mapped.HeartRateStdDev);
-            Assert.AreEqual(1f, mapped.InterBeatIntervalStdDev);
+            Assert.AreEqual(0.5f, mapped.Engagement);
+        }
+
+        [Test]
+        public void AudienceSignalToParticleMeshMapper_WhenRemovedSignalsChange_ProducesSameParticleValues()
+        {
+            var mapper = new AudienceSignalToParticleMeshMapper(AudienceSignalToParticleMeshMapper.CreateDefaultSettings());
+            var firstSample = new AudienceSignalSample(
+                "device-a",
+                PhysioMetricsEncoding.ZScore,
+                -1f,
+                0.75f,
+                1.5f,
+                -0.5f,
+                -3f,
+                0.65f,
+                0f,
+                0f);
+            var secondSample = new AudienceSignalSample(
+                "device-a",
+                PhysioMetricsEncoding.ZScore,
+                -1f,
+                0.75f,
+                1.5f,
+                -0.5f,
+                3f,
+                0.65f,
+                2f,
+                2f);
+            var firstFrame = new DataFrame<AudienceSignalSample>(1L, 0, firstSample);
+            var secondFrame = new DataFrame<AudienceSignalSample>(2L, 1, secondSample);
+
+            ParticleMeshSignalSample first = mapper.Map(in firstFrame);
+            ParticleMeshSignalSample second = mapper.Map(in secondFrame);
+
+            Assert.AreEqual(first.TonicElectrodermalActivityStdDev, second.TonicElectrodermalActivityStdDev);
+            Assert.AreEqual(first.TemperatureRateOfChangeStdDev, second.TemperatureRateOfChangeStdDev);
+            Assert.AreEqual(first.SkinConductanceResponseFrequencyStdDev, second.SkinConductanceResponseFrequencyStdDev);
+            Assert.AreEqual(first.HeartRateStdDev, second.HeartRateStdDev);
+            Assert.AreEqual(first.Engagement, second.Engagement);
+        }
+
+        [TestCase(AudienceMetricKind.InterBeatIntervalStdDev)]
+        [TestCase(AudienceMetricKind.Arousal)]
+        [TestCase(AudienceMetricKind.Valence)]
+        public void AudienceVisualizationMetricPolicy_WhenMetricRemoved_RejectsGraphMetric(AudienceMetricKind metric)
+        {
+            Assert.IsFalse(AudienceVisualizationMetricPolicy.IsGraphMetricSupported(metric));
+        }
+
+        [TestCase(AudienceMetricKind.TonicElectrodermalActivityStdDev)]
+        [TestCase(AudienceMetricKind.TemperatureRateOfChangeStdDev)]
+        [TestCase(AudienceMetricKind.SkinConductanceResponseFrequencyStdDev)]
+        [TestCase(AudienceMetricKind.HeartRateStdDev)]
+        [TestCase(AudienceMetricKind.Engagement)]
+        public void AudienceVisualizationMetricPolicy_WhenMetricRetained_AcceptsGraphMetric(AudienceMetricKind metric)
+        {
+            Assert.IsTrue(AudienceVisualizationMetricPolicy.IsGraphMetricSupported(metric));
+        }
+
+        [Test]
+        public void TemperatureTrailResponseMapper_WhenTemperatureRatePositive_UsesHotUpwardResponse()
+        {
+            Color hot = Color.red;
+            TemperatureTrailResponse response = TemperatureTrailResponseMapper.Resolve(
+                0.6f, false, 0f, 0.18f, 0.25f, 0.65f, hot, Color.blue);
+
+            Assert.IsTrue(response.IsActive);
+            Assert.AreEqual(1f, response.Direction);
+            Assert.AreEqual(hot, response.Color);
+            Assert.Greater(response.Strength, 0f);
+        }
+
+        [Test]
+        public void TemperatureTrailResponseMapper_WhenTemperatureRateNegative_UsesColdDownwardResponseAndFlagsReversal()
+        {
+            Color cold = Color.blue;
+            TemperatureTrailResponse response = TemperatureTrailResponseMapper.Resolve(
+                -0.6f, true, 1f, 0.18f, 0.25f, 0.65f, Color.red, cold);
+
+            Assert.IsTrue(response.IsActive);
+            Assert.IsTrue(response.DirectionChanged);
+            Assert.AreEqual(-1f, response.Direction);
+            Assert.AreEqual(cold, response.Color);
+        }
+
+        [Test]
+        public void TemperatureTrailResponseMapper_UsesDeadbandAndReleaseHysteresis()
+        {
+            TemperatureTrailResponse inactive = TemperatureTrailResponseMapper.Resolve(
+                0.1f, false, 0f, 0.18f, 0.25f, 0.65f, Color.red, Color.blue);
+            TemperatureTrailResponse heldActive = TemperatureTrailResponseMapper.Resolve(
+                0.13f, true, 1f, 0.18f, 0.25f, 0.65f, Color.red, Color.blue);
+            TemperatureTrailResponse released = TemperatureTrailResponseMapper.Resolve(
+                0.1f, true, 1f, 0.18f, 0.25f, 0.65f, Color.red, Color.blue);
+
+            Assert.IsFalse(inactive.IsActive);
+            Assert.IsTrue(heldActive.IsActive);
+            Assert.IsFalse(released.IsActive);
+        }
+
+        [Test]
+        public void TemperatureTrailResponseMapper_WhenThresholdAtMaximum_StillProducesVisibleStrength()
+        {
+            TemperatureTrailResponse response = TemperatureTrailResponseMapper.Resolve(
+                1f, false, 0f, 1f, 0.25f, 1f, Color.red, Color.blue);
+
+            Assert.IsTrue(response.IsActive);
+            Assert.AreEqual(1f, response.Strength);
         }
     }
 }

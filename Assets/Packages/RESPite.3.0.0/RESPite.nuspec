@@ -1,0 +1,36 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<package xmlns="http://schemas.microsoft.com/packaging/2013/05/nuspec.xsd">
+  <metadata>
+    <id>RESPite</id>
+    <version>3.0.0</version>
+    <authors>Stack Exchange, Inc.,Marc Gravell,Nick Craver</authors>
+    <license type="expression">MIT</license>
+    <licenseUrl>https://licenses.nuget.org/MIT</licenseUrl>
+    <readme>readme.md</readme>
+    <projectUrl>https://stackexchange.github.io/StackExchange.Redis/</projectUrl>
+    <description>Package Description</description>
+    <releaseNotes>https://stackexchange.github.io/StackExchange.Redis/ReleaseNotes</releaseNotes>
+    <copyright>2025 - 2026 Marc Gravell</copyright>
+    <repository type="git" url="https://github.com/StackExchange/StackExchange.Redis/" branch="refs/heads/v3" commit="2be2ae6d7ffe333e629ab675030ceccafee3e68b" />
+    <dependencies>
+      <group targetFramework=".NETFramework4.6.1">
+        <dependency id="Microsoft.Bcl.AsyncInterfaces" version="10.0.5" exclude="Build,Analyzers" />
+        <dependency id="System.Buffers" version="4.6.1" exclude="Build,Analyzers" />
+        <dependency id="System.Memory" version="4.6.3" exclude="Build,Analyzers" />
+      </group>
+      <group targetFramework=".NETFramework4.7.2">
+        <dependency id="Microsoft.Bcl.AsyncInterfaces" version="10.0.5" exclude="Build,Analyzers" />
+        <dependency id="System.Buffers" version="4.6.1" exclude="Build,Analyzers" />
+        <dependency id="System.Memory" version="4.6.3" exclude="Build,Analyzers" />
+      </group>
+      <group targetFramework="net6.0" />
+      <group targetFramework="net8.0" />
+      <group targetFramework="net10.0" />
+      <group targetFramework=".NETStandard2.0">
+        <dependency id="Microsoft.Bcl.AsyncInterfaces" version="10.0.5" exclude="Build,Analyzers" />
+        <dependency id="System.Buffers" version="4.6.1" exclude="Build,Analyzers" />
+        <dependency id="System.Memory" version="4.6.3" exclude="Build,Analyzers" />
+      </group>
+    </dependencies>
+  </metadata>
+</package>

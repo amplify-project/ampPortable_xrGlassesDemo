@@ -1,7 +1,8 @@
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
-using System.Text.Json;
+using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
 using StackExchange.Redis;
 using UnityEngine;
 
@@ -101,13 +102,14 @@ namespace AmpPortableDataViz.Infra
         private static ConfigurationOptions CreateConfigurationOptions(string host, int port, int timeoutMs)
         {
             int effectiveTimeoutMs = Mathf.Max(1, timeoutMs);
-            return new ConfigurationOptions
+            var options = new ConfigurationOptions
             {
-                EndPoints = { $"{host}:{port}" },
                 ConnectTimeout = effectiveTimeoutMs,
                 SyncTimeout = effectiveTimeoutMs,
                 AbortOnConnectFail = false
             };
+            options.EndPoints.Add(host, port);
+            return options;
         }
 
         private static async Task CloseConnectionAsync(ConnectionMultiplexer redis)
@@ -202,8 +204,8 @@ namespace AmpPortableDataViz.Infra
 
             try
             {
-                using var jsonDoc = JsonDocument.Parse(payload);
-                ExtractDeviceIdsFromJson(jsonDoc.RootElement, ordered, seen, gate, false);
+                var root = JToken.Parse(payload);
+                ExtractDeviceIdsFromJson(root, ordered, seen, gate, false);
                 return;
             }
             catch (JsonException)
@@ -217,12 +219,12 @@ namespace AmpPortableDataViz.Infra
             }
         }
 
-        private static void ExtractDeviceIdsFromJson(JsonElement element, List<string> ordered, HashSet<string> seen, object gate, bool deviceContext)
+        private static void ExtractDeviceIdsFromJson(JToken element, List<string> ordered, HashSet<string> seen, object gate, bool deviceContext)
         {
-            switch (element.ValueKind)
+            switch (element.Type)
             {
-                case JsonValueKind.Object:
-                    foreach (var property in element.EnumerateObject())
+                case JTokenType.Object:
+                    foreach (var property in element.Children<JProperty>())
                     {
                         string normalizedName = NormalizeKey(property.Name);
                         bool isDeviceProperty = IsDevicePropertyName(normalizedName);
@@ -240,20 +242,20 @@ namespace AmpPortableDataViz.Infra
                             continue;
                         }
 
-                        if (property.Value.ValueKind == JsonValueKind.Object || property.Value.ValueKind == JsonValueKind.Array)
+                        if (property.Value.Type == JTokenType.Object || property.Value.Type == JTokenType.Array)
                         {
                             ExtractDeviceIdsFromJson(property.Value, ordered, seen, gate, isDeviceContext);
                         }
                     }
                     break;
-                case JsonValueKind.Array:
-                    foreach (var item in element.EnumerateArray())
+                case JTokenType.Array:
+                    foreach (var item in element.Children())
                     {
                         ExtractDeviceIdsFromJson(item, ordered, seen, gate, deviceContext);
                     }
                     break;
-                case JsonValueKind.String:
-                    AddDeviceId(element.GetString(), ordered, seen, gate, requireHeuristic: !deviceContext);
+                case JTokenType.String:
+                    AddDeviceId(element.Value<string>(), ordered, seen, gate, requireHeuristic: !deviceContext);
                     break;
             }
         }
