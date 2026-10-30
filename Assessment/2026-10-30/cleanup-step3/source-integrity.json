@@ -1,0 +1,70 @@
+{
+  "generated_utc": "2026-10-30T15:18:00.588636+00:00",
+  "base_head": "369c06c8b873817dedaa01fe9f2cf16af21da423",
+  "scope": [
+    "Assets",
+    "Packages",
+    "ProjectSettings"
+  ],
+  "before_file_count": 1817,
+  "after_file_count": 1809,
+  "fingerprint_method": "SHA-256 of sorted compact JSON arrays [POSIX path, file SHA-256] each followed by LF.",
+  "before_fingerprint": "6db752b49326b8070271463b9bf795920ee61fd9fa02a852587284d30e9c692f",
+  "after_fingerprint": "4a5ffdc13a4847f302d91b77b633d68c69e95ef54c57bf4a3ef6dbacce6ca566",
+  "expected_removals_only": true,
+  "removed": [
+    {
+      "path": "Assets/AmpPortableDataViz/Presentation/Interaction/XRealControllerQuitter.cs",
+      "sha256_before": "5d22cdce4de428510dcc7e9a6cbc4074b58423af9d5874304ac36820f3e73b69"
+    },
+    {
+      "path": "Assets/AmpPortableDataViz/Presentation/Interaction/XRealControllerQuitter.cs.meta",
+      "sha256_before": "004e630fa0fc693f5a11fa23dfb0fba07c106a7374560e4c15313c218c8579d8"
+    },
+    {
+      "path": "Assets/AmpPortableDataViz/Presentation/Visualization/FaceUserSmooth.cs",
+      "sha256_before": "a34c1d0da2e50d5cc294cb49865090fc95c943a460a70f2973ff7c6b892f8c9d"
+    },
+    {
+      "path": "Assets/AmpPortableDataViz/Presentation/Visualization/FaceUserSmooth.cs.meta",
+      "sha256_before": "14815f7a804bc6eba1761341408b52f1525f4d0bf4485bd0d4fc13c642d045e2"
+    },
+    {
+      "path": "Assets/AmpPortableDataViz/Presentation/Visualization/RuntimeImageBoard.cs",
+      "sha256_before": "30d6fd64f8380e862e2a7cfd2115f88e41f9b37a2641dcdb706c37d0b6015274"
+    },
+    {
+      "path": "Assets/AmpPortableDataViz/Presentation/Visualization/RuntimeImageBoard.cs.meta",
+      "sha256_before": "3ee1a985305a2a474ce94d130120c5db4791d8ae95524dd16ae1ea6fc8aa8dfb"
+    },
+    {
+      "path": "Assets/AmpPortableDataViz/Presentation/Visualization/URPImageBoardApplier.cs",
+      "sha256_before": "da6cb0107c36b36a56e9a36a571347e47f3b213267a582505a30b43b1b68c350"
+    },
+    {
+      "path": "Assets/AmpPortableDataViz/Presentation/Visualization/URPImageBoardApplier.cs.meta",
+      "sha256_before": "090337acb2685f3c0c9bc983777fc430a3491f2a656d45f0bf5cd2ea2b74c2ef"
+    }
+  ],
+  "changed_retained_files": [],
+  "added_source_files": [],
+  "retained_input_count": 1809,
+  "all_retained_input_bytes_unchanged": true,
+  "retained_inventory_rows_identical_to_step2": 92,
+  "post_removal_reference_check": {
+    "command": [
+      "rg",
+      "-n",
+      "--no-ignore",
+      "--hidden",
+      "XRealControllerQuitter|FaceUserSmooth|RuntimeImageBoard|URPImageBoardApplier|6ab818b15266638458808731a956b689|1e126d09f0b4ce243b941a0ab2396dc5|13af96730b4e4734abf8c774b56e4e5e|b05a98cf044bed64bb943fa30397ea57",
+      "Assets",
+      "Packages",
+      "ProjectSettings"
+    ],
+    "exit_code": 1,
+    "stdout": "",
+    "stderr": ""
+  },
+  "note": "Application change consists only of these four scripts and their four metadata files. Assessment outputs and ignored validation artifacts are outside this source scope."
+}

@@ -1,0 +1,102 @@
+{
+  "generated_utc": "2026-10-30T15:19:15.005091+00:00",
+  "playmode": {
+    "id": "2",
+    "testcasecount": "196",
+    "result": "Passed",
+    "total": "196",
+    "passed": "196",
+    "failed": "0",
+    "inconclusive": "0",
+    "skipped": "0",
+    "asserts": "0",
+    "engine-version": "3.5.0.0",
+    "clr-version": "4.0.30319.42000",
+    "start-time": "2026-10-30 15:15:54Z",
+    "end-time": "2026-10-30 15:15:55Z",
+    "duration": "0.9862707"
+  },
+  "android_build": {
+    "result": "Succeeded",
+    "errors": 0,
+    "warnings": 22,
+    "durationSeconds": 61.6532651,
+    "scriptingBackend": "IL2CPP",
+    "architectures": "ARM64",
+    "graphicsApis": [
+      "OpenGLES3"
+    ]
+  },
+  "enabled_scene_inspection": {
+    "dependencyCount": 86,
+    "gameObjectsScanned": 87,
+    "componentsScanned": 248,
+    "prefabsScanned": 8,
+    "materialsScanned": 17,
+    "missingScriptCount": 0,
+    "brokenObjectReferenceCount": 0,
+    "blockerCount": 0,
+    "warningCount": 0
+  },
+  "apk": {
+    "path": "C:\\Users\\Bryan Dunphy\\Documents\\UnityProjects\\ampPortable_xrGlassesDemo\\Temp\\CleanupStep3-20261030\\android\\RayNeo-assessment.apk",
+    "bytes": 167640873,
+    "sha256": "ad4e6d2171b0b46e26b40ae54922d7dc452e13f5d29303c999216ca43704233d",
+    "installed_on_device": false
+  },
+  "warning_evidence": {
+    "count": 22,
+    "baseline_log": "Temp\\PreMergeAssessment-20261030\\android-canonical-trust.log",
+    "baseline_log_sha256": "54e7703124f95a53b3c36e2d6a12a592473bbb7b8ee750f151af145cd28487af",
+    "baseline_showfps_messages": [
+      {
+        "line": 2131,
+        "text": "Script attached to 'ShowFps' in scene '' is missing or no valid script is attached."
+      },
+      {
+        "line": 2190,
+        "text": "Script attached to 'ShowFps' in scene '' is missing or no valid script is attached."
+      }
+    ],
+    "sdk_prefabs": [
+      "SDK/Runtime/Resources/Prefab/XR Plugin Gaze.prefab",
+      "SDK/Runtime/Resources/Prefab/XR Plugin Texture.prefab"
+    ],
+    "note": "ShowFps warnings predate cleanup. Compiler warnings are in retained, byte-identical source. Existing Active Input Handling Both and USD warnings persist. No warning-related changes made."
+  },
+  "process_notes": [
+    "First sandboxed Unity launch stalled on the licensing client; only that launched Unity process was stopped, exit -1, before test execution. Rerun with local licensing access passed.",
+    "Initial build-cache graph still listed the four removed source paths and emitted CS2001. Unity automatically regenerated its graph and recompiled successfully during this same build; final BuildReport has zero errors. No caches were hand-edited."
+  ],
+  "snapshot_drift": {
+    "changed_or_missing": [],
+    "validation_only_extras": [
+      "Assets/Editor.meta",
+      "Assets/Editor/MonoScriptProbe.cs",
+      "Assets/Editor/MonoScriptProbe.cs.meta",
+      "Assets/Editor/PreMergeValidation.cs",
+      "Assets/Editor/PreMergeValidation.cs.meta"
+    ],
+    "note": "Current snapshot source inputs match the checkout byte for byte after validation. Assessment-only Editor helpers remain isolated; no changes copied back."
+  },
+  "source_final_check": {
+    "retained_file_count": 1809,
+    "all_retained_bytes_unchanged": true,
+    "only_expected_eight_files_removed": true
+  },
+  "logs": [
+    {
+      "path": "Temp\\CleanupStep3-20261030\\playmode-full.log",
+      "sha256": "9895c0a4e398878c06b2f960c00cd7df4b0c1941134f81d8fe5b050fc0e59052"
+    },
+    {
+      "path": "Temp\\CleanupStep3-20261030\\playmode-licensed.log",
+      "sha256": "428250c7a72e05ef14ea7bf9fb74e1119bc6ddda77b675c1f01ac79748768e5a"
+    },
+    {
+      "path": "Temp\\CleanupStep3-20261030\\android.log",
+      "sha256": "6918c0597398d1c5627f98160cc7b839ec20d1e84e144b0a2623adbd177e9369"
+    }
+  ],
+  "stop_boundary": "Step 3 removes four standalone candidates only. No connected subsystem cleanup, dependency changes or remote push."
+}

@@ -1,0 +1,104 @@
+{
+  "generated_utc": "2026-10-30T15:10:45.152103+00:00",
+  "branch": "cleanup/obsolete-code",
+  "head": "369c06c8b873817dedaa01fe9f2cf16af21da423",
+  "source_scope": [
+    "Assets",
+    "Packages",
+    "ProjectSettings"
+  ],
+  "fingerprint_method": "Sorted POSIX path, byte length and file SHA-256 encoded as compact JSON array plus LF; aggregate SHA-256.",
+  "before": {
+    "file_count": 1817,
+    "total_bytes": 154714745,
+    "aggregate_sha256": "04048aeb9556ebfdb4581b7eb0384fec286072123650da1b5e2a21174c24c05f"
+  },
+  "after": {
+    "file_count": 1817,
+    "total_bytes": 154714745,
+    "aggregate_sha256": "04048aeb9556ebfdb4581b7eb0384fec286072123650da1b5e2a21174c24c05f"
+  },
+  "source_inputs_unchanged": true,
+  "inventory_validation": {
+    "row_count": 96,
+    "current_source_hashes_match": true,
+    "original_source_paths_hashes_guids_and_classifications_match": true,
+    "classification_counts_match_summary": true,
+    "csv_sha256_matches_summary": true,
+    "metadata_diagnostics_clear": true,
+    "independent_rg_paths_match": true,
+    "changed_reference_evidence": {
+      "Assets/AmpPortableDataViz/Presentation/ArtisticElements/ArtisticElementController.cs": [
+        "test_csharp_refs_lexical"
+      ],
+      "Assets/AmpPortableDataViz/Presentation/ArtisticElements/ArtisticElementsControlPanel.cs": [
+        "test_csharp_ref_count",
+        "test_csharp_refs_lexical"
+      ],
+      "Assets/AmpPortableDataViz/Presentation/ArtisticElements/ArtisticElementsSelectionController.cs": [
+        "test_csharp_refs_lexical"
+      ],
+      "Assets/AmpPortableDataViz/Presentation/ArtisticElements/ArtisticElementsTestSetup.cs": [
+        "test_csharp_refs_lexical"
+      ],
+      "Assets/AmpPortableDataViz/Presentation/Sources/RedisRuntimeSettings.cs": [
+        "test_csharp_refs_lexical"
+      ]
+    }
+  },
+  "candidate_count": 4,
+  "candidate_counts_and_unityevent_evidence_zero": true,
+  "targeted_candidate_searches": [
+    {
+      "command": [
+        "rg",
+        "-n",
+        "--no-ignore",
+        "--hidden",
+        "-g",
+        "!*.meta",
+        "XRealControllerQuitter|FaceUserSmooth|RuntimeImageBoard|URPImageBoardApplier|6ab818b15266638458808731a956b689|1e126d09f0b4ce243b941a0ab2396dc5|13af96730b4e4734abf8c774b56e4e5e|b05a98cf044bed64bb943fa30397ea57",
+        "Assets",
+        "Packages",
+        "ProjectSettings"
+      ],
+      "exit_code": 0,
+      "stdout": "Assets\\AmpPortableDataViz\\Presentation\\Visualization\\FaceUserSmooth.cs:5:public class FaceUserSmooth : MonoBehaviour\nAssets\\AmpPortableDataViz\\Presentation\\Visualization\\RuntimeImageBoard.cs:6:public class RuntimeImageBoard : MonoBehaviour\nAssets\\AmpPortableDataViz\\Presentation\\Visualization\\URPImageBoardApplier.cs:6:public class URPImageBoardApplier : MonoBehaviour\nAssets\\AmpPortableDataViz\\Presentation\\Interaction\\XRealControllerQuitter.cs:8:public class XRealControllerQuitter : MonoBehaviour\nAssets\\AmpPortableDataViz\\Presentation\\Interaction\\XRealControllerQuitter.cs:30:            Debug.LogWarning(\"XRealControllerQuitter: No quit action assigned. Assign an InputActionReference mapped to the desired controller button.\");\nAssets\\AmpPortableDataViz\\Presentation\\Interaction\\XRealControllerQuitter.cs:80:        Debug.Log(\"XRealControllerQuitter: Quit requested via assigned controller action.\");\n",
+      "stderr": ""
+    },
+    {
+      "command": [
+        "rg",
+        "-n",
+        "--no-ignore",
+        "--hidden",
+        "-g",
+        "*.cs",
+        "-g",
+        "*.java",
+        "-g",
+        "*.json",
+        "-g",
+        "*.xml",
+        "-g",
+        "*.meta",
+        "-g",
+        "*.unity",
+        "-g",
+        "*.prefab",
+        "-g",
+        "*.asset",
+        "-g",
+        "*.asmdef",
+        "XRealControllerQuitter|FaceUserSmooth|RuntimeImageBoard|URPImageBoardApplier|6ab818b15266638458808731a956b689|1e126d09f0b4ce243b941a0ab2396dc5|13af96730b4e4734abf8c774b56e4e5e|b05a98cf044bed64bb943fa30397ea57",
+        "Library/PackageCache",
+        "C:/Users/Bryan Dunphy/Documents/RayNeoSDK/RayNeo OpenXR Unity ARDK/RayNeo OpenXR Unity ARDK"
+      ],
+      "exit_code": 1,
+      "stdout": "",
+      "stderr": ""
+    }
+  ],
+  "unity_tests_run": false,
+  "stop_boundary": "Step 2 inventory only. No application/assets/settings/test/package changes, deletions, commits or pushes."
+}
