@@ -1,0 +1,192 @@
+{
+  "generated_utc": "2026-10-30T15:35:09.829358+00:00",
+  "test_runs": {
+    "playmode": {
+      "source_state": "cleanup",
+      "process_exit_code": 2,
+      "results": {
+        "id": "2",
+        "testcasecount": "196",
+        "result": "Failed(Child)",
+        "total": "196",
+        "passed": "195",
+        "failed": "1",
+        "inconclusive": "0",
+        "skipped": "0",
+        "asserts": "0",
+        "engine-version": "3.5.0.0",
+        "clr-version": "4.0.30319.42000",
+        "start-time": "2026-10-30 15:27:57Z",
+        "end-time": "2026-10-30 15:27:58Z",
+        "duration": "0.9773949"
+      },
+      "failures": [
+        {
+          "fullname": "AmpPortableDataViz.Tests.PlayMode.ParticleMeshVisualizerOrthogonalityTests.CornerHalos_StaySynchronizedWithNegativeInsideAndPositiveOutside",
+          "message": "  Expected: less than 0.0800000057f\n  But was:  0.0800000057f\n",
+          "stack_trace": "at AmpPortableDataViz.Tests.PlayMode.ParticleMeshVisualizerOrthogonalityTests+<CornerHalos_StaySynchronizedWithNegativeInsideAndPositiveOutside>d__4.MoveNext () [0x0016b] in C:\\Users\\Bryan Dunphy\\AppData\\Local\\Temp\\rnc1030\\project\\Assets\\Tests\\PlayMode\\ParticleMeshVisualizerOrthogonalityTests.cs:156\nat UnityEngine.TestTools.TestEnumerator+<Execute>d__7.MoveNext () [0x0003a] in .\\Library\\PackageCache\\com.unity.test-framework@1.4.6\\UnityEngine.TestRunner\\NUnitExtensions\\Attributes\\TestEnumerator.cs:44\n"
+        }
+      ]
+    },
+    "halo-focused": {
+      "source_state": "cleanup",
+      "process_exit_code": 0,
+      "results": {
+        "id": "2",
+        "testcasecount": "1",
+        "result": "Passed",
+        "total": "1",
+        "passed": "1",
+        "failed": "0",
+        "inconclusive": "0",
+        "skipped": "0",
+        "asserts": "0",
+        "engine-version": "3.5.0.0",
+        "clr-version": "4.0.30319.42000",
+        "start-time": "2026-10-30 15:29:01Z",
+        "end-time": "2026-10-30 15:29:01Z",
+        "duration": "0.0897694"
+      },
+      "failures": []
+    },
+    "playmode-repeat": {
+      "source_state": "cleanup",
+      "process_exit_code": 2,
+      "results": {
+        "id": "2",
+        "testcasecount": "196",
+        "result": "Failed(Child)",
+        "total": "196",
+        "passed": "195",
+        "failed": "1",
+        "inconclusive": "0",
+        "skipped": "0",
+        "asserts": "0",
+        "engine-version": "3.5.0.0",
+        "clr-version": "4.0.30319.42000",
+        "start-time": "2026-10-30 15:29:35Z",
+        "end-time": "2026-10-30 15:29:36Z",
+        "duration": "1.0390913"
+      },
+      "failures": [
+        {
+          "fullname": "AmpPortableDataViz.Tests.PlayMode.ParticleMeshVisualizerOrthogonalityTests.CornerHalos_StaySynchronizedWithNegativeInsideAndPositiveOutside",
+          "message": "  Expected: less than 0.0800000057f\n  But was:  0.0800000057f\n",
+          "stack_trace": "at AmpPortableDataViz.Tests.PlayMode.ParticleMeshVisualizerOrthogonalityTests+<CornerHalos_StaySynchronizedWithNegativeInsideAndPositiveOutside>d__4.MoveNext () [0x0016b] in C:\\Users\\Bryan Dunphy\\AppData\\Local\\Temp\\rnc1030\\project\\Assets\\Tests\\PlayMode\\ParticleMeshVisualizerOrthogonalityTests.cs:156\nat UnityEngine.TestTools.TestEnumerator+<Execute>d__7.MoveNext () [0x0003a] in .\\Library\\PackageCache\\com.unity.test-framework@1.4.6\\UnityEngine.TestRunner\\NUnitExtensions\\Attributes\\TestEnumerator.cs:44\n"
+        }
+      ]
+    },
+    "parent-baseline": {
+      "source_state": "pre-step4 parent",
+      "process_exit_code": 0,
+      "results": {
+        "id": "2",
+        "testcasecount": "196",
+        "result": "Passed",
+        "total": "196",
+        "passed": "196",
+        "failed": "0",
+        "inconclusive": "0",
+        "skipped": "0",
+        "asserts": "0",
+        "engine-version": "3.5.0.0",
+        "clr-version": "4.0.30319.42000",
+        "start-time": "2026-10-30 15:33:06Z",
+        "end-time": "2026-10-30 15:33:08Z",
+        "duration": "1.1037179"
+      },
+      "failures": []
+    },
+    "playmode-after-baseline": {
+      "source_state": "cleanup",
+      "process_exit_code": 0,
+      "results": {
+        "id": "2",
+        "testcasecount": "196",
+        "result": "Passed",
+        "total": "196",
+        "passed": "196",
+        "failed": "0",
+        "inconclusive": "0",
+        "skipped": "0",
+        "asserts": "0",
+        "engine-version": "3.5.0.0",
+        "clr-version": "4.0.30319.42000",
+        "start-time": "2026-10-30 15:34:41Z",
+        "end-time": "2026-10-30 15:34:42Z",
+        "duration": "1.0196358"
+      },
+      "failures": []
+    }
+  },
+  "interpretation": "Latest cleanup full suite passes 196/196. Two earlier cleanup full runs failed the same previously recorded halo-radius assertion, which passed in isolation. The exact pre-step4 parent also passed 196/196, then the restored byte-identical cleanup state passed 196/196. This demonstrates variability in the cleanup state; it does not diagnose or fix the underlying cause. All results are retained; no assertion, test, or retained runtime source changed.",
+  "android_build": {
+    "result": "Succeeded",
+    "errors": 0,
+    "warnings": 22,
+    "durationSeconds": 94.08232579999999,
+    "scriptingBackend": "IL2CPP",
+    "architectures": "ARM64",
+    "graphicsApis": [
+      "OpenGLES3"
+    ]
+  },
+  "build_warning_details_identical_to_step3": true,
+  "enabled_scene_inspection": {
+    "dependencyCount": 86,
+    "gameObjectsScanned": 87,
+    "componentsScanned": 248,
+    "prefabsScanned": 8,
+    "materialsScanned": 17,
+    "missingScriptCount": 0,
+    "brokenObjectReferenceCount": 0,
+    "blockerCount": 0,
+    "warningCount": 0
+  },
+  "apk": {
+    "path": "C:\\Users\\Bryan Dunphy\\Documents\\UnityProjects\\ampPortable_xrGlassesDemo\\Temp\\CleanupStep4-20261030\\android\\RayNeo-assessment.apk",
+    "bytes": 167629213,
+    "sha256": "6a78c0ee99122caeae9ebfca2baf7a41f625244f03533c7400dbc362b4931ca5",
+    "installed_on_device": false
+  },
+  "final_source_integrity": {
+    "retained_file_count": 1750,
+    "all_retained_bytes_unchanged": true,
+    "expected_removed_file_count": 59,
+    "current_snapshot_inputs_match_checkout": true,
+    "snapshot_validation_only_extra_files": [
+      "Assets/Editor.meta",
+      "Assets/Editor/MonoScriptProbe.cs",
+      "Assets/Editor/MonoScriptProbe.cs.meta",
+      "Assets/Editor/PreMergeValidation.cs",
+      "Assets/Editor/PreMergeValidation.cs.meta"
+    ]
+  },
+  "logs": [
+    {
+      "path": "Temp\\CleanupStep4-20261030\\android.log",
+      "sha256": "d5e99b9e2ef135c3160dac2a8032ab950fec13ed4085028b9b97753d66a53a85"
+    },
+    {
+      "path": "Temp\\CleanupStep4-20261030\\halo-focused.log",
+      "sha256": "04c4841fa1210a54b060460278e8a82e45811cc4d52c71a069291607d59fed29"
+    },
+    {
+      "path": "Temp\\CleanupStep4-20261030\\parent-baseline.log",
+      "sha256": "a381a2de06569cb41312dcf239d82a14476dc1d0be7c890af0af715050ac552d"
+    },
+    {
+      "path": "Temp\\CleanupStep4-20261030\\playmode-after-baseline.log",
+      "sha256": "8eb0cd2b1914c3b2f1b757f777dd4fff051d0eaefebfeec10fc99e4de8a9b3b3"
+    },
+    {
+      "path": "Temp\\CleanupStep4-20261030\\playmode-repeat.log",
+      "sha256": "eb49bb3a28f0b4c35e3a49700fddd7da52d00758173a2325b9e253bbe9e8d2f4"
+    },
+    {
+      "path": "Temp\\CleanupStep4-20261030\\playmode.log",
+      "sha256": "fb649ebb5bd47cb72de6074ac2cb690fa3662f054e98f87e386f083ea0b6f45c"
+    }
+  ],
+  "stop_boundary": "Step4 only: retire recovery and plasma manual scenes plus six exclusively recovery helpers. Optional runtime modes, shared contracts, dependencies and other assets retained. No push or step5 work."
+}

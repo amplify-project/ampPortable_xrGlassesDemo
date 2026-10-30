@@ -1,0 +1,187 @@
+{
+    "generatedAtUtc": "2026-10-30T15:30:27.6361337Z",
+    "unityVersion": "2022.3.36f1",
+    "projectPath": "C:\\Users\\Bryan Dunphy\\AppData\\Local\\Temp\\rnc1030\\project",
+    "outputPath": "C:\\Users\\Bryan Dunphy\\Documents\\UnityProjects\\ampPortable_xrGlassesDemo\\Temp\\CleanupStep4-20261030\\android\\RayNeo-assessment.apk",
+    "result": "Succeeded",
+    "buildAttempted": true,
+    "exception": "",
+    "target": "Android",
+    "options": "None",
+    "activeBuildTarget": "Android",
+    "applicationIdentifier": "com.TUS.RayNeoXRScoreViewer",
+    "scriptingBackend": "IL2CPP",
+    "architectures": "ARM64",
+    "minimumAndroidApi": "AndroidApiLevel30",
+    "targetAndroidApi": "AndroidApiLevel30",
+    "buildAppBundle": false,
+    "exportAsGoogleAndroidProject": false,
+    "automaticGraphicsApi": false,
+    "graphicsApis": [
+        "OpenGLES3"
+    ],
+    "scenes": [
+        "Assets/Scenes/ampPortable_xrGlassesDemo.unity"
+    ],
+    "inspectionHasBlockers": false,
+    "errors": 0,
+    "warnings": 22,
+    "durationSeconds": 94.08232579999999,
+    "sizeBytes": 1263315723,
+    "messages": [
+        {
+            "severity": "warning",
+            "kind": "build-message",
+            "asset": "Prepare For Build",
+            "objectPath": "",
+            "detail": "PlayerSettings->Active Input Handling is set to Both, this is unsupported on Android and might cause issues with input and application performance. Please choose only one active input handling."
+        },
+        {
+            "severity": "warning",
+            "kind": "build-message",
+            "asset": "Compile scripts",
+            "objectPath": "",
+            "detail": "Assets\\AmpPortableDataViz\\Presentation\\Sources\\RedisManager.cs(3,7): warning CS0105: The using directive for 'System' appeared previously in this namespace"
+        },
+        {
+            "severity": "warning",
+            "kind": "build-message",
+            "asset": "Compile scripts",
+            "objectPath": "",
+            "detail": "Assets\\AmpPortableDataViz\\Presentation\\Sources\\RedisManager.cs(5,7): warning CS0105: The using directive for 'System.Linq' appeared previously in this namespace"
+        },
+        {
+            "severity": "warning",
+            "kind": "build-message",
+            "asset": "Compile scripts",
+            "objectPath": "",
+            "detail": "Assets\\AmpPortableDataViz\\Infra\\RedisSubscriber.cs(851,77): warning CS8632: The annotation for nullable reference types should only be used in code within a '#nullable' annotations context."
+        },
+        {
+            "severity": "warning",
+            "kind": "build-message",
+            "asset": "Compile scripts",
+            "objectPath": "",
+            "detail": "Assets\\AmpPortableDataViz\\Infra\\RedisSubscriber.cs(781,59): warning CS8632: The annotation for nullable reference types should only be used in code within a '#nullable' annotations context."
+        },
+        {
+            "severity": "warning",
+            "kind": "build-message",
+            "asset": "Compile scripts",
+            "objectPath": "",
+            "detail": "Assets\\AmpPortableDataViz\\Infra\\RedisSubscriber.cs(791,62): warning CS8632: The annotation for nullable reference types should only be used in code within a '#nullable' annotations context."
+        },
+        {
+            "severity": "warning",
+            "kind": "build-message",
+            "asset": "Compile scripts",
+            "objectPath": "",
+            "detail": "Assets\\AmpPortableDataViz\\Infra\\RedisSubscriber.cs(906,79): warning CS8632: The annotation for nullable reference types should only be used in code within a '#nullable' annotations context."
+        },
+        {
+            "severity": "warning",
+            "kind": "build-message",
+            "asset": "Compile scripts",
+            "objectPath": "",
+            "detail": "Assets\\AmpPortableDataViz\\Infra\\RedisSubscriber.cs(85,92): warning CS8632: The annotation for nullable reference types should only be used in code within a '#nullable' annotations context."
+        },
+        {
+            "severity": "warning",
+            "kind": "build-message",
+            "asset": "Compile scripts",
+            "objectPath": "",
+            "detail": "Assets\\AmpPortableDataViz\\Infra\\RedisSubscriber.cs(983,70): warning CS8632: The annotation for nullable reference types should only be used in code within a '#nullable' annotations context."
+        },
+        {
+            "severity": "warning",
+            "kind": "build-message",
+            "asset": "Compile scripts",
+            "objectPath": "",
+            "detail": "Assets\\AmpPortableDataViz\\Infra\\RedisSubscriber.cs(700,26): warning CS8632: The annotation for nullable reference types should only be used in code within a '#nullable' annotations context."
+        },
+        {
+            "severity": "warning",
+            "kind": "build-message",
+            "asset": "Compile scripts",
+            "objectPath": "",
+            "detail": "Assets\\AmpPortableDataViz\\Infra\\RedisSubscriber.cs(66,41): warning CS8632: The annotation for nullable reference types should only be used in code within a '#nullable' annotations context."
+        },
+        {
+            "severity": "warning",
+            "kind": "build-message",
+            "asset": "Compile scripts",
+            "objectPath": "",
+            "detail": "Assets\\AmpPortableDataViz\\Infra\\RedisSubscriber.cs(67,31): warning CS8632: The annotation for nullable reference types should only be used in code within a '#nullable' annotations context."
+        },
+        {
+            "severity": "warning",
+            "kind": "build-message",
+            "asset": "Compile scripts",
+            "objectPath": "",
+            "detail": "Assets\\AmpPortableDataViz\\Presentation\\Sources\\RedisDataPump.cs(307,106): warning CS8632: The annotation for nullable reference types should only be used in code within a '#nullable' annotations context."
+        },
+        {
+            "severity": "warning",
+            "kind": "build-message",
+            "asset": "Compile scripts",
+            "objectPath": "",
+            "detail": "Assets\\AmpPortableDataViz\\Presentation\\Sources\\RedisDataPump.cs(328,54): warning CS8632: The annotation for nullable reference types should only be used in code within a '#nullable' annotations context."
+        },
+        {
+            "severity": "warning",
+            "kind": "build-message",
+            "asset": "Compile scripts",
+            "objectPath": "",
+            "detail": "Assets\\AmpPortableDataViz\\Presentation\\Sources\\RedisDataPump.cs(339,61): warning CS8632: The annotation for nullable reference types should only be used in code within a '#nullable' annotations context."
+        },
+        {
+            "severity": "warning",
+            "kind": "build-message",
+            "asset": "Compile scripts",
+            "objectPath": "",
+            "detail": "Assets\\AmpPortableDataViz\\Presentation\\Sources\\RedisDataPump.cs(350,48): warning CS8632: The annotation for nullable reference types should only be used in code within a '#nullable' annotations context."
+        },
+        {
+            "severity": "warning",
+            "kind": "build-message",
+            "asset": "Compile scripts",
+            "objectPath": "",
+            "detail": "Assets\\AmpPortableDataViz\\Infra\\RedisSubscriber.cs(856,31): warning CS8632: The annotation for nullable reference types should only be used in code within a '#nullable' annotations context."
+        },
+        {
+            "severity": "warning",
+            "kind": "build-message",
+            "asset": "Compile scripts",
+            "objectPath": "",
+            "detail": "Assets\\AmpPortableDataViz\\Infra\\RedisSubscriber.cs(262,42): warning CS0618: 'RedisChannel.implicit operator RedisChannel(string)' is obsolete: 'It is preferable to explicitly specify a PatternMode, or use the Literal/Pattern methods'"
+        },
+        {
+            "severity": "warning",
+            "kind": "build-message",
+            "asset": "Compile scripts",
+            "objectPath": "",
+            "detail": "Assets\\AmpPortableDataViz\\Infra\\RedisSubscriber.cs(284,44): warning CS0618: 'RedisChannel.implicit operator RedisChannel(string)' is obsolete: 'It is preferable to explicitly specify a PatternMode, or use the Literal/Pattern methods'"
+        },
+        {
+            "severity": "warning",
+            "kind": "build-message",
+            "asset": "Packaging assets - 97d5e7c9a6e32a14da7f0c46bc4c00fc",
+            "objectPath": "",
+            "detail": "Script attached to 'ShowFps' in scene '' is missing or no valid script is attached."
+        },
+        {
+            "severity": "warning",
+            "kind": "build-message",
+            "asset": "Packaging assets - bc005d80396f56b4d9954edfe8c8ee57",
+            "objectPath": "",
+            "detail": "Script attached to 'ShowFps' in scene '' is missing or no valid script is attached."
+        },
+        {
+            "severity": "warning",
+            "kind": "build-message",
+            "asset": "Postprocess built player",
+            "objectPath": "",
+            "detail": "The USD package is not supported in non desktop builds. The USD plugins directory will not be included in the build."
+        }
+    ]
+}

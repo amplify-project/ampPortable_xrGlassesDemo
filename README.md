@@ -37,4 +37,4 @@ The [30 October 2026 pre-merge assessment](Assessment/2026-10-30/RESULTS.md) rec
 
 `Assets/AmpPortableDataViz` separates domain contracts in `Core`, session orchestration in `Application`, concrete services in `Infra`, and Unity visualizers, bindings, input, and UI in `Presentation`.
 
-Obsolete-code cleanup is a separate follow-up task and has not been started.
+Obsolete-code cleanup is underway on `cleanup/obsolete-code`. The [scene-retirement report](Assessment/2026-10-30/cleanup-step4/README.md) records removal of historical recovery scenes, the plasma manual scene, and their unused recovery helpers. Shared code and optional runtime modes remain available.

@@ -1,0 +1,660 @@
+{
+  "generated_utc": "2026-10-30T15:25:22.305596+00:00",
+  "base_head": "f3148ba687c835385e694722e7c87d8af0a94bc0",
+  "user_decision": "Retire both recovery scenes and the plasma manual scene",
+  "recovery_scene_count": 22,
+  "retiring_scenes": [
+    "Assets/_Recovery/0 (1).unity",
+    "Assets/_Recovery/0 (10).unity",
+    "Assets/_Recovery/0 (11).unity",
+    "Assets/_Recovery/0 (12).unity",
+    "Assets/_Recovery/0 (13).unity",
+    "Assets/_Recovery/0 (14).unity",
+    "Assets/_Recovery/0 (15).unity",
+    "Assets/_Recovery/0 (16).unity",
+    "Assets/_Recovery/0 (17).unity",
+    "Assets/_Recovery/0 (18).unity",
+    "Assets/_Recovery/0 (19).unity",
+    "Assets/_Recovery/0 (2).unity",
+    "Assets/_Recovery/0 (20).unity",
+    "Assets/_Recovery/0 (21).unity",
+    "Assets/_Recovery/0 (3).unity",
+    "Assets/_Recovery/0 (4).unity",
+    "Assets/_Recovery/0 (5).unity",
+    "Assets/_Recovery/0 (6).unity",
+    "Assets/_Recovery/0 (7).unity",
+    "Assets/_Recovery/0 (8).unity",
+    "Assets/_Recovery/0 (9).unity",
+    "Assets/_Recovery/0.unity",
+    "Assets/Scenes/plasmaManual.unity"
+  ],
+  "retiring_folder": "Assets/_Recovery",
+  "retiring_scene_and_folder_guids": {
+    "023e40ab10c6c1045bd17addb7c6a149": "Assets/_Recovery/0 (1).unity",
+    "ebe451f5a46274e498c8512f158880a8": "Assets/_Recovery/0 (10).unity",
+    "e77d9d258b6b59e479912bb2155ac700": "Assets/_Recovery/0 (11).unity",
+    "579cdc68b718e594baf273ab0348860d": "Assets/_Recovery/0 (12).unity",
+    "67c4c47142008e64f807a08396b5cc83": "Assets/_Recovery/0 (13).unity",
+    "566c50cff1b21324eb220e55a623b304": "Assets/_Recovery/0 (14).unity",
+    "74f39f21039151b4a8e4185a57a2c1f3": "Assets/_Recovery/0 (15).unity",
+    "df0f19d59658e0741bf9562016c646f1": "Assets/_Recovery/0 (16).unity",
+    "332a8832bff1efb4db57036167b8cd3b": "Assets/_Recovery/0 (17).unity",
+    "c1be0eef6361855438e45ae8f4b131a5": "Assets/_Recovery/0 (18).unity",
+    "6d01b7c83bad8b34abf90a15e51b6634": "Assets/_Recovery/0 (19).unity",
+    "e14f1cc295ae69d4884b8c5ad01e9b7c": "Assets/_Recovery/0 (2).unity",
+    "81563e3f19f20b54fbeb802b8fc60a16": "Assets/_Recovery/0 (20).unity",
+    "029e4d5b6e9028840a673bc2b683d174": "Assets/_Recovery/0 (21).unity",
+    "ae29c53d794617a41a08769aca1f496f": "Assets/_Recovery/0 (3).unity",
+    "1183a527cac4cb84db83fd000f98cce2": "Assets/_Recovery/0 (4).unity",
+    "61622c2fb0976314b9e8b8987bec2ca5": "Assets/_Recovery/0 (5).unity",
+    "faa22c2b540b7cb4685036303e8a9d59": "Assets/_Recovery/0 (6).unity",
+    "9fb526e41de8ab4488aaf5ae4dc76815": "Assets/_Recovery/0 (7).unity",
+    "f76f630fde7e31a46a60c762986b4c75": "Assets/_Recovery/0 (8).unity",
+    "aa1156d37bf3a294eae43c3cfe6b2923": "Assets/_Recovery/0 (9).unity",
+    "993ecba5048d0b34c937609f0b57a609": "Assets/_Recovery/0.unity",
+    "8149388e993ac914d9a0dd0b9946dea9": "Assets/Scenes/plasmaManual.unity",
+    "0a31b6db79e75654ba84a937eb224896": "Assets/_Recovery"
+  },
+  "external_scene_guid_references": {},
+  "recovery_only_helpers": [
+    {
+      "path": "Assets/AmpPortableDataViz/Infra/IHandPoseProvider.cs",
+      "script_guid": "5c134a328a5929f4d932b59e72e5f15b",
+      "serialized_asset_count": 0,
+      "serialized_references": [],
+      "non_test_csharp_refs": [
+        {
+          "location": "Assets/AmpPortableDataViz/Presentation/Visualization/WristMenuFollower.cs:9",
+          "identifiers": [
+            "IHandPoseProvider"
+          ]
+        },
+        {
+          "location": "Assets/AmpPortableDataViz/Presentation/Visualization/WristMenuFollower.cs:33",
+          "identifiers": [
+            "IHandPoseProvider"
+          ]
+        }
+      ],
+      "test_csharp_refs": []
+    },
+    {
+      "path": "Assets/AmpPortableDataViz/Presentation/Debug/EmotionTelemetryLogger.cs",
+      "script_guid": "0793b080831e93042936e6867e6cf6ac",
+      "serialized_asset_count": 17,
+      "serialized_references": [
+        {
+          "location": "Assets/_Recovery/0 (1).unity:2339",
+          "kind": "script_attachment"
+        },
+        {
+          "location": "Assets/_Recovery/0 (10).unity:4056",
+          "kind": "script_attachment"
+        },
+        {
+          "location": "Assets/_Recovery/0 (11).unity:4133",
+          "kind": "script_attachment"
+        },
+        {
+          "location": "Assets/_Recovery/0 (12).unity:4728",
+          "kind": "script_attachment"
+        },
+        {
+          "location": "Assets/_Recovery/0 (17).unity:4729",
+          "kind": "script_attachment"
+        },
+        {
+          "location": "Assets/_Recovery/0 (18).unity:4729",
+          "kind": "script_attachment"
+        },
+        {
+          "location": "Assets/_Recovery/0 (19).unity:4729",
+          "kind": "script_attachment"
+        },
+        {
+          "location": "Assets/_Recovery/0 (2).unity:2849",
+          "kind": "script_attachment"
+        },
+        {
+          "location": "Assets/_Recovery/0 (20).unity:4729",
+          "kind": "script_attachment"
+        },
+        {
+          "location": "Assets/_Recovery/0 (21).unity:4729",
+          "kind": "script_attachment"
+        },
+        {
+          "location": "Assets/_Recovery/0 (3).unity:3604",
+          "kind": "script_attachment"
+        },
+        {
+          "location": "Assets/_Recovery/0 (4).unity:3604",
+          "kind": "script_attachment"
+        },
+        {
+          "location": "Assets/_Recovery/0 (5).unity:3661",
+          "kind": "script_attachment"
+        },
+        {
+          "location": "Assets/_Recovery/0 (6).unity:3661",
+          "kind": "script_attachment"
+        },
+        {
+          "location": "Assets/_Recovery/0 (7).unity:3802",
+          "kind": "script_attachment"
+        },
+        {
+          "location": "Assets/_Recovery/0 (8).unity:3802",
+          "kind": "script_attachment"
+        },
+        {
+          "location": "Assets/_Recovery/0 (9).unity:3806",
+          "kind": "script_attachment"
+        }
+      ],
+      "non_test_csharp_refs": [],
+      "test_csharp_refs": []
+    },
+    {
+      "path": "Assets/AmpPortableDataViz/Presentation/Interaction/VisualizationCycler.cs",
+      "script_guid": "d63d1e6a561f42c42966395b78127c78",
+      "serialized_asset_count": 15,
+      "serialized_references": [
+        {
+          "location": "Assets/_Recovery/0 (10).unity:5381",
+          "kind": "script_attachment"
+        },
+        {
+          "location": "Assets/_Recovery/0 (11).unity:5458",
+          "kind": "script_attachment"
+        },
+        {
+          "location": "Assets/_Recovery/0 (12).unity:6053",
+          "kind": "script_attachment"
+        },
+        {
+          "location": "Assets/_Recovery/0 (17).unity:6056",
+          "kind": "script_attachment"
+        },
+        {
+          "location": "Assets/_Recovery/0 (18).unity:6056",
+          "kind": "script_attachment"
+        },
+        {
+          "location": "Assets/_Recovery/0 (19).unity:6056",
+          "kind": "script_attachment"
+        },
+        {
+          "location": "Assets/_Recovery/0 (20).unity:6056",
+          "kind": "script_attachment"
+        },
+        {
+          "location": "Assets/_Recovery/0 (21).unity:6056",
+          "kind": "script_attachment"
+        },
+        {
+          "location": "Assets/_Recovery/0 (3).unity:4900",
+          "kind": "script_attachment"
+        },
+        {
+          "location": "Assets/_Recovery/0 (4).unity:4900",
+          "kind": "script_attachment"
+        },
+        {
+          "location": "Assets/_Recovery/0 (5).unity:4957",
+          "kind": "script_attachment"
+        },
+        {
+          "location": "Assets/_Recovery/0 (6).unity:4958",
+          "kind": "script_attachment"
+        },
+        {
+          "location": "Assets/_Recovery/0 (7).unity:5109",
+          "kind": "script_attachment"
+        },
+        {
+          "location": "Assets/_Recovery/0 (8).unity:5112",
+          "kind": "script_attachment"
+        },
+        {
+          "location": "Assets/_Recovery/0 (9).unity:5131",
+          "kind": "script_attachment"
+        }
+      ],
+      "non_test_csharp_refs": [],
+      "test_csharp_refs": []
+    },
+    {
+      "path": "Assets/AmpPortableDataViz/Presentation/Visualization/HudSquareBuilder.cs",
+      "script_guid": "935d74b24636ba24ca736f03d7399d68",
+      "serialized_asset_count": 16,
+      "serialized_references": [
+        {
+          "location": "Assets/_Recovery/0 (10).unity:167",
+          "kind": "script_attachment"
+        },
+        {
+          "location": "Assets/_Recovery/0 (11).unity:167",
+          "kind": "script_attachment"
+        },
+        {
+          "location": "Assets/_Recovery/0 (12).unity:167",
+          "kind": "script_attachment"
+        },
+        {
+          "location": "Assets/_Recovery/0 (17).unity:167",
+          "kind": "script_attachment"
+        },
+        {
+          "location": "Assets/_Recovery/0 (18).unity:167",
+          "kind": "script_attachment"
+        },
+        {
+          "location": "Assets/_Recovery/0 (19).unity:167",
+          "kind": "script_attachment"
+        },
+        {
+          "location": "Assets/_Recovery/0 (2).unity:167",
+          "kind": "script_attachment"
+        },
+        {
+          "location": "Assets/_Recovery/0 (20).unity:167",
+          "kind": "script_attachment"
+        },
+        {
+          "location": "Assets/_Recovery/0 (21).unity:167",
+          "kind": "script_attachment"
+        },
+        {
+          "location": "Assets/_Recovery/0 (3).unity:167",
+          "kind": "script_attachment"
+        },
+        {
+          "location": "Assets/_Recovery/0 (4).unity:167",
+          "kind": "script_attachment"
+        },
+        {
+          "location": "Assets/_Recovery/0 (5).unity:167",
+          "kind": "script_attachment"
+        },
+        {
+          "location": "Assets/_Recovery/0 (6).unity:167",
+          "kind": "script_attachment"
+        },
+        {
+          "location": "Assets/_Recovery/0 (7).unity:167",
+          "kind": "script_attachment"
+        },
+        {
+          "location": "Assets/_Recovery/0 (8).unity:167",
+          "kind": "script_attachment"
+        },
+        {
+          "location": "Assets/_Recovery/0 (9).unity:167",
+          "kind": "script_attachment"
+        }
+      ],
+      "non_test_csharp_refs": [],
+      "test_csharp_refs": []
+    },
+    {
+      "path": "Assets/AmpPortableDataViz/Presentation/Visualization/ToggleButtonColor.cs",
+      "script_guid": "28ce5df460578e0489f83db918a66610",
+      "serialized_asset_count": 18,
+      "serialized_references": [
+        {
+          "location": "Assets/_Recovery/0 (1).unity:265",
+          "kind": "script_attachment"
+        },
+        {
+          "location": "Assets/_Recovery/0 (1).unity:835",
+          "kind": "script_attachment"
+        },
+        {
+          "location": "Assets/_Recovery/0 (1).unity:2608",
+          "kind": "script_attachment"
+        },
+        {
+          "location": "Assets/_Recovery/0 (10).unity:320",
+          "kind": "script_attachment"
+        },
+        {
+          "location": "Assets/_Recovery/0 (10).unity:1398",
+          "kind": "script_attachment"
+        },
+        {
+          "location": "Assets/_Recovery/0 (10).unity:4484",
+          "kind": "script_attachment"
+        },
+        {
+          "location": "Assets/_Recovery/0 (11).unity:320",
+          "kind": "script_attachment"
+        },
+        {
+          "location": "Assets/_Recovery/0 (11).unity:1337",
+          "kind": "script_attachment"
+        },
+        {
+          "location": "Assets/_Recovery/0 (11).unity:4561",
+          "kind": "script_attachment"
+        },
+        {
+          "location": "Assets/_Recovery/0 (12).unity:395",
+          "kind": "script_attachment"
+        },
+        {
+          "location": "Assets/_Recovery/0 (12).unity:1416",
+          "kind": "script_attachment"
+        },
+        {
+          "location": "Assets/_Recovery/0 (12).unity:5156",
+          "kind": "script_attachment"
+        },
+        {
+          "location": "Assets/_Recovery/0 (17).unity:395",
+          "kind": "script_attachment"
+        },
+        {
+          "location": "Assets/_Recovery/0 (17).unity:1416",
+          "kind": "script_attachment"
+        },
+        {
+          "location": "Assets/_Recovery/0 (17).unity:5157",
+          "kind": "script_attachment"
+        },
+        {
+          "location": "Assets/_Recovery/0 (18).unity:395",
+          "kind": "script_attachment"
+        },
+        {
+          "location": "Assets/_Recovery/0 (18).unity:1416",
+          "kind": "script_attachment"
+        },
+        {
+          "location": "Assets/_Recovery/0 (18).unity:5157",
+          "kind": "script_attachment"
+        },
+        {
+          "location": "Assets/_Recovery/0 (19).unity:395",
+          "kind": "script_attachment"
+        },
+        {
+          "location": "Assets/_Recovery/0 (19).unity:1416",
+          "kind": "script_attachment"
+        },
+        {
+          "location": "Assets/_Recovery/0 (19).unity:5157",
+          "kind": "script_attachment"
+        },
+        {
+          "location": "Assets/_Recovery/0 (2).unity:320",
+          "kind": "script_attachment"
+        },
+        {
+          "location": "Assets/_Recovery/0 (2).unity:922",
+          "kind": "script_attachment"
+        },
+        {
+          "location": "Assets/_Recovery/0 (2).unity:3277",
+          "kind": "script_attachment"
+        },
+        {
+          "location": "Assets/_Recovery/0 (20).unity:395",
+          "kind": "script_attachment"
+        },
+        {
+          "location": "Assets/_Recovery/0 (20).unity:1416",
+          "kind": "script_attachment"
+        },
+        {
+          "location": "Assets/_Recovery/0 (20).unity:5157",
+          "kind": "script_attachment"
+        },
+        {
+          "location": "Assets/_Recovery/0 (21).unity:395",
+          "kind": "script_attachment"
+        },
+        {
+          "location": "Assets/_Recovery/0 (21).unity:1416",
+          "kind": "script_attachment"
+        },
+        {
+          "location": "Assets/_Recovery/0 (21).unity:5157",
+          "kind": "script_attachment"
+        },
+        {
+          "location": "Assets/_Recovery/0 (3).unity:320",
+          "kind": "script_attachment"
+        },
+        {
+          "location": "Assets/_Recovery/0 (3).unity:1337",
+          "kind": "script_attachment"
+        },
+        {
+          "location": "Assets/_Recovery/0 (3).unity:4032",
+          "kind": "script_attachment"
+        },
+        {
+          "location": "Assets/_Recovery/0 (4).unity:320",
+          "kind": "script_attachment"
+        },
+        {
+          "location": "Assets/_Recovery/0 (4).unity:1337",
+          "kind": "script_attachment"
+        },
+        {
+          "location": "Assets/_Recovery/0 (4).unity:4032",
+          "kind": "script_attachment"
+        },
+        {
+          "location": "Assets/_Recovery/0 (5).unity:320",
+          "kind": "script_attachment"
+        },
+        {
+          "location": "Assets/_Recovery/0 (5).unity:1394",
+          "kind": "script_attachment"
+        },
+        {
+          "location": "Assets/_Recovery/0 (5).unity:4089",
+          "kind": "script_attachment"
+        },
+        {
+          "location": "Assets/_Recovery/0 (6).unity:320",
+          "kind": "script_attachment"
+        },
+        {
+          "location": "Assets/_Recovery/0 (6).unity:1394",
+          "kind": "script_attachment"
+        },
+        {
+          "location": "Assets/_Recovery/0 (6).unity:4089",
+          "kind": "script_attachment"
+        },
+        {
+          "location": "Assets/_Recovery/0 (7).unity:320",
+          "kind": "script_attachment"
+        },
+        {
+          "location": "Assets/_Recovery/0 (7).unity:1398",
+          "kind": "script_attachment"
+        },
+        {
+          "location": "Assets/_Recovery/0 (7).unity:4230",
+          "kind": "script_attachment"
+        },
+        {
+          "location": "Assets/_Recovery/0 (8).unity:320",
+          "kind": "script_attachment"
+        },
+        {
+          "location": "Assets/_Recovery/0 (8).unity:1398",
+          "kind": "script_attachment"
+        },
+        {
+          "location": "Assets/_Recovery/0 (8).unity:4230",
+          "kind": "script_attachment"
+        },
+        {
+          "location": "Assets/_Recovery/0 (9).unity:320",
+          "kind": "script_attachment"
+        },
+        {
+          "location": "Assets/_Recovery/0 (9).unity:1398",
+          "kind": "script_attachment"
+        },
+        {
+          "location": "Assets/_Recovery/0 (9).unity:4234",
+          "kind": "script_attachment"
+        },
+        {
+          "location": "Assets/_Recovery/0.unity:281",
+          "kind": "script_attachment"
+        },
+        {
+          "location": "Assets/_Recovery/0.unity:628",
+          "kind": "script_attachment"
+        },
+        {
+          "location": "Assets/_Recovery/0.unity:1999",
+          "kind": "script_attachment"
+        }
+      ],
+      "non_test_csharp_refs": [],
+      "test_csharp_refs": []
+    },
+    {
+      "path": "Assets/AmpPortableDataViz/Presentation/Visualization/WristMenuFollower.cs",
+      "script_guid": "2001cc8113081f143a1f171c5e8ad73c",
+      "serialized_asset_count": 1,
+      "serialized_references": [
+        {
+          "location": "Assets/_Recovery/0.unity:2223",
+          "kind": "script_attachment"
+        }
+      ],
+      "non_test_csharp_refs": [],
+      "test_csharp_refs": []
+    }
+  ],
+  "helper_type_or_guid_references_outside_retiring_group": [],
+  "retiring_files": [
+    "Assets/AmpPortableDataViz/Infra/IHandPoseProvider.cs",
+    "Assets/AmpPortableDataViz/Infra/IHandPoseProvider.cs.meta",
+    "Assets/AmpPortableDataViz/Presentation/Debug/EmotionTelemetryLogger.cs",
+    "Assets/AmpPortableDataViz/Presentation/Debug/EmotionTelemetryLogger.cs.meta",
+    "Assets/AmpPortableDataViz/Presentation/Interaction/VisualizationCycler.cs",
+    "Assets/AmpPortableDataViz/Presentation/Interaction/VisualizationCycler.cs.meta",
+    "Assets/AmpPortableDataViz/Presentation/Visualization/HudSquareBuilder.cs",
+    "Assets/AmpPortableDataViz/Presentation/Visualization/HudSquareBuilder.cs.meta",
+    "Assets/AmpPortableDataViz/Presentation/Visualization/ToggleButtonColor.cs",
+    "Assets/AmpPortableDataViz/Presentation/Visualization/ToggleButtonColor.cs.meta",
+    "Assets/AmpPortableDataViz/Presentation/Visualization/WristMenuFollower.cs",
+    "Assets/AmpPortableDataViz/Presentation/Visualization/WristMenuFollower.cs.meta",
+    "Assets/Scenes/plasmaManual.unity",
+    "Assets/Scenes/plasmaManual.unity.meta",
+    "Assets/_Recovery.meta",
+    "Assets/_Recovery/0 (1).unity",
+    "Assets/_Recovery/0 (1).unity.meta",
+    "Assets/_Recovery/0 (10).unity",
+    "Assets/_Recovery/0 (10).unity.meta",
+    "Assets/_Recovery/0 (11).unity",
+    "Assets/_Recovery/0 (11).unity.meta",
+    "Assets/_Recovery/0 (12).unity",
+    "Assets/_Recovery/0 (12).unity.meta",
+    "Assets/_Recovery/0 (13).unity",
+    "Assets/_Recovery/0 (13).unity.meta",
+    "Assets/_Recovery/0 (14).unity",
+    "Assets/_Recovery/0 (14).unity.meta",
+    "Assets/_Recovery/0 (15).unity",
+    "Assets/_Recovery/0 (15).unity.meta",
+    "Assets/_Recovery/0 (16).unity",
+    "Assets/_Recovery/0 (16).unity.meta",
+    "Assets/_Recovery/0 (17).unity",
+    "Assets/_Recovery/0 (17).unity.meta",
+    "Assets/_Recovery/0 (18).unity",
+    "Assets/_Recovery/0 (18).unity.meta",
+    "Assets/_Recovery/0 (19).unity",
+    "Assets/_Recovery/0 (19).unity.meta",
+    "Assets/_Recovery/0 (2).unity",
+    "Assets/_Recovery/0 (2).unity.meta",
+    "Assets/_Recovery/0 (20).unity",
+    "Assets/_Recovery/0 (20).unity.meta",
+    "Assets/_Recovery/0 (21).unity",
+    "Assets/_Recovery/0 (21).unity.meta",
+    "Assets/_Recovery/0 (3).unity",
+    "Assets/_Recovery/0 (3).unity.meta",
+    "Assets/_Recovery/0 (4).unity",
+    "Assets/_Recovery/0 (4).unity.meta",
+    "Assets/_Recovery/0 (5).unity",
+    "Assets/_Recovery/0 (5).unity.meta",
+    "Assets/_Recovery/0 (6).unity",
+    "Assets/_Recovery/0 (6).unity.meta",
+    "Assets/_Recovery/0 (7).unity",
+    "Assets/_Recovery/0 (7).unity.meta",
+    "Assets/_Recovery/0 (8).unity",
+    "Assets/_Recovery/0 (8).unity.meta",
+    "Assets/_Recovery/0 (9).unity",
+    "Assets/_Recovery/0 (9).unity.meta",
+    "Assets/_Recovery/0.unity",
+    "Assets/_Recovery/0.unity.meta"
+  ],
+  "note": "Current text searches include source metadata and serialized assets. Only first-party cross-helper dependency is WristMenuFollower to IHandPoseProvider, both retired together. Optional runtime paths and their prefabs/contracts remain.",
+  "external_package_sdk_helper_search": {
+    "command": [
+      "rg",
+      "-n",
+      "--no-ignore",
+      "-g",
+      "*.cs",
+      "-g",
+      "*.java",
+      "-g",
+      "*.meta",
+      "-g",
+      "*.unity",
+      "-g",
+      "*.prefab",
+      "-g",
+      "*.asset",
+      "-g",
+      "*.json",
+      "-g",
+      "*.asmdef",
+      "IHandPoseProvider|5c134a328a5929f4d932b59e72e5f15b|EmotionTelemetryLogger|0793b080831e93042936e6867e6cf6ac|VisualizationCycler|d63d1e6a561f42c42966395b78127c78|HudSquareBuilder|935d74b24636ba24ca736f03d7399d68|ToggleButtonColor|28ce5df460578e0489f83db918a66610|WristMenuFollower|2001cc8113081f143a1f171c5e8ad73c",
+      "Library/PackageCache",
+      "C:/Users/Bryan Dunphy/Documents/RayNeoSDK/RayNeo OpenXR Unity ARDK/RayNeo OpenXR Unity ARDK"
+    ],
+    "exit_code": 1,
+    "stdout": "",
+    "stderr": ""
+  },
+  "external_package_sdk_scene_guid_search": {
+    "command": [
+      "rg",
+      "-n",
+      "--no-ignore",
+      "-g",
+      "*.cs",
+      "-g",
+      "*.java",
+      "-g",
+      "*.meta",
+      "-g",
+      "*.unity",
+      "-g",
+      "*.prefab",
+      "-g",
+      "*.asset",
+      "-g",
+      "*.json",
+      "-g",
+      "*.asmdef",
+      "023e40ab10c6c1045bd17addb7c6a149|ebe451f5a46274e498c8512f158880a8|e77d9d258b6b59e479912bb2155ac700|579cdc68b718e594baf273ab0348860d|67c4c47142008e64f807a08396b5cc83|566c50cff1b21324eb220e55a623b304|74f39f21039151b4a8e4185a57a2c1f3|df0f19d59658e0741bf9562016c646f1|332a8832bff1efb4db57036167b8cd3b|c1be0eef6361855438e45ae8f4b131a5|6d01b7c83bad8b34abf90a15e51b6634|e14f1cc295ae69d4884b8c5ad01e9b7c|81563e3f19f20b54fbeb802b8fc60a16|029e4d5b6e9028840a673bc2b683d174|ae29c53d794617a41a08769aca1f496f|1183a527cac4cb84db83fd000f98cce2|61622c2fb0976314b9e8b8987bec2ca5|faa22c2b540b7cb4685036303e8a9d59|9fb526e41de8ab4488aaf5ae4dc76815|f76f630fde7e31a46a60c762986b4c75|aa1156d37bf3a294eae43c3cfe6b2923|993ecba5048d0b34c937609f0b57a609|8149388e993ac914d9a0dd0b9946dea9|0a31b6db79e75654ba84a937eb224896",
+      "Library/PackageCache",
+      "C:/Users/Bryan Dunphy/Documents/RayNeoSDK/RayNeo OpenXR Unity ARDK/RayNeo OpenXR Unity ARDK"
+    ],
+    "exit_code": 1,
+    "stdout": "",
+    "stderr": ""
+  }
+}

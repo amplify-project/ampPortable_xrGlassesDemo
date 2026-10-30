@@ -1,0 +1,341 @@
+{
+  "generated_utc": "2026-10-30T15:29:59.973886+00:00",
+  "base_head": "f3148ba687c835385e694722e7c87d8af0a94bc0",
+  "source_scope": [
+    "Assets",
+    "Packages",
+    "ProjectSettings"
+  ],
+  "before_file_count": 1809,
+  "after_file_count": 1750,
+  "fingerprint_method": "SHA-256 of sorted compact JSON arrays [POSIX path, file SHA-256] each followed by LF.",
+  "before_fingerprint": "4a5ffdc13a4847f302d91b77b633d68c69e95ef54c57bf4a3ef6dbacce6ca566",
+  "after_fingerprint": "e9908b7570e3810d57b6c743a04311cd40cddd7d9f83890719ca7a3240bf50a7",
+  "expected_removals_only": true,
+  "removed": [
+    {
+      "path": "Assets/AmpPortableDataViz/Infra/IHandPoseProvider.cs",
+      "sha256_before": "68293661c9b39dfe863b987639cc574cdba9e4279a204e6edb96cd2c0b38d1ee"
+    },
+    {
+      "path": "Assets/AmpPortableDataViz/Infra/IHandPoseProvider.cs.meta",
+      "sha256_before": "86cba0839d2a175dca10c98f45474d7317da68fa34257419e34df971f1f392be"
+    },
+    {
+      "path": "Assets/AmpPortableDataViz/Presentation/Debug/EmotionTelemetryLogger.cs",
+      "sha256_before": "c9d28c329b40361fa9d7cd04c12bacdb9356f59e4b66a80f812541daf284688b"
+    },
+    {
+      "path": "Assets/AmpPortableDataViz/Presentation/Debug/EmotionTelemetryLogger.cs.meta",
+      "sha256_before": "f5f4211a4eff03636233d63108a961a6fb88d635ef520f8234c8e3eebd8c0043"
+    },
+    {
+      "path": "Assets/AmpPortableDataViz/Presentation/Interaction/VisualizationCycler.cs",
+      "sha256_before": "7532d72c80c734b83ef6b175253313e08c9df6bef0f222c2b0b971810a511705"
+    },
+    {
+      "path": "Assets/AmpPortableDataViz/Presentation/Interaction/VisualizationCycler.cs.meta",
+      "sha256_before": "aa11533b15d623a209799d5b6ecc2fdaa86502d8196d0528a4a26b5e301f69a8"
+    },
+    {
+      "path": "Assets/AmpPortableDataViz/Presentation/Visualization/HudSquareBuilder.cs",
+      "sha256_before": "e1a380fb501c2d212b1db0670c65bc2f834d77c0a338cade7255681e16fb08b5"
+    },
+    {
+      "path": "Assets/AmpPortableDataViz/Presentation/Visualization/HudSquareBuilder.cs.meta",
+      "sha256_before": "0bdab79f86d30af30d80caa7e9f66032e403efd12f4eb9120544616fc4d766b6"
+    },
+    {
+      "path": "Assets/AmpPortableDataViz/Presentation/Visualization/ToggleButtonColor.cs",
+      "sha256_before": "64f99dec4d8759001b4ed0b7ae07225ee3beecd43b615662eeb05bd54c10fb57"
+    },
+    {
+      "path": "Assets/AmpPortableDataViz/Presentation/Visualization/ToggleButtonColor.cs.meta",
+      "sha256_before": "257e14aacdd8e606d526f00891fc56cb356024dd2089b6dd71959f9fd85a18f6"
+    },
+    {
+      "path": "Assets/AmpPortableDataViz/Presentation/Visualization/WristMenuFollower.cs",
+      "sha256_before": "155ad9b8575666aa401fce279be88855571e78f79569057a575073785ae1b2c9"
+    },
+    {
+      "path": "Assets/AmpPortableDataViz/Presentation/Visualization/WristMenuFollower.cs.meta",
+      "sha256_before": "9831eedfe1289c81c613d4fd98c1216a6b3f031d06c7fca366b26d95fd5b4b0f"
+    },
+    {
+      "path": "Assets/Scenes/plasmaManual.unity",
+      "sha256_before": "e8c90b111e2d108fb18fdc177de458f30a1d1495226e234cc58bab7b17be7d50"
+    },
+    {
+      "path": "Assets/Scenes/plasmaManual.unity.meta",
+      "sha256_before": "76227b392f9b0e69b730fb7fd99ec963be7768c4e81fe11f84eb3692a8efceeb"
+    },
+    {
+      "path": "Assets/_Recovery.meta",
+      "sha256_before": "40862adb7e6c30bde1a5454b595be8b9d2b91be4251488bff431c63a01ab7d8c"
+    },
+    {
+      "path": "Assets/_Recovery/0 (1).unity",
+      "sha256_before": "29cfbf36b471c61d305eaf08c9bff0866c0ed12ad4e1cf5a18733516cbdc000a"
+    },
+    {
+      "path": "Assets/_Recovery/0 (1).unity.meta",
+      "sha256_before": "cedda763a5b2d15aaf5b3e2b81d3035e32e336ee0dcdca9bfacfe9353bab1c07"
+    },
+    {
+      "path": "Assets/_Recovery/0 (10).unity",
+      "sha256_before": "46000d77b0148f1bc6852b578e40fb9dd05bde04650626f376140b735852cad6"
+    },
+    {
+      "path": "Assets/_Recovery/0 (10).unity.meta",
+      "sha256_before": "bbe1d3a48a72d30d5406446a88b7e2be674a7cec372953bd7dc8e6112c788bc5"
+    },
+    {
+      "path": "Assets/_Recovery/0 (11).unity",
+      "sha256_before": "fe69cca3892c18ce0b120b5e02d6f7a599212487f32ce80ec230c9b6c4fc5699"
+    },
+    {
+      "path": "Assets/_Recovery/0 (11).unity.meta",
+      "sha256_before": "878c058b9d599dfd9d43eeb167acf6096b9feb0fdf16f7b93ca8099348c279ce"
+    },
+    {
+      "path": "Assets/_Recovery/0 (12).unity",
+      "sha256_before": "22714e6c0946061a6db359da8b8ceb451819b09a98056e13ebe0037e03c6e534"
+    },
+    {
+      "path": "Assets/_Recovery/0 (12).unity.meta",
+      "sha256_before": "912187e7a82c8e9762d822244cb06ee76097e1146ef02c51a051ceecf5d88ec3"
+    },
+    {
+      "path": "Assets/_Recovery/0 (13).unity",
+      "sha256_before": "6c653fd3b219d96d4623409569e08c4ec5104e97acfb7114efb2026f31a1c6e5"
+    },
+    {
+      "path": "Assets/_Recovery/0 (13).unity.meta",
+      "sha256_before": "2e58f3acbd243531d3ca0132c2bdf52dfa8f719dfb25b6cbe476ef42f156361c"
+    },
+    {
+      "path": "Assets/_Recovery/0 (14).unity",
+      "sha256_before": "2dab5017419a2ee28505c5594da8f22a492895f3ae30dd8afc70a6a0c52ddc1a"
+    },
+    {
+      "path": "Assets/_Recovery/0 (14).unity.meta",
+      "sha256_before": "49721e1542f197a7eded6a3379b10bf2c239f8f9e1c5a81cf88ec0a449ba54bf"
+    },
+    {
+      "path": "Assets/_Recovery/0 (15).unity",
+      "sha256_before": "2dab5017419a2ee28505c5594da8f22a492895f3ae30dd8afc70a6a0c52ddc1a"
+    },
+    {
+      "path": "Assets/_Recovery/0 (15).unity.meta",
+      "sha256_before": "515aaed20ecb88ed99c8212af81222866743874d6f424adf921d7d829c77d0c7"
+    },
+    {
+      "path": "Assets/_Recovery/0 (16).unity",
+      "sha256_before": "321197917dadc4726b052e9face998b70778cf880c0195be5b302765c8ae0502"
+    },
+    {
+      "path": "Assets/_Recovery/0 (16).unity.meta",
+      "sha256_before": "bdfbd9ceeaf2f6d7fcf39a065cfa9617d9db782d110cfac2013120145f4f61c2"
+    },
+    {
+      "path": "Assets/_Recovery/0 (17).unity",
+      "sha256_before": "a428e7294e357e9dde3a2df3b3b07de744f301d3a2a7e41b6965af22a4792997"
+    },
+    {
+      "path": "Assets/_Recovery/0 (17).unity.meta",
+      "sha256_before": "7854511143b4ea23de6344c2ea988bb1d692252c74d096579989595378c5bbec"
+    },
+    {
+      "path": "Assets/_Recovery/0 (18).unity",
+      "sha256_before": "a428e7294e357e9dde3a2df3b3b07de744f301d3a2a7e41b6965af22a4792997"
+    },
+    {
+      "path": "Assets/_Recovery/0 (18).unity.meta",
+      "sha256_before": "843b75fa7b87d5320c5f264042879a8a50acd330de46c46882d8547b923507ac"
+    },
+    {
+      "path": "Assets/_Recovery/0 (19).unity",
+      "sha256_before": "7416e84ac05a1d83dd92b4434d70370e4c6da5d740e6d634e92d0cbf189ac710"
+    },
+    {
+      "path": "Assets/_Recovery/0 (19).unity.meta",
+      "sha256_before": "e1019ffde6854850e5b9c9ef878c543b6c9eec951ff3b29637491eb0116ec13f"
+    },
+    {
+      "path": "Assets/_Recovery/0 (2).unity",
+      "sha256_before": "c0f9bbd8d242a9075aa807f377342b984b5ea1d1075a6387b8f5c84e397a3149"
+    },
+    {
+      "path": "Assets/_Recovery/0 (2).unity.meta",
+      "sha256_before": "a63c08f460f649613067bca3fa3cc00f9938f6ea3bc1cf0dd842874e96c4f81d"
+    },
+    {
+      "path": "Assets/_Recovery/0 (20).unity",
+      "sha256_before": "7416e84ac05a1d83dd92b4434d70370e4c6da5d740e6d634e92d0cbf189ac710"
+    },
+    {
+      "path": "Assets/_Recovery/0 (20).unity.meta",
+      "sha256_before": "03e5e2030ae9f340aac44ff65fd6773b14401220c992168d0b27402140a07934"
+    },
+    {
+      "path": "Assets/_Recovery/0 (21).unity",
+      "sha256_before": "3163272da207a1b1d2868d61808a845dd060cdf6724bf6c581bb6dc231e2b457"
+    },
+    {
+      "path": "Assets/_Recovery/0 (21).unity.meta",
+      "sha256_before": "5fbffd4925300bcb210af461a2ae8df136118adb4f700882c5db95d21d3188d2"
+    },
+    {
+      "path": "Assets/_Recovery/0 (3).unity",
+      "sha256_before": "e6357e59929d8f51dd5427d192637d29b5c219b35f21c7dc1cb95dfc609eb5c4"
+    },
+    {
+      "path": "Assets/_Recovery/0 (3).unity.meta",
+      "sha256_before": "1a783ddf4cb273bad0a46662cb3a4969f48264771130f46a22962440fa9d16c8"
+    },
+    {
+      "path": "Assets/_Recovery/0 (4).unity",
+      "sha256_before": "26b7917fb155ebc820d87770f8313273177e91a4157b9a3ab2a25ff2b853e661"
+    },
+    {
+      "path": "Assets/_Recovery/0 (4).unity.meta",
+      "sha256_before": "5b93e92dcd9698542a1c6e73bf25ae1225d93c3a6adc66251f8b99c95dcddfb4"
+    },
+    {
+      "path": "Assets/_Recovery/0 (5).unity",
+      "sha256_before": "1edb281861be45231c81d6b461f3764ccce6a6b229dcfe25c2f91bc48de87add"
+    },
+    {
+      "path": "Assets/_Recovery/0 (5).unity.meta",
+      "sha256_before": "78b5904f5f90135e70b16aec4f876efc43b1fdf333bb5558ab35d3fd43436c1e"
+    },
+    {
+      "path": "Assets/_Recovery/0 (6).unity",
+      "sha256_before": "1f5e692c156df0f02c3e55a2ea20aa51a744263f2906d24db782b5a9664371f7"
+    },
+    {
+      "path": "Assets/_Recovery/0 (6).unity.meta",
+      "sha256_before": "f1991aac541b31812e7bb9c5a25bf3a3c72ecec0137168e04842876659cb01a9"
+    },
+    {
+      "path": "Assets/_Recovery/0 (7).unity",
+      "sha256_before": "c11142d865f1b406fb7decafc2222d49c28948b682575b1bf7c164484afd86df"
+    },
+    {
+      "path": "Assets/_Recovery/0 (7).unity.meta",
+      "sha256_before": "539da8c3cd9ac721b520ae43c7bf41c156ed6cea2c85d016cc9ffa729e306ead"
+    },
+    {
+      "path": "Assets/_Recovery/0 (8).unity",
+      "sha256_before": "aab14a2eb0fd0308b50a45a8f98befc499d4419224dcb547ed5b624b8891adbe"
+    },
+    {
+      "path": "Assets/_Recovery/0 (8).unity.meta",
+      "sha256_before": "42c81a88c325736ea77382f774ec6ff9ead9cd89144047ebbd90892c04bfb593"
+    },
+    {
+      "path": "Assets/_Recovery/0 (9).unity",
+      "sha256_before": "fe0e6faba185b550c356840d53a0bde004e97b8ffe222843393a2859f865c220"
+    },
+    {
+      "path": "Assets/_Recovery/0 (9).unity.meta",
+      "sha256_before": "00997467cf1cf22811680217a14151411e9fdb665d818bb9b52198266d872d95"
+    },
+    {
+      "path": "Assets/_Recovery/0.unity",
+      "sha256_before": "adec8ff018a9c53452305567a9fecd8c4320037db2b267982575abca0e32cbe6"
+    },
+    {
+      "path": "Assets/_Recovery/0.unity.meta",
+      "sha256_before": "4a9aec7a5b4f5f21639bc8b121f07ab0be0eda5874623a9a9a3487cd373e1e9f"
+    }
+  ],
+  "changed_retained_files": [],
+  "added_source_files": [],
+  "all_retained_input_bytes_unchanged": true,
+  "retained_script_count": 86,
+  "retained_script_hashes_guids_and_test_callers_unchanged": true,
+  "retained_rows_with_reference_changes": {
+    "Assets/AmpPortableDataViz/Core/Interfaces.cs": [
+      "non_test_csharp_ref_count",
+      "non_test_csharp_refs_lexical"
+    ],
+    "Assets/AmpPortableDataViz/Presentation/Bootstrap/Bootstrapper.cs": [
+      "serialized_asset_count",
+      "recovery_asset_count",
+      "serialized_guid_ref_count",
+      "serialized_guid_refs",
+      "unityevent_type_name_refs_lexical"
+    ],
+    "Assets/AmpPortableDataViz/Presentation/Sources/LiveKitTelemetryReceiver.cs": [
+      "serialized_asset_count",
+      "recovery_asset_count",
+      "serialized_guid_ref_count",
+      "serialized_guid_refs"
+    ],
+    "Assets/AmpPortableDataViz/Presentation/Sources/RedisDataPump.cs": [
+      "serialized_asset_count",
+      "recovery_asset_count",
+      "serialized_guid_ref_count",
+      "serialized_guid_refs",
+      "non_test_csharp_ref_count",
+      "non_test_csharp_refs_lexical"
+    ],
+    "Assets/AmpPortableDataViz/Presentation/Sources/RedisEndpointPrompt.cs": [
+      "serialized_asset_count",
+      "recovery_asset_count",
+      "serialized_guid_ref_count",
+      "serialized_guid_refs"
+    ],
+    "Assets/AmpPortableDataViz/Presentation/Sources/RedisManager.cs": [
+      "serialized_asset_count",
+      "recovery_asset_count",
+      "serialized_guid_ref_count",
+      "serialized_guid_refs"
+    ],
+    "Assets/AmpPortableDataViz/Presentation/Sources/RedisRuntimeSettings.cs": [
+      "non_test_csharp_ref_count",
+      "non_test_csharp_refs_lexical"
+    ],
+    "Assets/AmpPortableDataViz/Presentation/Visualization/ColourChangingHudSide.cs": [
+      "serialized_asset_count",
+      "recovery_asset_count",
+      "serialized_guid_ref_count",
+      "serialized_guid_refs"
+    ],
+    "Assets/AmpPortableDataViz/Presentation/Visualization/EngagementHudBinding.cs": [
+      "serialized_asset_count",
+      "recovery_asset_count",
+      "serialized_guid_ref_count",
+      "serialized_guid_refs"
+    ],
+    "Assets/AmpPortableDataViz/Presentation/Visualization/ParticleMeshManualDriver.cs": [
+      "serialized_asset_count",
+      "recovery_asset_count",
+      "serialized_guid_ref_count",
+      "serialized_guid_refs"
+    ],
+    "Assets/AmpPortableDataViz/Presentation/Visualization/ParticleMeshVisualizer.cs": [
+      "serialized_asset_count",
+      "recovery_asset_count",
+      "serialized_guid_ref_count",
+      "serialized_guid_refs"
+    ]
+  },
+  "post_removal_reference_check": {
+    "command": [
+      "rg",
+      "-n",
+      "--no-ignore",
+      "--hidden",
+      "023e40ab10c6c1045bd17addb7c6a149|ebe451f5a46274e498c8512f158880a8|e77d9d258b6b59e479912bb2155ac700|579cdc68b718e594baf273ab0348860d|67c4c47142008e64f807a08396b5cc83|566c50cff1b21324eb220e55a623b304|74f39f21039151b4a8e4185a57a2c1f3|df0f19d59658e0741bf9562016c646f1|332a8832bff1efb4db57036167b8cd3b|c1be0eef6361855438e45ae8f4b131a5|6d01b7c83bad8b34abf90a15e51b6634|e14f1cc295ae69d4884b8c5ad01e9b7c|81563e3f19f20b54fbeb802b8fc60a16|029e4d5b6e9028840a673bc2b683d174|ae29c53d794617a41a08769aca1f496f|1183a527cac4cb84db83fd000f98cce2|61622c2fb0976314b9e8b8987bec2ca5|faa22c2b540b7cb4685036303e8a9d59|9fb526e41de8ab4488aaf5ae4dc76815|f76f630fde7e31a46a60c762986b4c75|aa1156d37bf3a294eae43c3cfe6b2923|993ecba5048d0b34c937609f0b57a609|8149388e993ac914d9a0dd0b9946dea9|0a31b6db79e75654ba84a937eb224896|IHandPoseProvider|EmotionTelemetryLogger|VisualizationCycler|HudSquareBuilder|ToggleButtonColor|WristMenuFollower|5c134a328a5929f4d932b59e72e5f15b|0793b080831e93042936e6867e6cf6ac|d63d1e6a561f42c42966395b78127c78|935d74b24636ba24ca736f03d7399d68|28ce5df460578e0489f83db918a66610|2001cc8113081f143a1f171c5e8ad73c",
+      "Assets",
+      "Packages",
+      "ProjectSettings"
+    ],
+    "exit_code": 1,
+    "stdout": "",
+    "stderr": ""
+  },
+  "note": "Only the 59 scene/helper/metadata files listed were removed from project inputs. README and assessment documentation are outside this source scope. Historical classifier labels do not automatically describe current usage after retiring scenes."
+}

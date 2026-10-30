@@ -1,0 +1,28 @@
+﻿{
+    "stage":  "PlayMode",
+    "attempt":  "halo-focused",
+    "started_utc":  "2026-10-30T15:28:39.4911218Z",
+    "finished_utc":  "2026-10-30T15:29:04.5727862Z",
+    "exit_code":  0,
+    "editor":  "C:\\Program Files\\Unity\\Hub\\Editor\\2022.3.36f1\\Editor\\Unity.exe",
+    "arguments":  [
+                      "-batchmode",
+                      "-projectPath",
+                      "\"C:\\Users\\Bryan Dunphy\\AppData\\Local\\Temp\\rnc1030\\project\"",
+                      "-buildTarget",
+                      "Android",
+                      "-logFile",
+                      "\"C:\\Users\\Bryan Dunphy\\Documents\\UnityProjects\\ampPortable_xrGlassesDemo\\Temp\\CleanupStep4-20261030\\halo-focused.log\"",
+                      "-forgetProjectPath",
+                      "-runTests",
+                      "-testPlatform",
+                      "PlayMode",
+                      "-testResults",
+                      "\"C:\\Users\\Bryan Dunphy\\Documents\\UnityProjects\\ampPortable_xrGlassesDemo\\Assessment\\2026-10-30\\cleanup-step4\\halo-focused.xml\"",
+                      "-testFilter",
+                      "\"AmpPortableDataViz.Tests.PlayMode.ParticleMeshVisualizerOrthogonalityTests.CornerHalos_StaySynchronizedWithNegativeInsideAndPositiveOutside\""
+                  ],
+    "process_git_longpaths":  true,
+    "process_java_windows_trust":  false,
+    "log":  "C:\\Users\\Bryan Dunphy\\Documents\\UnityProjects\\ampPortable_xrGlassesDemo\\Temp\\CleanupStep4-20261030\\halo-focused.log"
+}
