@@ -1,0 +1,24 @@
+﻿{
+    "attempt":  "full",
+    "started_utc":  "2026-11-02T14:45:32.8378658Z",
+    "finished_utc":  "2026-11-02T14:45:56.9561888Z",
+    "exit_code":  0,
+    "editor":  "C:\\Program Files\\Unity\\Hub\\Editor\\2022.3.36f1\\Editor\\Unity.exe",
+    "arguments":  [
+                      "-batchmode",
+                      "-projectPath",
+                      "\"C:\\Users\\Bryan Dunphy\\AppData\\Local\\Temp\\rnc1030\\project\"",
+                      "-buildTarget",
+                      "Android",
+                      "-logFile",
+                      "\"C:\\Users\\Bryan Dunphy\\Documents\\UnityProjects\\ampPortable_xrGlassesDemo\\Temp\\BootstrapperRefactorStep3-20261102\\full.log\"",
+                      "-forgetProjectPath",
+                      "-runTests",
+                      "-testPlatform",
+                      "PlayMode",
+                      "-testResults",
+                      "\"C:\\Users\\Bryan Dunphy\\Documents\\UnityProjects\\ampPortable_xrGlassesDemo\\Assessment\\2026-11-02\\bootstrapper-refactor-step3\\full.xml\""
+                  ],
+    "process_git_longpaths":  true,
+    "log":  "C:\\Users\\Bryan Dunphy\\Documents\\UnityProjects\\ampPortable_xrGlassesDemo\\Temp\\BootstrapperRefactorStep3-20261102\\full.log"
+}

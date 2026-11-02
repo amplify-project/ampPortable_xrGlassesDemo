@@ -1139,7 +1139,7 @@ namespace AmpPortableDataViz.Presentation.Bootstrap
                     PhysioMetricsChannel = definition.PhysioMetricsChannel
                 });
 
-                AttachGraphGroupLabel(instance, definition.DeviceId, deviceIndex, Array.Empty<Vector3>());
+                AttachGraphGroupLabel(instance, definition.DeviceId, deviceIndex);
                 deviceIndex++;
             }
         }
@@ -1595,39 +1595,6 @@ namespace AmpPortableDataViz.Presentation.Bootstrap
             }
         }
 
-        private bool TryCalculateGraphGroupBounds(IReadOnlyList<Vector3> channelOffsets, out Vector3 center, out Vector3 size)
-        {
-            center = Vector3.zero;
-            size = GraphItemBoundsSize;
-
-            if (GraphItemBoundsSize.sqrMagnitude < 1e-6f)
-            {
-                return false;
-            }
-
-            if (channelOffsets == null || channelOffsets.Count == 0)
-            {
-                size += GraphGroupBoundsPadding * 2f;
-                return true;
-            }
-
-            Vector3 halfSize = GraphItemBoundsSize * 0.5f;
-            Vector3 min = new Vector3(float.PositiveInfinity, float.PositiveInfinity, float.PositiveInfinity);
-            Vector3 max = new Vector3(float.NegativeInfinity, float.NegativeInfinity, float.NegativeInfinity);
-
-            foreach (var offset in channelOffsets)
-            {
-                Vector3 localMin = offset - halfSize;
-                Vector3 localMax = offset + halfSize;
-                min = Vector3.Min(min, localMin);
-                max = Vector3.Max(max, localMax);
-            }
-
-            size = (max - min) + GraphGroupBoundsPadding * 2f;
-            center = (min + max) * 0.5f;
-            return true;
-        }
-
         private List<AudienceDeviceChannelDefinition> BuildAudienceDeviceChannelDefinitions(IEnumerable<string> redisChannels)
         {
             var orderedDeviceIds = new List<string>();
@@ -1659,7 +1626,6 @@ namespace AmpPortableDataViz.Presentation.Bootstrap
                     continue;
                 }
 
-                FillAudienceChannelDefaults(ref definition);
                 ordered.Add(definition);
             }
 
@@ -1678,14 +1644,6 @@ namespace AmpPortableDataViz.Presentation.Bootstrap
             }
 
             return definition;
-        }
-
-        private static void FillAudienceChannelDefaults(ref AudienceDeviceChannelDefinition definition)
-        {
-            if (string.IsNullOrWhiteSpace(definition.PhysioMetricsChannel))
-            {
-                definition.PhysioMetricsChannel = RedisAudienceChannels.FormatPhysioMetricsChannel(definition.DeviceId);
-            }
         }
 
         private static List<AudienceDeviceChannelDefinition> FilterAudienceToConfiguredDevices(IEnumerable<AudienceDeviceChannelDefinition> definitions, IEnumerable<string> configuredDeviceIds)
@@ -1794,7 +1752,7 @@ namespace AmpPortableDataViz.Presentation.Bootstrap
             labelObject.AddComponent<BillboardLabel>();
         }
 
-        private void AttachGraphGroupLabel(GameObject groupRoot, string deviceId, int deviceIndex, IReadOnlyList<Vector3> channelOffsets)
+        private void AttachGraphGroupLabel(GameObject groupRoot, string deviceId, int deviceIndex)
         {
             if (!ShowGraphGroupLabels || groupRoot == null)
             {
@@ -1815,10 +1773,12 @@ namespace AmpPortableDataViz.Presentation.Bootstrap
 
             float extraYOffset = Mathf.Max(0f, GraphGroupLabelVerticalOffset);
             Vector3 localPosition = GraphGroupLabelOffset + new Vector3(0f, extraYOffset, 0f);
-            if (TryCalculateGraphGroupBounds(channelOffsets, out var center, out var size))
+            bool boundsTooSmall = GraphItemBoundsSize.sqrMagnitude < 1e-6f;
+            if (!boundsTooSmall)
             {
-                float yOffset = center.y + size.y * 0.5f + extraYOffset;
-                localPosition = new Vector3(center.x, yOffset, center.z) + GraphGroupLabelOffset;
+                Vector3 size = GraphItemBoundsSize + GraphGroupBoundsPadding * 2f;
+                float yOffset = size.y * 0.5f + extraYOffset;
+                localPosition = new Vector3(0f, yOffset, 0f) + GraphGroupLabelOffset;
             }
 
             labelObject.transform.localPosition = localPosition;

@@ -1,0 +1,19 @@
+{
+  "base_head": "de70e30dabea0191e2fa171ef940c5e94d586445",
+  "target_sha256": "d01c6da44d91f08836985b43bf0f5ab4691a76302208096e6196e7c3c7b16644",
+  "all_inputs": {
+    "file_count": 1702,
+    "total_bytes": 150761278,
+    "aggregate_sha256": "e7a6cc6da97b62e23ee5a7c9e7a0b656da259048fddb336ca729b5006756b649"
+  },
+  "other_inputs": {
+    "file_count": 1701,
+    "total_bytes": 150687380,
+    "aggregate_sha256": "56ae24446e44f37d6d9cd5c10d3ff62f64b3e591a54a113b01b1e10af483264a"
+  },
+  "excluded_targets": [
+    "Assets/AmpPortableDataViz/Presentation/Bootstrap/Bootstrapper.cs",
+    "Assets/Tests/PlayMode/BootstrapperChannelAndLabelTests.cs",
+    "Assets/Tests/PlayMode/BootstrapperChannelAndLabelTests.cs.meta"
+  ]
+}

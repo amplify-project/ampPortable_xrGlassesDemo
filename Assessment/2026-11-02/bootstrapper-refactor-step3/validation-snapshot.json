@@ -1,0 +1,18 @@
+{
+  "prepared_utc": "2026-11-02T14:43:39.783662+00:00",
+  "project": "C:\\Users\\Bryan Dunphy\\AppData\\Local\\Temp\\rnc1030\\project",
+  "phase": "after runtime simplification",
+  "verified_source_files": 1704,
+  "all_source_bytes_match_before_unity": true,
+  "synchronized_files": [
+    "Assets/AmpPortableDataViz/Presentation/Bootstrap/Bootstrapper.cs",
+    "Assets/Tests/PlayMode/BootstrapperChannelAndLabelTests.cs"
+  ],
+  "validation_only_extra_files": [
+    "Assets/Editor.meta",
+    "Assets/Editor/MonoScriptProbe.cs",
+    "Assets/Editor/MonoScriptProbe.cs.meta",
+    "Assets/Editor/PreMergeValidation.cs",
+    "Assets/Editor/PreMergeValidation.cs.meta"
+  ]
+}

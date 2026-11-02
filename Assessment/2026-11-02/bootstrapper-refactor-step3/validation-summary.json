@@ -1,0 +1,98 @@
+{
+  "recorded_utc": "2026-11-02T14:48:11.155333+00:00",
+  "test_runs": {
+    "focused-before": {
+      "results": {
+        "id": "2",
+        "testcasecount": "9",
+        "result": "Passed",
+        "total": "9",
+        "passed": "9",
+        "failed": "0",
+        "inconclusive": "0",
+        "skipped": "0",
+        "asserts": "0",
+        "engine-version": "3.5.0.0",
+        "clr-version": "4.0.30319.42000",
+        "start-time": "2026-11-02 14:42:27Z",
+        "end-time": "2026-11-02 14:42:27Z",
+        "duration": "0.0691884"
+      },
+      "process_exit_code": 0
+    },
+    "focused-after": {
+      "results": {
+        "id": "2",
+        "testcasecount": "9",
+        "result": "Passed",
+        "total": "9",
+        "passed": "9",
+        "failed": "0",
+        "inconclusive": "0",
+        "skipped": "0",
+        "asserts": "0",
+        "engine-version": "3.5.0.0",
+        "clr-version": "4.0.30319.42000",
+        "start-time": "2026-11-02 14:44:03Z",
+        "end-time": "2026-11-02 14:44:03Z",
+        "duration": "0.0722188"
+      },
+      "process_exit_code": 0
+    },
+    "full": {
+      "results": {
+        "id": "2",
+        "testcasecount": "202",
+        "result": "Passed",
+        "total": "202",
+        "passed": "202",
+        "failed": "0",
+        "inconclusive": "0",
+        "skipped": "0",
+        "asserts": "0",
+        "engine-version": "3.5.0.0",
+        "clr-version": "4.0.30319.42000",
+        "start-time": "2026-11-02 14:45:52Z",
+        "end-time": "2026-11-02 14:45:53Z",
+        "duration": "1.0135316"
+      },
+      "process_exit_code": 0
+    }
+  },
+  "test_count_change": "193 retained tests plus9 new channel/label behavior cases =202. No prior test removed or edited.",
+  "focused_before_after_case_names_identical": true,
+  "focused_assertions_and_test_data_unchanged": true,
+  "new_case_names": [
+    "AmpPortableDataViz.Tests.PlayMode.BootstrapperChannelAndLabelTests.ChannelDefinitions_DoNotGenerateDefinitionsFromInvalidChannels",
+    "AmpPortableDataViz.Tests.PlayMode.BootstrapperChannelAndLabelTests.ChannelDefinitions_PreserveParsedInputChannelsAndSensorOrder",
+    "AmpPortableDataViz.Tests.PlayMode.BootstrapperChannelAndLabelTests.GraphLabel_BoundsAtThresholdUsesPadding",
+    "AmpPortableDataViz.Tests.PlayMode.BootstrapperChannelAndLabelTests.GraphLabel_CustomBoundsAndPadding",
+    "AmpPortableDataViz.Tests.PlayMode.BootstrapperChannelAndLabelTests.GraphLabel_DefaultBounds",
+    "AmpPortableDataViz.Tests.PlayMode.BootstrapperChannelAndLabelTests.GraphLabel_NegativeVerticalOffsetClamped",
+    "AmpPortableDataViz.Tests.PlayMode.BootstrapperChannelAndLabelTests.GraphLabel_SignedHeightPreserved",
+    "AmpPortableDataViz.Tests.PlayMode.BootstrapperChannelAndLabelTests.GraphLabel_TinyBoundsUsesOffsetOnly",
+    "AmpPortableDataViz.Tests.PlayMode.BootstrapperChannelAndLabelTests.GraphLabel_ZeroBoundsUsesOffsetOnly"
+  ],
+  "runtime_unchanged_when_baseline_tests_ran": true,
+  "isolated_snapshot_matches_final_checkout": true,
+  "source_input_count": 1704,
+  "source_change_scope_verified": true,
+  "android_build_run": false,
+  "device_action_performed": false,
+  "test_limit": "Passing these tests does not diagnose or fix the previously recorded intermittent halo assertion. It did not recur in this full run. No tests were suppressed or retried in this step.",
+  "logs": [
+    {
+      "path": "Temp\\BootstrapperRefactorStep3-20261102\\focused-after.log",
+      "sha256": "f17bf29853cbc4d30d7ac115b3a47d20082f9369b6b7c4e380e228d0306d4b5a"
+    },
+    {
+      "path": "Temp\\BootstrapperRefactorStep3-20261102\\focused-before.log",
+      "sha256": "bc2f08626d17f5e807a7ec0b6203bd9cdb1bd720c6a68f17e660b3e7c74bc148"
+    },
+    {
+      "path": "Temp\\BootstrapperRefactorStep3-20261102\\full.log",
+      "sha256": "16488d5f14bc3be235f08dec09ae22fe1376ac257a8e4ae2761a3312b8ed16f8"
+    }
+  ],
+  "step4_started": false
+}
