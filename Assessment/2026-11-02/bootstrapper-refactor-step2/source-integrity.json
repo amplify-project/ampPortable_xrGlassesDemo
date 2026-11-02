@@ -1,0 +1,78 @@
+{
+  "base_head": "b9b92bcc4dbe5895b80968d81ae4bbdd7ca67fe6",
+  "target": "Assets/AmpPortableDataViz/Presentation/Bootstrap/Bootstrapper.cs",
+  "target_sha256_before": "c4905f728d3b65b5ae51055a8756788df7f968110200bab4ae593a8384c4114e",
+  "target_sha256_after": "d01c6da44d91f08836985b43bf0f5ab4691a76302208096e6196e7c3c7b16644",
+  "source_lines_before": 1998,
+  "source_lines_after": 1986,
+  "before_all_inputs": {
+    "file_count": 1702,
+    "total_bytes": 150761817,
+    "aggregate_sha256": "a2b926e9758cdc55d36ad454a8b440f184deb543ee23319c7570eac3653c3e79"
+  },
+  "before_other_inputs": {
+    "file_count": 1701,
+    "total_bytes": 150687380,
+    "aggregate_sha256": "56ae24446e44f37d6d9cd5c10d3ff62f64b3e591a54a113b01b1e10af483264a"
+  },
+  "after_other_inputs": {
+    "file_count": 1701,
+    "total_bytes": 150687380,
+    "aggregate_sha256": "56ae24446e44f37d6d9cd5c10d3ff62f64b3e591a54a113b01b1e10af483264a"
+  },
+  "all_1701_other_inputs_byte_identical": true,
+  "exact_allowed_diff_and_nested_records_verified": true,
+  "removed_fields": {
+    "AudienceDeviceInstance": [
+      "DeviceId",
+      "PhysioPump"
+    ],
+    "AudienceGraphDeviceGroupInstance": [
+      "DeviceId",
+      "DeviceIndex",
+      "PhysioPump"
+    ],
+    "SharedPhysioPumpHandle": [
+      "ChannelName"
+    ]
+  },
+  "removed_field_count": 6,
+  "removed_initializer_assignment_count": 6,
+  "remaining_runtime_record_fields": {
+    "AudienceDeviceInstance": [
+      "VisualInstance",
+      "Binding",
+      "PhysioMetricsChannel"
+    ],
+    "AudienceGraphDeviceGroupInstance": [
+      "GroupRoot",
+      "Binding",
+      "PhysioMetricsChannel"
+    ],
+    "SharedPhysioPumpHandle": [
+      "Host",
+      "Port",
+      "Pump",
+      "ReferenceCount"
+    ]
+  },
+  "removed_diff_lines": {
+    "DeviceId = definition.DeviceId,": 2,
+    "PhysioMetricsChannel = definition.PhysioMetricsChannel,": 2,
+    "PhysioPump = physioPump": 2,
+    "DeviceIndex = deviceIndex,": 1,
+    "ChannelName = channelName,": 1,
+    "public string DeviceId;": 2,
+    "public RedisPhysioMetricsPump PhysioPump;": 2,
+    "public int DeviceIndex;": 1,
+    "public string ChannelName;": 1
+  },
+  "added_diff_lines": {
+    "PhysioMetricsChannel = definition.PhysioMetricsChannel": 2
+  },
+  "remaining_configuration_field_count": 62,
+  "remaining_method_count": 59,
+  "method_signatures_and_public_configuration_fields_unchanged": true,
+  "scope": "Only nested runtime bookkeeping fields and assignments removed, with two initializer trailing commas adjusted. No methods, serialization, lifecycle or mode changes. Step3 not started.",
+  "fingerprint_method": "Sorted compact JSON arrays [POSIX path, byte length, SHA-256 of raw bytes], each followed by LF, aggregated with SHA-256. Scope: Assets/Packages/ProjectSettings excluding the target for the unchanged-input comparison."
+}

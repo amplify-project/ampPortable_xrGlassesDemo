@@ -1,0 +1,94 @@
+{
+  "recorded_utc": "2026-11-02T13:56:33.215451+00:00",
+  "test_runs": {
+    "full": {
+      "results": {
+        "id": "2",
+        "testcasecount": "193",
+        "result": "Failed(Child)",
+        "total": "193",
+        "passed": "192",
+        "failed": "1",
+        "inconclusive": "0",
+        "skipped": "0",
+        "asserts": "0",
+        "engine-version": "3.5.0.0",
+        "clr-version": "4.0.30319.42000",
+        "start-time": "2026-11-02 13:51:02Z",
+        "end-time": "2026-11-02 13:51:03Z",
+        "duration": "1.0149582"
+      },
+      "process_exit_code": 2,
+      "failures": [
+        {
+          "fullname": "AmpPortableDataViz.Tests.PlayMode.ParticleMeshVisualizerOrthogonalityTests.CornerHalos_StaySynchronizedWithNegativeInsideAndPositiveOutside",
+          "message": "  Expected: less than 0.0800000057f\n  But was:  0.0800000057f\n"
+        }
+      ]
+    },
+    "halo-focused": {
+      "results": {
+        "id": "2",
+        "testcasecount": "1",
+        "result": "Passed",
+        "total": "1",
+        "passed": "1",
+        "failed": "0",
+        "inconclusive": "0",
+        "skipped": "0",
+        "asserts": "0",
+        "engine-version": "3.5.0.0",
+        "clr-version": "4.0.30319.42000",
+        "start-time": "2026-11-02 13:52:53Z",
+        "end-time": "2026-11-02 13:52:53Z",
+        "duration": "0.0902614"
+      },
+      "process_exit_code": 0,
+      "failures": []
+    },
+    "full-repeat": {
+      "results": {
+        "id": "2",
+        "testcasecount": "193",
+        "result": "Passed",
+        "total": "193",
+        "passed": "193",
+        "failed": "0",
+        "inconclusive": "0",
+        "skipped": "0",
+        "asserts": "0",
+        "engine-version": "3.5.0.0",
+        "clr-version": "4.0.30319.42000",
+        "start-time": "2026-11-02 13:54:16Z",
+        "end-time": "2026-11-02 13:54:17Z",
+        "duration": "0.9883444"
+      },
+      "process_exit_code": 0,
+      "failures": []
+    }
+  },
+  "interpretation": "The first full run passed192/193 with the previously recorded intermittent halo-radius assertion failing. The unchanged halo test passed in isolation and one unchanged full-suite rerun passed193/193. Earlier failure preserved. No tests, assertions or halo code changed. This step does not fix the intermittent failure.",
+  "source_scope_verified": true,
+  "source_file_count": 1702,
+  "isolated_snapshot_inputs_match_checkout": true,
+  "all_other_1701_source_inputs_unchanged": true,
+  "no_tests_added_or_removed": true,
+  "android_build_run": false,
+  "device_action_performed": false,
+  "validation_rationale": "Existing Unity PlayMode compilation/regressions plus exact source-diff and input-hash checks validate this deletion of unread private runtime-record fields. No behavior, serialized configuration or platform code changed; APK/device validation was not repeated.",
+  "logs": [
+    {
+      "path": "Temp\\BootstrapperRefactorStep2-20261102\\full-repeat.log",
+      "sha256": "d82ab204e00d83e1dd109f89b2b6d93c3c851270460874571663c7eb32fe8c34"
+    },
+    {
+      "path": "Temp\\BootstrapperRefactorStep2-20261102\\full.log",
+      "sha256": "fe65584bcc2afb44df32b4773f2747f82ee153b99bab7070dd5e60ea943d0dfe"
+    },
+    {
+      "path": "Temp\\BootstrapperRefactorStep2-20261102\\halo-focused.log",
+      "sha256": "ed3b2181d8f53d1360eba604919da4b3a20434549040616f1efc4da58d9733fa"
+    }
+  ],
+  "step3_started": false
+}

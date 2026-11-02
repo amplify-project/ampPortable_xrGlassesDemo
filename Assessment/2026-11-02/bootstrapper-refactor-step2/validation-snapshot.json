@@ -1,0 +1,18 @@
+{
+  "prepared_utc": "2026-11-02T13:50:34.418617+00:00",
+  "project": "C:\\Users\\Bryan Dunphy\\AppData\\Local\\Temp\\rnc1030\\project",
+  "base_head": "b9b92bcc4dbe5895b80968d81ae4bbdd7ca67fe6",
+  "verified_source_files": 1702,
+  "all_source_bytes_match_before_unity": true,
+  "synchronized_files": [
+    "Assets/AmpPortableDataViz/Presentation/Bootstrap/Bootstrapper.cs"
+  ],
+  "validation_only_extra_files": [
+    "Assets/Editor.meta",
+    "Assets/Editor/MonoScriptProbe.cs",
+    "Assets/Editor/MonoScriptProbe.cs.meta",
+    "Assets/Editor/PreMergeValidation.cs",
+    "Assets/Editor/PreMergeValidation.cs.meta"
+  ],
+  "note": "Existing canonical validation project reused; only source inputs synchronized, Unity-managed caches untouched. Prior outputs preserved. Assessment-only Editor helpers are not executed by this PlayMode run."
+}

@@ -1038,11 +1038,9 @@ namespace AmpPortableDataViz.Presentation.Bootstrap
 
                 _audienceDeviceInstances.Add(new AudienceDeviceInstance
                 {
-                    DeviceId = definition.DeviceId,
                     VisualInstance = instance,
                     Binding = binding,
-                    PhysioMetricsChannel = definition.PhysioMetricsChannel,
-                    PhysioPump = physioPump
+                    PhysioMetricsChannel = definition.PhysioMetricsChannel
                 });
 
                 AttachDeviceLabel(instance, definition.DeviceId, deviceIndex);
@@ -1136,12 +1134,9 @@ namespace AmpPortableDataViz.Presentation.Bootstrap
 
                 _audienceGraphDeviceGroups.Add(new AudienceGraphDeviceGroupInstance
                 {
-                    DeviceId = definition.DeviceId,
-                    DeviceIndex = deviceIndex,
                     GroupRoot = instance,
                     Binding = binding,
-                    PhysioMetricsChannel = definition.PhysioMetricsChannel,
-                    PhysioPump = physioPump
+                    PhysioMetricsChannel = definition.PhysioMetricsChannel
                 });
 
                 AttachGraphGroupLabel(instance, definition.DeviceId, deviceIndex, Array.Empty<Vector3>());
@@ -1316,7 +1311,6 @@ namespace AmpPortableDataViz.Presentation.Bootstrap
 
             _sharedPhysioPumpsByChannel[channelName] = new SharedPhysioPumpHandle
             {
-                ChannelName = channelName,
                 Host = RedisHost,
                 Port = RedisPort,
                 Pump = pump,
@@ -1928,21 +1922,16 @@ namespace AmpPortableDataViz.Presentation.Bootstrap
 
         private sealed class AudienceDeviceInstance
         {
-            public string DeviceId;
             public GameObject VisualInstance;
             public AudienceSignalBinding Binding;
             public string PhysioMetricsChannel;
-            public RedisPhysioMetricsPump PhysioPump;
         }
 
         private sealed class AudienceGraphDeviceGroupInstance
         {
-            public string DeviceId;
-            public int DeviceIndex;
             public GameObject GroupRoot;
             public AudienceSignalBinding Binding;
             public string PhysioMetricsChannel;
-            public RedisPhysioMetricsPump PhysioPump;
         }
 
         private sealed class SelectedSensorSourceInstance
@@ -1954,7 +1943,6 @@ namespace AmpPortableDataViz.Presentation.Bootstrap
 
         private sealed class SharedPhysioPumpHandle
         {
-            public string ChannelName;
             public string Host;
             public int Port;
             public RedisPhysioMetricsPump Pump;
