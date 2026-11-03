@@ -145,7 +145,7 @@ namespace AmpPortableDataViz.Tests.PlayMode
 
         private static GameObject LoadPrefab()
         {
-            var prefab = AssetDatabase.LoadAssetAtPath<GameObject>("Assets/Prefabs/AudienceGraphPrefab.prefab");
+            var prefab = AssetDatabase.LoadAssetAtPath<GameObject>("Assets/Prefabs/SensorGraphPrefab.prefab");
             Assert.IsNotNull(prefab);
             return prefab;
         }

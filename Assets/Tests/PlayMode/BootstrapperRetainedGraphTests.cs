@@ -13,6 +13,7 @@ namespace AmpPortableDataViz.Tests.PlayMode
     {
         private GameObject _testRoot;
         private GameObject _graphInstance;
+        private GameObject _manualGraphFixture;
 
         [TearDown]
         public void TearDown()
@@ -25,13 +26,17 @@ namespace AmpPortableDataViz.Tests.PlayMode
             {
                 Object.DestroyImmediate(_testRoot);
             }
+            if (_manualGraphFixture != null)
+            {
+                Object.DestroyImmediate(_manualGraphFixture);
+            }
         }
 
 #if UNITY_EDITOR
         [Test]
         public void ManualGraphPrefab_RendersWithoutLiveSource()
         {
-            _graphInstance = Object.Instantiate(LoadPrefab("GraphPrefab"));
+            _graphInstance = Object.Instantiate(CreateManualGraphFixture());
             AssertNoMissingScripts(_graphInstance);
 
             var driver = _graphInstance.GetComponent<GraphManualDriver>();
@@ -51,7 +56,7 @@ namespace AmpPortableDataViz.Tests.PlayMode
             BootstrapperTestConfiguration.Set(bootstrapper, "UseManualVisualizationDrivers", true);
             BootstrapperTestConfiguration.Set(bootstrapper, "RequireRedisEndpointConfirmation", true);
             BootstrapperTestConfiguration.Set(bootstrapper, "RedisHost", string.Empty);
-            BootstrapperTestConfiguration.Set(bootstrapper, "GraphPrefab", LoadPrefab("GraphPrefab"));
+            BootstrapperTestConfiguration.Set(bootstrapper, "GraphPrefab", CreateManualGraphFixture());
             BootstrapperTestConfiguration.Set(bootstrapper, "GraphGroupParent", _testRoot.transform);
 
             Invoke(bootstrapper, "ApplySignalConfiguration");
@@ -68,7 +73,7 @@ namespace AmpPortableDataViz.Tests.PlayMode
         {
             Bootstrapper bootstrapper = CreateBootstrapper();
             _graphInstance = (GameObject)Invoke(
-                GetVisuals(bootstrapper), "SpawnSelectedSensorVisual", LoadPrefab("AudienceGraphPrefab"),
+                GetVisuals(bootstrapper), "SpawnSelectedSensorVisual", LoadPrefab("SensorGraphPrefab"),
                 _testRoot.transform, "SelectedGraph", true, false);
 
             Assert.IsNotNull(_graphInstance);
@@ -88,6 +93,20 @@ namespace AmpPortableDataViz.Tests.PlayMode
             {
                 Assert.IsFalse(driver.enabled);
             }
+        }
+
+        private GameObject CreateManualGraphFixture()
+        {
+            _manualGraphFixture = new GameObject("ManualGraphFixture");
+            var driver = _manualGraphFixture.AddComponent<GraphManualDriver>();
+            driver.enabled = false;
+            var serialized = new SerializedObject(driver);
+            serialized.FindProperty("targetVisualizer").objectReferenceValue =
+                _manualGraphFixture.GetComponent<GraphVisualizer>();
+            serialized.FindProperty("yRange").vector2Value = new Vector2(0f, 1f);
+            serialized.FindProperty("noiseOffset").floatValue = 13.953234f;
+            serialized.ApplyModifiedPropertiesWithoutUndo();
+            return _manualGraphFixture;
         }
 
         private static GameObject LoadPrefab(string name)

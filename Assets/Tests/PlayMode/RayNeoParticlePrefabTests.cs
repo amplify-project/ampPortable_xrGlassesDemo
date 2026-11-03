@@ -29,7 +29,7 @@ namespace AmpPortableDataViz.Tests.PlayMode
         [TestCase("ParticleMeshViz")]
         [TestCase("ParticleMeshVizRoot")]
         [TestCase("ParticleMeshVizRoot_RayNeo")]
-        [TestCase("AudienceGraphPrefab")]
+        [TestCase("SensorGraphPrefab")]
         [TestCase("ArtistViz")]
         public void RenamedComponents_AllRelatedPrefabsHaveNoMissingScripts(string name)
         {

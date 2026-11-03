@@ -49,7 +49,7 @@ GameObject:
   - component: {fileID: 1829037997221100804}
   - component: {fileID: 3313141666019676919}
   m_Layer: 0
-  m_Name: AudienceGraphPrefab
+  m_Name: SensorGraphPrefab
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -94,21 +94,21 @@ MonoBehaviour:
   m_EditorClassIdentifier: Amp::AmpPortableDataViz.Presentation.Visualization.SensorDataSimulator
   sourceId: audience-manual
   deviceId: 
-  tonicElectrodermalActivityStdDev: -1.2266641
-  temperatureRateOfChangeStdDev: -1.2304635
-  skinConductanceResponseFrequencyStdDev: 1.5505571
-  heartRateStdDev: -0.1477232
-  interBeatIntervalStdDev: 0.40767324
-  arousal: 0.35583746
-  valence: 0.88706
-  engagement: 0.5001398
+  tonicElectrodermalActivityStdDev: 1.5104113
+  temperatureRateOfChangeStdDev: -0.11274612
+  skinConductanceResponseFrequencyStdDev: 0.29737222
+  heartRateStdDev: -0.29597908
+  interBeatIntervalStdDev: -1.2255242
+  arousal: 0.89432216
+  valence: 0.8233931
+  engagement: 0.54700035
   sourceMode: 1
   autoEmit: 1
   animateProceduralNoise: 1
   timeScale: 0.35
   noiseFrequency: 0.75
   noiseSeed: 0.1234
-  noiseOffset: 135.02577
+  noiseOffset: 136.44708
   onSampleEmitted:
     m_PersistentCalls:
       m_Calls: []
