@@ -31,6 +31,8 @@ Right-temple single tap cycles visualizations; double tap cycles sensors. Horizo
 
 PlayMode tests live in `Assets/Tests/PlayMode`. Run them with Unity Test Runner using the project Editor version. Optional diagnostic screenshot generation has been removed; all behavioral assertions remain.
 
+The corner-halo test now waits for the smoothed heart-rate response before measuring geometry. The [halo timing investigation](Assessment/2026-11-03/halo-timing-fix/README.md) records the controlled reproduction, fix and passing 208-case suite; historical failure records are preserved.
+
 The [30 October 2026 pre-merge assessment](Assessment/2026-10-30/RESULTS.md) records the latest **196/196** passing full-suite run, successful APK build and deployment, and the user's successful on-device test. It also records an intermittent halo-radius assertion from an earlier run and two Android build warnings. Raw local logs and APKs remain under ignored `Temp/` paths.
 
 ## Project structure
