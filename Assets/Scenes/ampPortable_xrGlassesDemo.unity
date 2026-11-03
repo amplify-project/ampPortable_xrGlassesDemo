@@ -1901,7 +1901,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::AmpPortableDataViz.Presentation.Bootstrap.Bootstrapper
   AnchorRegistry: {fileID: 0}
-  SineSource: {fileID: 0}
   RedisSource: {fileID: 0}
   VisualPrefab: {fileID: 7070063373814244994, guid: 7fe113f1db4d2784d8f60c23f9c9137b, type: 3}
   IsHost: 1

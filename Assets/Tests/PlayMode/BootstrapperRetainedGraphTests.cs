@@ -54,7 +54,6 @@ namespace AmpPortableDataViz.Tests.PlayMode
             bootstrapper.RedisHost = string.Empty;
             bootstrapper.GraphPrefab = LoadPrefab("GraphPrefab");
             bootstrapper.GraphGroupParent = _testRoot.transform;
-            bootstrapper.SineSource = _testRoot.AddComponent<SineWaveSource>();
             bootstrapper.RedisSource = _testRoot.AddComponent<RedisDataPump>();
 
             Invoke(bootstrapper, "ApplySignalConfiguration");
@@ -63,7 +62,6 @@ namespace AmpPortableDataViz.Tests.PlayMode
             Assert.IsNotNull(driver);
             Assert.IsTrue(driver.enabled);
             Assert.IsNotNull(driver.GetComponent<GraphVisualizer>());
-            Assert.IsFalse(bootstrapper.SineSource.enabled);
             Assert.IsFalse(bootstrapper.RedisSource.enabled);
             AssertNoMissingScripts(driver.gameObject);
         }

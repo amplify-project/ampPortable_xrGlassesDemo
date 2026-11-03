@@ -1,6 +1,6 @@
 # XR Score Viewer
 
-Unity XR proof-of-concept for viewing real-time audience data on RayNeo X3 Pro glasses. The app presents a score/image board, an abstract particle mesh, objective graphs, and an ArtistViz placeholder. Redis supplies live data; local sine-wave and manual sources remain available in the project.
+Unity XR proof-of-concept for viewing real-time audience data on RayNeo X3 Pro glasses. The app presents a score/image board, an abstract particle mesh, objective graphs, and an ArtistViz placeholder. Redis supplies live data; manual visualization drivers remain available for development. The original sine-wave demo source has been retired.
 
 ## Current baseline
 

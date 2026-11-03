@@ -23,13 +23,11 @@ namespace AmpPortableDataViz.Presentation.Bootstrap
     {
         [Header("Scene Dependencies")]
         public AnchorRegistry AnchorRegistry;
-        public SineWaveSource SineSource;
         public RedisDataPump RedisSource;
         public GameObject VisualPrefab;
 
         public enum SignalSourceType
         {
-            Sine = 0,
             Redis = 1
         }
 
@@ -40,7 +38,7 @@ namespace AmpPortableDataViz.Presentation.Bootstrap
         public int Seed = 12345;
 
         [Header("Signal Source Selection")]
-        public SignalSourceType ActiveSignalSource = SignalSourceType.Sine;
+        public SignalSourceType ActiveSignalSource = SignalSourceType.Redis;
 
         [Header("Manual Visualization Testing")]
         public bool UseManualVisualizationDrivers;
@@ -282,16 +280,6 @@ namespace AmpPortableDataViz.Presentation.Bootstrap
 
         private void EnsureSources()
         {
-            if (SineSource == null)
-            {
-                SineSource = FindFirstObjectByType<SineWaveSource>();
-                if (SineSource == null && IsHost)
-                {
-                    var sourceGameObject = new GameObject("SineWaveSource");
-                    SineSource = sourceGameObject.AddComponent<SineWaveSource>();
-                }
-            }
-
             if (RedisSource == null)
             {
                 RedisSource = FindFirstObjectByType<RedisDataPump>();
@@ -333,19 +321,8 @@ namespace AmpPortableDataViz.Presentation.Bootstrap
 
             yield return _sessionController.InitializeAsync(options).AsIEnumerator();
 
-            if (IsHost && SineSource != null)
-            {
-                _sessionController.BindSignalSource(SineSource, _floatToParamsMapper);
-            }
-
             switch (ActiveSignalSource)
             {
-                case SignalSourceType.Sine:
-                    if (SineSource != null)
-                    {
-                        _sessionController.BindSignalSource(SineSource, _floatToParamsMapper);
-                    }
-                    break;
                 case SignalSourceType.Redis:
                     // Audience visuals manage their own Redis sources; avoid a duplicate primary visual.
                     bool shouldBindPrimaryRedis = !AutoSpawnAudienceVisualsFromChannels && !AutoSpawnGraphVisualsFromChannels;
@@ -375,13 +352,7 @@ namespace AmpPortableDataViz.Presentation.Bootstrap
             EnsureRedisEndpointFromRuntime();
 
             bool hasRedisEndpoint = !string.IsNullOrWhiteSpace(RedisHost);
-            bool useSine = ActiveSignalSource == SignalSourceType.Sine;
             bool useRedis = ActiveSignalSource == SignalSourceType.Redis;
-
-            if (SineSource != null)
-            {
-                SineSource.enabled = useSine;
-            }
 
             var redisChannels = GetRedisChannels();
             var primaryRedisChannel = redisChannels[0];
@@ -569,11 +540,6 @@ namespace AmpPortableDataViz.Presentation.Bootstrap
 
         private void ApplyManualDriverConfiguration()
         {
-            if (SineSource != null)
-            {
-                SineSource.enabled = false;
-            }
-
             if (RedisSource != null)
             {
                 RedisSource.enabled = false;

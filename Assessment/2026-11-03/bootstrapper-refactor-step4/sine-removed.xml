@@ -1,0 +1,141 @@
+<?xml version="1.0" encoding="utf-8"?>
+<test-run id="2" testcasecount="13" result="Passed" total="13" passed="13" failed="0" inconclusive="0" skipped="0" asserts="0" engine-version="3.5.0.0" clr-version="4.0.30319.42000" start-time="2026-11-03 10:33:49Z" end-time="2026-11-03 10:33:49Z" duration="0.189392">
+  <test-suite type="TestSuite" id="1260" name="XR Score Viewer" fullname="XR Score Viewer" runstate="Runnable" testcasecount="202" result="Passed" start-time="2026-11-03 10:33:49Z" end-time="2026-11-03 10:33:49Z" duration="0.189392" total="13" passed="13" failed="0" inconclusive="0" skipped="0" asserts="0">
+    <properties>
+      <property name="platform" value="PlayMode" />
+    </properties>
+    <test-suite type="Assembly" id="1252" name="Tests.dll" fullname="C:/Users/Bryan Dunphy/AppData/Local/Temp/rnc1030/project/Library/ScriptAssemblies/Tests.dll" runstate="Runnable" testcasecount="202" result="Passed" start-time="2026-11-03 10:33:49Z" end-time="2026-11-03 10:33:49Z" duration="0.182641" total="13" passed="13" failed="0" inconclusive="0" skipped="0" asserts="0">
+      <properties>
+        <property name="_PID" value="39552" />
+        <property name="_APPDOMAIN" value="Unity Child Domain" />
+        <property name="platform" value="PlayMode" />
+        <property name="EditorOnly" value="False" />
+      </properties>
+      <test-suite type="TestSuite" id="1253" name="AmpPortableDataViz" fullname="AmpPortableDataViz" runstate="Runnable" testcasecount="202" result="Passed" start-time="2026-11-03 10:33:49Z" end-time="2026-11-03 10:33:49Z" duration="0.180399" total="13" passed="13" failed="0" inconclusive="0" skipped="0" asserts="0">
+        <properties />
+        <test-suite type="TestSuite" id="1254" name="Tests" fullname="AmpPortableDataViz.Tests" runstate="Runnable" testcasecount="202" result="Passed" start-time="2026-11-03 10:33:49Z" end-time="2026-11-03 10:33:49Z" duration="0.177652" total="13" passed="13" failed="0" inconclusive="0" skipped="0" asserts="0">
+          <properties />
+          <test-suite type="TestSuite" id="1257" name="PlayMode" fullname="AmpPortableDataViz.Tests.PlayMode" runstate="Runnable" testcasecount="166" result="Passed" start-time="2026-11-03 10:33:49Z" end-time="2026-11-03 10:33:49Z" duration="0.175592" total="13" passed="13" failed="0" inconclusive="0" skipped="0" asserts="0">
+            <properties />
+            <test-suite type="TestFixture" id="1117" name="BootstrapperArtistVizTests" fullname="AmpPortableDataViz.Tests.PlayMode.BootstrapperArtistVizTests" classname="AmpPortableDataViz.Tests.PlayMode.BootstrapperArtistVizTests" runstate="Runnable" testcasecount="1" result="Passed" start-time="2026-11-03 10:33:49Z" end-time="2026-11-03 10:33:49Z" duration="0.049293" total="1" passed="1" failed="0" inconclusive="0" skipped="0" asserts="0">
+              <properties />
+              <test-case id="1118" name="SelectedArtistVisual_IsSpawnedRegisteredAndCleared" fullname="AmpPortableDataViz.Tests.PlayMode.BootstrapperArtistVizTests.SelectedArtistVisual_IsSpawnedRegisteredAndCleared" methodname="SelectedArtistVisual_IsSpawnedRegisteredAndCleared" classname="AmpPortableDataViz.Tests.PlayMode.BootstrapperArtistVizTests" runstate="Runnable" seed="1514150855" result="Passed" start-time="2026-11-03 10:33:49Z" end-time="2026-11-03 10:33:49Z" duration="0.034245" asserts="0">
+                <properties>
+                  <property name="_JOINTYPE" value="UnityCombinatorial" />
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+                <output><![CDATA[Bootstrapper: Waiting for Redis endpoint confirmation before connecting.
+]]></output>
+              </test-case>
+            </test-suite>
+            <test-suite type="TestFixture" id="1119" name="BootstrapperChannelAndLabelTests" fullname="AmpPortableDataViz.Tests.PlayMode.BootstrapperChannelAndLabelTests" classname="AmpPortableDataViz.Tests.PlayMode.BootstrapperChannelAndLabelTests" runstate="Runnable" testcasecount="9" result="Passed" start-time="2026-11-03 10:33:49Z" end-time="2026-11-03 10:33:49Z" duration="0.023015" total="9" passed="9" failed="0" inconclusive="0" skipped="0" asserts="0">
+              <properties />
+              <test-case id="1121" name="ChannelDefinitions_DoNotGenerateDefinitionsFromInvalidChannels" fullname="AmpPortableDataViz.Tests.PlayMode.BootstrapperChannelAndLabelTests.ChannelDefinitions_DoNotGenerateDefinitionsFromInvalidChannels" methodname="ChannelDefinitions_DoNotGenerateDefinitionsFromInvalidChannels" classname="AmpPortableDataViz.Tests.PlayMode.BootstrapperChannelAndLabelTests" runstate="Runnable" seed="1505558323" result="Passed" start-time="2026-11-03 10:33:49Z" end-time="2026-11-03 10:33:49Z" duration="0.004901" asserts="0">
+                <properties>
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+                <output><![CDATA[Bootstrapper: Waiting for Redis endpoint confirmation before connecting.
+]]></output>
+              </test-case>
+              <test-case id="1120" name="ChannelDefinitions_PreserveParsedInputChannelsAndSensorOrder" fullname="AmpPortableDataViz.Tests.PlayMode.BootstrapperChannelAndLabelTests.ChannelDefinitions_PreserveParsedInputChannelsAndSensorOrder" methodname="ChannelDefinitions_PreserveParsedInputChannelsAndSensorOrder" classname="AmpPortableDataViz.Tests.PlayMode.BootstrapperChannelAndLabelTests" runstate="Runnable" seed="548930517" result="Passed" start-time="2026-11-03 10:33:49Z" end-time="2026-11-03 10:33:49Z" duration="0.002730" asserts="0">
+                <properties>
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+                <output><![CDATA[Bootstrapper: Waiting for Redis endpoint confirmation before connecting.
+]]></output>
+              </test-case>
+              <test-suite type="ParameterizedMethod" id="1129" name="GraphLabel_PreservesConfiguredPosition" fullname="AmpPortableDataViz.Tests.PlayMode.BootstrapperChannelAndLabelTests.GraphLabel_PreservesConfiguredPosition" classname="AmpPortableDataViz.Tests.PlayMode.BootstrapperChannelAndLabelTests" runstate="Runnable" testcasecount="7" result="Passed" start-time="2026-11-03 10:33:49Z" end-time="2026-11-03 10:33:49Z" duration="0.013135" total="7" passed="7" failed="0" inconclusive="0" skipped="0" asserts="0">
+                <properties />
+                <test-case id="1122" name="GraphLabel_DefaultBounds" fullname="AmpPortableDataViz.Tests.PlayMode.BootstrapperChannelAndLabelTests.GraphLabel_DefaultBounds" methodname="GraphLabel_PreservesConfiguredPosition" classname="AmpPortableDataViz.Tests.PlayMode.BootstrapperChannelAndLabelTests" runstate="Runnable" seed="1331102570" result="Passed" start-time="2026-11-03 10:33:49Z" end-time="2026-11-03 10:33:49Z" duration="0.006923" asserts="0">
+                  <properties>
+                    <property name="retryIteration" value="0" />
+                    <property name="repeatIteration" value="0" />
+                  </properties>
+                  <output><![CDATA[Bootstrapper: Waiting for Redis endpoint confirmation before connecting.
+]]></output>
+                </test-case>
+                <test-case id="1123" name="GraphLabel_CustomBoundsAndPadding" fullname="AmpPortableDataViz.Tests.PlayMode.BootstrapperChannelAndLabelTests.GraphLabel_CustomBoundsAndPadding" methodname="GraphLabel_PreservesConfiguredPosition" classname="AmpPortableDataViz.Tests.PlayMode.BootstrapperChannelAndLabelTests" runstate="Runnable" seed="1471507559" result="Passed" start-time="2026-11-03 10:33:49Z" end-time="2026-11-03 10:33:49Z" duration="0.000993" asserts="0">
+                  <properties>
+                    <property name="retryIteration" value="0" />
+                    <property name="repeatIteration" value="0" />
+                  </properties>
+                  <output><![CDATA[Bootstrapper: Waiting for Redis endpoint confirmation before connecting.
+]]></output>
+                </test-case>
+                <test-case id="1124" name="GraphLabel_NegativeVerticalOffsetClamped" fullname="AmpPortableDataViz.Tests.PlayMode.BootstrapperChannelAndLabelTests.GraphLabel_NegativeVerticalOffsetClamped" methodname="GraphLabel_PreservesConfiguredPosition" classname="AmpPortableDataViz.Tests.PlayMode.BootstrapperChannelAndLabelTests" runstate="Runnable" seed="298287954" result="Passed" start-time="2026-11-03 10:33:49Z" end-time="2026-11-03 10:33:49Z" duration="0.000661" asserts="0">
+                  <properties>
+                    <property name="retryIteration" value="0" />
+                    <property name="repeatIteration" value="0" />
+                  </properties>
+                  <output><![CDATA[Bootstrapper: Waiting for Redis endpoint confirmation before connecting.
+]]></output>
+                </test-case>
+                <test-case id="1125" name="GraphLabel_ZeroBoundsUsesOffsetOnly" fullname="AmpPortableDataViz.Tests.PlayMode.BootstrapperChannelAndLabelTests.GraphLabel_ZeroBoundsUsesOffsetOnly" methodname="GraphLabel_PreservesConfiguredPosition" classname="AmpPortableDataViz.Tests.PlayMode.BootstrapperChannelAndLabelTests" runstate="Runnable" seed="614747696" result="Passed" start-time="2026-11-03 10:33:49Z" end-time="2026-11-03 10:33:49Z" duration="0.000564" asserts="0">
+                  <properties>
+                    <property name="retryIteration" value="0" />
+                    <property name="repeatIteration" value="0" />
+                  </properties>
+                  <output><![CDATA[Bootstrapper: Waiting for Redis endpoint confirmation before connecting.
+]]></output>
+                </test-case>
+                <test-case id="1126" name="GraphLabel_TinyBoundsUsesOffsetOnly" fullname="AmpPortableDataViz.Tests.PlayMode.BootstrapperChannelAndLabelTests.GraphLabel_TinyBoundsUsesOffsetOnly" methodname="GraphLabel_PreservesConfiguredPosition" classname="AmpPortableDataViz.Tests.PlayMode.BootstrapperChannelAndLabelTests" runstate="Runnable" seed="1855775043" result="Passed" start-time="2026-11-03 10:33:49Z" end-time="2026-11-03 10:33:49Z" duration="0.000535" asserts="0">
+                  <properties>
+                    <property name="retryIteration" value="0" />
+                    <property name="repeatIteration" value="0" />
+                  </properties>
+                  <output><![CDATA[Bootstrapper: Waiting for Redis endpoint confirmation before connecting.
+]]></output>
+                </test-case>
+                <test-case id="1127" name="GraphLabel_BoundsAtThresholdUsesPadding" fullname="AmpPortableDataViz.Tests.PlayMode.BootstrapperChannelAndLabelTests.GraphLabel_BoundsAtThresholdUsesPadding" methodname="GraphLabel_PreservesConfiguredPosition" classname="AmpPortableDataViz.Tests.PlayMode.BootstrapperChannelAndLabelTests" runstate="Runnable" seed="1646613131" result="Passed" start-time="2026-11-03 10:33:49Z" end-time="2026-11-03 10:33:49Z" duration="0.000651" asserts="0">
+                  <properties>
+                    <property name="retryIteration" value="0" />
+                    <property name="repeatIteration" value="0" />
+                  </properties>
+                  <output><![CDATA[Bootstrapper: Waiting for Redis endpoint confirmation before connecting.
+]]></output>
+                </test-case>
+                <test-case id="1128" name="GraphLabel_SignedHeightPreserved" fullname="AmpPortableDataViz.Tests.PlayMode.BootstrapperChannelAndLabelTests.GraphLabel_SignedHeightPreserved" methodname="GraphLabel_PreservesConfiguredPosition" classname="AmpPortableDataViz.Tests.PlayMode.BootstrapperChannelAndLabelTests" runstate="Runnable" seed="1534322611" result="Passed" start-time="2026-11-03 10:33:49Z" end-time="2026-11-03 10:33:49Z" duration="0.000574" asserts="0">
+                  <properties>
+                    <property name="retryIteration" value="0" />
+                    <property name="repeatIteration" value="0" />
+                  </properties>
+                  <output><![CDATA[Bootstrapper: Waiting for Redis endpoint confirmation before connecting.
+]]></output>
+                </test-case>
+              </test-suite>
+            </test-suite>
+            <test-suite type="TestFixture" id="1130" name="BootstrapperRetainedGraphTests" fullname="AmpPortableDataViz.Tests.PlayMode.BootstrapperRetainedGraphTests" classname="AmpPortableDataViz.Tests.PlayMode.BootstrapperRetainedGraphTests" runstate="Runnable" testcasecount="3" result="Passed" start-time="2026-11-03 10:33:49Z" end-time="2026-11-03 10:33:49Z" duration="0.099747" total="3" passed="3" failed="0" inconclusive="0" skipped="0" asserts="0">
+              <properties />
+              <test-case id="1131" name="ManualGraphPrefab_RendersWithoutLiveSource" fullname="AmpPortableDataViz.Tests.PlayMode.BootstrapperRetainedGraphTests.ManualGraphPrefab_RendersWithoutLiveSource" methodname="ManualGraphPrefab_RendersWithoutLiveSource" classname="AmpPortableDataViz.Tests.PlayMode.BootstrapperRetainedGraphTests" runstate="Runnable" seed="501424507" result="Passed" start-time="2026-11-03 10:33:49Z" end-time="2026-11-03 10:33:49Z" duration="0.073371" asserts="0">
+                <properties>
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+              </test-case>
+              <test-case id="1132" name="ManualMode_SpawnsGraphWithRedisEndpointUnconfirmed" fullname="AmpPortableDataViz.Tests.PlayMode.BootstrapperRetainedGraphTests.ManualMode_SpawnsGraphWithRedisEndpointUnconfirmed" methodname="ManualMode_SpawnsGraphWithRedisEndpointUnconfirmed" classname="AmpPortableDataViz.Tests.PlayMode.BootstrapperRetainedGraphTests" runstate="Runnable" seed="302248874" result="Passed" start-time="2026-11-03 10:33:49Z" end-time="2026-11-03 10:33:49Z" duration="0.003797" asserts="0">
+                <properties>
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+                <output><![CDATA[Bootstrapper: Waiting for Redis endpoint confirmation before connecting.
+]]></output>
+              </test-case>
+              <test-case id="1133" name="SelectedGraphPrefab_KeepsVisualizerBindingAndDisablesLocalSources" fullname="AmpPortableDataViz.Tests.PlayMode.BootstrapperRetainedGraphTests.SelectedGraphPrefab_KeepsVisualizerBindingAndDisablesLocalSources" methodname="SelectedGraphPrefab_KeepsVisualizerBindingAndDisablesLocalSources" classname="AmpPortableDataViz.Tests.PlayMode.BootstrapperRetainedGraphTests" runstate="Runnable" seed="783350962" result="Passed" start-time="2026-11-03 10:33:49Z" end-time="2026-11-03 10:33:49Z" duration="0.021129" asserts="0">
+                <properties>
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+                <output><![CDATA[Bootstrapper: Waiting for Redis endpoint confirmation before connecting.
+Saving results to: C:\Users\Bryan Dunphy\Documents\UnityProjects\ampPortable_xrGlassesDemo\Assessment\2026-11-03\bootstrapper-refactor-step4\sine-removed.xml
+]]></output>
+              </test-case>
+            </test-suite>
+          </test-suite>
+        </test-suite>
+      </test-suite>
+    </test-suite>
+  </test-suite>
+</test-run>
