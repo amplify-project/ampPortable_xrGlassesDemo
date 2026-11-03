@@ -1,17 +1,15 @@
 {
-  "phase": "streams",
+  "phase": "visuals",
   "project": "C:\\Users\\Bryan Dunphy\\AppData\\Local\\Temp\\rnc1030\\project",
-  "source_files": 1683,
+  "source_files": 1685,
   "all_source_bytes_match": true,
   "copied": [
     "Assets/AmpPortableDataViz/Presentation/Bootstrap/Bootstrapper.cs",
-    "Assets/AmpPortableDataViz/Presentation/Bootstrap/RedisStreamRegistry.cs",
-    "Assets/AmpPortableDataViz/Presentation/Bootstrap/RedisStreamRegistry.cs.meta",
-    "Assets/Scenes/ampPortable_xrGlassesDemo.unity",
-    "Assets/Tests/PlayMode/BootstrapperChannelAndLabelTests.cs",
+    "Assets/AmpPortableDataViz/Presentation/Bootstrap/VisualizationPresenter.cs",
+    "Assets/AmpPortableDataViz/Presentation/Bootstrap/VisualizationPresenter.cs.meta",
+    "Assets/Tests/PlayMode/BootstrapperArtistVizTests.cs",
     "Assets/Tests/PlayMode/BootstrapperLifecycleTests.cs",
-    "Assets/Tests/PlayMode/RedisStreamRegistryTests.cs",
-    "Assets/Tests/PlayMode/RedisStreamRegistryTests.cs.meta"
+    "Assets/Tests/PlayMode/BootstrapperRetainedGraphTests.cs"
   ],
   "removed": [],
   "validation_only_extras": [

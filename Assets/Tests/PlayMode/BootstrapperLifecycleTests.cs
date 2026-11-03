@@ -69,7 +69,7 @@ namespace AmpPortableDataViz.Tests.PlayMode
             _bootstrapper.GraphPrefab = Child("ManualGraphTemplate");
             _bootstrapper.GraphPrefab.AddComponent<GraphManualDriver>();
             Invoke(_bootstrapper, "ApplySignalConfiguration");
-            var instances = (IList)GetField(_bootstrapper, "_manualDriverInstances");
+            var instances = (IList)GetField(GetVisuals(_bootstrapper), "_manualDriverInstances");
             Assert.AreEqual(1, instances.Count);
             var first = (GameObject)instances[0];
             Invoke(_bootstrapper, "ApplySignalConfiguration");
@@ -96,7 +96,7 @@ namespace AmpPortableDataViz.Tests.PlayMode
         {
             ConfigureAutomaticTemplates();
             _bootstrapper.BeginAfterEndpoint();
-            var firstVisual = (GameObject)GetField(_bootstrapper, "_selectedParticleVisual");
+            var firstVisual = (GameObject)GetField(GetVisuals(_bootstrapper), "_selectedParticleVisual");
             Assert.AreEqual(2, _root.GetComponent<SensorStreamCoordinator>().SensorCount);
             _bootstrapper.BeginAfterEndpoint();
             yield return null;
@@ -108,8 +108,8 @@ namespace AmpPortableDataViz.Tests.PlayMode
             yield return null;
             Assert.AreEqual(0, _root.GetComponent<SensorStreamCoordinator>().SensorCount);
             Assert.AreEqual(0, _root.GetComponentsInChildren<RedisPhysioMetricsPump>(true).Length);
-            Assert.IsNull(GetField(_bootstrapper, "_selectedParticleVisual"));
-            Assert.IsNull(GetField(_bootstrapper, "_selectedGraphVisual"));
+            Assert.IsNull(GetField(GetVisuals(_bootstrapper), "_selectedParticleVisual"));
+            Assert.IsNull(GetField(GetVisuals(_bootstrapper), "_selectedGraphVisual"));
             Assert.IsNull(GetField(GetField(_bootstrapper, "_streams"), "_sensorEngagementBackendObject"));
 
             Invoke(_bootstrapper, "OnEnable");
@@ -129,8 +129,8 @@ namespace AmpPortableDataViz.Tests.PlayMode
             ConfigureAutomaticTemplates();
             _bootstrapper.UseSingleSelectedSensorStream = false;
             _bootstrapper.BeginAfterEndpoint();
-            Assert.AreEqual(2, ((ICollection)GetField(_bootstrapper, "_audienceDeviceInstances")).Count);
-            Assert.AreEqual(2, ((ICollection)GetField(_bootstrapper, "_audienceGraphDeviceGroups")).Count);
+            Assert.AreEqual(2, ((ICollection)GetField(GetVisuals(_bootstrapper), "_audienceDeviceInstances")).Count);
+            Assert.AreEqual(2, ((ICollection)GetField(GetVisuals(_bootstrapper), "_audienceGraphDeviceGroups")).Count);
             Assert.AreEqual(2, ((IDictionary)GetField(GetField(_bootstrapper, "_streams"), "_sharedPhysioPumpsByChannel")).Count);
             Assert.AreEqual(2, _root.GetComponentsInChildren<RedisPhysioMetricsPump>(true).Length);
             foreach (object handle in ((IDictionary)GetField(GetField(_bootstrapper, "_streams"), "_sharedPhysioPumpsByChannel")).Values)
@@ -141,8 +141,8 @@ namespace AmpPortableDataViz.Tests.PlayMode
             _bootstrapper.UseSingleSelectedSensorStream = true;
             Invoke(_bootstrapper, "ApplySignalConfiguration");
             yield return null;
-            Assert.AreEqual(0, ((ICollection)GetField(_bootstrapper, "_audienceDeviceInstances")).Count);
-            Assert.AreEqual(0, ((ICollection)GetField(_bootstrapper, "_audienceGraphDeviceGroups")).Count);
+            Assert.AreEqual(0, ((ICollection)GetField(GetVisuals(_bootstrapper), "_audienceDeviceInstances")).Count);
+            Assert.AreEqual(0, ((ICollection)GetField(GetVisuals(_bootstrapper), "_audienceGraphDeviceGroups")).Count);
             Assert.AreEqual(2, _root.GetComponentsInChildren<RedisPhysioMetricsPump>(true).Length);
             Assert.AreEqual(2, _root.GetComponent<SensorStreamCoordinator>().SensorCount);
 
@@ -177,6 +177,12 @@ namespace AmpPortableDataViz.Tests.PlayMode
             var child = new GameObject(name);
             child.transform.SetParent(_root.transform, false);
             return child;
+        }
+
+        private static VisualizationPresenter GetVisuals(Bootstrapper bootstrapper)
+        {
+            return (VisualizationPresenter)typeof(Bootstrapper).GetProperty(
+                "Visuals", BindingFlags.Instance | BindingFlags.NonPublic).GetValue(bootstrapper);
         }
 
         private static object Invoke(object target, string name, params object[] arguments)

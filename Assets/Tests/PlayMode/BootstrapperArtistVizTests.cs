@@ -52,12 +52,12 @@ namespace AmpPortableDataViz.Tests.PlayMode
             InvokeAddVisualizerBindings(instance, bindings);
             Assert.AreEqual(1, bindings.Count);
 
-            SetField(bootstrapper, "_selectedArtistVisual", instance);
-            Invoke(bootstrapper, "ClearSelectedSensorStreamMode");
+            SetField(GetVisuals(bootstrapper), "_selectedArtistVisual", instance);
+            Invoke(GetVisuals(bootstrapper), "ClearSelectedSensorStreamMode");
             yield return null;
 
             Assert.IsTrue(instance == null);
-            Assert.IsNull(GetField(bootstrapper, "_selectedArtistVisual"));
+            Assert.IsNull(GetField(GetVisuals(bootstrapper), "_selectedArtistVisual"));
         }
 
         private static GameObject InvokeSpawnSelectedSensorVisual(
@@ -66,7 +66,7 @@ namespace AmpPortableDataViz.Tests.PlayMode
             Transform parent)
         {
             return (GameObject)Invoke(
-                bootstrapper,
+                GetVisuals(bootstrapper),
                 "SpawnSelectedSensorVisual",
                 prefab,
                 parent,
@@ -79,11 +79,17 @@ namespace AmpPortableDataViz.Tests.PlayMode
             GameObject instance,
             ICollection<AudienceSignalVisualizerBinding> bindings)
         {
-            MethodInfo method = typeof(Bootstrapper).GetMethod(
+            MethodInfo method = typeof(VisualizationPresenter).GetMethod(
                 "AddVisualizerBindings",
                 BindingFlags.Static | BindingFlags.NonPublic);
             Assert.IsNotNull(method);
             method.Invoke(null, new object[] { instance, bindings });
+        }
+
+        private static VisualizationPresenter GetVisuals(Bootstrapper bootstrapper)
+        {
+            return (VisualizationPresenter)typeof(Bootstrapper).GetProperty(
+                "Visuals", BindingFlags.Instance | BindingFlags.NonPublic).GetValue(bootstrapper);
         }
 
         private static object Invoke(object target, string methodName, params object[] arguments)

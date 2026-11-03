@@ -68,7 +68,7 @@ namespace AmpPortableDataViz.Tests.PlayMode
         {
             Bootstrapper bootstrapper = CreateBootstrapper();
             _graphInstance = (GameObject)Invoke(
-                bootstrapper, "SpawnSelectedSensorVisual", LoadPrefab("AudienceGraphPrefab"),
+                GetVisuals(bootstrapper), "SpawnSelectedSensorVisual", LoadPrefab("AudienceGraphPrefab"),
                 _testRoot.transform, "SelectedGraph", true, false);
 
             Assert.IsNotNull(_graphInstance);
@@ -111,6 +111,12 @@ namespace AmpPortableDataViz.Tests.PlayMode
             _testRoot = new GameObject(nameof(BootstrapperRetainedGraphTests));
             _testRoot.SetActive(false);
             return _testRoot.AddComponent<Bootstrapper>();
+        }
+
+        private static VisualizationPresenter GetVisuals(Bootstrapper bootstrapper)
+        {
+            return (VisualizationPresenter)typeof(Bootstrapper).GetProperty(
+                "Visuals", BindingFlags.Instance | BindingFlags.NonPublic).GetValue(bootstrapper);
         }
 
         private static object Invoke(object target, string name, params object[] arguments)

@@ -2,10 +2,8 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
-using AmpPortableDataViz.Application;
 using AmpPortableDataViz.Core;
 using AmpPortableDataViz.Infra;
-using AmpPortableDataViz.Presentation.Interaction;
 using AmpPortableDataViz.Presentation.Sources;
 using AmpPortableDataViz.Presentation.Visualization;
 using TMPro;
@@ -122,6 +120,39 @@ namespace AmpPortableDataViz.Presentation.Bootstrap
         [Tooltip("World-space spawn rotation in degrees used when no visualization parent is assigned.")]
         public Vector3 SpawnRotationEuler = Vector3.zero;
 
+        private VisualizationPresenter _visuals;
+        private VisualizationPresenter Visuals
+        {
+            get
+            {
+                if (_visuals == null)
+                {
+                    _visuals = new VisualizationPresenter(gameObject, Streams,
+                        PositionAbstractViz, PositionGraphGroup, PositionAtParentOrigin,
+                        AttachDeviceLabel, AttachGraphGroupLabel);
+                }
+
+                _visuals.Configure(new VisualizationPresenter.Settings
+                {
+                    AbstractVizPrefab = AbstractVizPrefab,
+                    AbstractVizParent = AbstractVizParent,
+                    GraphPrefab = GraphPrefab,
+                    GraphGroupParent = GraphGroupParent,
+                    ArtistVizPrefab = ArtistVizPrefab,
+                    ArtistVizParent = ArtistVizParent,
+                    AutoSpawnAbstractViz = AutoSpawnAbstractViz,
+                    AutoSpawnGraphVisualsFromChannels = AutoSpawnGraphVisualsFromChannels,
+                    SensorIds = SensorIds,
+                    SensorHudCamera = SensorHudCamera,
+                    SensorHudLocalPosition = SensorHudLocalPosition,
+                    SensorHudLocalScale = SensorHudLocalScale,
+                    SensorHudFontSize = SensorHudFontSize,
+                    SensorHudColor = SensorHudColor
+                });
+                return _visuals;
+            }
+        }
+
         private RedisStreamRegistry _streams;
         private RedisStreamRegistry Streams => _streams ??= new RedisStreamRegistry(transform);
 
@@ -145,17 +176,7 @@ namespace AmpPortableDataViz.Presentation.Bootstrap
         }
 
         private Coroutine _deviceDiscoveryRoutine;
-        private readonly List<AudienceDeviceInstance> _audienceDeviceInstances = new List<AudienceDeviceInstance>();
-        private readonly List<AudienceGraphDeviceGroupInstance> _audienceGraphDeviceGroups = new List<AudienceGraphDeviceGroupInstance>();
-        private readonly List<SelectedSensorSourceInstance> _selectedSensorSources = new List<SelectedSensorSourceInstance>();
-        private readonly List<GameObject> _manualDriverInstances = new List<GameObject>();
         private bool _redisEndpointReady;
-        private SensorStreamCoordinator _sensorStreamCoordinator;
-        private RayNeoTempleSensorStreamCycler _sensorStreamCycler;
-        private GameObject _selectedParticleVisual;
-        private GameObject _selectedGraphVisual;
-        private GameObject _selectedArtistVisual;
-        private GameObject _sensorHudObject;
 
         private void Awake()
         {
@@ -219,16 +240,16 @@ namespace AmpPortableDataViz.Presentation.Bootstrap
 
         private void ClearAutomaticVisuals()
         {
-            ClearAudienceDeviceVisuals();
-            ClearAudienceGraphDeviceVisuals();
-            ClearSelectedSensorStreamMode();
+            Visuals.ClearAudienceDeviceVisuals();
+            Visuals.ClearAudienceGraphDeviceVisuals();
+            Visuals.ClearSelectedSensorStreamMode();
             Streams.ClearSensorEngagementBackend();
         }
 
         private void ClearRuntimeVisuals()
         {
             ClearAutomaticVisuals();
-            ClearManualDriverVisuals();
+            Visuals.ClearManualDriverVisuals();
         }
 
         private void ApplySignalConfiguration()
@@ -242,7 +263,7 @@ namespace AmpPortableDataViz.Presentation.Bootstrap
             EnsureRedisEndpointFromRuntime();
             ConfigureStreams();
 
-            ClearManualDriverVisuals();
+            Visuals.ClearManualDriverVisuals();
 
             bool hasRedisEndpoint = !string.IsNullOrWhiteSpace(RedisHost);
 
@@ -287,9 +308,9 @@ namespace AmpPortableDataViz.Presentation.Bootstrap
                 (shouldSpawnAudienceVisuals || shouldSpawnAudienceGraphVisuals || shouldSpawnArtistViz);
             if (shouldUseSelectedSensorStream)
             {
-                ClearAudienceDeviceVisuals();
-                ClearAudienceGraphDeviceVisuals();
-                EnsureSelectedSensorStreamMode(
+                Visuals.ClearAudienceDeviceVisuals();
+                Visuals.ClearAudienceGraphDeviceVisuals();
+                Visuals.EnsureSelectedSensorStreamMode(
                     redisChannels,
                     shouldSpawnAudienceVisuals,
                     shouldSpawnAudienceGraphVisuals,
@@ -297,24 +318,24 @@ namespace AmpPortableDataViz.Presentation.Bootstrap
                 return;
             }
 
-            ClearSelectedSensorStreamMode();
+            Visuals.ClearSelectedSensorStreamMode();
 
             if (shouldSpawnAudienceVisuals)
             {
-                EnsureAudienceDeviceVisuals(redisChannels);
+                Visuals.EnsureAudienceDeviceVisuals(redisChannels);
             }
             else
             {
-                ClearAudienceDeviceVisuals();
+                Visuals.ClearAudienceDeviceVisuals();
             }
 
             if (shouldSpawnAudienceGraphVisuals)
             {
-                EnsureAudienceGraphDeviceVisuals(redisChannels);
+                Visuals.EnsureAudienceGraphDeviceVisuals(redisChannels);
             }
             else
             {
-                ClearAudienceGraphDeviceVisuals();
+                Visuals.ClearAudienceGraphDeviceVisuals();
             }
         }
 
@@ -398,109 +419,7 @@ namespace AmpPortableDataViz.Presentation.Bootstrap
         private void ApplyManualDriverConfiguration()
         {
             ClearAutomaticVisuals();
-            EnsureManualDriverVisuals();
-        }
-
-        private void EnsureManualDriverVisuals()
-        {
-            if (_manualDriverInstances.Count > 0)
-            {
-                return;
-            }
-
-            SpawnManualDriverPrefab(AbstractVizPrefab, AbstractVizParent, "ManualVisual", 0, isGraphPrefab: false);
-            SpawnManualDriverPrefab(GraphPrefab, GraphGroupParent, "ManualGraph", 0, isGraphPrefab: true);
-        }
-
-        private void SpawnManualDriverPrefab(GameObject prefab, Transform parent, string suffix, int index, bool isGraphPrefab)
-        {
-            if (prefab == null)
-            {
-                return;
-            }
-
-            bool hasManualDriver =
-                prefab.GetComponentInChildren<AudienceDataManualDriver>(true) != null ||
-                prefab.GetComponentInChildren<ParticleMeshManualDriver>(true) != null ||
-                prefab.GetComponentInChildren<GraphManualDriver>(true) != null;
-
-            if (!hasManualDriver)
-            {
-                return;
-            }
-
-            bool hasCustomParent = parent != null;
-            var instance = hasCustomParent
-                ? Instantiate(prefab, parent)
-                : Instantiate(prefab);
-
-            instance.name = $"{prefab.name}_{suffix}";
-            if (isGraphPrefab)
-            {
-                PositionGraphGroup(instance.transform, index, hasCustomParent);
-            }
-            else
-            {
-                PositionAbstractViz(instance.transform, index, hasCustomParent);
-            }
-
-            ConfigureManualDriverInstance(instance);
-            _manualDriverInstances.Add(instance);
-        }
-
-        private static void ConfigureManualDriverInstance(GameObject instance)
-        {
-            if (instance == null)
-            {
-                return;
-            }
-
-            var audienceBindings = instance.GetComponentsInChildren<AudienceSignalBinding>(true);
-            foreach (var binding in audienceBindings)
-            {
-                binding.enabled = false;
-            }
-
-            var audienceManualDrivers = instance.GetComponentsInChildren<AudienceDataManualDriver>(true);
-            bool hasAudienceManualDriver = audienceManualDrivers.Length > 0;
-            foreach (var manualDriver in audienceManualDrivers)
-            {
-                manualDriver.enabled = true;
-            }
-
-            var audienceVisualizerBindings = instance.GetComponentsInChildren<AudienceSignalVisualizerBinding>(true);
-            foreach (var visualizerBinding in audienceVisualizerBindings)
-            {
-                if (hasAudienceManualDriver)
-                {
-                    visualizerBinding.ConfigureManualSource(audienceManualDrivers[0]);
-                }
-
-                var particleMeshVisualizer = visualizerBinding.GetComponentInChildren<ParticleMeshVisualizer>();
-                if (particleMeshVisualizer == null)
-                {
-                    particleMeshVisualizer = instance.GetComponentInChildren<ParticleMeshVisualizer>(true);
-                }
-
-                if (particleMeshVisualizer != null)
-                {
-                    visualizerBinding.ConfigureParticleTarget(particleMeshVisualizer);
-                }
-
-                visualizerBinding.enabled = true;
-            }
-
-            var particleManualDrivers = instance.GetComponentsInChildren<ParticleMeshManualDriver>(true);
-            foreach (var manualDriver in particleManualDrivers)
-            {
-                manualDriver.enabled = !hasAudienceManualDriver;
-            }
-
-            var graphManualDrivers = instance.GetComponentsInChildren<GraphManualDriver>(true);
-            foreach (var manualDriver in graphManualDrivers)
-            {
-                manualDriver.enabled = !hasAudienceManualDriver;
-            }
+            Visuals.EnsureManualDriverVisuals();
         }
 
 #if UNITY_EDITOR
@@ -514,162 +433,6 @@ namespace AmpPortableDataViz.Presentation.Bootstrap
             ApplySignalConfiguration();
         }
 #endif
-
-        private void EnsureSelectedSensorStreamMode(
-            string[] redisChannels,
-            bool spawnParticleVisual,
-            bool spawnGraphVisual,
-            bool spawnArtistVisual)
-        {
-            ClearSelectedSensorStreamMode();
-
-            var deviceDefinitions = RedisStreamRegistry.BuildAudienceDeviceChannelDefinitions(redisChannels);
-            deviceDefinitions = RedisStreamRegistry.FilterAudienceToConfiguredDevices(deviceDefinitions, SensorIds);
-            if (deviceDefinitions.Count == 0)
-            {
-                Debug.LogWarning("Bootstrapper: No complete sensor streams are available for selected-stream mode.");
-                EnsureSensorStreamPresentation(Array.Empty<AudienceSignalBinding>(), Array.Empty<AudienceSignalVisualizerBinding>());
-                return;
-            }
-
-            foreach (var definition in deviceDefinitions)
-            {
-                if (!definition.HasVisualizationChannels)
-                {
-                    Debug.LogWarning($"Bootstrapper: Incomplete audience channel set for device '{definition.DeviceId}', skipping selectable stream.");
-                    continue;
-                }
-
-                var sourceObject = new GameObject($"SensorStreamSource_{definition.DeviceId}");
-                sourceObject.transform.SetParent(transform, false);
-                sourceObject.SetActive(false);
-
-                var binding = sourceObject.AddComponent<AudienceSignalBinding>();
-                var physioPump = Streams.AcquirePhysioPumpForChannel(definition.DeviceId, definition.PhysioMetricsChannel);
-                var engagementSource = Streams.ResolveSensorEngagementSource(definition.DeviceId);
-
-                if (physioPump == null || engagementSource == null)
-                {
-                    Debug.LogWarning($"Bootstrapper: Unable to create selectable stream for '{definition.DeviceId}'.");
-                    Destroy(sourceObject);
-                    Streams.ReleasePhysioPump(definition.PhysioMetricsChannel);
-                    continue;
-                }
-
-                binding.ConfigureSensorSources(
-                    physioPump,
-                    engagementSource,
-                    definition.DeviceId);
-                binding.ConfigureParticleTarget(null);
-                sourceObject.SetActive(true);
-
-                _selectedSensorSources.Add(new SelectedSensorSourceInstance
-                {
-                    SourceObject = sourceObject,
-                    Binding = binding,
-                    PhysioMetricsChannel = definition.PhysioMetricsChannel
-                });
-            }
-
-            if (_selectedSensorSources.Count == 0)
-            {
-                Debug.LogWarning("Bootstrapper: No complete sensor streams could be configured.");
-                EnsureSensorStreamPresentation(Array.Empty<AudienceSignalBinding>(), Array.Empty<AudienceSignalVisualizerBinding>());
-                return;
-            }
-
-            if (spawnParticleVisual)
-            {
-                _selectedParticleVisual = SpawnSelectedSensorVisual(
-                    AbstractVizPrefab,
-                    AbstractVizParent,
-                    "SelectedSensor",
-                    isGraphVisual: false);
-            }
-
-            if (spawnGraphVisual)
-            {
-                _selectedGraphVisual = SpawnSelectedSensorVisual(
-                    GraphPrefab,
-                    GraphGroupParent,
-                    "SelectedSensor",
-                    isGraphVisual: true);
-            }
-
-            if (spawnArtistVisual)
-            {
-                _selectedArtistVisual = SpawnSelectedSensorVisual(
-                    ArtistVizPrefab,
-                    ArtistVizParent,
-                    "SelectedSensor",
-                    isGraphVisual: false,
-                    positionAtParentOrigin: true);
-            }
-
-            var visualizerBindings = new List<AudienceSignalVisualizerBinding>();
-            AddVisualizerBindings(_selectedParticleVisual, visualizerBindings);
-            AddVisualizerBindings(_selectedGraphVisual, visualizerBindings);
-            AddVisualizerBindings(_selectedArtistVisual, visualizerBindings);
-
-            EnsureSensorStreamPresentation(
-                _selectedSensorSources.Select(source => source.Binding),
-                visualizerBindings);
-
-            Debug.Log($"Bootstrapper: Configured one persistent visualization target for {_selectedSensorSources.Count} selectable sensor streams.");
-        }
-
-        private GameObject SpawnSelectedSensorVisual(
-            GameObject prefab,
-            Transform parent,
-            string suffix,
-            bool isGraphVisual,
-            bool positionAtParentOrigin = false)
-        {
-            if (prefab == null)
-            {
-                return null;
-            }
-
-            bool hasCustomParent = parent != null;
-            var instance = hasCustomParent ? Instantiate(prefab, parent) : Instantiate(prefab);
-            instance.name = $"{prefab.name}_{suffix}";
-
-            if (positionAtParentOrigin)
-            {
-                PositionAtParentOrigin(instance.transform, hasCustomParent);
-            }
-            else if (isGraphVisual)
-            {
-                PositionGraphGroup(instance.transform, 0, hasCustomParent);
-            }
-            else
-            {
-                PositionAbstractViz(instance.transform, 0, hasCustomParent);
-            }
-
-            DisableManualDrivers(instance);
-
-            foreach (var sourceBinding in instance.GetComponentsInChildren<AudienceSignalBinding>(true))
-            {
-                sourceBinding.enabled = false;
-                sourceBinding.ConfigureParticleTarget(null);
-            }
-
-            var visualizerBindings = instance.GetComponentsInChildren<AudienceSignalVisualizerBinding>(true);
-            if (visualizerBindings.Length == 0)
-            {
-                Debug.LogWarning($"Bootstrapper: Selected-stream visual '{instance.name}' has no AudienceSignalVisualizerBinding.");
-                Destroy(instance);
-                return null;
-            }
-
-            foreach (var visualizerBinding in visualizerBindings)
-            {
-                visualizerBinding.enabled = true;
-            }
-
-            return instance;
-        }
 
         private void PositionAtParentOrigin(Transform target, bool useLocalSpace)
         {
@@ -687,457 +450,6 @@ namespace AmpPortableDataViz.Presentation.Bootstrap
 
             target.position = SpawnPosition;
             target.rotation = Quaternion.Euler(SpawnRotationEuler);
-        }
-
-        private void EnsureSensorStreamPresentation(
-            IEnumerable<AudienceSignalBinding> sources,
-            IEnumerable<AudienceSignalVisualizerBinding> visualizerBindings)
-        {
-            if (_sensorStreamCoordinator == null)
-            {
-                _sensorStreamCoordinator = GetComponent<SensorStreamCoordinator>();
-                if (_sensorStreamCoordinator == null)
-                {
-                    _sensorStreamCoordinator = gameObject.AddComponent<SensorStreamCoordinator>();
-                }
-            }
-
-            _sensorStreamCoordinator.ConfigureVisualizerBindings(visualizerBindings);
-            _sensorStreamCoordinator.ConfigureSources(sources);
-
-            if (_sensorStreamCycler == null)
-            {
-                _sensorStreamCycler = GetComponent<RayNeoTempleSensorStreamCycler>();
-                if (_sensorStreamCycler == null)
-                {
-                    _sensorStreamCycler = gameObject.AddComponent<RayNeoTempleSensorStreamCycler>();
-                }
-            }
-
-            _sensorStreamCycler.Configure(_sensorStreamCoordinator);
-            EnsureSensorHud();
-        }
-
-        private void EnsureSensorHud()
-        {
-            if (_sensorHudObject != null || _sensorStreamCoordinator == null)
-            {
-                return;
-            }
-
-            Camera hudCamera = SensorHudCamera != null ? SensorHudCamera : Camera.main;
-            if (hudCamera == null)
-            {
-                hudCamera = FindFirstObjectByType<Camera>();
-            }
-
-            if (hudCamera == null)
-            {
-                Debug.LogWarning("Bootstrapper: No camera is available for the active sensor HUD.");
-                return;
-            }
-
-            _sensorHudObject = new GameObject("ActiveSensorHud");
-            _sensorHudObject.transform.SetParent(hudCamera.transform, false);
-            _sensorHudObject.transform.localPosition = SensorHudLocalPosition;
-            _sensorHudObject.transform.localRotation = Quaternion.identity;
-            _sensorHudObject.transform.localScale = Vector3.one * Mathf.Max(0.0001f, SensorHudLocalScale);
-
-            var label = _sensorHudObject.AddComponent<TextMeshPro>();
-            label.fontSize = Mathf.Max(0.01f, SensorHudFontSize);
-            label.color = SensorHudColor;
-            label.alignment = TextAlignmentOptions.Center;
-            label.enableWordWrapping = false;
-            label.richText = false;
-            label.sortingOrder = 100;
-            label.rectTransform.sizeDelta = new Vector2(60f, 8f);
-
-            var hudBinding = _sensorHudObject.AddComponent<ActiveSensorHudBinding>();
-            hudBinding.Configure(_sensorStreamCoordinator, label);
-        }
-
-        private static void AddVisualizerBindings(
-            GameObject instance,
-            ICollection<AudienceSignalVisualizerBinding> bindings)
-        {
-            if (instance == null || bindings == null)
-            {
-                return;
-            }
-
-            foreach (var binding in instance.GetComponentsInChildren<AudienceSignalVisualizerBinding>(true))
-            {
-                if (binding != null && !bindings.Contains(binding))
-                {
-                    bindings.Add(binding);
-                }
-            }
-        }
-
-        private void EnsureAudienceDeviceVisuals(string[] redisChannels)
-        {
-            if (!AutoSpawnAbstractViz)
-            {
-                return;
-            }
-
-            if (AbstractVizPrefab == null)
-            {
-                Debug.LogWarning("Bootstrapper: AbstractVizPrefab is missing, cannot spawn audience signal instances.");
-                ClearAudienceDeviceVisuals();
-                return;
-            }
-
-            if (redisChannels == null || redisChannels.Length == 0)
-            {
-                ClearAudienceDeviceVisuals();
-                return;
-            }
-
-            bool hasAudienceBinding = AbstractVizPrefab.GetComponentInChildren<AudienceSignalBinding>() != null;
-            if (!hasAudienceBinding)
-            {
-                ClearAudienceDeviceVisuals();
-                return;
-            }
-
-            var deviceDefinitions = RedisStreamRegistry.BuildAudienceDeviceChannelDefinitions(redisChannels);
-            deviceDefinitions = RedisStreamRegistry.FilterAudienceToConfiguredDevices(deviceDefinitions, SensorIds);
-            ClearAudienceDeviceVisuals();
-
-            if (deviceDefinitions.Count == 0)
-            {
-                Debug.LogWarning("Bootstrapper: No device-specific audience signal channels were found.");
-                return;
-            }
-
-            Debug.Log($"Bootstrapper: Spawning audience visuals for {deviceDefinitions.Count} devices: {string.Join(", ", deviceDefinitions.Select(d => d.DeviceId))}");
-
-            bool hasCustomParent = AbstractVizParent != null;
-            int deviceIndex = 0;
-            foreach (var definition in deviceDefinitions)
-            {
-                if (!definition.HasVisualizationChannels)
-                {
-                    Debug.LogWarning($"Bootstrapper: Incomplete audience channel set for device '{definition.DeviceId}', skipping visual spawn.");
-                    continue;
-                }
-
-                var instance = hasCustomParent
-                    ? Instantiate(AbstractVizPrefab, AbstractVizParent)
-                    : Instantiate(AbstractVizPrefab);
-
-                instance.name = $"{AbstractVizPrefab.name}_{definition.DeviceId}";
-                PositionAbstractViz(instance.transform, deviceIndex, hasCustomParent);
-
-                DisableManualDrivers(instance);
-
-                var binding = instance.GetComponentInChildren<AudienceSignalBinding>();
-                if (binding == null)
-                {
-                    Debug.LogWarning($"Bootstrapper: Audience visual '{instance.name}' is missing AudienceSignalBinding, skipping visual spawn.");
-                    Destroy(instance);
-                    continue;
-                }
-
-                var particleMeshVisualizer = instance.GetComponentInChildren<ParticleMeshVisualizer>();
-                var physioPump = Streams.AcquirePhysioPumpForChannel(definition.DeviceId, definition.PhysioMetricsChannel);
-                var engagementSource = Streams.ResolveSensorEngagementSource(definition.DeviceId);
-
-                if (!TryConfigureAudienceBinding(binding, physioPump, engagementSource, particleMeshVisualizer, definition.DeviceId))
-                {
-                    Debug.LogWarning($"Bootstrapper: Unable to configure audience binding on '{instance.name}', skipping visual spawn.");
-                    Destroy(instance);
-                    Streams.ReleasePhysioPump(definition.PhysioMetricsChannel);
-                    continue;
-                }
-
-                _audienceDeviceInstances.Add(new AudienceDeviceInstance
-                {
-                    VisualInstance = instance,
-                    Binding = binding,
-                    PhysioMetricsChannel = definition.PhysioMetricsChannel
-                });
-
-                AttachDeviceLabel(instance, definition.DeviceId, deviceIndex);
-                deviceIndex++;
-            }
-
-            if (deviceIndex == 0)
-            {
-                Debug.LogWarning("Bootstrapper: Unable to spawn audience visuals because no device had the required channels.");
-            }
-        }
-
-        private void EnsureAudienceGraphDeviceVisuals(string[] redisChannels)
-        {
-            if (!AutoSpawnGraphVisualsFromChannels)
-            {
-                return;
-            }
-
-            if (GraphPrefab == null)
-            {
-                Debug.LogWarning("Bootstrapper: GraphPrefab is missing, cannot spawn audience graph instances.");
-                ClearAudienceGraphDeviceVisuals();
-                return;
-            }
-
-            if (redisChannels == null || redisChannels.Length == 0)
-            {
-                ClearAudienceGraphDeviceVisuals();
-                return;
-            }
-
-            bool hasAudienceBinding = GraphPrefab.GetComponentInChildren<AudienceSignalBinding>() != null;
-            bool hasAudienceVisualizerBinding = GraphPrefab.GetComponentInChildren<AudienceSignalVisualizerBinding>() != null;
-            bool hasGraphVisualizer = GraphPrefab.GetComponentInChildren<GraphVisualizer>() != null;
-            if (!hasAudienceBinding || !hasAudienceVisualizerBinding || !hasGraphVisualizer)
-            {
-                Debug.LogWarning("Bootstrapper: Audience GraphPrefab must include AudienceSignalBinding, AudienceSignalVisualizerBinding, and at least one GraphVisualizer component. Audience graph metrics are configured on the prefab's AudienceSignalVisualizerBinding.");
-                ClearAudienceGraphDeviceVisuals();
-                return;
-            }
-
-            var deviceDefinitions = RedisStreamRegistry.BuildAudienceDeviceChannelDefinitions(redisChannels);
-            deviceDefinitions = RedisStreamRegistry.FilterAudienceToConfiguredDevices(deviceDefinitions, SensorIds);
-            ClearAudienceGraphDeviceVisuals();
-
-            if (deviceDefinitions.Count == 0)
-            {
-                Debug.LogWarning("Bootstrapper: No device-specific audience channels were found for graphs.");
-                return;
-            }
-
-            Debug.Log($"Bootstrapper: Spawning audience graph groups for {deviceDefinitions.Count} devices: {string.Join(", ", deviceDefinitions.Select(d => d.DeviceId))}");
-
-            bool hasCustomParent = GraphGroupParent != null;
-            int deviceIndex = 0;
-            foreach (var definition in deviceDefinitions)
-            {
-                if (!definition.HasVisualizationChannels)
-                {
-                    Debug.LogWarning($"Bootstrapper: Incomplete audience channel set for device '{definition.DeviceId}', skipping graph spawn.");
-                    continue;
-                }
-
-                var instance = hasCustomParent
-                    ? Instantiate(GraphPrefab, GraphGroupParent)
-                    : Instantiate(GraphPrefab);
-
-                instance.name = $"{GraphPrefab.name}_{definition.DeviceId}";
-                PositionGraphGroup(instance.transform, deviceIndex, hasCustomParent);
-                DisableManualDrivers(instance);
-
-                var binding = instance.GetComponentInChildren<AudienceSignalBinding>();
-                if (binding == null)
-                {
-                    Debug.LogWarning($"Bootstrapper: Audience graph '{instance.name}' is missing AudienceSignalBinding, skipping graph spawn.");
-                    Destroy(instance);
-                    continue;
-                }
-
-                var physioPump = Streams.AcquirePhysioPumpForChannel(definition.DeviceId, definition.PhysioMetricsChannel);
-                var engagementSource = Streams.ResolveSensorEngagementSource(definition.DeviceId);
-
-                if (!TryConfigureAudienceBinding(binding, physioPump, engagementSource, null, definition.DeviceId))
-                {
-                    Debug.LogWarning($"Bootstrapper: Unable to configure audience graph binding on '{instance.name}', skipping graph spawn.");
-                    Destroy(instance);
-                    Streams.ReleasePhysioPump(definition.PhysioMetricsChannel);
-                    continue;
-                }
-
-                _audienceGraphDeviceGroups.Add(new AudienceGraphDeviceGroupInstance
-                {
-                    GroupRoot = instance,
-                    Binding = binding,
-                    PhysioMetricsChannel = definition.PhysioMetricsChannel
-                });
-
-                AttachGraphGroupLabel(instance, definition.DeviceId, deviceIndex);
-                deviceIndex++;
-            }
-        }
-
-        private static bool TryConfigureAudienceBinding(
-            AudienceSignalBinding binding,
-            RedisPhysioMetricsPump physioPump,
-            ILatestDataSource<SensorEngagementState> engagementSource,
-            ParticleMeshVisualizer particleMeshVisualizer,
-            string deviceId)
-        {
-            if (binding == null || physioPump == null || engagementSource == null)
-            {
-                return false;
-            }
-
-            binding.ConfigureSensorSources(physioPump, engagementSource, deviceId);
-            if (particleMeshVisualizer != null)
-            {
-                binding.ConfigureParticleTarget(particleMeshVisualizer);
-            }
-
-            var visualizerBinding = binding.GetComponentInChildren<AudienceSignalVisualizerBinding>();
-            if (visualizerBinding == null && binding.gameObject != null)
-            {
-                visualizerBinding = binding.gameObject.GetComponentInParent<AudienceSignalVisualizerBinding>();
-            }
-
-            if (visualizerBinding != null)
-            {
-                visualizerBinding.ConfigureLiveSource(binding, deviceId);
-                if (particleMeshVisualizer != null)
-                {
-                    visualizerBinding.ConfigureParticleTarget(particleMeshVisualizer);
-                }
-
-                visualizerBinding.enabled = true;
-            }
-
-            binding.enabled = true;
-            return true;
-        }
-
-        private static void DisableManualDrivers(GameObject instance)
-        {
-            if (instance == null)
-            {
-                return;
-            }
-
-            var audienceManualDrivers = instance.GetComponentsInChildren<AudienceDataManualDriver>(true);
-            foreach (var manualDriver in audienceManualDrivers)
-            {
-                manualDriver.enabled = false;
-            }
-
-            var particleManualDrivers = instance.GetComponentsInChildren<ParticleMeshManualDriver>(true);
-            foreach (var manualDriver in particleManualDrivers)
-            {
-                manualDriver.enabled = false;
-            }
-
-            var graphManualDrivers = instance.GetComponentsInChildren<GraphManualDriver>(true);
-            foreach (var manualDriver in graphManualDrivers)
-            {
-                manualDriver.enabled = false;
-            }
-        }
-
-        private void ClearAudienceDeviceVisuals()
-        {
-            if (_audienceDeviceInstances.Count == 0)
-            {
-                return;
-            }
-
-            foreach (var instance in _audienceDeviceInstances)
-            {
-                if (instance.VisualInstance != null)
-                {
-                    Destroy(instance.VisualInstance);
-                }
-                else if (instance.Binding != null)
-                {
-                    Destroy(instance.Binding.gameObject);
-                }
-
-                Streams.ReleasePhysioPump(instance.PhysioMetricsChannel);
-            }
-
-            _audienceDeviceInstances.Clear();
-        }
-
-        private void ClearAudienceGraphDeviceVisuals()
-        {
-            if (_audienceGraphDeviceGroups.Count == 0)
-            {
-                return;
-            }
-
-            foreach (var instance in _audienceGraphDeviceGroups)
-            {
-                if (instance.GroupRoot != null)
-                {
-                    Destroy(instance.GroupRoot);
-                }
-                else if (instance.Binding != null)
-                {
-                    Destroy(instance.Binding.gameObject);
-                }
-
-                Streams.ReleasePhysioPump(instance.PhysioMetricsChannel);
-            }
-
-            _audienceGraphDeviceGroups.Clear();
-        }
-
-        private void ClearSelectedSensorStreamMode()
-        {
-            if (_sensorStreamCoordinator != null)
-            {
-                _sensorStreamCoordinator.ConfigureVisualizerBindings(Array.Empty<AudienceSignalVisualizerBinding>());
-                _sensorStreamCoordinator.ConfigureSources(Array.Empty<AudienceSignalBinding>());
-            }
-
-            foreach (var source in _selectedSensorSources)
-            {
-                if (source.SourceObject != null)
-                {
-                    Destroy(source.SourceObject);
-                }
-                else if (source.Binding != null)
-                {
-                    Destroy(source.Binding.gameObject);
-                }
-
-                Streams.ReleasePhysioPump(source.PhysioMetricsChannel);
-            }
-
-            _selectedSensorSources.Clear();
-
-            if (_selectedParticleVisual != null)
-            {
-                Destroy(_selectedParticleVisual);
-                _selectedParticleVisual = null;
-            }
-
-            if (_selectedGraphVisual != null)
-            {
-                Destroy(_selectedGraphVisual);
-                _selectedGraphVisual = null;
-            }
-
-            if (_selectedArtistVisual != null)
-            {
-                Destroy(_selectedArtistVisual);
-                _selectedArtistVisual = null;
-            }
-
-            if (_sensorHudObject != null)
-            {
-                Destroy(_sensorHudObject);
-                _sensorHudObject = null;
-            }
-        }
-
-        private void ClearManualDriverVisuals()
-        {
-            if (_manualDriverInstances.Count == 0)
-            {
-                return;
-            }
-
-            foreach (var instance in _manualDriverInstances)
-            {
-                if (instance != null)
-                {
-                    Destroy(instance);
-                }
-            }
-
-            _manualDriverInstances.Clear();
         }
 
         private void PositionAbstractViz(Transform target, int index, bool useLocalSpace)
@@ -1387,27 +699,6 @@ namespace AmpPortableDataViz.Presentation.Bootstrap
             }
 
             return instance.transform;
-        }
-
-        private sealed class AudienceDeviceInstance
-        {
-            public GameObject VisualInstance;
-            public AudienceSignalBinding Binding;
-            public string PhysioMetricsChannel;
-        }
-
-        private sealed class AudienceGraphDeviceGroupInstance
-        {
-            public GameObject GroupRoot;
-            public AudienceSignalBinding Binding;
-            public string PhysioMetricsChannel;
-        }
-
-        private sealed class SelectedSensorSourceInstance
-        {
-            public GameObject SourceObject;
-            public AudienceSignalBinding Binding;
-            public string PhysioMetricsChannel;
         }
 
         [Serializable]
