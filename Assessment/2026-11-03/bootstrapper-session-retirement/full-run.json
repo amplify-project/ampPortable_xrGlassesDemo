@@ -1,0 +1,26 @@
+﻿{
+    "stage":  "PlayMode",
+    "attempt":  "full",
+    "started_utc":  "2026-11-03T11:34:41.4557729Z",
+    "finished_utc":  "2026-11-03T11:35:06.5324020Z",
+    "exit_code":  2,
+    "editor":  "C:\\Program Files\\Unity\\Hub\\Editor\\2022.3.36f1\\Editor\\Unity.exe",
+    "arguments":  [
+                      "-batchmode",
+                      "-projectPath",
+                      "\"C:\\Users\\Bryan Dunphy\\AppData\\Local\\Temp\\rnc1030\\project\"",
+                      "-buildTarget",
+                      "Android",
+                      "-logFile",
+                      "\"C:\\Users\\Bryan Dunphy\\Documents\\UnityProjects\\ampPortable_xrGlassesDemo\\Temp\\BootstrapperSessionRetirement-20261103\\full.log\"",
+                      "-forgetProjectPath",
+                      "-runTests",
+                      "-testPlatform",
+                      "PlayMode",
+                      "-testResults",
+                      "\"C:\\Users\\Bryan Dunphy\\Documents\\UnityProjects\\ampPortable_xrGlassesDemo\\Assessment\\2026-11-03\\bootstrapper-session-retirement\\full.xml\""
+                  ],
+    "process_git_longpaths":  true,
+    "process_java_windows_trust":  false,
+    "log":  "C:\\Users\\Bryan Dunphy\\Documents\\UnityProjects\\ampPortable_xrGlassesDemo\\Temp\\BootstrapperSessionRetirement-20261103\\full.log"
+}

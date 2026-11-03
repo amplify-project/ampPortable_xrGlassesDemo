@@ -10,6 +10,7 @@ using AmpPortableDataViz.Presentation.Sources;
 using AmpPortableDataViz.Presentation.Visualization;
 using TMPro;
 using UnityEngine;
+using UnityEngine.Serialization;
 
 namespace AmpPortableDataViz.Presentation.Bootstrap
 {
@@ -19,7 +20,9 @@ namespace AmpPortableDataViz.Presentation.Bootstrap
     public sealed class Bootstrapper : MonoBehaviour
     {
         [Header("Scene Dependencies")]
-        public GameObject VisualPrefab;
+        [FormerlySerializedAs("VisualPrefab")]
+        [InspectorName("AbstractViz Prefab")]
+        public GameObject AbstractVizPrefab;
 
         [Header("Manual Visualization Testing")]
         public bool UseManualVisualizationDrivers;
@@ -32,26 +35,35 @@ namespace AmpPortableDataViz.Presentation.Bootstrap
         [Header("Redis Prompt")]
         public bool RequireRedisEndpointConfirmation = true;
 
-        [Header("Emotion Channel Settings")]
-        public bool IncludeEmotionChannels = true;
-        public string[] EmotionDeviceIds = RedisEmotionChannels.GetDefaultDeviceIds();
-        public bool AutoDetectEmotionDeviceIds = true;
+        [Header("Sensor Discovery")]
+        [FormerlySerializedAs("IncludeEmotionChannels")]
+        public bool IncludeSensorChannels = true;
+        [FormerlySerializedAs("EmotionDeviceIds")]
+        public string[] SensorIds = RedisEmotionChannels.GetDefaultDeviceIds();
+        [FormerlySerializedAs("AutoDetectEmotionDeviceIds")]
+        public bool AutoDetectSensorIds = true;
         public int RedisDiscoveryTimeoutMs = 2000;
 
-        [Header("Emotion Visual Settings")]
-        public Transform EmotionVisualParent;
-        public Vector3 EmotionVisualOriginOffset = Vector3.zero;
-        public Vector3 EmotionVisualSpacing = new Vector3(0.75f, 0f, 0.75f);
+        [Header("AbstractViz Layout")]
+        [FormerlySerializedAs("EmotionVisualParent")]
+        public Transform AbstractVizParent;
+        [FormerlySerializedAs("EmotionVisualOriginOffset")]
+        public Vector3 AbstractVizOriginOffset = Vector3.zero;
+        [FormerlySerializedAs("EmotionVisualSpacing")]
+        public Vector3 AbstractVizSpacing = new Vector3(0.75f, 0f, 0.75f);
         [Min(1)]
-        public int EmotionVisualsPerRow = 2;
-        [Header("Emotion Visual Labels")]
+        [FormerlySerializedAs("EmotionVisualsPerRow")]
+        public int AbstractVizPerRow = 2;
+        [Header("Sensor Labels")]
         public bool ShowDeviceLabels = true;
         public Vector3 DeviceLabelOffset = new Vector3(0f, -0.35f, 0f);
         public float DeviceLabelFontSize = 0.22f;
         public Color DeviceLabelColor = Color.white;
 
-        [Header("Audience Signal Visual Settings")]
-        public bool AutoSpawnAudienceVisualsFromChannels = true;
+        [Header("AbstractViz Settings")]
+        [FormerlySerializedAs("AutoSpawnAudienceVisualsFromChannels")]
+        [InspectorName("Auto Spawn AbstractViz")]
+        public bool AutoSpawnAbstractViz = true;
 
         [Header("Artist Visual Settings")]
         public bool AutoSpawnArtistVizFromChannels = true;
@@ -102,9 +114,13 @@ namespace AmpPortableDataViz.Presentation.Bootstrap
         public Vector3 GraphItemBoundsSize = new Vector3(1f, 1f, 0.02f);
         public Vector3 GraphGroupBoundsPadding = new Vector3(0.05f, 0.05f, 0.05f);
 
-        [Header("Anchor Settings")]
-        public Vector3 AnchorPosition = new Vector3(0f, 1.2f, 2f);
-        public Vector3 AnchorRotationEuler = Vector3.zero;
+        [Header("Visualization Spawn Placement")]
+        [FormerlySerializedAs("AnchorPosition")]
+        [Tooltip("World-space spawn position used when no visualization parent is assigned.")]
+        public Vector3 SpawnPosition = new Vector3(0f, 1.2f, 2f);
+        [FormerlySerializedAs("AnchorRotationEuler")]
+        [Tooltip("World-space spawn rotation in degrees used when no visualization parent is assigned.")]
+        public Vector3 SpawnRotationEuler = Vector3.zero;
 
         private Coroutine _deviceDiscoveryRoutine;
         private readonly List<AudienceDeviceInstance> _audienceDeviceInstances = new List<AudienceDeviceInstance>();
@@ -132,7 +148,7 @@ namespace AmpPortableDataViz.Presentation.Bootstrap
 
         private void OnEnable()
         {
-            if (ShouldAutoDetectEmotionDeviceIds())
+            if (ShouldAutoDetectSensorIds())
             {
                 StartDeviceDiscovery();
                 return;
@@ -154,9 +170,9 @@ namespace AmpPortableDataViz.Presentation.Bootstrap
 
             StopRoutine(ref _deviceDiscoveryRoutine);
 
-            if (ShouldAutoDetectEmotionDeviceIds())
+            if (ShouldAutoDetectSensorIds())
             {
-                Debug.Log("Bootstrapper: Auto-detecting Redis emotion device ids after endpoint confirmation.");
+                Debug.Log("Bootstrapper: Auto-detecting Redis sensor IDs after endpoint confirmation.");
                 StartDeviceDiscovery();
                 return;
             }
@@ -228,8 +244,8 @@ namespace AmpPortableDataViz.Presentation.Bootstrap
 
             bool redisReady = !RequireRedisEndpointConfirmation || _redisEndpointReady;
 
-            bool visualPrefabHasAudienceBinding = VisualPrefab != null && VisualPrefab.GetComponentInChildren<AudienceSignalBinding>() != null;
-            bool shouldSpawnAudienceVisuals = hasRedisEndpoint && redisReady && AutoSpawnAudienceVisualsFromChannels && visualPrefabHasAudienceBinding;
+            bool visualPrefabHasAudienceBinding = AbstractVizPrefab != null && AbstractVizPrefab.GetComponentInChildren<AudienceSignalBinding>() != null;
+            bool shouldSpawnAudienceVisuals = hasRedisEndpoint && redisReady && AutoSpawnAbstractViz && visualPrefabHasAudienceBinding;
             bool graphPrefabHasAudienceBinding = GraphPrefab != null && GraphPrefab.GetComponentInChildren<AudienceSignalBinding>() != null;
             bool shouldSpawnAudienceGraphVisuals = hasRedisEndpoint && redisReady && AutoSpawnGraphVisualsFromChannels && graphPrefabHasAudienceBinding;
             bool artistPrefabHasVisualizerBinding = ArtistVizPrefab != null &&
@@ -241,7 +257,7 @@ namespace AmpPortableDataViz.Presentation.Bootstrap
             if (shouldSpawnAudienceVisuals || shouldSpawnAudienceGraphVisuals || shouldSpawnArtistViz)
             {
                 var sensorDefinitions = BuildAudienceDeviceChannelDefinitions(redisChannels);
-                sensorDefinitions = FilterAudienceToConfiguredDevices(sensorDefinitions, EmotionDeviceIds);
+                sensorDefinitions = FilterAudienceToConfiguredDevices(sensorDefinitions, SensorIds);
                 EnsureSensorEngagementBackend(sensorDefinitions.Select(definition => definition.DeviceId));
             }
             else
@@ -300,14 +316,14 @@ namespace AmpPortableDataViz.Presentation.Bootstrap
             }
         }
 
-        private bool ShouldAutoDetectEmotionDeviceIds()
+        private bool ShouldAutoDetectSensorIds()
         {
             if (UseManualVisualizationDrivers)
             {
                 return false;
             }
 
-            if (!AutoDetectEmotionDeviceIds || !IncludeEmotionChannels)
+            if (!AutoDetectSensorIds || !IncludeSensorChannels)
             {
                 return false;
             }
@@ -330,10 +346,10 @@ namespace AmpPortableDataViz.Presentation.Bootstrap
         private void StartDeviceDiscovery()
         {
             StopRoutine(ref _deviceDiscoveryRoutine);
-            _deviceDiscoveryRoutine = StartCoroutine(DiscoverEmotionDevicesThenApply());
+            _deviceDiscoveryRoutine = StartCoroutine(DiscoverSensorsThenApply());
         }
 
-        private IEnumerator DiscoverEmotionDevicesThenApply()
+        private IEnumerator DiscoverSensorsThenApply()
         {
             EnsureRedisEndpointFromRuntime();
 
@@ -352,8 +368,8 @@ namespace AmpPortableDataViz.Presentation.Bootstrap
                 var discovered = discoveryTask.Result;
                 if (discovered != null && discovered.Count > 0)
                 {
-                    EmotionDeviceIds = discovered.ToArray();
-                    Debug.Log($"Bootstrapper: Discovered {discovered.Count} emotion devices from Redis.");
+                    SensorIds = discovered.ToArray();
+                    Debug.Log($"Bootstrapper: Discovered {discovered.Count} sensors from Redis.");
                 }
             }
 
@@ -374,7 +390,7 @@ namespace AmpPortableDataViz.Presentation.Bootstrap
                 return;
             }
 
-            SpawnManualDriverPrefab(VisualPrefab, EmotionVisualParent, "ManualVisual", 0, isGraphPrefab: false);
+            SpawnManualDriverPrefab(AbstractVizPrefab, AbstractVizParent, "ManualVisual", 0, isGraphPrefab: false);
             SpawnManualDriverPrefab(GraphPrefab, GraphGroupParent, "ManualGraph", 0, isGraphPrefab: true);
         }
 
@@ -407,7 +423,7 @@ namespace AmpPortableDataViz.Presentation.Bootstrap
             }
             else
             {
-                PositionEmotionVisual(instance.transform, index, hasCustomParent);
+                PositionAbstractViz(instance.transform, index, hasCustomParent);
             }
 
             ConfigureManualDriverInstance(instance);
@@ -490,7 +506,7 @@ namespace AmpPortableDataViz.Presentation.Bootstrap
             ClearSelectedSensorStreamMode();
 
             var deviceDefinitions = BuildAudienceDeviceChannelDefinitions(redisChannels);
-            deviceDefinitions = FilterAudienceToConfiguredDevices(deviceDefinitions, EmotionDeviceIds);
+            deviceDefinitions = FilterAudienceToConfiguredDevices(deviceDefinitions, SensorIds);
             if (deviceDefinitions.Count == 0)
             {
                 Debug.LogWarning("Bootstrapper: No complete sensor streams are available for selected-stream mode.");
@@ -547,8 +563,8 @@ namespace AmpPortableDataViz.Presentation.Bootstrap
             if (spawnParticleVisual)
             {
                 _selectedParticleVisual = SpawnSelectedSensorVisual(
-                    VisualPrefab,
-                    EmotionVisualParent,
+                    AbstractVizPrefab,
+                    AbstractVizParent,
                     "SelectedSensor",
                     isGraphVisual: false);
             }
@@ -610,7 +626,7 @@ namespace AmpPortableDataViz.Presentation.Bootstrap
             }
             else
             {
-                PositionEmotionVisual(instance.transform, 0, hasCustomParent);
+                PositionAbstractViz(instance.transform, 0, hasCustomParent);
             }
 
             DisableManualDrivers(instance);
@@ -651,8 +667,8 @@ namespace AmpPortableDataViz.Presentation.Bootstrap
                 return;
             }
 
-            target.position = AnchorPosition;
-            target.rotation = Quaternion.Euler(AnchorRotationEuler);
+            target.position = SpawnPosition;
+            target.rotation = Quaternion.Euler(SpawnRotationEuler);
         }
 
         private void EnsureSensorStreamPresentation(
@@ -742,14 +758,14 @@ namespace AmpPortableDataViz.Presentation.Bootstrap
 
         private void EnsureAudienceDeviceVisuals(string[] redisChannels)
         {
-            if (!AutoSpawnAudienceVisualsFromChannels)
+            if (!AutoSpawnAbstractViz)
             {
                 return;
             }
 
-            if (VisualPrefab == null)
+            if (AbstractVizPrefab == null)
             {
-                Debug.LogWarning("Bootstrapper: VisualPrefab is missing, cannot spawn audience signal instances.");
+                Debug.LogWarning("Bootstrapper: AbstractVizPrefab is missing, cannot spawn audience signal instances.");
                 ClearAudienceDeviceVisuals();
                 return;
             }
@@ -760,7 +776,7 @@ namespace AmpPortableDataViz.Presentation.Bootstrap
                 return;
             }
 
-            bool hasAudienceBinding = VisualPrefab.GetComponentInChildren<AudienceSignalBinding>() != null;
+            bool hasAudienceBinding = AbstractVizPrefab.GetComponentInChildren<AudienceSignalBinding>() != null;
             if (!hasAudienceBinding)
             {
                 ClearAudienceDeviceVisuals();
@@ -768,7 +784,7 @@ namespace AmpPortableDataViz.Presentation.Bootstrap
             }
 
             var deviceDefinitions = BuildAudienceDeviceChannelDefinitions(redisChannels);
-            deviceDefinitions = FilterAudienceToConfiguredDevices(deviceDefinitions, EmotionDeviceIds);
+            deviceDefinitions = FilterAudienceToConfiguredDevices(deviceDefinitions, SensorIds);
             ClearAudienceDeviceVisuals();
 
             if (deviceDefinitions.Count == 0)
@@ -779,7 +795,7 @@ namespace AmpPortableDataViz.Presentation.Bootstrap
 
             Debug.Log($"Bootstrapper: Spawning audience visuals for {deviceDefinitions.Count} devices: {string.Join(", ", deviceDefinitions.Select(d => d.DeviceId))}");
 
-            bool hasCustomParent = EmotionVisualParent != null;
+            bool hasCustomParent = AbstractVizParent != null;
             int deviceIndex = 0;
             foreach (var definition in deviceDefinitions)
             {
@@ -790,11 +806,11 @@ namespace AmpPortableDataViz.Presentation.Bootstrap
                 }
 
                 var instance = hasCustomParent
-                    ? Instantiate(VisualPrefab, EmotionVisualParent)
-                    : Instantiate(VisualPrefab);
+                    ? Instantiate(AbstractVizPrefab, AbstractVizParent)
+                    : Instantiate(AbstractVizPrefab);
 
-                instance.name = $"{VisualPrefab.name}_{definition.DeviceId}";
-                PositionEmotionVisual(instance.transform, deviceIndex, hasCustomParent);
+                instance.name = $"{AbstractVizPrefab.name}_{definition.DeviceId}";
+                PositionAbstractViz(instance.transform, deviceIndex, hasCustomParent);
 
                 DisableManualDrivers(instance);
 
@@ -866,7 +882,7 @@ namespace AmpPortableDataViz.Presentation.Bootstrap
             }
 
             var deviceDefinitions = BuildAudienceDeviceChannelDefinitions(redisChannels);
-            deviceDefinitions = FilterAudienceToConfiguredDevices(deviceDefinitions, EmotionDeviceIds);
+            deviceDefinitions = FilterAudienceToConfiguredDevices(deviceDefinitions, SensorIds);
             ClearAudienceGraphDeviceVisuals();
 
             if (deviceDefinitions.Count == 0)
@@ -1308,21 +1324,21 @@ namespace AmpPortableDataViz.Presentation.Bootstrap
             _manualDriverInstances.Clear();
         }
 
-        private void PositionEmotionVisual(Transform target, int index, bool useLocalSpace)
+        private void PositionAbstractViz(Transform target, int index, bool useLocalSpace)
         {
             if (target == null)
             {
                 return;
             }
 
-            int perRow = Mathf.Max(1, EmotionVisualsPerRow);
+            int perRow = Mathf.Max(1, AbstractVizPerRow);
             int row = index / perRow;
             int column = index % perRow;
 
-            Vector3 offset = EmotionVisualOriginOffset + new Vector3(
-                column * EmotionVisualSpacing.x,
-                row * EmotionVisualSpacing.y,
-                row * EmotionVisualSpacing.z);
+            Vector3 offset = AbstractVizOriginOffset + new Vector3(
+                column * AbstractVizSpacing.x,
+                row * AbstractVizSpacing.y,
+                row * AbstractVizSpacing.z);
 
             if (useLocalSpace)
             {
@@ -1331,8 +1347,8 @@ namespace AmpPortableDataViz.Presentation.Bootstrap
             }
             else
             {
-                target.position = AnchorPosition + offset;
-                target.rotation = Quaternion.Euler(AnchorRotationEuler);
+                target.position = SpawnPosition + offset;
+                target.rotation = Quaternion.Euler(SpawnRotationEuler);
             }
         }
 
@@ -1359,8 +1375,8 @@ namespace AmpPortableDataViz.Presentation.Bootstrap
             }
             else
             {
-                target.position = AnchorPosition + offset;
-                target.rotation = Quaternion.Euler(AnchorRotationEuler);
+                target.position = SpawnPosition + offset;
+                target.rotation = Quaternion.Euler(SpawnRotationEuler);
             }
         }
 
@@ -1471,11 +1487,11 @@ namespace AmpPortableDataViz.Presentation.Bootstrap
                 }
             }
 
-            if (IncludeEmotionChannels)
+            if (IncludeSensorChannels)
             {
-                if (EmotionDeviceIds != null)
+                if (SensorIds != null)
                 {
-                    foreach (var deviceId in EmotionDeviceIds)
+                    foreach (var deviceId in SensorIds)
                     {
                         AddChannel(RedisAudienceChannels.FormatPhysioMetricsChannel(deviceId));
                     }

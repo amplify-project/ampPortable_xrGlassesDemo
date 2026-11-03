@@ -35,6 +35,6 @@ The [30 October 2026 pre-merge assessment](Assessment/2026-10-30/RESULTS.md) rec
 
 ## Project structure
 
-`Assets/AmpPortableDataViz` separates domain contracts in `Core`, session orchestration in `Application`, concrete services in `Infra`, and Unity visualizers, bindings, input, and UI in `Presentation`.
+`Assets/AmpPortableDataViz` separates domain contracts in `Core`, sensor selection and data coordination in `Application`, concrete services in `Infra`, and Unity visualizers, bindings, input, and UI in `Presentation`.
 
-Obsolete-code cleanup is underway on `cleanup/obsolete-code`. Historical recovery/manual scenes and the optional LiveKit, plasma, legacy HUD/graph, and RedisManager application paths have been retired. The [optional-feature retirement report](Assessment/2026-10-30/cleanup-step5/README.md) records the changes and validation. Current RayNeo views, ArtisticElements, audience/particle/graph manual tools, shared graph contracts, and session fallbacks remain. Package-manifest and unrelated asset pruning are deferred.
+Obsolete-code cleanup is underway on `cleanup/obsolete-code`. Historical recovery/manual scenes and the optional LiveKit, plasma, legacy HUD/graph, and RedisManager application paths have been retired. The [optional-feature retirement report](Assessment/2026-10-30/cleanup-step5/README.md) records those changes. The original visualization session and spatial-anchor implementation have also been removed; see the [session retirement and Inspector migration report](Assessment/2026-11-03/bootstrapper-session-retirement/README.md). Current RayNeo views, ArtisticElements, audience/particle/graph manual tools, and shared graph contracts remain. Package-manifest and unrelated asset pruning are deferred.

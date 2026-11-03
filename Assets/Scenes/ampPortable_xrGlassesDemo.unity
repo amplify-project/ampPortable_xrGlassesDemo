@@ -1900,26 +1900,26 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 477867e8dea98d8478798cc3a73521d0, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::AmpPortableDataViz.Presentation.Bootstrap.Bootstrapper
-  VisualPrefab: {fileID: 7070063373814244994, guid: 7fe113f1db4d2784d8f60c23f9c9137b, type: 3}
+  AbstractVizPrefab: {fileID: 7070063373814244994, guid: 7fe113f1db4d2784d8f60c23f9c9137b, type: 3}
   UseManualVisualizationDrivers: 0
   RedisHost: 10.215.55.160
   RedisPort: 6379
   RedisChannel: engagement_score
   RedisChannels: []
   RequireRedisEndpointConfirmation: 1
-  IncludeEmotionChannels: 1
-  EmotionDeviceIds: []
-  AutoDetectEmotionDeviceIds: 1
+  IncludeSensorChannels: 1
+  SensorIds: []
+  AutoDetectSensorIds: 1
   RedisDiscoveryTimeoutMs: 2000
-  EmotionVisualParent: {fileID: 1165166120}
-  EmotionVisualOriginOffset: {x: 0, y: 0, z: 1}
-  EmotionVisualSpacing: {x: 2, y: 0, z: 0.75}
-  EmotionVisualsPerRow: 2
+  AbstractVizParent: {fileID: 1165166120}
+  AbstractVizOriginOffset: {x: 0, y: 0, z: 1}
+  AbstractVizSpacing: {x: 2, y: 0, z: 0.75}
+  AbstractVizPerRow: 2
   ShowDeviceLabels: 1
   DeviceLabelOffset: {x: 0, y: -0.35, z: 0}
   DeviceLabelFontSize: 0.22
   DeviceLabelColor: {r: 1, g: 1, b: 1, a: 1}
-  AutoSpawnAudienceVisualsFromChannels: 1
+  AutoSpawnAbstractViz: 1
   AutoSpawnArtistVizFromChannels: 1
   ArtistVizPrefab: {fileID: 8059361543654115388, guid: cc161b297d65a6d46bb6f1d60e597c1a, type: 3}
   ArtistVizParent: {fileID: 233017176}
@@ -1953,8 +1953,8 @@ MonoBehaviour:
   GraphGroupLabelColor: {r: 1, g: 1, b: 1, a: 1}
   GraphItemBoundsSize: {x: 1, y: 1, z: 0.02}
   GraphGroupBoundsPadding: {x: 0.05, y: 0.05, z: 0.05}
-  AnchorPosition: {x: 0, y: 1.2, z: 2}
-  AnchorRotationEuler: {x: 0, y: 0, z: 0}
+  SpawnPosition: {x: 0, y: 1.2, z: 2}
+  SpawnRotationEuler: {x: 0, y: 0, z: 0}
 --- !u!4 &1639454966
 Transform:
   m_ObjectHideFlags: 0

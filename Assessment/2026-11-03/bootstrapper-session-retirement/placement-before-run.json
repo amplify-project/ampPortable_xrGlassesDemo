@@ -1,0 +1,28 @@
+﻿{
+    "stage":  "PlayMode",
+    "attempt":  "placement-before",
+    "started_utc":  "2026-11-03T11:31:39.9213781Z",
+    "finished_utc":  "2026-11-03T11:32:06.0016015Z",
+    "exit_code":  0,
+    "editor":  "C:\\Program Files\\Unity\\Hub\\Editor\\2022.3.36f1\\Editor\\Unity.exe",
+    "arguments":  [
+                      "-batchmode",
+                      "-projectPath",
+                      "\"C:\\Users\\Bryan Dunphy\\AppData\\Local\\Temp\\rnc1030\\project\"",
+                      "-buildTarget",
+                      "Android",
+                      "-logFile",
+                      "\"C:\\Users\\Bryan Dunphy\\Documents\\UnityProjects\\ampPortable_xrGlassesDemo\\Temp\\BootstrapperSessionRetirement-20261103\\placement-before.log\"",
+                      "-forgetProjectPath",
+                      "-runTests",
+                      "-testPlatform",
+                      "PlayMode",
+                      "-testResults",
+                      "\"C:\\Users\\Bryan Dunphy\\Documents\\UnityProjects\\ampPortable_xrGlassesDemo\\Assessment\\2026-11-03\\bootstrapper-session-retirement\\placement-before.xml\"",
+                      "-testFilter",
+                      "\"BootstrapperPlacementTests\""
+                  ],
+    "process_git_longpaths":  true,
+    "process_java_windows_trust":  false,
+    "log":  "C:\\Users\\Bryan Dunphy\\Documents\\UnityProjects\\ampPortable_xrGlassesDemo\\Temp\\BootstrapperSessionRetirement-20261103\\placement-before.log"
+}

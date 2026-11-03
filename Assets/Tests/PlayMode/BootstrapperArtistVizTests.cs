@@ -29,7 +29,7 @@ namespace AmpPortableDataViz.Tests.PlayMode
             _testRoot.SetActive(false);
 
             var bootstrapper = _testRoot.AddComponent<Bootstrapper>();
-            bootstrapper.EmotionVisualOriginOffset = new Vector3(1f, 2f, 3f);
+            bootstrapper.AbstractVizOriginOffset = new Vector3(1f, 2f, 3f);
             var parentObject = new GameObject("ArtistVizParent");
             parentObject.transform.SetParent(_testRoot.transform, false);
 

@@ -1,0 +1,94 @@
+{
+  "runs": {
+    "session-removed": {
+      "total": 16,
+      "passed": 16,
+      "failed": 0,
+      "skipped": 0,
+      "exit_code": 0,
+      "xml_sha256": "b7ba39a11b2f7c2f8a0e13860f7b189aef9ea76905d54e52f3ba9ffe1c922ecf"
+    },
+    "session-full": {
+      "total": 192,
+      "passed": 192,
+      "failed": 0,
+      "skipped": 0,
+      "exit_code": 0,
+      "xml_sha256": "2d1f36bca16f35b13c1eee48d3b6842793c99bfb45b4a20a68aec38c22fb5867"
+    },
+    "placement-before": {
+      "total": 6,
+      "passed": 6,
+      "failed": 0,
+      "skipped": 0,
+      "exit_code": 0,
+      "xml_sha256": "fe7a93c08f52a2893cb5d1281d907c3ce0205be924da1287ee1ef1637bc5854c"
+    },
+    "renamed-focused": {
+      "total": 23,
+      "passed": 23,
+      "failed": 0,
+      "skipped": 0,
+      "exit_code": 0,
+      "xml_sha256": "f5c31541da51e8c7fa91df8981f6a80736840cc3624e6d9a8008db31f3babf06"
+    },
+    "full": {
+      "total": 199,
+      "passed": 198,
+      "failed": 1,
+      "skipped": 0,
+      "exit_code": 2,
+      "xml_sha256": "ce029b89c7758a21a0bbb0a1cd8210b4f08c5fa467ed7640acd7988e0f874d5e"
+    },
+    "halo-focused": {
+      "total": 1,
+      "passed": 1,
+      "failed": 0,
+      "skipped": 0,
+      "exit_code": 0,
+      "xml_sha256": "97d75ca1d416a659865ee5187f182a67f4986a173249951849464d09b946bc40"
+    },
+    "full-repeat": {
+      "total": 199,
+      "passed": 199,
+      "failed": 0,
+      "skipped": 0,
+      "exit_code": 0,
+      "xml_sha256": "e1726743d71f61377a58031dbf744f6f91a5187fc83ebd80f16b1364c374c40f"
+    }
+  },
+  "prior_test_cases_retired": 18,
+  "all_192_other_prior_cases_retained": true,
+  "new_test_cases": [
+    "AmpPortableDataViz.Tests.PlayMode.BootstrapperPlacementTests.AbstractPlacement_PreservesParentLocalAndWorldFallback(False)",
+    "AmpPortableDataViz.Tests.PlayMode.BootstrapperPlacementTests.AbstractPlacement_PreservesParentLocalAndWorldFallback(True)",
+    "AmpPortableDataViz.Tests.PlayMode.BootstrapperPlacementTests.ArtistPlacement_PreservesParentOriginAndWorldFallback(False)",
+    "AmpPortableDataViz.Tests.PlayMode.BootstrapperPlacementTests.ArtistPlacement_PreservesParentOriginAndWorldFallback(True)",
+    "AmpPortableDataViz.Tests.PlayMode.BootstrapperPlacementTests.GraphPlacement_PreservesParentLocalAndWorldFallback(False)",
+    "AmpPortableDataViz.Tests.PlayMode.BootstrapperPlacementTests.GraphPlacement_PreservesParentLocalAndWorldFallback(True)",
+    "AmpPortableDataViz.Tests.PlayMode.BootstrapperSerializationTests.LegacyPrefab_ImportsRetainedSettingsAndObjectReferences"
+  ],
+  "known_halo_flake_failed_first_full_then_passed_isolated_and_full_unchanged": true,
+  "android": {
+    "result": "Succeeded",
+    "errors": 0,
+    "warnings": 20,
+    "durationSeconds": 109.41453999999999
+  },
+  "build_warning_comparison": {
+    "added": [],
+    "removed": []
+  },
+  "scene": {
+    "missingScriptCount": 0,
+    "brokenObjectReferenceCount": 0,
+    "blockerCount": 0,
+    "componentsScanned": 248,
+    "prefabsScanned": 8,
+    "materialsScanned": 17
+  },
+  "helper_extraction_started": false,
+  "packages_modified": false,
+  "remote_push_performed": false,
+  "device_install_or_test_performed": false
+}

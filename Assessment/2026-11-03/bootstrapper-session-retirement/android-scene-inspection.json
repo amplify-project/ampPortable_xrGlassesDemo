@@ -1,0 +1,18 @@
+{
+    "generatedAtUtc": "2026-11-03T11:39:05.0963403Z",
+    "unityVersion": "2022.3.36f1",
+    "enabledScenes": [
+        "Assets/Scenes/ampPortable_xrGlassesDemo.unity"
+    ],
+    "dependencyCount": 86,
+    "gameObjectsScanned": 87,
+    "componentsScanned": 248,
+    "prefabsScanned": 8,
+    "materialsScanned": 17,
+    "missingScriptCount": 0,
+    "brokenObjectReferenceCount": 0,
+    "blockerCount": 0,
+    "warningCount": 0,
+    "issues": [],
+    "limitations": "Editor inspection only. Null object references with instance ID zero cannot be distinguished from intentional empty fields. Duplicate findings may occur when a prefab is inspected both in-scene and as a dependency. Package/native/runtime-only content, real network behavior, device shader support, and wearer comfort require separate validation."
+}

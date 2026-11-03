@@ -37,13 +37,13 @@ namespace AmpPortableDataViz.Tests.PlayMode
             _root = new GameObject(nameof(BootstrapperLifecycleTests));
             _root.SetActive(false);
             _bootstrapper = _root.AddComponent<Bootstrapper>();
-            _bootstrapper.VisualPrefab = Child("VisualTemplate");
-            _bootstrapper.EmotionVisualParent = _root.transform;
+            _bootstrapper.AbstractVizPrefab = Child("VisualTemplate");
+            _bootstrapper.AbstractVizParent = _root.transform;
             _bootstrapper.GraphGroupParent = _root.transform;
-            _bootstrapper.AutoDetectEmotionDeviceIds = false;
-            _bootstrapper.IncludeEmotionChannels = false;
+            _bootstrapper.AutoDetectSensorIds = false;
+            _bootstrapper.IncludeSensorChannels = false;
             _bootstrapper.UseIndividualSensorEngagement = false;
-            _bootstrapper.AutoSpawnAudienceVisualsFromChannels = false;
+            _bootstrapper.AutoSpawnAbstractViz = false;
             _bootstrapper.AutoSpawnGraphVisualsFromChannels = false;
             _bootstrapper.AutoSpawnArtistVizFromChannels = false;
             _bootstrapper.RequireRedisEndpointConfirmation = true;
@@ -157,14 +157,14 @@ namespace AmpPortableDataViz.Tests.PlayMode
 
         private void ConfigureAutomaticTemplates()
         {
-            _bootstrapper.AutoSpawnAudienceVisualsFromChannels = true;
+            _bootstrapper.AutoSpawnAbstractViz = true;
             _bootstrapper.AutoSpawnGraphVisualsFromChannels = true;
             _bootstrapper.ShowDeviceLabels = false;
             _bootstrapper.ShowGraphGroupLabels = false;
             _bootstrapper.RedisChannels = new[] { "device:a:physio_metrics", "device:b:physio_metrics" };
-            _bootstrapper.EmotionDeviceIds = Array.Empty<string>();
-            _bootstrapper.VisualPrefab.AddComponent<AudienceSignalBinding>();
-            _bootstrapper.VisualPrefab.AddComponent<AudienceSignalVisualizerBinding>();
+            _bootstrapper.SensorIds = Array.Empty<string>();
+            _bootstrapper.AbstractVizPrefab.AddComponent<AudienceSignalBinding>();
+            _bootstrapper.AbstractVizPrefab.AddComponent<AudienceSignalVisualizerBinding>();
             _bootstrapper.GraphPrefab = Child("GraphTemplate");
             _bootstrapper.GraphPrefab.AddComponent<AudienceSignalBinding>();
             _bootstrapper.GraphPrefab.AddComponent<AudienceSignalVisualizerBinding>();

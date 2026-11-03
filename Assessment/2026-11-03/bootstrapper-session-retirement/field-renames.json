@@ -1,0 +1,23 @@
+{
+  "fields": {
+    "VisualPrefab": "AbstractVizPrefab",
+    "IncludeEmotionChannels": "IncludeSensorChannels",
+    "EmotionDeviceIds": "SensorIds",
+    "AutoDetectEmotionDeviceIds": "AutoDetectSensorIds",
+    "EmotionVisualParent": "AbstractVizParent",
+    "EmotionVisualOriginOffset": "AbstractVizOriginOffset",
+    "EmotionVisualSpacing": "AbstractVizSpacing",
+    "EmotionVisualsPerRow": "AbstractVizPerRow",
+    "AutoSpawnAudienceVisualsFromChannels": "AutoSpawnAbstractViz",
+    "AnchorPosition": "SpawnPosition",
+    "AnchorRotationEuler": "SpawnRotationEuler"
+  },
+  "methods": {
+    "ShouldAutoDetectEmotionDeviceIds": "ShouldAutoDetectSensorIds",
+    "DiscoverEmotionDevicesThenApply": "DiscoverSensorsThenApply",
+    "PositionEmotionVisual": "PositionAbstractViz"
+  },
+  "updated_saved_assets": [
+    "Assets/Scenes/ampPortable_xrGlassesDemo.unity"
+  ]
+}
