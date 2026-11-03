@@ -1375,7 +1375,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1165166120}
   m_Layer: 0
-  m_Name: EmotionVisualParent
+  m_Name: AbstractVizParent
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
