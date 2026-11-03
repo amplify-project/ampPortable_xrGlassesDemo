@@ -15,8 +15,8 @@ namespace AmpPortableDataViz.Presentation.Visualization
     public sealed class SensorStreamCoordinator : MonoBehaviour
     {
         [Header("Persistent Visualization Targets")]
-        [SerializeField] private AudienceSignalVisualizerBinding[] visualizerBindings =
-            Array.Empty<AudienceSignalVisualizerBinding>();
+        [SerializeField] private SensorVisualizationBinding[] visualizerBindings =
+            Array.Empty<SensorVisualizationBinding>();
 
         [Header("Diagnostics")]
         [SerializeField] private bool logSelectionChanges = true;
@@ -50,7 +50,7 @@ namespace AmpPortableDataViz.Presentation.Visualization
             _selection = null;
         }
 
-        public void ConfigureSources(IEnumerable<AudienceSignalBinding> sources)
+        public void ConfigureSources(IEnumerable<SensorSampleAssembler> sources)
         {
             ConfigureSources(sources?.Cast<IDataSource<AudienceSignalSample>>());
         }
@@ -62,10 +62,10 @@ namespace AmpPortableDataViz.Presentation.Visualization
             BindVisualizerTargets();
         }
 
-        public void ConfigureVisualizerBindings(IEnumerable<AudienceSignalVisualizerBinding> bindings)
+        public void ConfigureVisualizerBindings(IEnumerable<SensorVisualizationBinding> bindings)
         {
             visualizerBindings = bindings == null
-                ? Array.Empty<AudienceSignalVisualizerBinding>()
+                ? Array.Empty<SensorVisualizationBinding>()
                 : bindings.Where(binding => binding != null).Distinct().ToArray();
 
             BindVisualizerTargets();
@@ -102,7 +102,7 @@ namespace AmpPortableDataViz.Presentation.Visualization
                 return;
             }
 
-            foreach (AudienceSignalVisualizerBinding binding in visualizerBindings)
+            foreach (SensorVisualizationBinding binding in visualizerBindings)
             {
                 if (binding != null)
                 {

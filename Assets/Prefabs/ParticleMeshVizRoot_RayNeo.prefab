@@ -72,6 +72,10 @@ PrefabInstance:
       propertyPath: m_Materials.Array.data[0]
       value: 
       objectReference: {fileID: 2100000, guid: 6fd344480969d5c4aaacaa81b4d6eeb0, type: 2}
+    - target: {fileID: 7742124648179192571, guid: 74e05b7be47103748b0057db90b75d78, type: 3}
+      propertyPath: liveSource
+      value:
+      objectReference: {fileID: 0}
     - target: {fileID: 7919801646832807489, guid: 74e05b7be47103748b0057db90b75d78, type: 3}
       propertyPath: m_LocalPosition.x
       value: 0
@@ -164,7 +168,10 @@ PrefabInstance:
       propertyPath: temperatureTrailLineWidth
       value: 0.0253
       objectReference: {fileID: 0}
-    m_RemovedComponents: []
+    m_RemovedComponents:
+    - {fileID: 1170849113260357678, guid: 74e05b7be47103748b0057db90b75d78, type: 3}
+    - {fileID: 5329396794755667635, guid: 74e05b7be47103748b0057db90b75d78, type: 3}
+    - {fileID: 2047772319342869088, guid: 74e05b7be47103748b0057db90b75d78, type: 3}
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
     m_AddedComponents: []

@@ -1,0 +1,1 @@
+RayNeo variant saved using Unity PrefabUtility; removed root XRGrabInteractable/Rigidbody and local SensorSampleAssembler; cleared local liveSource; retained collider, renderer, visualization binding and simulator.

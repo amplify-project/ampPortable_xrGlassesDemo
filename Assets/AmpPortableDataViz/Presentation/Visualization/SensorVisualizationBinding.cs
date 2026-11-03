@@ -3,15 +3,17 @@ using System.Collections.Generic;
 using AmpPortableDataViz.Core;
 using AmpPortableDataViz.Presentation.Mapping;
 using UnityEngine;
+using UnityEngine.Scripting.APIUpdating;
 
 namespace AmpPortableDataViz.Presentation.Visualization
 {
     /// <summary>
-    /// Applies shared audience data samples to particle mesh and graph visualizers.
+    /// Maps sensor samples into particle mesh, graph and artist visualization parameters.
     /// </summary>
     [DisallowMultipleComponent]
-    [AddComponentMenu("Amp Portable Data Viz/Visualization/Audience Signal Visualizer Binding")]
-    public sealed class AudienceSignalVisualizerBinding : MonoBehaviour
+    [AddComponentMenu("Amp Portable Data Viz/Visualization/Sensor Visualization Binding")]
+    [MovedFrom(true, sourceNamespace: "AmpPortableDataViz.Presentation.Visualization", sourceAssembly: "Amp", sourceClassName: "AudienceSignalVisualizerBinding")]
+    public sealed class SensorVisualizationBinding : MonoBehaviour
     {
         private static readonly Vector2 SignedPhysioGraphRange = new Vector2(-3f, 3f);
         private static readonly Vector2 LegacyTonicEdaRange = new Vector2(0.01f, 0.5f);
@@ -38,8 +40,8 @@ namespace AmpPortableDataViz.Presentation.Visualization
 
         [Header("Sources")]
         [SerializeField] private SourceMode sourceMode = SourceMode.Auto;
-        [SerializeField] private AudienceSignalBinding liveSource;
-        [SerializeField] private AudienceDataManualDriver manualSource;
+        [SerializeField] private SensorSampleAssembler liveSource;
+        [SerializeField] private SensorDataSimulator manualSource;
 
         [Header("Particle Mesh Target")]
         [SerializeField] private ParticleMeshVisualizer particleMeshVisualizer;
@@ -123,7 +125,7 @@ namespace AmpPortableDataViz.Presentation.Visualization
             UpdateGraphMapperSettings();
         }
 
-        public void ConfigureLiveSource(AudienceSignalBinding source, string overrideDeviceId = null)
+        public void ConfigureLiveSource(SensorSampleAssembler source, string overrideDeviceId = null)
         {
             ConfigureLiveSource((IDataSource<AudienceSignalSample>)source, overrideDeviceId);
         }
@@ -136,7 +138,7 @@ namespace AmpPortableDataViz.Presentation.Visualization
                 DetachSource();
             }
 
-            liveSource = source as AudienceSignalBinding;
+            liveSource = source as SensorSampleAssembler;
             _runtimeLiveSource = source;
             if (source != null)
             {
@@ -151,7 +153,7 @@ namespace AmpPortableDataViz.Presentation.Visualization
             }
         }
 
-        public void ConfigureManualSource(AudienceDataManualDriver source)
+        public void ConfigureManualSource(SensorDataSimulator source)
         {
             bool wasEnabled = isActiveAndEnabled;
             if (wasEnabled)
@@ -187,7 +189,7 @@ namespace AmpPortableDataViz.Presentation.Visualization
         {
             if (liveSource == null)
             {
-                liveSource = GetComponent<AudienceSignalBinding>();
+                liveSource = GetComponent<SensorSampleAssembler>();
             }
 
             if (_runtimeLiveSource == null)
@@ -197,7 +199,7 @@ namespace AmpPortableDataViz.Presentation.Visualization
 
             if (manualSource == null)
             {
-                manualSource = GetComponent<AudienceDataManualDriver>();
+                manualSource = GetComponent<SensorDataSimulator>();
             }
 
             if (particleMeshVisualizer == null)
@@ -218,7 +220,7 @@ namespace AmpPortableDataViz.Presentation.Visualization
                 case SourceMode.Manual:
                     if (manualSource == null)
                     {
-                        Debug.LogWarning($"{nameof(AudienceSignalVisualizerBinding)}[{name}] is missing a manual source.", this);
+                        Debug.LogWarning($"{nameof(SensorVisualizationBinding)}[{name}] is missing a manual source.", this);
                         return;
                     }
 
@@ -229,7 +231,7 @@ namespace AmpPortableDataViz.Presentation.Visualization
                     IDataSource<AudienceSignalSample> selectedLiveSource = ResolveLiveSource();
                     if (selectedLiveSource == null)
                     {
-                        Debug.LogWarning($"{nameof(AudienceSignalVisualizerBinding)}[{name}] is missing a live source.", this);
+                        Debug.LogWarning($"{nameof(SensorVisualizationBinding)}[{name}] is missing a live source.", this);
                         return;
                     }
 
@@ -307,7 +309,7 @@ namespace AmpPortableDataViz.Presentation.Visualization
 
             if (logReceivedSamples)
             {
-                Debug.Log($"{nameof(AudienceSignalVisualizerBinding)}[{name}] received {frame.Payload}", this);
+                Debug.Log($"{nameof(SensorVisualizationBinding)}[{name}] received {frame.Payload}", this);
             }
 
             ApplyParticleMesh(frame);

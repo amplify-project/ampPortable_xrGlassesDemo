@@ -1,0 +1,47 @@
+{
+  "phase": "renamed",
+  "project": "C:\\Users\\Bryan Dunphy\\AppData\\Local\\Temp\\rnc1030\\project",
+  "source_files": 1689,
+  "all_source_bytes_match": true,
+  "copied": [
+    "Assets/AmpPortableDataViz/Presentation/Bootstrap/Bootstrapper.cs",
+    "Assets/AmpPortableDataViz/Presentation/Bootstrap/VisualizationPresenter.cs",
+    "Assets/AmpPortableDataViz/Presentation/Visualization/SensorDataSimulator.cs",
+    "Assets/AmpPortableDataViz/Presentation/Visualization/SensorDataSimulator.cs.meta",
+    "Assets/AmpPortableDataViz/Presentation/Visualization/SensorSampleAssembler.cs",
+    "Assets/AmpPortableDataViz/Presentation/Visualization/SensorSampleAssembler.cs.meta",
+    "Assets/AmpPortableDataViz/Presentation/Visualization/SensorStreamCoordinator.cs",
+    "Assets/AmpPortableDataViz/Presentation/Visualization/SensorVisualizationBinding.cs",
+    "Assets/AmpPortableDataViz/Presentation/Visualization/SensorVisualizationBinding.cs.meta",
+    "Assets/Prefabs/AudienceGraphPrefab.prefab",
+    "Assets/Prefabs/ParticleMeshViz.prefab",
+    "Assets/Tests/PlayMode/ArtistVizAssetWiringTests.cs",
+    "Assets/Tests/PlayMode/ArtistVizBindingTests.cs",
+    "Assets/Tests/PlayMode/BootstrapperArtistVizTests.cs",
+    "Assets/Tests/PlayMode/BootstrapperLifecycleTests.cs",
+    "Assets/Tests/PlayMode/BootstrapperRetainedGraphTests.cs",
+    "Assets/Tests/PlayMode/SensorEngagementIntegrationTests.cs",
+    "Assets/Tests/PlayMode/SensorVisualizationBindingSmoothingTests.cs",
+    "Assets/Tests/PlayMode/SensorVisualizationBindingSmoothingTests.cs.meta",
+    "ProjectSettings/ProjectSettings.asset"
+  ],
+  "removed": [
+    "Assets/AmpPortableDataViz/Presentation/Visualization/AudienceDataManualDriver.cs",
+    "Assets/AmpPortableDataViz/Presentation/Visualization/AudienceDataManualDriver.cs.meta",
+    "Assets/AmpPortableDataViz/Presentation/Visualization/AudienceSignalBinding.cs",
+    "Assets/AmpPortableDataViz/Presentation/Visualization/AudienceSignalBinding.cs.meta",
+    "Assets/AmpPortableDataViz/Presentation/Visualization/AudienceSignalVisualizerBinding.cs",
+    "Assets/AmpPortableDataViz/Presentation/Visualization/AudienceSignalVisualizerBinding.cs.meta",
+    "Assets/Tests/PlayMode/AudienceSignalVisualizerBindingSmoothingTests.cs",
+    "Assets/Tests/PlayMode/AudienceSignalVisualizerBindingSmoothingTests.cs.meta"
+  ],
+  "validation_only_extras": [
+    "Assets/Editor.meta",
+    "Assets/Editor/MonoScriptProbe.cs",
+    "Assets/Editor/MonoScriptProbe.cs.meta",
+    "Assets/Editor/PreMergeValidation.cs",
+    "Assets/Editor/PreMergeValidation.cs.meta",
+    "Assets/Editor/RayNeoParticlePrefabMigration.cs",
+    "Assets/Editor/RayNeoParticlePrefabMigration.cs.meta"
+  ]
+}

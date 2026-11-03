@@ -155,6 +155,62 @@ namespace AmpPortableDataViz.Tests.PlayMode
             Assert.IsNull(GetField(GetField(_bootstrapper, "_streams"), "_sensorEngagementBackendObject"));
         }
 
+        [UnityTest]
+        public IEnumerator DisplayOnlyPrefab_SelectedModeSpawnsAndSwitchesWithoutLocalAssembler()
+        {
+            ConfigureAutomaticTemplates();
+            var template = BootstrapperTestConfiguration.Get<GameObject>(_bootstrapper, "AbstractVizPrefab");
+            UnityEngine.Object.DestroyImmediate(template.GetComponent<SensorSampleAssembler>());
+            BootstrapperTestConfiguration.Set(_bootstrapper, "AutoSpawnGraphVisualsFromChannels", false);
+            _bootstrapper.BeginAfterEndpoint();
+
+            var visual = (GameObject)GetField(GetVisuals(_bootstrapper), "_selectedParticleVisual");
+            Assert.IsNotNull(visual, "The abstract view must not depend on a prefab-local assembler.");
+            Assert.IsNull(visual.GetComponentInChildren<SensorSampleAssembler>(true));
+            var coordinator = _root.GetComponent<SensorStreamCoordinator>();
+            Assert.AreEqual(2, coordinator.SensorCount);
+            string firstSensor = coordinator.ActiveSensorId;
+            Assert.IsTrue(coordinator.SelectNextSensor());
+            Assert.AreNotEqual(firstSensor, coordinator.ActiveSensorId);
+            Assert.AreSame(visual, GetField(GetVisuals(_bootstrapper), "_selectedParticleVisual"));
+            yield return null;
+        }
+
+        [UnityTest]
+        public IEnumerator DisplayOnlyPrefab_PerDeviceModeCreatesAndReleasesAssemblers()
+        {
+            ConfigureAutomaticTemplates();
+            var template = BootstrapperTestConfiguration.Get<GameObject>(_bootstrapper, "AbstractVizPrefab");
+            UnityEngine.Object.DestroyImmediate(template.GetComponent<SensorSampleAssembler>());
+            BootstrapperTestConfiguration.Set(_bootstrapper, "AutoSpawnGraphVisualsFromChannels", false);
+            BootstrapperTestConfiguration.Set(_bootstrapper, "UseSingleSelectedSensorStream", false);
+            _bootstrapper.BeginAfterEndpoint();
+
+            var instances = (ICollection)GetField(GetVisuals(_bootstrapper), "_audienceDeviceInstances");
+            Assert.AreEqual(2, instances.Count);
+            var ownedAssemblers = new System.Collections.Generic.List<SensorSampleAssembler>();
+            foreach (var instance in instances)
+            {
+                var visual = (GameObject)instance.GetType().GetField("VisualInstance").GetValue(instance);
+                var assembler = visual.GetComponentInChildren<SensorSampleAssembler>(true);
+                Assert.IsNotNull(assembler);
+                Assert.IsTrue(assembler.enabled);
+                ownedAssemblers.Add(assembler);
+                var serializedBinding = visual.GetComponentInChildren<SensorVisualizationBinding>(true);
+                Assert.AreSame(assembler, GetField(serializedBinding, "liveSource"));
+            }
+            Assert.IsNull(template.GetComponent<SensorSampleAssembler>(), "Runtime configuration must not modify the template.");
+
+            Invoke(_bootstrapper, "OnDisable");
+            yield return null;
+            Assert.AreEqual(0, instances.Count);
+            foreach (var assembler in ownedAssemblers)
+            {
+                Assert.IsTrue(assembler == null, "Each runtime assembler must be destroyed with its visual.");
+            }
+            Assert.AreEqual(0, _root.GetComponentsInChildren<RedisPhysioMetricsPump>(true).Length);
+        }
+
         private void ConfigureAutomaticTemplates()
         {
             BootstrapperTestConfiguration.Set(_bootstrapper, "AutoSpawnAbstractViz", true);
@@ -163,11 +219,11 @@ namespace AmpPortableDataViz.Tests.PlayMode
             BootstrapperTestConfiguration.Set(_bootstrapper, "ShowGraphGroupLabels", false);
             BootstrapperTestConfiguration.Set(_bootstrapper, "RedisChannels", new[] { "device:a:physio_metrics", "device:b:physio_metrics" });
             BootstrapperTestConfiguration.Set(_bootstrapper, "SensorIds", Array.Empty<string>());
-            BootstrapperTestConfiguration.Get<GameObject>(_bootstrapper, "AbstractVizPrefab").AddComponent<AudienceSignalBinding>();
-            BootstrapperTestConfiguration.Get<GameObject>(_bootstrapper, "AbstractVizPrefab").AddComponent<AudienceSignalVisualizerBinding>();
+            BootstrapperTestConfiguration.Get<GameObject>(_bootstrapper, "AbstractVizPrefab").AddComponent<SensorSampleAssembler>();
+            BootstrapperTestConfiguration.Get<GameObject>(_bootstrapper, "AbstractVizPrefab").AddComponent<SensorVisualizationBinding>();
             BootstrapperTestConfiguration.Set(_bootstrapper, "GraphPrefab", Child("GraphTemplate"));
-            BootstrapperTestConfiguration.Get<GameObject>(_bootstrapper, "GraphPrefab").AddComponent<AudienceSignalBinding>();
-            BootstrapperTestConfiguration.Get<GameObject>(_bootstrapper, "GraphPrefab").AddComponent<AudienceSignalVisualizerBinding>();
+            BootstrapperTestConfiguration.Get<GameObject>(_bootstrapper, "GraphPrefab").AddComponent<SensorSampleAssembler>();
+            BootstrapperTestConfiguration.Get<GameObject>(_bootstrapper, "GraphPrefab").AddComponent<SensorVisualizationBinding>();
             BootstrapperTestConfiguration.Get<GameObject>(_bootstrapper, "GraphPrefab").AddComponent<GraphVisualizer>();
             BootstrapperTestConfiguration.Set(_bootstrapper, "SensorHudCamera", Child("HudCamera").AddComponent<Camera>());
         }

@@ -74,17 +74,17 @@ namespace AmpPortableDataViz.Tests.PlayMode
             Assert.IsNotNull(_graphInstance);
             AssertNoMissingScripts(_graphInstance);
             Assert.IsNotNull(_graphInstance.GetComponentInChildren<GraphVisualizer>(true));
-            var bindings = _graphInstance.GetComponentsInChildren<AudienceSignalVisualizerBinding>(true);
+            var bindings = _graphInstance.GetComponentsInChildren<SensorVisualizationBinding>(true);
             Assert.IsNotEmpty(bindings);
             foreach (var binding in bindings)
             {
                 Assert.IsTrue(binding.enabled);
             }
-            foreach (var source in _graphInstance.GetComponentsInChildren<AudienceSignalBinding>(true))
+            foreach (var source in _graphInstance.GetComponentsInChildren<SensorSampleAssembler>(true))
             {
                 Assert.IsFalse(source.enabled);
             }
-            foreach (var driver in _graphInstance.GetComponentsInChildren<AudienceDataManualDriver>(true))
+            foreach (var driver in _graphInstance.GetComponentsInChildren<SensorDataSimulator>(true))
             {
                 Assert.IsFalse(driver.enabled);
             }

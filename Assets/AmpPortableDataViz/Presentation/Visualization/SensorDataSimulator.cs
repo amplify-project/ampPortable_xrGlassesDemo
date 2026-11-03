@@ -1,17 +1,19 @@
 using System;
 using AmpPortableDataViz.Core;
 using UnityEngine;
+using UnityEngine.Scripting.APIUpdating;
 using UnityEngine.Events;
 
 namespace AmpPortableDataViz.Presentation.Visualization
 {
     /// <summary>
-    /// Manual/debug source for simulating the shared audience data payload without Redis.
+    /// Generates manual or procedural sensor samples for development without Redis.
     /// </summary>
     [ExecuteAlways]
     [DisallowMultipleComponent]
-    [AddComponentMenu("Amp Portable Data Viz/Visualization/Audience Data Manual Driver")]
-    public sealed class AudienceDataManualDriver : MonoBehaviour, ILatestDataSource<AudienceSignalSample>
+    [AddComponentMenu("Amp Portable Data Viz/Visualization/Sensor Data Simulator")]
+    [MovedFrom(true, sourceNamespace: "AmpPortableDataViz.Presentation.Visualization", sourceAssembly: "Amp", sourceClassName: "AudienceDataManualDriver")]
+    public sealed class SensorDataSimulator : MonoBehaviour, ILatestDataSource<AudienceSignalSample>
     {
         private const float PhysioZScoreMin = -3f;
         private const float PhysioZScoreMax = 3f;
@@ -134,7 +136,7 @@ namespace AmpPortableDataViz.Presentation.Visualization
 
             if (logEmittedSample)
             {
-                Debug.Log($"{nameof(AudienceDataManualDriver)} emitted {sample}", this);
+                Debug.Log($"{nameof(SensorDataSimulator)} emitted {sample}", this);
             }
         }
 

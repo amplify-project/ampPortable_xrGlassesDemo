@@ -8,7 +8,7 @@ using UnityEngine;
 
 namespace AmpPortableDataViz.Tests.PlayMode
 {
-    public class AudienceSignalVisualizerBindingSmoothingTests
+    public class SensorVisualizationBindingSmoothingTests
     {
         private static readonly long OneSecond = TimeSpan.TicksPerSecond;
         private GameObject _gameObject;
@@ -25,7 +25,7 @@ namespace AmpPortableDataViz.Tests.PlayMode
         [Test]
         public void AppendGraphSample_WhenSmoothingEnabled_StoresSmoothedValue()
         {
-            AudienceSignalVisualizerBinding binding = CreateBinding(true, 1f);
+            SensorVisualizationBinding binding = CreateBinding(true, 1f);
 
             Append(binding, 0f, OneSecond);
             Append(binding, 10f, 2L * OneSecond);
@@ -38,7 +38,7 @@ namespace AmpPortableDataViz.Tests.PlayMode
         [Test]
         public void AppendGraphSample_WhenSmoothingDisabled_StoresRawValue()
         {
-            AudienceSignalVisualizerBinding binding = CreateBinding(false, 1f);
+            SensorVisualizationBinding binding = CreateBinding(false, 1f);
 
             Append(binding, 0f, OneSecond);
             Append(binding, 10f, 2L * OneSecond);
@@ -50,7 +50,7 @@ namespace AmpPortableDataViz.Tests.PlayMode
         [Test]
         public void ResetGraphState_ClearsSmoothingHistory()
         {
-            AudienceSignalVisualizerBinding binding = CreateBinding(true, 1f);
+            SensorVisualizationBinding binding = CreateBinding(true, 1f);
             Append(binding, 0f, OneSecond);
             Append(binding, 10f, 2L * OneSecond);
 
@@ -62,15 +62,15 @@ namespace AmpPortableDataViz.Tests.PlayMode
             Assert.AreEqual(3f, samples[0].y);
         }
 
-        private AudienceSignalVisualizerBinding CreateBinding(bool smoothingEnabled, float halfLifeSeconds)
+        private SensorVisualizationBinding CreateBinding(bool smoothingEnabled, float halfLifeSeconds)
         {
-            _gameObject = new GameObject(nameof(AudienceSignalVisualizerBindingSmoothingTests));
+            _gameObject = new GameObject(nameof(SensorVisualizationBindingSmoothingTests));
             _gameObject.SetActive(false);
-            var binding = _gameObject.AddComponent<AudienceSignalVisualizerBinding>();
+            var binding = _gameObject.AddComponent<SensorVisualizationBinding>();
 
             var graphStreams = new[]
             {
-                new AudienceSignalVisualizerBinding.GraphMetricBinding
+                new SensorVisualizationBinding.GraphMetricBinding
                 {
                     Metric = AudienceMetricKind.Engagement,
                     YRange = new Vector2(0f, 1f),
@@ -86,12 +86,12 @@ namespace AmpPortableDataViz.Tests.PlayMode
             return binding;
         }
 
-        private static void Append(AudienceSignalVisualizerBinding binding, float value, long timestampTicksUtc)
+        private static void Append(SensorVisualizationBinding binding, float value, long timestampTicksUtc)
         {
             Invoke(binding, "AppendGraphSample", 0, value, timestampTicksUtc);
         }
 
-        private static List<Vector2> GetSamples(AudienceSignalVisualizerBinding binding)
+        private static List<Vector2> GetSamples(SensorVisualizationBinding binding)
         {
             var sampleLists = (List<Vector2>[])GetField(binding, "_graphSamples");
             return sampleLists[0];

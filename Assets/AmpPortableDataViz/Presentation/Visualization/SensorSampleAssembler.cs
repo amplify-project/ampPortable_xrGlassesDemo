@@ -4,16 +4,18 @@ using AmpPortableDataViz.Core;
 using AmpPortableDataViz.Presentation.Mapping;
 using AmpPortableDataViz.Presentation.Sources;
 using UnityEngine;
+using UnityEngine.Scripting.APIUpdating;
 using UnityEngine.Serialization;
 
 namespace AmpPortableDataViz.Presentation.Visualization
 {
     /// <summary>
-    /// Aggregates Redis physiological and engagement streams for particle mesh and graph visuals.
+    /// Combines physiological and engagement streams into shared sensor samples.
     /// </summary>
     [DisallowMultipleComponent]
-    [AddComponentMenu("Amp Portable Data Viz/Visualization/Audience Signal Binding")]
-    public sealed class AudienceSignalBinding : MonoBehaviour, ILatestDataSource<AudienceSignalSample>
+    [AddComponentMenu("Amp Portable Data Viz/Visualization/Sensor Sample Assembler")]
+    [MovedFrom(true, sourceNamespace: "AmpPortableDataViz.Presentation.Visualization", sourceAssembly: "Amp", sourceClassName: "AudienceSignalBinding")]
+    public sealed class SensorSampleAssembler : MonoBehaviour, ILatestDataSource<AudienceSignalSample>
     {
         private static readonly Vector2 SignedPhysioGraphRange = new Vector2(-3f, 3f);
         private static readonly Vector2 LegacyTonicEdaRange = new Vector2(0.01f, 0.5f);
@@ -234,7 +236,7 @@ namespace AmpPortableDataViz.Presentation.Visualization
         {
             if (source == null)
             {
-                Debug.LogWarning($"AudienceSignalBinding[{ResolveDeviceId()}] is missing a physio Redis source.", this);
+                Debug.LogWarning($"SensorSampleAssembler[{ResolveDeviceId()}] is missing a physio Redis source.", this);
                 return;
             }
 
@@ -249,7 +251,7 @@ namespace AmpPortableDataViz.Presentation.Visualization
         {
             if (source == null)
             {
-                Debug.LogWarning($"AudienceSignalBinding[{ResolveDeviceId()}] is missing a sensor engagement source.", this);
+                Debug.LogWarning($"SensorSampleAssembler[{ResolveDeviceId()}] is missing a sensor engagement source.", this);
                 return;
             }
 
@@ -261,7 +263,7 @@ namespace AmpPortableDataViz.Presentation.Visualization
         {
             if (pump == null)
             {
-                Debug.LogWarning($"AudienceSignalBinding[{ResolveDeviceId()}] is missing a {label} Redis source.", this);
+                Debug.LogWarning($"SensorSampleAssembler[{ResolveDeviceId()}] is missing a {label} Redis source.", this);
                 return;
             }
 
@@ -309,7 +311,7 @@ namespace AmpPortableDataViz.Presentation.Visualization
 
             if (logRawInputs)
             {
-                Debug.Log($"AudienceSignalBinding[{ResolveDeviceId()}] physio {frame.Payload} seq={frame.SequenceId} ts={frame.TimestampTicksUtc}", this);
+                Debug.Log($"SensorSampleAssembler[{ResolveDeviceId()}] physio {frame.Payload} seq={frame.SequenceId} ts={frame.TimestampTicksUtc}", this);
             }
 
             AppendGraphSample(AudienceMetricKind.TonicElectrodermalActivityStdDev, ResolvePhysioGraphValue(AudienceMetricKind.TonicElectrodermalActivityStdDev, frame.Payload), frame.TimestampTicksUtc);
@@ -327,7 +329,7 @@ namespace AmpPortableDataViz.Presentation.Visualization
 
             if (logRawInputs)
             {
-                Debug.Log($"AudienceSignalBinding[{ResolveDeviceId()}] engagement={_latestEngagement:F4} seq={frame.SequenceId} ts={frame.TimestampTicksUtc}", this);
+                Debug.Log($"SensorSampleAssembler[{ResolveDeviceId()}] engagement={_latestEngagement:F4} seq={frame.SequenceId} ts={frame.TimestampTicksUtc}", this);
             }
 
             AppendGraphSample(AudienceMetricKind.Engagement, _latestEngagement, frame.TimestampTicksUtc);
@@ -349,7 +351,7 @@ namespace AmpPortableDataViz.Presentation.Visualization
             if (logRawInputs)
             {
                 Debug.Log(
-                    $"AudienceSignalBinding[{ResolveDeviceId()}] sensor engagement={_latestEngagement:F4} status={state.Status} " +
+                    $"SensorSampleAssembler[{ResolveDeviceId()}] sensor engagement={_latestEngagement:F4} status={state.Status} " +
                     $"seq={frame.SequenceId} ts={frame.TimestampTicksUtc}",
                     this);
             }
@@ -381,7 +383,7 @@ namespace AmpPortableDataViz.Presentation.Visualization
 
             if (logResolvedSamples)
             {
-                Debug.Log($"AudienceSignalBinding[{ResolveDeviceId()}] -> ParticleMesh {sample}", this);
+                Debug.Log($"SensorSampleAssembler[{ResolveDeviceId()}] -> ParticleMesh {sample}", this);
             }
         }
 
@@ -646,10 +648,10 @@ namespace AmpPortableDataViz.Presentation.Visualization
 
         private void WarnIfUnconfigured()
         {
-            bool hasExternalVisualizerBinding = GetComponentInChildren<AudienceSignalVisualizerBinding>() != null;
+            bool hasExternalVisualizerBinding = GetComponentInChildren<SensorVisualizationBinding>() != null;
             if (!hasExternalVisualizerBinding && particleMeshVisualizer == null && (graphStreams == null || graphStreams.Length == 0))
             {
-                Debug.LogWarning($"AudienceSignalBinding[{ResolveDeviceId()}] has no particle mesh or graph targets configured.", this);
+                Debug.LogWarning($"SensorSampleAssembler[{ResolveDeviceId()}] has no particle mesh or graph targets configured.", this);
             }
         }
 

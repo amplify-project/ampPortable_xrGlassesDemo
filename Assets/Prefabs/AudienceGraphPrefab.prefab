@@ -94,7 +94,7 @@ MonoBehaviour:
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: d5189cfb48f34bd7b0687cf4b010df5d, type: 3}
   m_Name: 
-  m_EditorClassIdentifier: Amp::AmpPortableDataViz.Presentation.Visualization.AudienceSignalBinding
+  m_EditorClassIdentifier: Amp::AmpPortableDataViz.Presentation.Visualization.SensorSampleAssembler
   physioSource: {fileID: 0}
   engagementSource: {fileID: 0}
   deviceId: 
@@ -161,7 +161,7 @@ MonoBehaviour:
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 4fca7e35d651470b96c88ea31139fb69, type: 3}
   m_Name: 
-  m_EditorClassIdentifier: Amp::AmpPortableDataViz.Presentation.Visualization.AudienceDataManualDriver
+  m_EditorClassIdentifier: Amp::AmpPortableDataViz.Presentation.Visualization.SensorDataSimulator
   sourceId: audience-manual
   deviceId: 
   tonicElectrodermalActivityStdDev: -1.2266641
@@ -218,7 +218,7 @@ MonoBehaviour:
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 46a6202ad8a64b2db7b22f6d0f6a9ab8, type: 3}
   m_Name: 
-  m_EditorClassIdentifier: Amp::AmpPortableDataViz.Presentation.Visualization.AudienceSignalVisualizerBinding
+  m_EditorClassIdentifier: Amp::AmpPortableDataViz.Presentation.Visualization.SensorVisualizationBinding
   sourceMode: 0
   liveSource: {fileID: 9171372730100571172}
   manualSource: {fileID: 481934060280776417}

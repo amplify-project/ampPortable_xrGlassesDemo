@@ -72,7 +72,7 @@ namespace AmpPortableDataViz.Presentation.Bootstrap
             }
 
             bool hasManualDriver =
-                prefab.GetComponentInChildren<AudienceDataManualDriver>(true) != null ||
+                prefab.GetComponentInChildren<SensorDataSimulator>(true) != null ||
                 prefab.GetComponentInChildren<ParticleMeshManualDriver>(true) != null ||
                 prefab.GetComponentInChildren<GraphManualDriver>(true) != null;
 
@@ -107,20 +107,20 @@ namespace AmpPortableDataViz.Presentation.Bootstrap
                 return;
             }
 
-            var audienceBindings = instance.GetComponentsInChildren<AudienceSignalBinding>(true);
+            var audienceBindings = instance.GetComponentsInChildren<SensorSampleAssembler>(true);
             foreach (var binding in audienceBindings)
             {
                 binding.enabled = false;
             }
 
-            var audienceManualDrivers = instance.GetComponentsInChildren<AudienceDataManualDriver>(true);
+            var audienceManualDrivers = instance.GetComponentsInChildren<SensorDataSimulator>(true);
             bool hasAudienceManualDriver = audienceManualDrivers.Length > 0;
             foreach (var manualDriver in audienceManualDrivers)
             {
                 manualDriver.enabled = true;
             }
 
-            var audienceVisualizerBindings = instance.GetComponentsInChildren<AudienceSignalVisualizerBinding>(true);
+            var audienceVisualizerBindings = instance.GetComponentsInChildren<SensorVisualizationBinding>(true);
             foreach (var visualizerBinding in audienceVisualizerBindings)
             {
                 if (hasAudienceManualDriver)
@@ -168,7 +168,7 @@ namespace AmpPortableDataViz.Presentation.Bootstrap
             if (deviceDefinitions.Count == 0)
             {
                 Debug.LogWarning("Bootstrapper: No complete sensor streams are available for selected-stream mode.");
-                EnsureSensorStreamPresentation(Array.Empty<AudienceSignalBinding>(), Array.Empty<AudienceSignalVisualizerBinding>());
+                EnsureSensorStreamPresentation(Array.Empty<SensorSampleAssembler>(), Array.Empty<SensorVisualizationBinding>());
                 return;
             }
 
@@ -184,7 +184,7 @@ namespace AmpPortableDataViz.Presentation.Bootstrap
                 sourceObject.transform.SetParent(_owner.transform, false);
                 sourceObject.SetActive(false);
 
-                var binding = sourceObject.AddComponent<AudienceSignalBinding>();
+                var binding = sourceObject.AddComponent<SensorSampleAssembler>();
                 var physioPump = _streams.AcquirePhysioPumpForChannel(definition.DeviceId, definition.PhysioMetricsChannel);
                 var engagementSource = _streams.ResolveSensorEngagementSource(definition.DeviceId);
 
@@ -214,7 +214,7 @@ namespace AmpPortableDataViz.Presentation.Bootstrap
             if (_selectedSensorSources.Count == 0)
             {
                 Debug.LogWarning("Bootstrapper: No complete sensor streams could be configured.");
-                EnsureSensorStreamPresentation(Array.Empty<AudienceSignalBinding>(), Array.Empty<AudienceSignalVisualizerBinding>());
+                EnsureSensorStreamPresentation(Array.Empty<SensorSampleAssembler>(), Array.Empty<SensorVisualizationBinding>());
                 return;
             }
 
@@ -246,7 +246,7 @@ namespace AmpPortableDataViz.Presentation.Bootstrap
                     positionAtParentOrigin: true);
             }
 
-            var visualizerBindings = new List<AudienceSignalVisualizerBinding>();
+            var visualizerBindings = new List<SensorVisualizationBinding>();
             AddVisualizerBindings(_selectedParticleVisual, visualizerBindings);
             AddVisualizerBindings(_selectedGraphVisual, visualizerBindings);
             AddVisualizerBindings(_selectedArtistVisual, visualizerBindings);
@@ -289,16 +289,16 @@ namespace AmpPortableDataViz.Presentation.Bootstrap
 
             DisableManualDrivers(instance);
 
-            foreach (var sourceBinding in instance.GetComponentsInChildren<AudienceSignalBinding>(true))
+            foreach (var sourceBinding in instance.GetComponentsInChildren<SensorSampleAssembler>(true))
             {
                 sourceBinding.enabled = false;
                 sourceBinding.ConfigureParticleTarget(null);
             }
 
-            var visualizerBindings = instance.GetComponentsInChildren<AudienceSignalVisualizerBinding>(true);
+            var visualizerBindings = instance.GetComponentsInChildren<SensorVisualizationBinding>(true);
             if (visualizerBindings.Length == 0)
             {
-                Debug.LogWarning($"Bootstrapper: Selected-stream visual '{instance.name}' has no AudienceSignalVisualizerBinding.");
+                Debug.LogWarning($"Bootstrapper: Selected-stream visual '{instance.name}' has no SensorVisualizationBinding.");
                 UnityEngine.Object.Destroy(instance);
                 return null;
             }
@@ -312,8 +312,8 @@ namespace AmpPortableDataViz.Presentation.Bootstrap
         }
 
         private void EnsureSensorStreamPresentation(
-            IEnumerable<AudienceSignalBinding> sources,
-            IEnumerable<AudienceSignalVisualizerBinding> visualizerBindings)
+            IEnumerable<SensorSampleAssembler> sources,
+            IEnumerable<SensorVisualizationBinding> visualizerBindings)
         {
             if (_sensorStreamCoordinator == null)
             {
@@ -352,14 +352,14 @@ namespace AmpPortableDataViz.Presentation.Bootstrap
 
         internal static void AddVisualizerBindings(
             GameObject instance,
-            ICollection<AudienceSignalVisualizerBinding> bindings)
+            ICollection<SensorVisualizationBinding> bindings)
         {
             if (instance == null || bindings == null)
             {
                 return;
             }
 
-            foreach (var binding in instance.GetComponentsInChildren<AudienceSignalVisualizerBinding>(true))
+            foreach (var binding in instance.GetComponentsInChildren<SensorVisualizationBinding>(true))
             {
                 if (binding != null && !bindings.Contains(binding))
                 {
@@ -388,8 +388,9 @@ namespace AmpPortableDataViz.Presentation.Bootstrap
                 return;
             }
 
-            bool hasAudienceBinding = _settings.AbstractVizPrefab.GetComponentInChildren<AudienceSignalBinding>() != null;
-            if (!hasAudienceBinding)
+            bool hasSampleAssembler = _settings.AbstractVizPrefab.GetComponentInChildren<SensorSampleAssembler>(true) != null;
+            bool hasVisualizerBinding = _settings.AbstractVizPrefab.GetComponentInChildren<SensorVisualizationBinding>(true) != null;
+            if (!hasSampleAssembler && !hasVisualizerBinding)
             {
                 ClearAudienceDeviceVisuals();
                 return;
@@ -426,15 +427,26 @@ namespace AmpPortableDataViz.Presentation.Bootstrap
 
                 DisableManualDrivers(instance);
 
-                var binding = instance.GetComponentInChildren<AudienceSignalBinding>();
+                var binding = instance.GetComponentInChildren<SensorSampleAssembler>(true);
+                bool reactivateAfterConfiguration = false;
                 if (binding == null)
                 {
-                    Debug.LogWarning($"Bootstrapper: Audience visual '{instance.name}' is missing AudienceSignalBinding, skipping visual spawn.");
-                    UnityEngine.Object.Destroy(instance);
-                    continue;
+                    // Display-only prefabs receive a source only when per-device mode needs it.
+                    // Configure while inactive so OnEnable cannot subscribe to missing sources.
+                    var visualizerBinding = instance.GetComponentInChildren<SensorVisualizationBinding>(true);
+                    if (visualizerBinding == null)
+                    {
+                        Debug.LogWarning($"Bootstrapper: Audience visual '{instance.name}' has no sensor binding, skipping visual spawn.");
+                        UnityEngine.Object.Destroy(instance);
+                        continue;
+                    }
+
+                    reactivateAfterConfiguration = instance.activeSelf;
+                    instance.SetActive(false);
+                    binding = visualizerBinding.gameObject.AddComponent<SensorSampleAssembler>();
                 }
 
-                var particleMeshVisualizer = instance.GetComponentInChildren<ParticleMeshVisualizer>();
+                var particleMeshVisualizer = instance.GetComponentInChildren<ParticleMeshVisualizer>(true);
                 var physioPump = _streams.AcquirePhysioPumpForChannel(definition.DeviceId, definition.PhysioMetricsChannel);
                 var engagementSource = _streams.ResolveSensorEngagementSource(definition.DeviceId);
 
@@ -444,6 +456,11 @@ namespace AmpPortableDataViz.Presentation.Bootstrap
                     UnityEngine.Object.Destroy(instance);
                     _streams.ReleasePhysioPump(definition.PhysioMetricsChannel);
                     continue;
+                }
+
+                if (reactivateAfterConfiguration)
+                {
+                    instance.SetActive(true);
                 }
 
                 _audienceDeviceInstances.Add(new AudienceDeviceInstance
@@ -483,12 +500,12 @@ namespace AmpPortableDataViz.Presentation.Bootstrap
                 return;
             }
 
-            bool hasAudienceBinding = _settings.GraphPrefab.GetComponentInChildren<AudienceSignalBinding>() != null;
-            bool hasAudienceVisualizerBinding = _settings.GraphPrefab.GetComponentInChildren<AudienceSignalVisualizerBinding>() != null;
+            bool hasAudienceBinding = _settings.GraphPrefab.GetComponentInChildren<SensorSampleAssembler>() != null;
+            bool hasAudienceVisualizerBinding = _settings.GraphPrefab.GetComponentInChildren<SensorVisualizationBinding>() != null;
             bool hasGraphVisualizer = _settings.GraphPrefab.GetComponentInChildren<GraphVisualizer>() != null;
             if (!hasAudienceBinding || !hasAudienceVisualizerBinding || !hasGraphVisualizer)
             {
-                Debug.LogWarning("Bootstrapper: Audience Graph Prefab must include AudienceSignalBinding, AudienceSignalVisualizerBinding, and at least one GraphVisualizer component. Audience graph metrics are configured on the prefab's AudienceSignalVisualizerBinding.");
+                Debug.LogWarning("Bootstrapper: Audience Graph Prefab must include SensorSampleAssembler, SensorVisualizationBinding, and at least one GraphVisualizer component. Audience graph metrics are configured on the prefab's SensorVisualizationBinding.");
                 ClearAudienceGraphDeviceVisuals();
                 return;
             }
@@ -523,10 +540,10 @@ namespace AmpPortableDataViz.Presentation.Bootstrap
                 _layout.PositionGraphGroup(instance.transform, deviceIndex, hasCustomParent);
                 DisableManualDrivers(instance);
 
-                var binding = instance.GetComponentInChildren<AudienceSignalBinding>();
+                var binding = instance.GetComponentInChildren<SensorSampleAssembler>();
                 if (binding == null)
                 {
-                    Debug.LogWarning($"Bootstrapper: Audience graph '{instance.name}' is missing AudienceSignalBinding, skipping graph spawn.");
+                    Debug.LogWarning($"Bootstrapper: Audience graph '{instance.name}' is missing SensorSampleAssembler, skipping graph spawn.");
                     UnityEngine.Object.Destroy(instance);
                     continue;
                 }
@@ -555,7 +572,7 @@ namespace AmpPortableDataViz.Presentation.Bootstrap
         }
 
         private static bool TryConfigureAudienceBinding(
-            AudienceSignalBinding binding,
+            SensorSampleAssembler binding,
             RedisPhysioMetricsPump physioPump,
             ILatestDataSource<SensorEngagementState> engagementSource,
             ParticleMeshVisualizer particleMeshVisualizer,
@@ -572,10 +589,10 @@ namespace AmpPortableDataViz.Presentation.Bootstrap
                 binding.ConfigureParticleTarget(particleMeshVisualizer);
             }
 
-            var visualizerBinding = binding.GetComponentInChildren<AudienceSignalVisualizerBinding>();
+            var visualizerBinding = binding.GetComponentInChildren<SensorVisualizationBinding>();
             if (visualizerBinding == null && binding.gameObject != null)
             {
-                visualizerBinding = binding.gameObject.GetComponentInParent<AudienceSignalVisualizerBinding>();
+                visualizerBinding = binding.gameObject.GetComponentInParent<SensorVisualizationBinding>();
             }
 
             if (visualizerBinding != null)
@@ -600,7 +617,7 @@ namespace AmpPortableDataViz.Presentation.Bootstrap
                 return;
             }
 
-            var audienceManualDrivers = instance.GetComponentsInChildren<AudienceDataManualDriver>(true);
+            var audienceManualDrivers = instance.GetComponentsInChildren<SensorDataSimulator>(true);
             foreach (var manualDriver in audienceManualDrivers)
             {
                 manualDriver.enabled = false;
@@ -671,8 +688,8 @@ namespace AmpPortableDataViz.Presentation.Bootstrap
         {
             if (_sensorStreamCoordinator != null)
             {
-                _sensorStreamCoordinator.ConfigureVisualizerBindings(Array.Empty<AudienceSignalVisualizerBinding>());
-                _sensorStreamCoordinator.ConfigureSources(Array.Empty<AudienceSignalBinding>());
+                _sensorStreamCoordinator.ConfigureVisualizerBindings(Array.Empty<SensorVisualizationBinding>());
+                _sensorStreamCoordinator.ConfigureSources(Array.Empty<SensorSampleAssembler>());
             }
 
             foreach (var source in _selectedSensorSources)
@@ -737,21 +754,21 @@ namespace AmpPortableDataViz.Presentation.Bootstrap
         private sealed class AudienceDeviceInstance
         {
             public GameObject VisualInstance;
-            public AudienceSignalBinding Binding;
+            public SensorSampleAssembler Binding;
             public string PhysioMetricsChannel;
         }
 
         private sealed class AudienceGraphDeviceGroupInstance
         {
             public GameObject GroupRoot;
-            public AudienceSignalBinding Binding;
+            public SensorSampleAssembler Binding;
             public string PhysioMetricsChannel;
         }
 
         private sealed class SelectedSensorSourceInstance
         {
             public GameObject SourceObject;
-            public AudienceSignalBinding Binding;
+            public SensorSampleAssembler Binding;
             public string PhysioMetricsChannel;
         }
     }

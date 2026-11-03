@@ -56,7 +56,7 @@ namespace AmpPortableDataViz.Tests.PlayMode
 
             var coordinator = _root.AddComponent<SensorStreamCoordinator>();
             var visualizer = _root.AddComponent<ArtistVizVisualizer>();
-            var binding = _root.AddComponent<AudienceSignalVisualizerBinding>();
+            var binding = _root.AddComponent<SensorVisualizationBinding>();
             binding.ConfigureArtistVizTarget(visualizer);
 
             var sourceA = new FakeAudienceSource("sensor-a");
@@ -81,7 +81,7 @@ namespace AmpPortableDataViz.Tests.PlayMode
             _root.SetActive(false);
 
             visualizer = _root.AddComponent<ArtistVizVisualizer>();
-            var binding = _root.AddComponent<AudienceSignalVisualizerBinding>();
+            var binding = _root.AddComponent<SensorVisualizationBinding>();
             binding.ConfigureArtistVizTarget(visualizer);
             binding.ConfigureLiveSource(source);
 

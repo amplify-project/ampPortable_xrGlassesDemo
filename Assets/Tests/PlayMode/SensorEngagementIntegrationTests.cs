@@ -55,14 +55,14 @@ namespace AmpPortableDataViz.Tests.PlayMode
                     SensorEngagementStatus.WaitingForConfirmedScore));
             var gameObject = new GameObject("audience-binding-sensor-engagement-test");
             gameObject.SetActive(false);
-            var binding = gameObject.AddComponent<AudienceSignalBinding>();
+            var binding = gameObject.AddComponent<SensorSampleAssembler>();
 
             try
             {
                 binding.ConfigureSensorSources(physioSource, engagementSource, "sensor-a");
                 LogAssert.Expect(
                     LogType.Warning,
-                    "AudienceSignalBinding[sensor-a] has no particle mesh or graph targets configured.");
+                    "SensorSampleAssembler[sensor-a] has no particle mesh or graph targets configured.");
                 gameObject.SetActive(true);
 
                 physioSource.Publish(
@@ -104,14 +104,14 @@ namespace AmpPortableDataViz.Tests.PlayMode
                     SensorEngagementStatus.WaitingForConfirmedScore));
             var gameObject = new GameObject("audience-binding-mismatch-test");
             gameObject.SetActive(false);
-            var binding = gameObject.AddComponent<AudienceSignalBinding>();
+            var binding = gameObject.AddComponent<SensorSampleAssembler>();
 
             try
             {
                 binding.ConfigureSensorSources(physioSource, engagementSource, "sensor-a");
                 LogAssert.Expect(
                     LogType.Warning,
-                    "AudienceSignalBinding[sensor-a] has no particle mesh or graph targets configured.");
+                    "SensorSampleAssembler[sensor-a] has no particle mesh or graph targets configured.");
                 gameObject.SetActive(true);
                 physioSource.Publish(
                     new PhysioMetricsSample("sensor-a", 0.1f, 0.2f, 0.3f, 0.4f, 0.5f),

@@ -36,7 +36,7 @@ namespace AmpPortableDataViz.Tests.PlayMode
             var template = new GameObject("ArtistVizTemplate");
             template.transform.SetParent(_testRoot.transform, false);
             template.AddComponent<ArtistVizVisualizer>();
-            template.AddComponent<AudienceSignalVisualizerBinding>();
+            template.AddComponent<SensorVisualizationBinding>();
 
             GameObject instance = InvokeSpawnSelectedSensorVisual(
                 bootstrapper,
@@ -48,7 +48,7 @@ namespace AmpPortableDataViz.Tests.PlayMode
             Assert.AreEqual(Vector3.zero, instance.transform.localPosition);
             Assert.IsNotNull(instance.GetComponent<ArtistVizVisualizer>());
 
-            var bindings = new List<AudienceSignalVisualizerBinding>();
+            var bindings = new List<SensorVisualizationBinding>();
             InvokeAddVisualizerBindings(instance, bindings);
             Assert.AreEqual(1, bindings.Count);
 
@@ -77,7 +77,7 @@ namespace AmpPortableDataViz.Tests.PlayMode
 
         private static void InvokeAddVisualizerBindings(
             GameObject instance,
-            ICollection<AudienceSignalVisualizerBinding> bindings)
+            ICollection<SensorVisualizationBinding> bindings)
         {
             MethodInfo method = typeof(VisualizationPresenter).GetMethod(
                 "AddVisualizerBindings",

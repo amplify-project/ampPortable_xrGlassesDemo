@@ -313,12 +313,18 @@ namespace AmpPortableDataViz.Presentation.Bootstrap
 
             bool redisReady = !RequireRedisEndpointConfirmation || _redisEndpointReady;
 
-            bool visualPrefabHasAudienceBinding = AbstractVizPrefab != null && AbstractVizPrefab.GetComponentInChildren<AudienceSignalBinding>() != null;
-            bool shouldSpawnAudienceVisuals = hasRedisEndpoint && redisReady && AutoSpawnAbstractViz && visualPrefabHasAudienceBinding;
-            bool graphPrefabHasAudienceBinding = GraphPrefab != null && GraphPrefab.GetComponentInChildren<AudienceSignalBinding>() != null;
+            bool visualPrefabHasVisualizerBinding = AbstractVizPrefab != null &&
+                AbstractVizPrefab.GetComponentInChildren<SensorVisualizationBinding>(true) != null;
+            bool visualPrefabHasSampleAssembler = AbstractVizPrefab != null &&
+                AbstractVizPrefab.GetComponentInChildren<SensorSampleAssembler>(true) != null;
+            bool canBindAbstractViz = UseSingleSelectedSensorStream
+                ? visualPrefabHasVisualizerBinding
+                : visualPrefabHasVisualizerBinding || visualPrefabHasSampleAssembler;
+            bool shouldSpawnAudienceVisuals = hasRedisEndpoint && redisReady && AutoSpawnAbstractViz && canBindAbstractViz;
+            bool graphPrefabHasAudienceBinding = GraphPrefab != null && GraphPrefab.GetComponentInChildren<SensorSampleAssembler>() != null;
             bool shouldSpawnAudienceGraphVisuals = hasRedisEndpoint && redisReady && AutoSpawnGraphVisualsFromChannels && graphPrefabHasAudienceBinding;
             bool artistPrefabHasVisualizerBinding = ArtistVizPrefab != null &&
-                ArtistVizPrefab.GetComponentInChildren<AudienceSignalVisualizerBinding>(true) != null &&
+                ArtistVizPrefab.GetComponentInChildren<SensorVisualizationBinding>(true) != null &&
                 ArtistVizPrefab.GetComponentInChildren<ArtistVizVisualizer>(true) != null;
             bool shouldSpawnArtistViz = hasRedisEndpoint && redisReady &&
                 UseSingleSelectedSensorStream && AutoSpawnArtistVizFromChannels && artistPrefabHasVisualizerBinding;
