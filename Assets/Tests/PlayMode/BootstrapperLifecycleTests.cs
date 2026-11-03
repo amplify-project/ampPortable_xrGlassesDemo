@@ -110,7 +110,7 @@ namespace AmpPortableDataViz.Tests.PlayMode
             Assert.AreEqual(0, _root.GetComponentsInChildren<RedisPhysioMetricsPump>(true).Length);
             Assert.IsNull(GetField(_bootstrapper, "_selectedParticleVisual"));
             Assert.IsNull(GetField(_bootstrapper, "_selectedGraphVisual"));
-            Assert.IsNull(GetField(_bootstrapper, "_sensorEngagementBackendObject"));
+            Assert.IsNull(GetField(GetField(_bootstrapper, "_streams"), "_sensorEngagementBackendObject"));
 
             Invoke(_bootstrapper, "OnEnable");
             Assert.AreEqual(2, _root.GetComponent<SensorStreamCoordinator>().SensorCount);
@@ -131,9 +131,9 @@ namespace AmpPortableDataViz.Tests.PlayMode
             _bootstrapper.BeginAfterEndpoint();
             Assert.AreEqual(2, ((ICollection)GetField(_bootstrapper, "_audienceDeviceInstances")).Count);
             Assert.AreEqual(2, ((ICollection)GetField(_bootstrapper, "_audienceGraphDeviceGroups")).Count);
-            Assert.AreEqual(2, ((IDictionary)GetField(_bootstrapper, "_sharedPhysioPumpsByChannel")).Count);
+            Assert.AreEqual(2, ((IDictionary)GetField(GetField(_bootstrapper, "_streams"), "_sharedPhysioPumpsByChannel")).Count);
             Assert.AreEqual(2, _root.GetComponentsInChildren<RedisPhysioMetricsPump>(true).Length);
-            foreach (object handle in ((IDictionary)GetField(_bootstrapper, "_sharedPhysioPumpsByChannel")).Values)
+            foreach (object handle in ((IDictionary)GetField(GetField(_bootstrapper, "_streams"), "_sharedPhysioPumpsByChannel")).Values)
             {
                 Assert.AreEqual(2, handle.GetType().GetField("ReferenceCount").GetValue(handle));
             }
@@ -150,9 +150,9 @@ namespace AmpPortableDataViz.Tests.PlayMode
             Invoke(_bootstrapper, "ApplySignalConfiguration");
             yield return null;
             Assert.AreEqual(0, _root.GetComponent<SensorStreamCoordinator>().SensorCount);
-            Assert.AreEqual(0, ((IDictionary)GetField(_bootstrapper, "_sharedPhysioPumpsByChannel")).Count);
+            Assert.AreEqual(0, ((IDictionary)GetField(GetField(_bootstrapper, "_streams"), "_sharedPhysioPumpsByChannel")).Count);
             Assert.AreEqual(0, _root.GetComponentsInChildren<RedisPhysioMetricsPump>(true).Length);
-            Assert.IsNull(GetField(_bootstrapper, "_sensorEngagementBackendObject"));
+            Assert.IsNull(GetField(GetField(_bootstrapper, "_streams"), "_sensorEngagementBackendObject"));
         }
 
         private void ConfigureAutomaticTemplates()

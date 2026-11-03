@@ -122,8 +122,7 @@ namespace AmpPortableDataViz.Tests.PlayMode
 
         private object[] BuildDefinitions(string[] channels)
         {
-            var definitions = (System.Collections.IEnumerable)Invoke(
-                "BuildAudienceDeviceChannelDefinitions", new object[] { channels });
+            var definitions = RedisStreamRegistry.BuildAudienceDeviceChannelDefinitions(channels);
             return definitions.Cast<object>().ToArray();
         }
 

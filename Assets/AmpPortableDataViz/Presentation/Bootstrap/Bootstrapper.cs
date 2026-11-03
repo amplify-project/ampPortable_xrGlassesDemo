@@ -122,16 +122,33 @@ namespace AmpPortableDataViz.Presentation.Bootstrap
         [Tooltip("World-space spawn rotation in degrees used when no visualization parent is assigned.")]
         public Vector3 SpawnRotationEuler = Vector3.zero;
 
+        private RedisStreamRegistry _streams;
+        private RedisStreamRegistry Streams => _streams ??= new RedisStreamRegistry(transform);
+
+        private void ConfigureStreams()
+        {
+            var overrides = SensorEngagementChannelOverrides == null
+                ? null
+                : SensorEngagementChannelOverrides.Select(value =>
+                    new SensorEngagementChannelRoute(value.SensorId, value.ChannelName)).ToArray();
+            Streams.Configure(new RedisStreamRegistry.Settings
+            {
+                RedisHost = RedisHost,
+                RedisPort = RedisPort,
+                UseIndividualSensorEngagement = UseIndividualSensorEngagement,
+                SensorEngagementChannelTemplate = SensorEngagementChannelTemplate,
+                SensorEngagementChannelOverrides = overrides,
+                SensorEngagementTimeoutSeconds = SensorEngagementTimeoutSeconds,
+                SensorEngagementNeutralValue = SensorEngagementNeutralValue,
+                SensorEngagementPayloadFormat = SensorEngagementPayloadFormat
+            });
+        }
+
         private Coroutine _deviceDiscoveryRoutine;
         private readonly List<AudienceDeviceInstance> _audienceDeviceInstances = new List<AudienceDeviceInstance>();
         private readonly List<AudienceGraphDeviceGroupInstance> _audienceGraphDeviceGroups = new List<AudienceGraphDeviceGroupInstance>();
         private readonly List<SelectedSensorSourceInstance> _selectedSensorSources = new List<SelectedSensorSourceInstance>();
         private readonly List<GameObject> _manualDriverInstances = new List<GameObject>();
-        private readonly Dictionary<string, SharedPhysioPumpHandle> _sharedPhysioPumpsByChannel = new Dictionary<string, SharedPhysioPumpHandle>(StringComparer.Ordinal);
-        private GameObject _sensorEngagementBackendObject;
-        private RedisSensorEngagementPump _sensorEngagementPump;
-        private SensorEngagementCoordinator _sensorEngagementCoordinator;
-        private string _sensorEngagementConfigurationKey = string.Empty;
         private bool _redisEndpointReady;
         private SensorStreamCoordinator _sensorStreamCoordinator;
         private RayNeoTempleSensorStreamCycler _sensorStreamCycler;
@@ -205,7 +222,7 @@ namespace AmpPortableDataViz.Presentation.Bootstrap
             ClearAudienceDeviceVisuals();
             ClearAudienceGraphDeviceVisuals();
             ClearSelectedSensorStreamMode();
-            ClearSensorEngagementBackend();
+            Streams.ClearSensorEngagementBackend();
         }
 
         private void ClearRuntimeVisuals()
@@ -223,6 +240,7 @@ namespace AmpPortableDataViz.Presentation.Bootstrap
             }
 
             EnsureRedisEndpointFromRuntime();
+            ConfigureStreams();
 
             ClearManualDriverVisuals();
 
@@ -256,13 +274,13 @@ namespace AmpPortableDataViz.Presentation.Bootstrap
 
             if (shouldSpawnAudienceVisuals || shouldSpawnAudienceGraphVisuals || shouldSpawnArtistViz)
             {
-                var sensorDefinitions = BuildAudienceDeviceChannelDefinitions(redisChannels);
-                sensorDefinitions = FilterAudienceToConfiguredDevices(sensorDefinitions, SensorIds);
-                EnsureSensorEngagementBackend(sensorDefinitions.Select(definition => definition.DeviceId));
+                var sensorDefinitions = RedisStreamRegistry.BuildAudienceDeviceChannelDefinitions(redisChannels);
+                sensorDefinitions = RedisStreamRegistry.FilterAudienceToConfiguredDevices(sensorDefinitions, SensorIds);
+                Streams.EnsureSensorEngagementBackend(sensorDefinitions.Select(definition => definition.DeviceId));
             }
             else
             {
-                ClearSensorEngagementBackend();
+                Streams.ClearSensorEngagementBackend();
             }
 
             bool shouldUseSelectedSensorStream = UseSingleSelectedSensorStream &&
@@ -505,8 +523,8 @@ namespace AmpPortableDataViz.Presentation.Bootstrap
         {
             ClearSelectedSensorStreamMode();
 
-            var deviceDefinitions = BuildAudienceDeviceChannelDefinitions(redisChannels);
-            deviceDefinitions = FilterAudienceToConfiguredDevices(deviceDefinitions, SensorIds);
+            var deviceDefinitions = RedisStreamRegistry.BuildAudienceDeviceChannelDefinitions(redisChannels);
+            deviceDefinitions = RedisStreamRegistry.FilterAudienceToConfiguredDevices(deviceDefinitions, SensorIds);
             if (deviceDefinitions.Count == 0)
             {
                 Debug.LogWarning("Bootstrapper: No complete sensor streams are available for selected-stream mode.");
@@ -527,14 +545,14 @@ namespace AmpPortableDataViz.Presentation.Bootstrap
                 sourceObject.SetActive(false);
 
                 var binding = sourceObject.AddComponent<AudienceSignalBinding>();
-                var physioPump = AcquirePhysioPumpForChannel(definition.DeviceId, definition.PhysioMetricsChannel);
-                var engagementSource = ResolveSensorEngagementSource(definition.DeviceId);
+                var physioPump = Streams.AcquirePhysioPumpForChannel(definition.DeviceId, definition.PhysioMetricsChannel);
+                var engagementSource = Streams.ResolveSensorEngagementSource(definition.DeviceId);
 
                 if (physioPump == null || engagementSource == null)
                 {
                     Debug.LogWarning($"Bootstrapper: Unable to create selectable stream for '{definition.DeviceId}'.");
                     Destroy(sourceObject);
-                    ReleasePhysioPump(definition.PhysioMetricsChannel);
+                    Streams.ReleasePhysioPump(definition.PhysioMetricsChannel);
                     continue;
                 }
 
@@ -783,8 +801,8 @@ namespace AmpPortableDataViz.Presentation.Bootstrap
                 return;
             }
 
-            var deviceDefinitions = BuildAudienceDeviceChannelDefinitions(redisChannels);
-            deviceDefinitions = FilterAudienceToConfiguredDevices(deviceDefinitions, SensorIds);
+            var deviceDefinitions = RedisStreamRegistry.BuildAudienceDeviceChannelDefinitions(redisChannels);
+            deviceDefinitions = RedisStreamRegistry.FilterAudienceToConfiguredDevices(deviceDefinitions, SensorIds);
             ClearAudienceDeviceVisuals();
 
             if (deviceDefinitions.Count == 0)
@@ -823,14 +841,14 @@ namespace AmpPortableDataViz.Presentation.Bootstrap
                 }
 
                 var particleMeshVisualizer = instance.GetComponentInChildren<ParticleMeshVisualizer>();
-                var physioPump = AcquirePhysioPumpForChannel(definition.DeviceId, definition.PhysioMetricsChannel);
-                var engagementSource = ResolveSensorEngagementSource(definition.DeviceId);
+                var physioPump = Streams.AcquirePhysioPumpForChannel(definition.DeviceId, definition.PhysioMetricsChannel);
+                var engagementSource = Streams.ResolveSensorEngagementSource(definition.DeviceId);
 
                 if (!TryConfigureAudienceBinding(binding, physioPump, engagementSource, particleMeshVisualizer, definition.DeviceId))
                 {
                     Debug.LogWarning($"Bootstrapper: Unable to configure audience binding on '{instance.name}', skipping visual spawn.");
                     Destroy(instance);
-                    ReleasePhysioPump(definition.PhysioMetricsChannel);
+                    Streams.ReleasePhysioPump(definition.PhysioMetricsChannel);
                     continue;
                 }
 
@@ -881,8 +899,8 @@ namespace AmpPortableDataViz.Presentation.Bootstrap
                 return;
             }
 
-            var deviceDefinitions = BuildAudienceDeviceChannelDefinitions(redisChannels);
-            deviceDefinitions = FilterAudienceToConfiguredDevices(deviceDefinitions, SensorIds);
+            var deviceDefinitions = RedisStreamRegistry.BuildAudienceDeviceChannelDefinitions(redisChannels);
+            deviceDefinitions = RedisStreamRegistry.FilterAudienceToConfiguredDevices(deviceDefinitions, SensorIds);
             ClearAudienceGraphDeviceVisuals();
 
             if (deviceDefinitions.Count == 0)
@@ -919,14 +937,14 @@ namespace AmpPortableDataViz.Presentation.Bootstrap
                     continue;
                 }
 
-                var physioPump = AcquirePhysioPumpForChannel(definition.DeviceId, definition.PhysioMetricsChannel);
-                var engagementSource = ResolveSensorEngagementSource(definition.DeviceId);
+                var physioPump = Streams.AcquirePhysioPumpForChannel(definition.DeviceId, definition.PhysioMetricsChannel);
+                var engagementSource = Streams.ResolveSensorEngagementSource(definition.DeviceId);
 
                 if (!TryConfigureAudienceBinding(binding, physioPump, engagementSource, null, definition.DeviceId))
                 {
                     Debug.LogWarning($"Bootstrapper: Unable to configure audience graph binding on '{instance.name}', skipping graph spawn.");
                     Destroy(instance);
-                    ReleasePhysioPump(definition.PhysioMetricsChannel);
+                    Streams.ReleasePhysioPump(definition.PhysioMetricsChannel);
                     continue;
                 }
 
@@ -940,208 +958,6 @@ namespace AmpPortableDataViz.Presentation.Bootstrap
                 AttachGraphGroupLabel(instance, definition.DeviceId, deviceIndex);
                 deviceIndex++;
             }
-        }
-
-        private void EnsureSensorEngagementBackend(IEnumerable<string> sensorIds)
-        {
-            string[] normalizedSensorIds = sensorIds == null
-                ? Array.Empty<string>()
-                : sensorIds
-                    .Where(sensorId => !string.IsNullOrWhiteSpace(sensorId))
-                    .Select(sensorId => sensorId.Trim())
-                    .Distinct(StringComparer.OrdinalIgnoreCase)
-                    .OrderBy(sensorId => sensorId, StringComparer.OrdinalIgnoreCase)
-                    .ToArray();
-
-            if (normalizedSensorIds.Length == 0)
-            {
-                ClearSensorEngagementBackend();
-                return;
-            }
-
-            SensorEngagementChannelRoute[] routes = BuildSensorEngagementRoutes(normalizedSensorIds);
-            string configurationKey = BuildSensorEngagementConfigurationKey(normalizedSensorIds, routes);
-            if (_sensorEngagementBackendObject != null &&
-                _sensorEngagementCoordinator != null &&
-                string.Equals(_sensorEngagementConfigurationKey, configurationKey, StringComparison.Ordinal))
-            {
-                return;
-            }
-
-            ClearSensorEngagementBackend();
-
-            _sensorEngagementBackendObject = new GameObject("Sensor Engagement Backend");
-            _sensorEngagementBackendObject.transform.SetParent(transform, false);
-            _sensorEngagementBackendObject.SetActive(false);
-
-            _sensorEngagementPump = _sensorEngagementBackendObject.AddComponent<RedisSensorEngagementPump>();
-            _sensorEngagementCoordinator = _sensorEngagementBackendObject.AddComponent<SensorEngagementCoordinator>();
-
-            var decoder = new SensorEngagementJsonDecoder(SensorEngagementPayloadFormat);
-            _sensorEngagementPump.ConfigureConnection(
-                RedisHost,
-                RedisPort,
-                UseIndividualSensorEngagement ? routes : Array.Empty<SensorEngagementChannelRoute>(),
-                decoder);
-            _sensorEngagementCoordinator.Configure(
-                _sensorEngagementPump,
-                normalizedSensorIds,
-                SensorEngagementTimeoutSeconds,
-                SensorEngagementNeutralValue);
-
-            _sensorEngagementConfigurationKey = configurationKey;
-            _sensorEngagementBackendObject.SetActive(true);
-
-            if (UseIndividualSensorEngagement && routes.Length == 0)
-            {
-                Debug.LogWarning(
-                    "Bootstrapper: Individual sensor engagement is enabled, but no channel template or overrides are configured. " +
-                    "Sensor visualizations will use the neutral engagement value.",
-                    this);
-            }
-        }
-
-        private SensorEngagementChannelRoute[] BuildSensorEngagementRoutes(IEnumerable<string> sensorIds)
-        {
-            if (!UseIndividualSensorEngagement || sensorIds == null)
-            {
-                return Array.Empty<SensorEngagementChannelRoute>();
-            }
-
-            var routes = new List<SensorEngagementChannelRoute>();
-            foreach (string sensorId in sensorIds)
-            {
-                string channelName = ResolveSensorEngagementChannel(sensorId);
-                if (!string.IsNullOrWhiteSpace(channelName))
-                {
-                    routes.Add(new SensorEngagementChannelRoute(sensorId, channelName));
-                }
-            }
-
-            return routes.ToArray();
-        }
-
-        private string ResolveSensorEngagementChannel(string sensorId)
-        {
-            if (SensorEngagementChannelOverrides != null)
-            {
-                for (int i = 0; i < SensorEngagementChannelOverrides.Length; i++)
-                {
-                    SensorEngagementChannelOverride channelOverride = SensorEngagementChannelOverrides[i];
-                    if (string.Equals(channelOverride.SensorId?.Trim(), sensorId, StringComparison.OrdinalIgnoreCase) &&
-                        !string.IsNullOrWhiteSpace(channelOverride.ChannelName))
-                    {
-                        return channelOverride.ChannelName.Trim();
-                    }
-                }
-            }
-
-            if (string.IsNullOrWhiteSpace(SensorEngagementChannelTemplate))
-            {
-                return string.Empty;
-            }
-
-            return SensorEngagementChannelTemplate
-                .Trim()
-                .Replace("{serial}", sensorId)
-                .Replace("{sensorId}", sensorId)
-                .Replace("{0}", sensorId);
-        }
-
-        private string BuildSensorEngagementConfigurationKey(
-            IEnumerable<string> sensorIds,
-            IEnumerable<SensorEngagementChannelRoute> routes)
-        {
-            string sensorKey = string.Join("|", sensorIds);
-            string routeKey = string.Join("|", routes.Select(route => $"{route.SensorId}={route.ChannelName}"));
-            return $"{RedisHost}:{RedisPort};enabled={UseIndividualSensorEngagement};timeout={SensorEngagementTimeoutSeconds:R};" +
-                $"neutral={SensorEngagementNeutralValue:R};sensors={sensorKey};routes={routeKey};" +
-                $"items={SensorEngagementPayloadFormat.ItemsPropertyName};sensor={SensorEngagementPayloadFormat.SensorIdPropertyName};" +
-                $"score={SensorEngagementPayloadFormat.EngagementPropertyName};confirmed={SensorEngagementPayloadFormat.ConfirmationPropertyName};" +
-                $"timestamp={SensorEngagementPayloadFormat.TimestampPropertyName}";
-        }
-
-        private ILatestDataSource<SensorEngagementState> ResolveSensorEngagementSource(string sensorId)
-        {
-            return _sensorEngagementCoordinator?.GetSource(sensorId);
-        }
-
-        private void ClearSensorEngagementBackend()
-        {
-            if (_sensorEngagementBackendObject != null)
-            {
-                Destroy(_sensorEngagementBackendObject);
-            }
-
-            _sensorEngagementBackendObject = null;
-            _sensorEngagementPump = null;
-            _sensorEngagementCoordinator = null;
-            _sensorEngagementConfigurationKey = string.Empty;
-        }
-
-        private RedisPhysioMetricsPump AcquirePhysioPumpForChannel(string deviceId, string channelName)
-        {
-            if (string.IsNullOrWhiteSpace(channelName))
-            {
-                return null;
-            }
-
-            if (_sharedPhysioPumpsByChannel.TryGetValue(channelName, out var handle) && handle.Pump != null)
-            {
-                handle.ReferenceCount++;
-                if (!string.Equals(handle.Host, RedisHost, StringComparison.Ordinal) || handle.Port != RedisPort)
-                {
-                    handle.Pump.ConfigureConnection(RedisHost, RedisPort, channelName);
-                    handle.Host = RedisHost;
-                    handle.Port = RedisPort;
-                }
-                return handle.Pump;
-            }
-
-            var pumpObject = new GameObject($"RedisPump_{deviceId}_PhysioMetrics");
-            pumpObject.transform.SetParent(transform, false);
-            pumpObject.SetActive(false);
-
-            var pump = pumpObject.AddComponent<RedisPhysioMetricsPump>();
-            pump.ConfigureConnection(RedisHost, RedisPort, channelName);
-
-            pumpObject.SetActive(true);
-
-            _sharedPhysioPumpsByChannel[channelName] = new SharedPhysioPumpHandle
-            {
-                Host = RedisHost,
-                Port = RedisPort,
-                Pump = pump,
-                ReferenceCount = 1
-            };
-
-            return pump;
-        }
-
-        private void ReleasePhysioPump(string channelName)
-        {
-            if (string.IsNullOrWhiteSpace(channelName))
-            {
-                return;
-            }
-
-            if (!_sharedPhysioPumpsByChannel.TryGetValue(channelName, out var handle))
-            {
-                return;
-            }
-
-            handle.ReferenceCount--;
-            if (handle.ReferenceCount > 0)
-            {
-                return;
-            }
-
-            if (handle.Pump != null)
-            {
-                Destroy(handle.Pump.gameObject);
-            }
-
-            _sharedPhysioPumpsByChannel.Remove(channelName);
         }
 
         private static bool TryConfigureAudienceBinding(
@@ -1227,7 +1043,7 @@ namespace AmpPortableDataViz.Presentation.Bootstrap
                     Destroy(instance.Binding.gameObject);
                 }
 
-                ReleasePhysioPump(instance.PhysioMetricsChannel);
+                Streams.ReleasePhysioPump(instance.PhysioMetricsChannel);
             }
 
             _audienceDeviceInstances.Clear();
@@ -1251,7 +1067,7 @@ namespace AmpPortableDataViz.Presentation.Bootstrap
                     Destroy(instance.Binding.gameObject);
                 }
 
-                ReleasePhysioPump(instance.PhysioMetricsChannel);
+                Streams.ReleasePhysioPump(instance.PhysioMetricsChannel);
             }
 
             _audienceGraphDeviceGroups.Clear();
@@ -1276,7 +1092,7 @@ namespace AmpPortableDataViz.Presentation.Bootstrap
                     Destroy(source.Binding.gameObject);
                 }
 
-                ReleasePhysioPump(source.PhysioMetricsChannel);
+                Streams.ReleasePhysioPump(source.PhysioMetricsChannel);
             }
 
             _selectedSensorSources.Clear();
@@ -1378,82 +1194,6 @@ namespace AmpPortableDataViz.Presentation.Bootstrap
                 target.position = SpawnPosition + offset;
                 target.rotation = Quaternion.Euler(SpawnRotationEuler);
             }
-        }
-
-        private List<AudienceDeviceChannelDefinition> BuildAudienceDeviceChannelDefinitions(IEnumerable<string> redisChannels)
-        {
-            var orderedDeviceIds = new List<string>();
-            var map = new Dictionary<string, AudienceDeviceChannelDefinition>(StringComparer.OrdinalIgnoreCase);
-
-            foreach (var channel in redisChannels)
-            {
-                if (string.IsNullOrWhiteSpace(channel))
-                {
-                    continue;
-                }
-
-                string deviceId;
-                AudienceDeviceChannelDefinition definition;
-
-                if (RedisAudienceChannels.TryParsePhysioMetricsDeviceChannel(channel, out deviceId))
-                {
-                    definition = GetOrCreateAudienceDefinition(deviceId, orderedDeviceIds, map);
-                    definition.PhysioMetricsChannel = channel;
-                    map[deviceId] = definition;
-                }
-            }
-
-            var ordered = new List<AudienceDeviceChannelDefinition>();
-            foreach (var deviceId in orderedDeviceIds)
-            {
-                if (!map.TryGetValue(deviceId, out var definition))
-                {
-                    continue;
-                }
-
-                ordered.Add(definition);
-            }
-
-            return ordered;
-        }
-
-        private static AudienceDeviceChannelDefinition GetOrCreateAudienceDefinition(
-            string deviceId,
-            List<string> orderedDeviceIds,
-            Dictionary<string, AudienceDeviceChannelDefinition> map)
-        {
-            if (!map.TryGetValue(deviceId, out var definition))
-            {
-                definition = new AudienceDeviceChannelDefinition { DeviceId = deviceId };
-                orderedDeviceIds.Add(deviceId);
-            }
-
-            return definition;
-        }
-
-        private static List<AudienceDeviceChannelDefinition> FilterAudienceToConfiguredDevices(IEnumerable<AudienceDeviceChannelDefinition> definitions, IEnumerable<string> configuredDeviceIds)
-        {
-            if (configuredDeviceIds == null)
-            {
-                return new List<AudienceDeviceChannelDefinition>(definitions);
-            }
-
-            var allowed = new HashSet<string>(configuredDeviceIds.Where(id => !string.IsNullOrWhiteSpace(id)).Select(id => id.Trim()), StringComparer.OrdinalIgnoreCase);
-            if (allowed.Count == 0)
-            {
-                return new List<AudienceDeviceChannelDefinition>(definitions);
-            }
-
-            var filtered = new List<AudienceDeviceChannelDefinition>();
-            foreach (var definition in definitions)
-            {
-                if (!string.IsNullOrWhiteSpace(definition.DeviceId) && allowed.Contains(definition.DeviceId))
-                {
-                    filtered.Add(definition);
-                }
-            }
-
-            return filtered;
         }
 
         private string[] GetRedisChannels()
@@ -1668,24 +1408,6 @@ namespace AmpPortableDataViz.Presentation.Bootstrap
             public GameObject SourceObject;
             public AudienceSignalBinding Binding;
             public string PhysioMetricsChannel;
-        }
-
-        private sealed class SharedPhysioPumpHandle
-        {
-            public string Host;
-            public int Port;
-            public RedisPhysioMetricsPump Pump;
-            public int ReferenceCount;
-        }
-
-        private struct AudienceDeviceChannelDefinition
-        {
-            public string DeviceId;
-            public string PhysioMetricsChannel;
-
-            public bool HasVisualizationChannels =>
-                !string.IsNullOrWhiteSpace(DeviceId) &&
-                !string.IsNullOrWhiteSpace(PhysioMetricsChannel);
         }
 
         [Serializable]
