@@ -1,0 +1,208 @@
+<?xml version="1.0" encoding="utf-8"?>
+<test-run id="2" testcasecount="7" result="Failed(Child)" total="7" passed="2" failed="5" inconclusive="0" skipped="0" asserts="0" engine-version="3.5.0.0" clr-version="4.0.30319.42000" start-time="2026-11-03 10:35:04Z" end-time="2026-11-03 10:35:04Z" duration="0.1467042">
+  <test-suite type="TestSuite" id="1268" name="XR Score Viewer" fullname="XR Score Viewer" runstate="Runnable" testcasecount="209" result="Failed" site="Child" start-time="2026-11-03 10:35:04Z" end-time="2026-11-03 10:35:04Z" duration="0.146704" total="7" passed="2" failed="5" inconclusive="0" skipped="0" asserts="0">
+    <properties>
+      <property name="platform" value="PlayMode" />
+    </properties>
+    <failure>
+      <message><![CDATA[One or more child tests had errors]]></message>
+    </failure>
+    <test-suite type="Assembly" id="1260" name="Tests.dll" fullname="C:/Users/Bryan Dunphy/AppData/Local/Temp/rnc1030/project/Library/ScriptAssemblies/Tests.dll" runstate="Runnable" testcasecount="209" result="Failed" site="Child" start-time="2026-11-03 10:35:04Z" end-time="2026-11-03 10:35:04Z" duration="0.139912" total="7" passed="2" failed="5" inconclusive="0" skipped="0" asserts="0">
+      <properties>
+        <property name="_PID" value="11268" />
+        <property name="_APPDOMAIN" value="Unity Child Domain" />
+        <property name="platform" value="PlayMode" />
+        <property name="EditorOnly" value="False" />
+      </properties>
+      <failure>
+        <message><![CDATA[One or more child tests had errors]]></message>
+      </failure>
+      <test-suite type="TestSuite" id="1261" name="AmpPortableDataViz" fullname="AmpPortableDataViz" runstate="Runnable" testcasecount="209" result="Failed" site="Child" start-time="2026-11-03 10:35:04Z" end-time="2026-11-03 10:35:04Z" duration="0.135502" total="7" passed="2" failed="5" inconclusive="0" skipped="0" asserts="0">
+        <properties />
+        <failure>
+          <message><![CDATA[One or more child tests had errors]]></message>
+        </failure>
+        <test-suite type="TestSuite" id="1262" name="Tests" fullname="AmpPortableDataViz.Tests" runstate="Runnable" testcasecount="209" result="Failed" site="Child" start-time="2026-11-03 10:35:04Z" end-time="2026-11-03 10:35:04Z" duration="0.132803" total="7" passed="2" failed="5" inconclusive="0" skipped="0" asserts="0">
+          <properties />
+          <failure>
+            <message><![CDATA[One or more child tests had errors]]></message>
+          </failure>
+          <test-suite type="TestSuite" id="1265" name="PlayMode" fullname="AmpPortableDataViz.Tests.PlayMode" runstate="Runnable" testcasecount="173" result="Failed" site="Child" start-time="2026-11-03 10:35:04Z" end-time="2026-11-03 10:35:04Z" duration="0.130496" total="7" passed="2" failed="5" inconclusive="0" skipped="0" asserts="0">
+            <properties />
+            <failure>
+              <message><![CDATA[One or more child tests had errors]]></message>
+            </failure>
+            <test-suite type="TestFixture" id="1130" name="BootstrapperLifecycleTests" fullname="AmpPortableDataViz.Tests.PlayMode.BootstrapperLifecycleTests" classname="AmpPortableDataViz.Tests.PlayMode.BootstrapperLifecycleTests" runstate="Runnable" testcasecount="7" result="Failed" site="Child" start-time="2026-11-03 10:35:04Z" end-time="2026-11-03 10:35:04Z" duration="0.127053" total="7" passed="2" failed="5" inconclusive="0" skipped="0" asserts="0">
+              <properties />
+              <failure>
+                <message><![CDATA[One or more child tests had errors]]></message>
+              </failure>
+              <test-case id="1137" name="PerDeviceToSelectedToManual_ReleasesSharedPumpsAndTargets" fullname="AmpPortableDataViz.Tests.PlayMode.BootstrapperLifecycleTests.PerDeviceToSelectedToManual_ReleasesSharedPumpsAndTargets" methodname="PerDeviceToSelectedToManual_ReleasesSharedPumpsAndTargets" classname="AmpPortableDataViz.Tests.PlayMode.BootstrapperLifecycleTests" runstate="Runnable" seed="966954959" result="Failed" start-time="2026-11-03 10:35:04Z" end-time="2026-11-03 10:35:04Z" duration="0.045784" asserts="0">
+                <properties>
+                  <property name="_JOINTYPE" value="UnityCombinatorial" />
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+                <failure>
+                  <message><![CDATA[  Expected: 2
+  But was:  0
+]]></message>
+                  <stack-trace><![CDATA[at AmpPortableDataViz.Tests.PlayMode.BootstrapperLifecycleTests+<PerDeviceToSelectedToManual_ReleasesSharedPumpsAndTargets>d__18.MoveNext () [0x00070] in C:\Users\Bryan Dunphy\AppData\Local\Temp\rnc1030\project\Assets\Tests\PlayMode\BootstrapperLifecycleTests.cs:201
+at UnityEngine.TestTools.TestEnumerator+<Execute>d__7.MoveNext () [0x0003a] in .\Library\PackageCache\com.unity.test-framework@1.4.6\UnityEngine.TestRunner\NUnitExtensions\Attributes\TestEnumerator.cs:44
+]]></stack-trace>
+                </failure>
+                <output><![CDATA[Bootstrapper: Waiting for Redis endpoint confirmation before connecting.
+Bootstrapper: BeginAfterEndpoint invoked from Redis endpoint prompt.
+Bootstrapper: Redis endpoint confirmed -> 127.0.0.1:6379
+Bootstrapper: Applying signal configuration after endpoint confirmation.
+Bootstrapper: Spawning audience visuals for 2 devices: a, b
+Bootstrapper: Audience GraphPrefab must include AudienceSignalBinding, AudienceSignalVisualizerBinding, and at least one GraphVisualizer component. Audience graph metrics are configured on the prefab's AudienceSignalVisualizerBinding.
+Bootstrapper: Beginning session after endpoint confirmation.
+]]></output>
+              </test-case>
+              <test-case id="1134" name="PrimaryRedis_DisableReenableAndDestroyReleaseSubscriptions" fullname="AmpPortableDataViz.Tests.PlayMode.BootstrapperLifecycleTests.PrimaryRedis_DisableReenableAndDestroyReleaseSubscriptions" methodname="PrimaryRedis_DisableReenableAndDestroyReleaseSubscriptions" classname="AmpPortableDataViz.Tests.PlayMode.BootstrapperLifecycleTests" runstate="Runnable" seed="1584955665" result="Passed" start-time="2026-11-03 10:35:04Z" end-time="2026-11-03 10:35:04Z" duration="0.014578" asserts="0">
+                <properties>
+                  <property name="_JOINTYPE" value="UnityCombinatorial" />
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+                <output><![CDATA[Bootstrapper: Waiting for Redis endpoint confirmation before connecting.
+Bootstrapper: BeginAfterEndpoint invoked from Redis endpoint prompt.
+Bootstrapper: Redis endpoint confirmed -> 127.0.0.1:6379
+Bootstrapper: Applying signal configuration after endpoint confirmation.
+Bootstrapper: Configuring RedisSource for 127.0.0.1:6379 (emotion_scores)
+Bootstrapper: Beginning session after endpoint confirmation.
+Bootstrapper: Configuring RedisSource for 127.0.0.1:6379 (emotion_scores)
+]]></output>
+              </test-case>
+              <test-case id="1133" name="PrimaryRedis_RepeatedConfirmationBindsAndSpawnsOnce" fullname="AmpPortableDataViz.Tests.PlayMode.BootstrapperLifecycleTests.PrimaryRedis_RepeatedConfirmationBindsAndSpawnsOnce" methodname="PrimaryRedis_RepeatedConfirmationBindsAndSpawnsOnce" classname="AmpPortableDataViz.Tests.PlayMode.BootstrapperLifecycleTests" runstate="Runnable" seed="207136278" result="Failed" start-time="2026-11-03 10:35:04Z" end-time="2026-11-03 10:35:04Z" duration="0.015462" asserts="0">
+                <properties>
+                  <property name="_JOINTYPE" value="UnityCombinatorial" />
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+                <failure>
+                  <message><![CDATA[Unhandled log message: '[Exception] InvalidOperationException: VisualizationSessionController has already been initialized.'. Use UnityEngine.TestTools.LogAssert.Expect]]></message>
+                  <stack-trace><![CDATA[AmpPortableDataViz.Application.VisualizationSessionController.InitializeAsync (AmpPortableDataViz.Application.VisualizationSessionOptions options, System.Threading.CancellationToken cancellationToken) (at Assets/AmpPortableDataViz/Application/VisualizationSessionController.cs:49)
+Rethrow as AggregateException: One or more errors occurred. (VisualizationSessionController has already been initialized.)
+AmpPortableDataViz.Presentation.Utility.TaskExtensions+<AsIEnumerator>d__0.MoveNext () (at Assets/AmpPortableDataViz/Presentation/Utility/TaskExtensions.cs:13)
+UnityEngine.SetupCoroutine.InvokeMoveNext (System.Collections.IEnumerator enumerator, System.IntPtr returnValueAddress) (at <f1e29a71158e46cdb750140a667aea01>:0)
+UnityEngine.MonoBehaviour:StartCoroutine(IEnumerator)
+AmpPortableDataViz.Presentation.Bootstrap.Bootstrapper:BeginSessionIfReady() (at Assets/AmpPortableDataViz/Presentation/Bootstrap/Bootstrapper.cs:538)
+AmpPortableDataViz.Presentation.Bootstrap.Bootstrapper:BeginAfterEndpoint() (at Assets/AmpPortableDataViz/Presentation/Bootstrap/Bootstrapper.cs:230)
+AmpPortableDataViz.Tests.PlayMode.<PrimaryRedis_RepeatedConfirmationBindsAndSpawnsOnce>d__14:MoveNext() (at Assets/Tests/PlayMode/BootstrapperLifecycleTests.cs:111)
+UnityEngine.SetupCoroutine:InvokeMoveNext(IEnumerator, IntPtr)
+
+]]></stack-trace>
+                </failure>
+                <output><![CDATA[Bootstrapper: Waiting for Redis endpoint confirmation before connecting.
+Bootstrapper: BeginAfterEndpoint invoked from Redis endpoint prompt.
+Bootstrapper: Redis endpoint confirmed -> 127.0.0.1:6379
+Bootstrapper: Applying signal configuration after endpoint confirmation.
+Bootstrapper: Configuring RedisSource for 127.0.0.1:6379 (emotion_scores)
+Bootstrapper: Beginning session after endpoint confirmation.
+Bootstrapper: BeginAfterEndpoint invoked from Redis endpoint prompt.
+Bootstrapper: Redis endpoint confirmed -> 127.0.0.1:6379
+Bootstrapper: Applying signal configuration after endpoint confirmation.
+Bootstrapper: Configuring RedisSource for 127.0.0.1:6379 (emotion_scores)
+Bootstrapper: Beginning session after endpoint confirmation.
+InvalidOperationException: VisualizationSessionController has already been initialized.
+AmpPortableDataViz.Application.VisualizationSessionController.InitializeAsync (AmpPortableDataViz.Application.VisualizationSessionOptions options, System.Threading.CancellationToken cancellationToken) (at Assets/AmpPortableDataViz/Application/VisualizationSessionController.cs:49)
+Rethrow as AggregateException: One or more errors occurred. (VisualizationSessionController has already been initialized.)
+AmpPortableDataViz.Presentation.Utility.TaskExtensions+<AsIEnumerator>d__0.MoveNext () (at Assets/AmpPortableDataViz/Presentation/Utility/TaskExtensions.cs:13)
+UnityEngine.SetupCoroutine.InvokeMoveNext (System.Collections.IEnumerator enumerator, System.IntPtr returnValueAddress) (at <f1e29a71158e46cdb750140a667aea01>:0)
+UnityEngine.MonoBehaviour:StartCoroutine(IEnumerator)
+AmpPortableDataViz.Presentation.Bootstrap.Bootstrapper:BeginSessionIfReady() (at Assets/AmpPortableDataViz/Presentation/Bootstrap/Bootstrapper.cs:538)
+AmpPortableDataViz.Presentation.Bootstrap.Bootstrapper:BeginAfterEndpoint() (at Assets/AmpPortableDataViz/Presentation/Bootstrap/Bootstrapper.cs:230)
+AmpPortableDataViz.Tests.PlayMode.<PrimaryRedis_RepeatedConfirmationBindsAndSpawnsOnce>d__14:MoveNext() (at Assets/Tests/PlayMode/BootstrapperLifecycleTests.cs:111)
+UnityEngine.SetupCoroutine:InvokeMoveNext(IEnumerator, IntPtr)
+
+]]></output>
+              </test-case>
+              <test-case id="1132" name="PrimaryRedis_WaitsForEndpointConfirmation" fullname="AmpPortableDataViz.Tests.PlayMode.BootstrapperLifecycleTests.PrimaryRedis_WaitsForEndpointConfirmation" methodname="PrimaryRedis_WaitsForEndpointConfirmation" classname="AmpPortableDataViz.Tests.PlayMode.BootstrapperLifecycleTests" runstate="Runnable" seed="561428118" result="Failed" start-time="2026-11-03 10:35:04Z" end-time="2026-11-03 10:35:04Z" duration="0.005182" asserts="0">
+                <properties>
+                  <property name="_JOINTYPE" value="UnityCombinatorial" />
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+                <failure>
+                  <message><![CDATA[  Expected: 0
+  But was:  2
+]]></message>
+                  <stack-trace><![CDATA[at AmpPortableDataViz.Tests.PlayMode.BootstrapperLifecycleTests+<PrimaryRedis_WaitsForEndpointConfirmation>d__13.MoveNext () [0x0005d] in C:\Users\Bryan Dunphy\AppData\Local\Temp\rnc1030\project\Assets\Tests\PlayMode\BootstrapperLifecycleTests.cs:99
+at UnityEngine.TestTools.TestEnumerator+<Execute>d__7.MoveNext () [0x0003a] in .\Library\PackageCache\com.unity.test-framework@1.4.6\UnityEngine.TestRunner\NUnitExtensions\Attributes\TestEnumerator.cs:44
+]]></stack-trace>
+                </failure>
+                <output><![CDATA[Bootstrapper: Waiting for Redis endpoint confirmation before connecting.
+Bootstrapper: Waiting for Redis endpoint confirmation before connecting.
+Bootstrapper: Remote server set to Redis but RedisDataPump not found.
+]]></output>
+              </test-case>
+              <test-case id="1135" name="PrimaryToManualTransition_StopsSessionAndCanReturnToRedis" fullname="AmpPortableDataViz.Tests.PlayMode.BootstrapperLifecycleTests.PrimaryToManualTransition_StopsSessionAndCanReturnToRedis" methodname="PrimaryToManualTransition_StopsSessionAndCanReturnToRedis" classname="AmpPortableDataViz.Tests.PlayMode.BootstrapperLifecycleTests" runstate="Runnable" seed="938949512" result="Failed" start-time="2026-11-03 10:35:04Z" end-time="2026-11-03 10:35:04Z" duration="0.005498" asserts="0">
+                <properties>
+                  <property name="_JOINTYPE" value="UnityCombinatorial" />
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+                <failure>
+                  <message><![CDATA[  Expected: 0
+  But was:  2
+]]></message>
+                  <stack-trace><![CDATA[at AmpPortableDataViz.Tests.PlayMode.BootstrapperLifecycleTests+<PrimaryToManualTransition_StopsSessionAndCanReturnToRedis>d__16.MoveNext () [0x00091] in C:\Users\Bryan Dunphy\AppData\Local\Temp\rnc1030\project\Assets\Tests\PlayMode\BootstrapperLifecycleTests.cs:158
+at UnityEngine.TestTools.TestEnumerator+<Execute>d__7.MoveNext () [0x0003a] in .\Library\PackageCache\com.unity.test-framework@1.4.6\UnityEngine.TestRunner\NUnitExtensions\Attributes\TestEnumerator.cs:44
+]]></stack-trace>
+                </failure>
+                <output><![CDATA[Bootstrapper: Waiting for Redis endpoint confirmation before connecting.
+Bootstrapper: BeginAfterEndpoint invoked from Redis endpoint prompt.
+Bootstrapper: Redis endpoint confirmed -> 127.0.0.1:6379
+Bootstrapper: Applying signal configuration after endpoint confirmation.
+Bootstrapper: Configuring RedisSource for 127.0.0.1:6379 (emotion_scores)
+Bootstrapper: Beginning session after endpoint confirmation.
+]]></output>
+              </test-case>
+              <test-case id="1131" name="RedisIsDefault_AndRetiredSourceValueCannotStartSession" fullname="AmpPortableDataViz.Tests.PlayMode.BootstrapperLifecycleTests.RedisIsDefault_AndRetiredSourceValueCannotStartSession" methodname="RedisIsDefault_AndRetiredSourceValueCannotStartSession" classname="AmpPortableDataViz.Tests.PlayMode.BootstrapperLifecycleTests" runstate="Runnable" seed="431115281" result="Failed" start-time="2026-11-03 10:35:04Z" end-time="2026-11-03 10:35:04Z" duration="0.004488" asserts="0">
+                <properties>
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+                <failure>
+                  <message><![CDATA[  Expected: False
+  But was:  True
+]]></message>
+                  <stack-trace><![CDATA[at AmpPortableDataViz.Tests.PlayMode.BootstrapperLifecycleTests.RedisIsDefault_AndRetiredSourceValueCannotStartSession () [0x00054] in C:\Users\Bryan Dunphy\AppData\Local\Temp\rnc1030\project\Assets\Tests\PlayMode\BootstrapperLifecycleTests.cs:89
+]]></stack-trace>
+                </failure>
+                <output><![CDATA[Bootstrapper: Waiting for Redis endpoint confirmation before connecting.
+]]></output>
+              </test-case>
+              <test-case id="1136" name="SelectedStreams_ReconfirmationAndDisableClearOwnedObjects" fullname="AmpPortableDataViz.Tests.PlayMode.BootstrapperLifecycleTests.SelectedStreams_ReconfirmationAndDisableClearOwnedObjects" methodname="SelectedStreams_ReconfirmationAndDisableClearOwnedObjects" classname="AmpPortableDataViz.Tests.PlayMode.BootstrapperLifecycleTests" runstate="Runnable" seed="2073550033" result="Passed" start-time="2026-11-03 10:35:04Z" end-time="2026-11-03 10:35:04Z" duration="0.021028" asserts="0">
+                <properties>
+                  <property name="_JOINTYPE" value="UnityCombinatorial" />
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+                <output><![CDATA[Bootstrapper: Waiting for Redis endpoint confirmation before connecting.
+Bootstrapper: BeginAfterEndpoint invoked from Redis endpoint prompt.
+Bootstrapper: Redis endpoint confirmed -> 127.0.0.1:6379
+Bootstrapper: Applying signal configuration after endpoint confirmation.
+SensorStreamCoordinator: Active stream is a (1/2).
+Bootstrapper: Configured one persistent visualization target for 2 selectable sensor streams.
+Bootstrapper: Beginning session after endpoint confirmation.
+Bootstrapper: BeginAfterEndpoint invoked from Redis endpoint prompt.
+Bootstrapper: Redis endpoint confirmed -> 127.0.0.1:6379
+Bootstrapper: Applying signal configuration after endpoint confirmation.
+SensorStreamCoordinator: Active stream is no available sensor.
+SensorStreamCoordinator: Active stream is a (1/2).
+Bootstrapper: Configured one persistent visualization target for 2 selectable sensor streams.
+Bootstrapper: Beginning session after endpoint confirmation.
+SensorStreamCoordinator: Active stream is no available sensor.
+Saving results to: C:\Users\Bryan Dunphy\Documents\UnityProjects\ampPortable_xrGlassesDemo\Assessment\2026-11-03\bootstrapper-refactor-step4\lifecycle-before.xml
+]]></output>
+              </test-case>
+            </test-suite>
+          </test-suite>
+        </test-suite>
+      </test-suite>
+    </test-suite>
+  </test-suite>
+</test-run>

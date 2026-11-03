@@ -1,0 +1,133 @@
+<?xml version="1.0" encoding="utf-8"?>
+<test-run id="2" testcasecount="7" result="Passed" total="7" passed="7" failed="0" inconclusive="0" skipped="0" asserts="0" engine-version="3.5.0.0" clr-version="4.0.30319.42000" start-time="2026-11-03 10:37:43Z" end-time="2026-11-03 10:37:43Z" duration="0.1523602">
+  <test-suite type="TestSuite" id="1268" name="XR Score Viewer" fullname="XR Score Viewer" runstate="Runnable" testcasecount="209" result="Passed" start-time="2026-11-03 10:37:43Z" end-time="2026-11-03 10:37:43Z" duration="0.152360" total="7" passed="7" failed="0" inconclusive="0" skipped="0" asserts="0">
+    <properties>
+      <property name="platform" value="PlayMode" />
+    </properties>
+    <test-suite type="Assembly" id="1260" name="Tests.dll" fullname="C:/Users/Bryan Dunphy/AppData/Local/Temp/rnc1030/project/Library/ScriptAssemblies/Tests.dll" runstate="Runnable" testcasecount="209" result="Passed" start-time="2026-11-03 10:37:43Z" end-time="2026-11-03 10:37:43Z" duration="0.142307" total="7" passed="7" failed="0" inconclusive="0" skipped="0" asserts="0">
+      <properties>
+        <property name="_PID" value="40740" />
+        <property name="_APPDOMAIN" value="Unity Child Domain" />
+        <property name="platform" value="PlayMode" />
+        <property name="EditorOnly" value="False" />
+      </properties>
+      <test-suite type="TestSuite" id="1261" name="AmpPortableDataViz" fullname="AmpPortableDataViz" runstate="Runnable" testcasecount="209" result="Passed" start-time="2026-11-03 10:37:43Z" end-time="2026-11-03 10:37:43Z" duration="0.139119" total="7" passed="7" failed="0" inconclusive="0" skipped="0" asserts="0">
+        <properties />
+        <test-suite type="TestSuite" id="1262" name="Tests" fullname="AmpPortableDataViz.Tests" runstate="Runnable" testcasecount="209" result="Passed" start-time="2026-11-03 10:37:43Z" end-time="2026-11-03 10:37:43Z" duration="0.137267" total="7" passed="7" failed="0" inconclusive="0" skipped="0" asserts="0">
+          <properties />
+          <test-suite type="TestSuite" id="1265" name="PlayMode" fullname="AmpPortableDataViz.Tests.PlayMode" runstate="Runnable" testcasecount="173" result="Passed" start-time="2026-11-03 10:37:43Z" end-time="2026-11-03 10:37:43Z" duration="0.134188" total="7" passed="7" failed="0" inconclusive="0" skipped="0" asserts="0">
+            <properties />
+            <test-suite type="TestFixture" id="1130" name="BootstrapperLifecycleTests" fullname="AmpPortableDataViz.Tests.PlayMode.BootstrapperLifecycleTests" classname="AmpPortableDataViz.Tests.PlayMode.BootstrapperLifecycleTests" runstate="Runnable" testcasecount="7" result="Passed" start-time="2026-11-03 10:37:43Z" end-time="2026-11-03 10:37:43Z" duration="0.129490" total="7" passed="7" failed="0" inconclusive="0" skipped="0" asserts="0">
+              <properties />
+              <test-case id="1137" name="PerDeviceToSelectedToManual_ReleasesSharedPumpsAndTargets" fullname="AmpPortableDataViz.Tests.PlayMode.BootstrapperLifecycleTests.PerDeviceToSelectedToManual_ReleasesSharedPumpsAndTargets" methodname="PerDeviceToSelectedToManual_ReleasesSharedPumpsAndTargets" classname="AmpPortableDataViz.Tests.PlayMode.BootstrapperLifecycleTests" runstate="Runnable" seed="1982908834" result="Passed" start-time="2026-11-03 10:37:43Z" end-time="2026-11-03 10:37:43Z" duration="0.069512" asserts="0">
+                <properties>
+                  <property name="_JOINTYPE" value="UnityCombinatorial" />
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+                <output><![CDATA[Bootstrapper: BeginAfterEndpoint invoked from Redis endpoint prompt.
+Bootstrapper: Redis endpoint confirmed -> 127.0.0.1:6379
+Bootstrapper: Applying signal configuration after endpoint confirmation.
+Bootstrapper: Spawning audience visuals for 2 devices: a, b
+Bootstrapper: Spawning audience graph groups for 2 devices: a, b
+Bootstrapper: Beginning session after endpoint confirmation.
+SensorStreamCoordinator: Active stream is a (1/2).
+Bootstrapper: Configured one persistent visualization target for 2 selectable sensor streams.
+SensorStreamCoordinator: Active stream is no available sensor.
+]]></output>
+              </test-case>
+              <test-case id="1134" name="PrimaryRedis_DisableReenableAndDestroyReleaseSubscriptions" fullname="AmpPortableDataViz.Tests.PlayMode.BootstrapperLifecycleTests.PrimaryRedis_DisableReenableAndDestroyReleaseSubscriptions" methodname="PrimaryRedis_DisableReenableAndDestroyReleaseSubscriptions" classname="AmpPortableDataViz.Tests.PlayMode.BootstrapperLifecycleTests" runstate="Runnable" seed="1543629363" result="Passed" start-time="2026-11-03 10:37:43Z" end-time="2026-11-03 10:37:43Z" duration="0.012803" asserts="0">
+                <properties>
+                  <property name="_JOINTYPE" value="UnityCombinatorial" />
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+                <output><![CDATA[Bootstrapper: BeginAfterEndpoint invoked from Redis endpoint prompt.
+Bootstrapper: Redis endpoint confirmed -> 127.0.0.1:6379
+Bootstrapper: Applying signal configuration after endpoint confirmation.
+Bootstrapper: Configuring RedisSource for 127.0.0.1:6379 (emotion_scores)
+Bootstrapper: Beginning session after endpoint confirmation.
+Bootstrapper: Configuring RedisSource for 127.0.0.1:6379 (emotion_scores)
+]]></output>
+              </test-case>
+              <test-case id="1133" name="PrimaryRedis_RepeatedConfirmationBindsAndSpawnsOnce" fullname="AmpPortableDataViz.Tests.PlayMode.BootstrapperLifecycleTests.PrimaryRedis_RepeatedConfirmationBindsAndSpawnsOnce" methodname="PrimaryRedis_RepeatedConfirmationBindsAndSpawnsOnce" classname="AmpPortableDataViz.Tests.PlayMode.BootstrapperLifecycleTests" runstate="Runnable" seed="1260648499" result="Passed" start-time="2026-11-03 10:37:43Z" end-time="2026-11-03 10:37:43Z" duration="0.007354" asserts="0">
+                <properties>
+                  <property name="_JOINTYPE" value="UnityCombinatorial" />
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+                <output><![CDATA[Bootstrapper: BeginAfterEndpoint invoked from Redis endpoint prompt.
+Bootstrapper: Redis endpoint confirmed -> 127.0.0.1:6379
+Bootstrapper: Applying signal configuration after endpoint confirmation.
+Bootstrapper: Configuring RedisSource for 127.0.0.1:6379 (emotion_scores)
+Bootstrapper: Beginning session after endpoint confirmation.
+Bootstrapper: BeginAfterEndpoint invoked from Redis endpoint prompt.
+Bootstrapper: Redis endpoint confirmed -> 127.0.0.1:6379
+Bootstrapper: Applying signal configuration after endpoint confirmation.
+Bootstrapper: Configuring RedisSource for 127.0.0.1:6379 (emotion_scores)
+Bootstrapper: Beginning session after endpoint confirmation.
+]]></output>
+              </test-case>
+              <test-case id="1132" name="PrimaryRedis_WaitsForEndpointConfirmation" fullname="AmpPortableDataViz.Tests.PlayMode.BootstrapperLifecycleTests.PrimaryRedis_WaitsForEndpointConfirmation" methodname="PrimaryRedis_WaitsForEndpointConfirmation" classname="AmpPortableDataViz.Tests.PlayMode.BootstrapperLifecycleTests" runstate="Runnable" seed="989344516" result="Passed" start-time="2026-11-03 10:37:43Z" end-time="2026-11-03 10:37:43Z" duration="0.003020" asserts="0">
+                <properties>
+                  <property name="_JOINTYPE" value="UnityCombinatorial" />
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+                <output><![CDATA[Bootstrapper: Waiting for Redis endpoint confirmation before connecting.
+]]></output>
+              </test-case>
+              <test-case id="1135" name="PrimaryToManualTransition_StopsSessionAndCanReturnToRedis" fullname="AmpPortableDataViz.Tests.PlayMode.BootstrapperLifecycleTests.PrimaryToManualTransition_StopsSessionAndCanReturnToRedis" methodname="PrimaryToManualTransition_StopsSessionAndCanReturnToRedis" classname="AmpPortableDataViz.Tests.PlayMode.BootstrapperLifecycleTests" runstate="Runnable" seed="1328571724" result="Passed" start-time="2026-11-03 10:37:43Z" end-time="2026-11-03 10:37:43Z" duration="0.005466" asserts="0">
+                <properties>
+                  <property name="_JOINTYPE" value="UnityCombinatorial" />
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+                <output><![CDATA[Bootstrapper: BeginAfterEndpoint invoked from Redis endpoint prompt.
+Bootstrapper: Redis endpoint confirmed -> 127.0.0.1:6379
+Bootstrapper: Applying signal configuration after endpoint confirmation.
+Bootstrapper: Configuring RedisSource for 127.0.0.1:6379 (emotion_scores)
+Bootstrapper: Beginning session after endpoint confirmation.
+Bootstrapper: BeginAfterEndpoint invoked from Redis endpoint prompt.
+Bootstrapper: Redis endpoint confirmed -> 127.0.0.1:6379
+Bootstrapper: Applying signal configuration after endpoint confirmation.
+Bootstrapper: Configuring RedisSource for 127.0.0.1:6379 (emotion_scores)
+Bootstrapper: Beginning session after endpoint confirmation.
+]]></output>
+              </test-case>
+              <test-case id="1131" name="RedisIsDefault_AndRetiredSourceValueCannotStartSession" fullname="AmpPortableDataViz.Tests.PlayMode.BootstrapperLifecycleTests.RedisIsDefault_AndRetiredSourceValueCannotStartSession" methodname="RedisIsDefault_AndRetiredSourceValueCannotStartSession" classname="AmpPortableDataViz.Tests.PlayMode.BootstrapperLifecycleTests" runstate="Runnable" seed="100262486" result="Passed" start-time="2026-11-03 10:37:43Z" end-time="2026-11-03 10:37:43Z" duration="0.002872" asserts="0">
+                <properties>
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+              </test-case>
+              <test-case id="1136" name="SelectedStreams_ReconfirmationAndDisableClearOwnedObjects" fullname="AmpPortableDataViz.Tests.PlayMode.BootstrapperLifecycleTests.SelectedStreams_ReconfirmationAndDisableClearOwnedObjects" methodname="SelectedStreams_ReconfirmationAndDisableClearOwnedObjects" classname="AmpPortableDataViz.Tests.PlayMode.BootstrapperLifecycleTests" runstate="Runnable" seed="1696292118" result="Passed" start-time="2026-11-03 10:37:43Z" end-time="2026-11-03 10:37:43Z" duration="0.011808" asserts="0">
+                <properties>
+                  <property name="_JOINTYPE" value="UnityCombinatorial" />
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+                <output><![CDATA[Bootstrapper: BeginAfterEndpoint invoked from Redis endpoint prompt.
+Bootstrapper: Redis endpoint confirmed -> 127.0.0.1:6379
+Bootstrapper: Applying signal configuration after endpoint confirmation.
+SensorStreamCoordinator: Active stream is a (1/2).
+Bootstrapper: Configured one persistent visualization target for 2 selectable sensor streams.
+Bootstrapper: Beginning session after endpoint confirmation.
+Bootstrapper: BeginAfterEndpoint invoked from Redis endpoint prompt.
+Bootstrapper: Redis endpoint confirmed -> 127.0.0.1:6379
+Bootstrapper: Applying signal configuration after endpoint confirmation.
+SensorStreamCoordinator: Active stream is no available sensor.
+SensorStreamCoordinator: Active stream is a (1/2).
+Bootstrapper: Configured one persistent visualization target for 2 selectable sensor streams.
+Bootstrapper: Beginning session after endpoint confirmation.
+SensorStreamCoordinator: Active stream is no available sensor.
+Saving results to: C:\Users\Bryan Dunphy\Documents\UnityProjects\ampPortable_xrGlassesDemo\Assessment\2026-11-03\bootstrapper-refactor-step4\lifecycle-after.xml
+]]></output>
+              </test-case>
+            </test-suite>
+          </test-suite>
+        </test-suite>
+      </test-suite>
+    </test-suite>
+  </test-suite>
+</test-run>

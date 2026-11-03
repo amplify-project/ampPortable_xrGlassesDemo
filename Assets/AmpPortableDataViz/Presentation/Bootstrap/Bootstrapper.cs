@@ -143,6 +143,7 @@ namespace AmpPortableDataViz.Presentation.Bootstrap
         private FloatToSimpleParams _floatToParamsMapper;
         private Coroutine _initializationRoutine;
         private Coroutine _deviceDiscoveryRoutine;
+        private bool _sessionStarted;
         private readonly List<AudienceDeviceInstance> _audienceDeviceInstances = new List<AudienceDeviceInstance>();
         private readonly List<AudienceGraphDeviceGroupInstance> _audienceGraphDeviceGroups = new List<AudienceGraphDeviceGroupInstance>();
         private readonly List<SelectedSensorSourceInstance> _selectedSensorSources = new List<SelectedSensorSourceInstance>();
@@ -205,17 +206,7 @@ namespace AmpPortableDataViz.Presentation.Bootstrap
 
             Debug.Log($"Bootstrapper: Redis endpoint confirmed -> {RedisHost}:{RedisPort}");
 
-            if (_initializationRoutine != null)
-            {
-                StopCoroutine(_initializationRoutine);
-                _initializationRoutine = null;
-            }
-
-            if (_deviceDiscoveryRoutine != null)
-            {
-                StopCoroutine(_deviceDiscoveryRoutine);
-                _deviceDiscoveryRoutine = null;
-            }
+            StopRoutine(ref _deviceDiscoveryRoutine);
 
             if (ShouldAutoDetectEmotionDeviceIds())
             {
@@ -237,34 +228,51 @@ namespace AmpPortableDataViz.Presentation.Bootstrap
                 RedisSource.enabled = false;
             }
 
-            if (_initializationRoutine != null)
-            {
-                StopCoroutine(_initializationRoutine);
-                _initializationRoutine = null;
-            }
-
-            if (_deviceDiscoveryRoutine != null)
-            {
-                StopCoroutine(_deviceDiscoveryRoutine);
-                _deviceDiscoveryRoutine = null;
-            }
-
-            _sessionController?.Shutdown();
-            ClearAudienceDeviceVisuals();
-            ClearAudienceGraphDeviceVisuals();
-            ClearSelectedSensorStreamMode();
-            ClearSensorEngagementBackend();
-            ClearManualDriverVisuals();
+            StopPendingWork();
+            StopSession();
+            ClearRuntimeVisuals();
         }
 
         private void OnDestroy()
         {
+            StopPendingWork();
             _sessionController?.Dispose();
             _sessionController = null;
+            _sessionStarted = false;
+            ClearRuntimeVisuals();
+        }
+
+        private void StopRoutine(ref Coroutine routine)
+        {
+            if (routine == null) return;
+            StopCoroutine(routine);
+            routine = null;
+        }
+
+        private void StopPendingWork()
+        {
+            StopRoutine(ref _initializationRoutine);
+            StopRoutine(ref _deviceDiscoveryRoutine);
+        }
+
+        private void StopSession()
+        {
+            StopRoutine(ref _initializationRoutine);
+            _sessionController?.Shutdown();
+            _sessionStarted = false;
+        }
+
+        private void ClearAutomaticVisuals()
+        {
             ClearAudienceDeviceVisuals();
             ClearAudienceGraphDeviceVisuals();
             ClearSelectedSensorStreamMode();
             ClearSensorEngagementBackend();
+        }
+
+        private void ClearRuntimeVisuals()
+        {
+            ClearAutomaticVisuals();
             ClearManualDriverVisuals();
         }
 
@@ -321,23 +329,18 @@ namespace AmpPortableDataViz.Presentation.Bootstrap
 
             yield return _sessionController.InitializeAsync(options).AsIEnumerator();
 
-            switch (ActiveSignalSource)
+            // Audience visuals manage their own Redis sources; avoid a duplicate primary visual.
+            bool shouldBindPrimaryRedis = !AutoSpawnAudienceVisualsFromChannels && !AutoSpawnGraphVisualsFromChannels;
+            if (shouldBindPrimaryRedis && RedisSource != null && RedisSource.enabled)
             {
-                case SignalSourceType.Redis:
-                    // Audience visuals manage their own Redis sources; avoid a duplicate primary visual.
-                    bool shouldBindPrimaryRedis = !AutoSpawnAudienceVisualsFromChannels && !AutoSpawnGraphVisualsFromChannels;
-                    if (shouldBindPrimaryRedis && RedisSource != null && RedisSource.enabled)
-                    {
-                        _sessionController.BindExternalSignalSource(RedisSource, _floatToParamsMapper);
-                    }
-                    else if (shouldBindPrimaryRedis)
-                    {
-                        Debug.LogWarning("Bootstrapper: Remote server set to Redis but RedisDataPump not found.");
-                    }
-                    break;
-                default:
-                    break;
+                _sessionController.BindExternalSignalSource(RedisSource, _floatToParamsMapper);
             }
+            else if (shouldBindPrimaryRedis)
+            {
+                Debug.LogWarning("Bootstrapper: Remote server set to Redis but RedisDataPump not found.");
+            }
+
+            _initializationRoutine = null;
         }
 
         private void ApplySignalConfiguration()
@@ -348,8 +351,14 @@ namespace AmpPortableDataViz.Presentation.Bootstrap
                 return;
             }
 
-            ClearManualDriverVisuals();
             EnsureRedisEndpointFromRuntime();
+
+            if (!ShouldInitializeSessionController())
+            {
+                StopSession();
+            }
+
+            ClearManualDriverVisuals();
 
             bool hasRedisEndpoint = !string.IsNullOrWhiteSpace(RedisHost);
             bool useRedis = ActiveSignalSource == SignalSourceType.Redis;
@@ -484,12 +493,7 @@ namespace AmpPortableDataViz.Presentation.Bootstrap
 
         private void StartDeviceDiscovery()
         {
-            if (_deviceDiscoveryRoutine != null)
-            {
-                StopCoroutine(_deviceDiscoveryRoutine);
-                _deviceDiscoveryRoutine = null;
-            }
-
+            StopRoutine(ref _deviceDiscoveryRoutine);
             _deviceDiscoveryRoutine = StartCoroutine(DiscoverEmotionDevicesThenApply());
         }
 
@@ -524,30 +528,24 @@ namespace AmpPortableDataViz.Presentation.Bootstrap
 
         private void BeginSessionIfReady()
         {
-            if (!ShouldInitializeSessionController())
+            if (!ShouldInitializeSessionController() || _sessionStarted)
             {
                 return;
             }
 
-            if (_initializationRoutine != null)
-            {
-                StopCoroutine(_initializationRoutine);
-                _initializationRoutine = null;
-            }
-
+            StopRoutine(ref _initializationRoutine);
+            _sessionStarted = true;
             _initializationRoutine = StartCoroutine(BeginSession());
         }
 
         private void ApplyManualDriverConfiguration()
         {
+            StopSession();
             if (RedisSource != null)
             {
                 RedisSource.enabled = false;
             }
-            ClearAudienceDeviceVisuals();
-            ClearAudienceGraphDeviceVisuals();
-            ClearSelectedSensorStreamMode();
-            ClearSensorEngagementBackend();
+            ClearAutomaticVisuals();
             EnsureManualDriverVisuals();
         }
 
@@ -656,12 +654,13 @@ namespace AmpPortableDataViz.Presentation.Bootstrap
 #if UNITY_EDITOR
         private void OnValidate()
         {
-            if (!UnityEngine.Application.isPlaying)
+            if (!UnityEngine.Application.isPlaying || !isActiveAndEnabled)
             {
                 return;
             }
 
             ApplySignalConfiguration();
+            BeginSessionIfReady();
         }
 #endif
 
@@ -1498,11 +1497,7 @@ namespace AmpPortableDataViz.Presentation.Bootstrap
             {
                 RedisSource.enabled = false;
             }
-            ClearAudienceDeviceVisuals();
-            ClearAudienceGraphDeviceVisuals();
-            ClearSelectedSensorStreamMode();
-            ClearSensorEngagementBackend();
-            ClearManualDriverVisuals();
+            ClearRuntimeVisuals();
         }
 
         private void PositionEmotionVisual(Transform target, int index, bool useLocalSpace)
@@ -1899,14 +1894,14 @@ namespace AmpPortableDataViz.Presentation.Bootstrap
                 return false;
             }
 
-            if (UseManualVisualizationDrivers)
+            if (UseManualVisualizationDrivers || ActiveSignalSource != SignalSourceType.Redis)
             {
                 return false;
             }
 
-            bool redisAutoSpawnOnly = ActiveSignalSource == SignalSourceType.Redis &&
-                (AutoSpawnAudienceVisualsFromChannels || AutoSpawnGraphVisualsFromChannels);
-            return !redisAutoSpawnOnly;
+            bool redisReady = !string.IsNullOrWhiteSpace(RedisHost) &&
+                (!RequireRedisEndpointConfirmation || _redisEndpointReady);
+            return redisReady && !AutoSpawnAudienceVisualsFromChannels && !AutoSpawnGraphVisualsFromChannels;
         }
     }
 }

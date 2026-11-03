@@ -1,0 +1,18 @@
+{
+  "phase": "lifecycle-before",
+  "project": "C:\\Users\\Bryan Dunphy\\AppData\\Local\\Temp\\rnc1030\\project",
+  "source_files": 1704,
+  "all_source_bytes_match": true,
+  "copied": [
+    "Assets/Tests/PlayMode/BootstrapperLifecycleTests.cs",
+    "Assets/Tests/PlayMode/BootstrapperLifecycleTests.cs.meta"
+  ],
+  "removed": [],
+  "validation_only_extras": [
+    "Assets/Editor.meta",
+    "Assets/Editor/MonoScriptProbe.cs",
+    "Assets/Editor/MonoScriptProbe.cs.meta",
+    "Assets/Editor/PreMergeValidation.cs",
+    "Assets/Editor/PreMergeValidation.cs.meta"
+  ]
+}
