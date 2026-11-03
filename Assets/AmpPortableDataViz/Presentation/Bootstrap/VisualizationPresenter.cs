@@ -5,7 +5,6 @@ using AmpPortableDataViz.Core;
 using AmpPortableDataViz.Presentation.Interaction;
 using AmpPortableDataViz.Presentation.Sources;
 using AmpPortableDataViz.Presentation.Visualization;
-using TMPro;
 using UnityEngine;
 
 namespace AmpPortableDataViz.Presentation.Bootstrap
@@ -16,26 +15,13 @@ namespace AmpPortableDataViz.Presentation.Bootstrap
         private readonly GameObject _owner;
         private readonly RedisStreamRegistry _streams;
         private Settings _settings;
-        private readonly Action<Transform, int, bool> _positionAbstractViz;
-        private readonly Action<Transform, int, bool> _positionGraphGroup;
-        private readonly Action<Transform, bool> _positionAtParentOrigin;
-        private readonly Action<GameObject, string, int> _attachDeviceLabel;
-        private readonly Action<GameObject, string, int> _attachGraphGroupLabel;
+        private readonly VisualizationLayout _layout;
 
-        internal VisualizationPresenter(GameObject owner, RedisStreamRegistry streams,
-            Action<Transform, int, bool> positionAbstractViz,
-            Action<Transform, int, bool> positionGraphGroup,
-            Action<Transform, bool> positionAtParentOrigin,
-            Action<GameObject, string, int> attachDeviceLabel,
-            Action<GameObject, string, int> attachGraphGroupLabel)
+        internal VisualizationPresenter(GameObject owner, RedisStreamRegistry streams, VisualizationLayout layout)
         {
             _owner = owner;
             _streams = streams;
-            _positionAbstractViz = positionAbstractViz;
-            _positionGraphGroup = positionGraphGroup;
-            _positionAtParentOrigin = positionAtParentOrigin;
-            _attachDeviceLabel = attachDeviceLabel;
-            _attachGraphGroupLabel = attachGraphGroupLabel;
+            _layout = layout;
         }
 
         internal void Configure(Settings settings)
@@ -65,11 +51,6 @@ namespace AmpPortableDataViz.Presentation.Bootstrap
             public bool AutoSpawnAbstractViz;
             public bool AutoSpawnGraphVisualsFromChannels;
             public string[] SensorIds;
-            public Camera SensorHudCamera;
-            public Vector3 SensorHudLocalPosition;
-            public float SensorHudLocalScale;
-            public float SensorHudFontSize;
-            public Color SensorHudColor;
         }
 
         internal void EnsureManualDriverVisuals()
@@ -108,11 +89,11 @@ namespace AmpPortableDataViz.Presentation.Bootstrap
             instance.name = $"{prefab.name}_{suffix}";
             if (isGraphPrefab)
             {
-                _positionGraphGroup(instance.transform, index, hasCustomParent);
+                _layout.PositionGraphGroup(instance.transform, index, hasCustomParent);
             }
             else
             {
-                _positionAbstractViz(instance.transform, index, hasCustomParent);
+                _layout.PositionAbstractViz(instance.transform, index, hasCustomParent);
             }
 
             ConfigureManualDriverInstance(instance);
@@ -295,15 +276,15 @@ namespace AmpPortableDataViz.Presentation.Bootstrap
 
             if (positionAtParentOrigin)
             {
-                _positionAtParentOrigin(instance.transform, hasCustomParent);
+                _layout.PositionAtParentOrigin(instance.transform, hasCustomParent);
             }
             else if (isGraphVisual)
             {
-                _positionGraphGroup(instance.transform, 0, hasCustomParent);
+                _layout.PositionGraphGroup(instance.transform, 0, hasCustomParent);
             }
             else
             {
-                _positionAbstractViz(instance.transform, 0, hasCustomParent);
+                _layout.PositionAbstractViz(instance.transform, 0, hasCustomParent);
             }
 
             DisableManualDrivers(instance);
@@ -366,35 +347,7 @@ namespace AmpPortableDataViz.Presentation.Bootstrap
                 return;
             }
 
-            Camera hudCamera = _settings.SensorHudCamera != null ? _settings.SensorHudCamera : Camera.main;
-            if (hudCamera == null)
-            {
-                hudCamera = UnityEngine.Object.FindFirstObjectByType<Camera>();
-            }
-
-            if (hudCamera == null)
-            {
-                Debug.LogWarning("Bootstrapper: No camera is available for the active sensor HUD.");
-                return;
-            }
-
-            _sensorHudObject = new GameObject("ActiveSensorHud");
-            _sensorHudObject.transform.SetParent(hudCamera.transform, false);
-            _sensorHudObject.transform.localPosition = _settings.SensorHudLocalPosition;
-            _sensorHudObject.transform.localRotation = Quaternion.identity;
-            _sensorHudObject.transform.localScale = Vector3.one * Mathf.Max(0.0001f, _settings.SensorHudLocalScale);
-
-            var label = _sensorHudObject.AddComponent<TextMeshPro>();
-            label.fontSize = Mathf.Max(0.01f, _settings.SensorHudFontSize);
-            label.color = _settings.SensorHudColor;
-            label.alignment = TextAlignmentOptions.Center;
-            label.enableWordWrapping = false;
-            label.richText = false;
-            label.sortingOrder = 100;
-            label.rectTransform.sizeDelta = new Vector2(60f, 8f);
-
-            var hudBinding = _sensorHudObject.AddComponent<ActiveSensorHudBinding>();
-            hudBinding.Configure(_sensorStreamCoordinator, label);
+            _sensorHudObject = _layout.CreateSensorHud(_sensorStreamCoordinator);
         }
 
         internal static void AddVisualizerBindings(
@@ -469,7 +422,7 @@ namespace AmpPortableDataViz.Presentation.Bootstrap
                     : UnityEngine.Object.Instantiate(_settings.AbstractVizPrefab);
 
                 instance.name = $"{_settings.AbstractVizPrefab.name}_{definition.DeviceId}";
-                _positionAbstractViz(instance.transform, deviceIndex, hasCustomParent);
+                _layout.PositionAbstractViz(instance.transform, deviceIndex, hasCustomParent);
 
                 DisableManualDrivers(instance);
 
@@ -500,7 +453,7 @@ namespace AmpPortableDataViz.Presentation.Bootstrap
                     PhysioMetricsChannel = definition.PhysioMetricsChannel
                 });
 
-                _attachDeviceLabel(instance, definition.DeviceId, deviceIndex);
+                _layout.AttachDeviceLabel(instance, definition.DeviceId, deviceIndex);
                 deviceIndex++;
             }
 
@@ -567,7 +520,7 @@ namespace AmpPortableDataViz.Presentation.Bootstrap
                     : UnityEngine.Object.Instantiate(_settings.GraphPrefab);
 
                 instance.name = $"{_settings.GraphPrefab.name}_{definition.DeviceId}";
-                _positionGraphGroup(instance.transform, deviceIndex, hasCustomParent);
+                _layout.PositionGraphGroup(instance.transform, deviceIndex, hasCustomParent);
                 DisableManualDrivers(instance);
 
                 var binding = instance.GetComponentInChildren<AudienceSignalBinding>();
@@ -596,7 +549,7 @@ namespace AmpPortableDataViz.Presentation.Bootstrap
                     PhysioMetricsChannel = definition.PhysioMetricsChannel
                 });
 
-                _attachGraphGroupLabel(instance, definition.DeviceId, deviceIndex);
+                _layout.AttachGraphGroupLabel(instance, definition.DeviceId, deviceIndex);
                 deviceIndex++;
             }
         }

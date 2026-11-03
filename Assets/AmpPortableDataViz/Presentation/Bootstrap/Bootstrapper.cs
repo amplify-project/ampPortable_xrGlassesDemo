@@ -6,7 +6,6 @@ using AmpPortableDataViz.Core;
 using AmpPortableDataViz.Infra;
 using AmpPortableDataViz.Presentation.Sources;
 using AmpPortableDataViz.Presentation.Visualization;
-using TMPro;
 using UnityEngine;
 using UnityEngine.Serialization;
 
@@ -120,16 +119,52 @@ namespace AmpPortableDataViz.Presentation.Bootstrap
         [Tooltip("World-space spawn rotation in degrees used when no visualization parent is assigned.")]
         public Vector3 SpawnRotationEuler = Vector3.zero;
 
+        private VisualizationLayout _layout;
+        private VisualizationLayout Layout
+        {
+            get
+            {
+                _layout ??= new VisualizationLayout();
+                _layout.Configure(new VisualizationLayout.Settings
+                {
+                    SpawnPosition = SpawnPosition,
+                    SpawnRotationEuler = SpawnRotationEuler,
+                    AbstractVizOriginOffset = AbstractVizOriginOffset,
+                    AbstractVizSpacing = AbstractVizSpacing,
+                    AbstractVizPerRow = AbstractVizPerRow,
+                    GraphGroupOriginOffset = GraphGroupOriginOffset,
+                    GraphGroupSpacing = GraphGroupSpacing,
+                    GraphGroupsPerRow = GraphGroupsPerRow,
+                    ShowDeviceLabels = ShowDeviceLabels,
+                    DeviceLabelOffset = DeviceLabelOffset,
+                    DeviceLabelFontSize = DeviceLabelFontSize,
+                    DeviceLabelColor = DeviceLabelColor,
+                    ShowGraphGroupLabels = ShowGraphGroupLabels,
+                    GraphGroupLabelOffset = GraphGroupLabelOffset,
+                    GraphGroupLabelVerticalOffset = GraphGroupLabelVerticalOffset,
+                    GraphGroupLabelFontSize = GraphGroupLabelFontSize,
+                    GraphGroupLabelColor = GraphGroupLabelColor,
+                    GraphItemBoundsSize = GraphItemBoundsSize,
+                    GraphGroupBoundsPadding = GraphGroupBoundsPadding,
+                    SensorHudCamera = SensorHudCamera,
+                    SensorHudLocalPosition = SensorHudLocalPosition,
+                    SensorHudLocalScale = SensorHudLocalScale,
+                    SensorHudFontSize = SensorHudFontSize,
+                    SensorHudColor = SensorHudColor
+                });
+                return _layout;
+            }
+        }
+
         private VisualizationPresenter _visuals;
         private VisualizationPresenter Visuals
         {
             get
             {
+                var layout = Layout;
                 if (_visuals == null)
                 {
-                    _visuals = new VisualizationPresenter(gameObject, Streams,
-                        PositionAbstractViz, PositionGraphGroup, PositionAtParentOrigin,
-                        AttachDeviceLabel, AttachGraphGroupLabel);
+                    _visuals = new VisualizationPresenter(gameObject, Streams, layout);
                 }
 
                 _visuals.Configure(new VisualizationPresenter.Settings
@@ -142,12 +177,7 @@ namespace AmpPortableDataViz.Presentation.Bootstrap
                     ArtistVizParent = ArtistVizParent,
                     AutoSpawnAbstractViz = AutoSpawnAbstractViz,
                     AutoSpawnGraphVisualsFromChannels = AutoSpawnGraphVisualsFromChannels,
-                    SensorIds = SensorIds,
-                    SensorHudCamera = SensorHudCamera,
-                    SensorHudLocalPosition = SensorHudLocalPosition,
-                    SensorHudLocalScale = SensorHudLocalScale,
-                    SensorHudFontSize = SensorHudFontSize,
-                    SensorHudColor = SensorHudColor
+                    SensorIds = SensorIds
                 });
                 return _visuals;
             }
@@ -434,80 +464,6 @@ namespace AmpPortableDataViz.Presentation.Bootstrap
         }
 #endif
 
-        private void PositionAtParentOrigin(Transform target, bool useLocalSpace)
-        {
-            if (target == null)
-            {
-                return;
-            }
-
-            if (useLocalSpace)
-            {
-                target.localPosition = Vector3.zero;
-                target.localRotation = Quaternion.identity;
-                return;
-            }
-
-            target.position = SpawnPosition;
-            target.rotation = Quaternion.Euler(SpawnRotationEuler);
-        }
-
-        private void PositionAbstractViz(Transform target, int index, bool useLocalSpace)
-        {
-            if (target == null)
-            {
-                return;
-            }
-
-            int perRow = Mathf.Max(1, AbstractVizPerRow);
-            int row = index / perRow;
-            int column = index % perRow;
-
-            Vector3 offset = AbstractVizOriginOffset + new Vector3(
-                column * AbstractVizSpacing.x,
-                row * AbstractVizSpacing.y,
-                row * AbstractVizSpacing.z);
-
-            if (useLocalSpace)
-            {
-                target.localPosition = offset;
-                target.localRotation = Quaternion.identity;
-            }
-            else
-            {
-                target.position = SpawnPosition + offset;
-                target.rotation = Quaternion.Euler(SpawnRotationEuler);
-            }
-        }
-
-        private void PositionGraphGroup(Transform target, int index, bool useLocalSpace)
-        {
-            if (target == null)
-            {
-                return;
-            }
-
-            int perRow = Mathf.Max(1, GraphGroupsPerRow);
-            int row = index / perRow;
-            int column = index % perRow;
-
-            Vector3 offset = GraphGroupOriginOffset + new Vector3(
-                column * GraphGroupSpacing.x,
-                row * GraphGroupSpacing.y,
-                row * GraphGroupSpacing.z);
-
-            if (useLocalSpace)
-            {
-                target.localPosition = offset;
-                target.localRotation = Quaternion.identity;
-            }
-            else
-            {
-                target.position = SpawnPosition + offset;
-                target.rotation = Quaternion.Euler(SpawnRotationEuler);
-            }
-        }
-
         private string[] GetRedisChannels()
         {
             var channels = new List<string>();
@@ -556,149 +512,6 @@ namespace AmpPortableDataViz.Presentation.Bootstrap
             }
 
             return channels.ToArray();
-        }
-
-        private void AttachDeviceLabel(GameObject visualInstance, string deviceId, int deviceIndex)
-        {
-            if (!ShowDeviceLabels || visualInstance == null)
-            {
-                return;
-            }
-
-            Transform labelParent = ResolveDeviceLabelParent(visualInstance);
-            if (labelParent == null)
-            {
-                return;
-            }
-
-            var labelObject = new GameObject("DeviceLabel");
-            labelObject.transform.SetParent(labelParent, false);
-            labelObject.transform.localPosition = DeviceLabelOffset;
-            labelObject.transform.localRotation = Quaternion.identity;
-            labelObject.transform.localScale = Vector3.one;
-            labelObject.layer = visualInstance.layer;
-
-            var text = labelObject.AddComponent<TextMeshPro>();
-            text.text = FormatDeviceLabel(deviceId, deviceIndex);
-            text.fontSize = Mathf.Max(0.01f, DeviceLabelFontSize);
-            text.color = DeviceLabelColor;
-            text.alignment = TextAlignmentOptions.Center;
-            text.enableWordWrapping = false;
-            text.richText = false;
-
-            labelObject.AddComponent<BillboardLabel>();
-        }
-
-        private void AttachGraphGroupLabel(GameObject groupRoot, string deviceId, int deviceIndex)
-        {
-            if (!ShowGraphGroupLabels || groupRoot == null)
-            {
-                return;
-            }
-
-            string labelText = FormatGraphGroupLabel(deviceId, deviceIndex);
-            if (string.IsNullOrWhiteSpace(labelText))
-            {
-                return;
-            }
-
-            var labelObject = new GameObject("GraphGroupLabel");
-            labelObject.transform.SetParent(groupRoot.transform, false);
-            labelObject.transform.localRotation = Quaternion.identity;
-            labelObject.transform.localScale = Vector3.one;
-            labelObject.layer = groupRoot.layer;
-
-            float extraYOffset = Mathf.Max(0f, GraphGroupLabelVerticalOffset);
-            Vector3 localPosition = GraphGroupLabelOffset + new Vector3(0f, extraYOffset, 0f);
-            bool boundsTooSmall = GraphItemBoundsSize.sqrMagnitude < 1e-6f;
-            if (!boundsTooSmall)
-            {
-                Vector3 size = GraphItemBoundsSize + GraphGroupBoundsPadding * 2f;
-                float yOffset = size.y * 0.5f + extraYOffset;
-                localPosition = new Vector3(0f, yOffset, 0f) + GraphGroupLabelOffset;
-            }
-
-            labelObject.transform.localPosition = localPosition;
-
-            var text = labelObject.AddComponent<TextMeshPro>();
-            text.text = labelText;
-            text.fontSize = Mathf.Max(0.01f, GraphGroupLabelFontSize);
-            text.color = GraphGroupLabelColor;
-            text.alignment = TextAlignmentOptions.Center;
-            text.enableWordWrapping = false;
-            text.richText = false;
-
-            labelObject.AddComponent<BillboardLabel>();
-        }
-
-        private static string FormatGraphGroupLabel(string deviceId, int deviceIndex)
-        {
-            if (!string.IsNullOrWhiteSpace(deviceId))
-            {
-                return deviceId.Trim();
-            }
-
-            return $"Device {deviceIndex + 1}";
-        }
-
-        private static string FormatDeviceLabel(string deviceId, int deviceIndex)
-        {
-            if (!string.IsNullOrWhiteSpace(deviceId))
-            {
-                string numeric = ExtractTrailingDigits(deviceId);
-                if (!string.IsNullOrEmpty(numeric))
-                {
-                    return $"Device {numeric}";
-                }
-
-                return $"Device {deviceId.Trim()}";
-            }
-
-            return $"Device {deviceIndex + 1}";
-        }
-
-        private static string ExtractTrailingDigits(string value)
-        {
-            if (string.IsNullOrWhiteSpace(value))
-            {
-                return string.Empty;
-            }
-
-            int end = value.Length - 1;
-            while (end >= 0 && !char.IsDigit(value[end]))
-            {
-                end--;
-            }
-
-            if (end < 0)
-            {
-                return string.Empty;
-            }
-
-            int start = end;
-            while (start >= 0 && char.IsDigit(value[start]))
-            {
-                start--;
-            }
-
-            int length = end - start;
-            return length > 0 ? value.Substring(start + 1, length) : string.Empty;
-        }
-
-        private static Transform ResolveDeviceLabelParent(GameObject instance)
-        {
-            if (instance == null)
-            {
-                return null;
-            }
-
-            var particleMeshVisualizer = instance.GetComponentInChildren<ParticleMeshVisualizer>(true);
-            if (particleMeshVisualizer != null)
-            {
-                return particleMeshVisualizer.transform;
-            }
-
-            return instance.transform;
         }
 
         [Serializable]

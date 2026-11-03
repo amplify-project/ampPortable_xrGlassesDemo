@@ -1,0 +1,255 @@
+{
+  "base_head": "36445624d46613a4d82d5902eb20d5b7d1371a4e",
+  "changed_sources": [
+    "Assets/AmpPortableDataViz/Presentation/Bootstrap/Bootstrapper.cs",
+    "Assets/Tests/PlayMode/BootstrapperArtistVizTests.cs",
+    "Assets/Tests/PlayMode/BootstrapperChannelAndLabelTests.cs",
+    "Assets/Tests/PlayMode/BootstrapperLifecycleTests.cs",
+    "Assets/Tests/PlayMode/BootstrapperPlacementTests.cs",
+    "Assets/Tests/PlayMode/BootstrapperRetainedGraphTests.cs"
+  ],
+  "added_sources": [
+    "Assets/AmpPortableDataViz/Presentation/Bootstrap/RedisStreamRegistry.cs",
+    "Assets/AmpPortableDataViz/Presentation/Bootstrap/RedisStreamRegistry.cs.meta",
+    "Assets/AmpPortableDataViz/Presentation/Bootstrap/VisualizationLayout.cs",
+    "Assets/AmpPortableDataViz/Presentation/Bootstrap/VisualizationLayout.cs.meta",
+    "Assets/AmpPortableDataViz/Presentation/Bootstrap/VisualizationPresenter.cs",
+    "Assets/AmpPortableDataViz/Presentation/Bootstrap/VisualizationPresenter.cs.meta",
+    "Assets/Tests/PlayMode/RedisStreamRegistryTests.cs",
+    "Assets/Tests/PlayMode/RedisStreamRegistryTests.cs.meta"
+  ],
+  "removed_sources": [],
+  "other_original_files_byte_identical": 1673,
+  "inspector_declarations_defaults_and_migration_attributes_unchanged": true,
+  "existing_user_scene_edit_byte_preserved_and_excluded_from_commits": true,
+  "all_original_method_bodies_equivalent_after_explicit_owner_settings_substitution": [
+    {
+      "method": "Awake",
+      "owner": "Bootstrapper"
+    },
+    {
+      "method": "OnEnable",
+      "owner": "Bootstrapper"
+    },
+    {
+      "method": "BeginAfterEndpoint",
+      "owner": "Bootstrapper"
+    },
+    {
+      "method": "OnDisable",
+      "owner": "Bootstrapper"
+    },
+    {
+      "method": "OnDestroy",
+      "owner": "Bootstrapper"
+    },
+    {
+      "method": "StopRoutine",
+      "owner": "Bootstrapper"
+    },
+    {
+      "method": "ClearAutomaticVisuals",
+      "owner": "Bootstrapper"
+    },
+    {
+      "method": "ClearRuntimeVisuals",
+      "owner": "Bootstrapper"
+    },
+    {
+      "method": "ApplySignalConfiguration",
+      "owner": "Bootstrapper"
+    },
+    {
+      "method": "EnsureRedisEndpointFromRuntime",
+      "owner": "Bootstrapper"
+    },
+    {
+      "method": "ShouldAutoDetectSensorIds",
+      "owner": "Bootstrapper"
+    },
+    {
+      "method": "StartDeviceDiscovery",
+      "owner": "Bootstrapper"
+    },
+    {
+      "method": "DiscoverSensorsThenApply",
+      "owner": "Bootstrapper"
+    },
+    {
+      "method": "ApplyManualDriverConfiguration",
+      "owner": "Bootstrapper"
+    },
+    {
+      "method": "EnsureManualDriverVisuals",
+      "owner": "VisualizationPresenter"
+    },
+    {
+      "method": "SpawnManualDriverPrefab",
+      "owner": "VisualizationPresenter"
+    },
+    {
+      "method": "ConfigureManualDriverInstance",
+      "owner": "VisualizationPresenter"
+    },
+    {
+      "method": "OnValidate",
+      "owner": "Bootstrapper"
+    },
+    {
+      "method": "EnsureSelectedSensorStreamMode",
+      "owner": "VisualizationPresenter"
+    },
+    {
+      "method": "SpawnSelectedSensorVisual",
+      "owner": "VisualizationPresenter"
+    },
+    {
+      "method": "PositionAtParentOrigin",
+      "owner": "VisualizationLayout"
+    },
+    {
+      "method": "EnsureSensorStreamPresentation",
+      "owner": "VisualizationPresenter"
+    },
+    {
+      "method": "EnsureSensorHud",
+      "owner": "VisualizationPresenter"
+    },
+    {
+      "method": "AddVisualizerBindings",
+      "owner": "VisualizationPresenter"
+    },
+    {
+      "method": "EnsureAudienceDeviceVisuals",
+      "owner": "VisualizationPresenter"
+    },
+    {
+      "method": "EnsureAudienceGraphDeviceVisuals",
+      "owner": "VisualizationPresenter"
+    },
+    {
+      "method": "EnsureSensorEngagementBackend",
+      "owner": "RedisStreamRegistry"
+    },
+    {
+      "method": "BuildSensorEngagementRoutes",
+      "owner": "RedisStreamRegistry"
+    },
+    {
+      "method": "ResolveSensorEngagementChannel",
+      "owner": "RedisStreamRegistry"
+    },
+    {
+      "method": "BuildSensorEngagementConfigurationKey",
+      "owner": "RedisStreamRegistry"
+    },
+    {
+      "method": "ResolveSensorEngagementSource",
+      "owner": "RedisStreamRegistry"
+    },
+    {
+      "method": "ClearSensorEngagementBackend",
+      "owner": "RedisStreamRegistry"
+    },
+    {
+      "method": "AcquirePhysioPumpForChannel",
+      "owner": "RedisStreamRegistry"
+    },
+    {
+      "method": "ReleasePhysioPump",
+      "owner": "RedisStreamRegistry"
+    },
+    {
+      "method": "TryConfigureAudienceBinding",
+      "owner": "VisualizationPresenter"
+    },
+    {
+      "method": "DisableManualDrivers",
+      "owner": "VisualizationPresenter"
+    },
+    {
+      "method": "ClearAudienceDeviceVisuals",
+      "owner": "VisualizationPresenter"
+    },
+    {
+      "method": "ClearAudienceGraphDeviceVisuals",
+      "owner": "VisualizationPresenter"
+    },
+    {
+      "method": "ClearSelectedSensorStreamMode",
+      "owner": "VisualizationPresenter"
+    },
+    {
+      "method": "ClearManualDriverVisuals",
+      "owner": "VisualizationPresenter"
+    },
+    {
+      "method": "PositionAbstractViz",
+      "owner": "VisualizationLayout"
+    },
+    {
+      "method": "PositionGraphGroup",
+      "owner": "VisualizationLayout"
+    },
+    {
+      "method": "BuildAudienceDeviceChannelDefinitions",
+      "owner": "RedisStreamRegistry"
+    },
+    {
+      "method": "GetOrCreateAudienceDefinition",
+      "owner": "RedisStreamRegistry"
+    },
+    {
+      "method": "FilterAudienceToConfiguredDevices",
+      "owner": "RedisStreamRegistry"
+    },
+    {
+      "method": "GetRedisChannels",
+      "owner": "Bootstrapper"
+    },
+    {
+      "method": "AttachDeviceLabel",
+      "owner": "VisualizationLayout"
+    },
+    {
+      "method": "AttachGraphGroupLabel",
+      "owner": "VisualizationLayout"
+    },
+    {
+      "method": "FormatGraphGroupLabel",
+      "owner": "VisualizationLayout"
+    },
+    {
+      "method": "FormatDeviceLabel",
+      "owner": "VisualizationLayout"
+    },
+    {
+      "method": "ExtractTrailingDigits",
+      "owner": "VisualizationLayout"
+    },
+    {
+      "method": "ResolveDeviceLabelParent",
+      "owner": "VisualizationLayout"
+    }
+  ],
+  "lines_before": 1698,
+  "lines_after": 524,
+  "runtime_helper_layers": "Presentation",
+  "step6_started": false,
+  "final_sha256": {
+    "Assets/AmpPortableDataViz/Presentation/Bootstrap/Bootstrapper.cs": "a86fdc9c81cda29c0e383e3e5c5a07b702b2f12b557e337396d6c921ba9c4a31",
+    "Assets/Tests/PlayMode/BootstrapperArtistVizTests.cs": "154ffe3fba7a860592a3ebbda3816e3937dca019fdceec98129e21697d0533dc",
+    "Assets/Tests/PlayMode/BootstrapperChannelAndLabelTests.cs": "ad9fa9f138c17c4115b3d983b3109dee26eba112106a0fa61fb5dc95d263cd05",
+    "Assets/Tests/PlayMode/BootstrapperLifecycleTests.cs": "561f0957167925dd53a4db19bf4e7e30c7de64f2c29e7df340061499ef91a3da",
+    "Assets/Tests/PlayMode/BootstrapperPlacementTests.cs": "8e700e197324e95c0086f60c60707bfc02dd65a96b1fe723a72944fa1bce2d23",
+    "Assets/Tests/PlayMode/BootstrapperRetainedGraphTests.cs": "1d839c5bd0ff6ecf2b5bfe3ca72419d4ee57cd1fd92b7d6e0aecdeaf7a6a7dd8",
+    "Assets/AmpPortableDataViz/Presentation/Bootstrap/RedisStreamRegistry.cs": "b039f0c3bdea59fd9c2d191874ffe541eb0ef9e966d9278df6478e89dfcb9b3a",
+    "Assets/AmpPortableDataViz/Presentation/Bootstrap/RedisStreamRegistry.cs.meta": "4e9b32bd7984ddb95539c64f5705490faf30cd15fa032d86d098969744c6a762",
+    "Assets/AmpPortableDataViz/Presentation/Bootstrap/VisualizationLayout.cs": "9a3d66dd23c65aae491078acee91be33b7e2ae980ce4b776c4f1bafe7c8e2a17",
+    "Assets/AmpPortableDataViz/Presentation/Bootstrap/VisualizationLayout.cs.meta": "2e298956115c3afe15549903f536b528ffc24491bd5847f37c3716045330b596",
+    "Assets/AmpPortableDataViz/Presentation/Bootstrap/VisualizationPresenter.cs": "5884109f07095ad62ec057064e4945135a59424b20c33b414f209b2b6cee01d7",
+    "Assets/AmpPortableDataViz/Presentation/Bootstrap/VisualizationPresenter.cs.meta": "edcdda204c060cece2076903e918690114dd7564f54d4634610e22e17b4c9fd1",
+    "Assets/Tests/PlayMode/RedisStreamRegistryTests.cs": "7906cd6a78990346c516e0741b5ec2f968ed1a71f4e4c82e5cdd159038cf7937",
+    "Assets/Tests/PlayMode/RedisStreamRegistryTests.cs.meta": "2b2bc7adad420319bab6f780d537046b1fbbf6f65ecbb3cc91856a9b0243d960"
+  }
+}

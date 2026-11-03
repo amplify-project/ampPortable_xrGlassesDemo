@@ -133,9 +133,11 @@ namespace AmpPortableDataViz.Tests.PlayMode
 
         private object Invoke(string name, params object[] arguments)
         {
-            MethodInfo method = typeof(Bootstrapper).GetMethod(name, BindingFlags.Instance | BindingFlags.NonPublic);
+            var layout = (VisualizationLayout)typeof(Bootstrapper).GetProperty(
+                "Layout", BindingFlags.Instance | BindingFlags.NonPublic).GetValue(_bootstrapper);
+            MethodInfo method = typeof(VisualizationLayout).GetMethod(name, BindingFlags.Instance | BindingFlags.NonPublic);
             Assert.IsNotNull(method);
-            return method.Invoke(_bootstrapper, arguments);
+            return method.Invoke(layout, arguments);
         }
 
         private static string ReadField(object definition, string name)

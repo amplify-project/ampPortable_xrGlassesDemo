@@ -1,6 +1,8 @@
 using System.Reflection;
 using AmpPortableDataViz.Presentation.Bootstrap;
+using AmpPortableDataViz.Presentation.Visualization;
 using NUnit.Framework;
+using TMPro;
 using UnityEngine;
 
 namespace AmpPortableDataViz.Tests.PlayMode
@@ -60,6 +62,35 @@ namespace AmpPortableDataViz.Tests.PlayMode
             AssertPlacement(useLocalSpace, Vector3.zero, new Vector3(3f, 4f, 5f));
         }
 
+        [TestCase(0f, 0f, 0.0001f, 0.01f)]
+        [TestCase(0.025f, 8f, 0.025f, 8f)]
+        public void SensorHud_PreservesCameraPlacementStyleAndSizeFallback(
+            float scale, float fontSize, float expectedScale, float expectedFontSize)
+        {
+            var cameraObject = new GameObject("HudCamera");
+            cameraObject.transform.SetParent(_root.transform, false);
+            _bootstrapper.SensorHudCamera = cameraObject.AddComponent<Camera>();
+            _bootstrapper.SensorHudLocalPosition = new Vector3(1f, 2f, 3f);
+            _bootstrapper.SensorHudLocalScale = scale;
+            _bootstrapper.SensorHudFontSize = fontSize;
+            _bootstrapper.SensorHudColor = Color.cyan;
+            var coordinator = _root.AddComponent<SensorStreamCoordinator>();
+            var layout = (VisualizationLayout)typeof(Bootstrapper).GetProperty(
+                "Layout", BindingFlags.Instance | BindingFlags.NonPublic).GetValue(_bootstrapper);
+
+            GameObject hud = layout.CreateSensorHud(coordinator);
+
+            Assert.AreSame(cameraObject.transform, hud.transform.parent);
+            Assert.AreEqual(new Vector3(1f, 2f, 3f), hud.transform.localPosition);
+            Assert.AreEqual(Quaternion.identity, hud.transform.localRotation);
+            Assert.AreEqual(Vector3.one * expectedScale, hud.transform.localScale);
+            var label = hud.GetComponent<TextMeshPro>();
+            Assert.AreEqual(expectedFontSize, label.fontSize, 0.00001f);
+            Assert.AreEqual(Color.cyan, label.color);
+            Assert.AreEqual("NO SENSOR STREAMS", label.text);
+            Assert.IsNotNull(hud.GetComponent<ActiveSensorHudBinding>());
+        }
+
         private void AssertPlacement(bool useLocalSpace, Vector3 localPosition, Vector3 worldPosition)
         {
             Vector3 actual = useLocalSpace ? _target.localPosition : _target.position;
@@ -72,9 +103,11 @@ namespace AmpPortableDataViz.Tests.PlayMode
 
         private void Invoke(string name, params object[] arguments)
         {
-            MethodInfo method = typeof(Bootstrapper).GetMethod(name, BindingFlags.Instance | BindingFlags.NonPublic);
+            var layout = (VisualizationLayout)typeof(Bootstrapper).GetProperty(
+                "Layout", BindingFlags.Instance | BindingFlags.NonPublic).GetValue(_bootstrapper);
+            MethodInfo method = typeof(VisualizationLayout).GetMethod(name, BindingFlags.Instance | BindingFlags.NonPublic);
             Assert.IsNotNull(method);
-            method.Invoke(_bootstrapper, arguments);
+            method.Invoke(layout, arguments);
         }
     }
 }
