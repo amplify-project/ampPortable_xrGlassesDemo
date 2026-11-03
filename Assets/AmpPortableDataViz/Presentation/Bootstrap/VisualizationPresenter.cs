@@ -500,12 +500,11 @@ namespace AmpPortableDataViz.Presentation.Bootstrap
                 return;
             }
 
-            bool hasAudienceBinding = _settings.GraphPrefab.GetComponentInChildren<SensorSampleAssembler>() != null;
-            bool hasAudienceVisualizerBinding = _settings.GraphPrefab.GetComponentInChildren<SensorVisualizationBinding>() != null;
-            bool hasGraphVisualizer = _settings.GraphPrefab.GetComponentInChildren<GraphVisualizer>() != null;
-            if (!hasAudienceBinding || !hasAudienceVisualizerBinding || !hasGraphVisualizer)
+            bool hasVisualizerBinding = _settings.GraphPrefab.GetComponentInChildren<SensorVisualizationBinding>(true) != null;
+            bool hasGraphVisualizer = _settings.GraphPrefab.GetComponentInChildren<GraphVisualizer>(true) != null;
+            if (!hasVisualizerBinding || !hasGraphVisualizer)
             {
-                Debug.LogWarning("Bootstrapper: Audience Graph Prefab must include SensorSampleAssembler, SensorVisualizationBinding, and at least one GraphVisualizer component. Audience graph metrics are configured on the prefab's SensorVisualizationBinding.");
+                Debug.LogWarning("Bootstrapper: Audience Graph Prefab must include SensorVisualizationBinding and at least one GraphVisualizer component. Audience graph metrics are configured on the prefab's SensorVisualizationBinding.");
                 ClearAudienceGraphDeviceVisuals();
                 return;
             }
@@ -540,12 +539,22 @@ namespace AmpPortableDataViz.Presentation.Bootstrap
                 _layout.PositionGraphGroup(instance.transform, deviceIndex, hasCustomParent);
                 DisableManualDrivers(instance);
 
-                var binding = instance.GetComponentInChildren<SensorSampleAssembler>();
+                var binding = instance.GetComponentInChildren<SensorSampleAssembler>(true);
+                bool reactivateAfterConfiguration = false;
                 if (binding == null)
                 {
-                    Debug.LogWarning($"Bootstrapper: Audience graph '{instance.name}' is missing SensorSampleAssembler, skipping graph spawn.");
-                    UnityEngine.Object.Destroy(instance);
-                    continue;
+                    var visualizerBinding = instance.GetComponentInChildren<SensorVisualizationBinding>(true);
+                    if (visualizerBinding == null)
+                    {
+                        Debug.LogWarning($"Bootstrapper: Audience graph '{instance.name}' has no visualization binding, skipping graph spawn.");
+                        UnityEngine.Object.Destroy(instance);
+                        continue;
+                    }
+
+                    // Configure the per-device source before OnEnable subscribes to its streams.
+                    reactivateAfterConfiguration = instance.activeSelf;
+                    instance.SetActive(false);
+                    binding = visualizerBinding.gameObject.AddComponent<SensorSampleAssembler>();
                 }
 
                 var physioPump = _streams.AcquirePhysioPumpForChannel(definition.DeviceId, definition.PhysioMetricsChannel);
@@ -557,6 +566,11 @@ namespace AmpPortableDataViz.Presentation.Bootstrap
                     UnityEngine.Object.Destroy(instance);
                     _streams.ReleasePhysioPump(definition.PhysioMetricsChannel);
                     continue;
+                }
+
+                if (reactivateAfterConfiguration)
+                {
+                    instance.SetActive(true);
                 }
 
                 _audienceGraphDeviceGroups.Add(new AudienceGraphDeviceGroupInstance

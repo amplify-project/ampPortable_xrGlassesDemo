@@ -321,8 +321,10 @@ namespace AmpPortableDataViz.Presentation.Bootstrap
                 ? visualPrefabHasVisualizerBinding
                 : visualPrefabHasVisualizerBinding || visualPrefabHasSampleAssembler;
             bool shouldSpawnAudienceVisuals = hasRedisEndpoint && redisReady && AutoSpawnAbstractViz && canBindAbstractViz;
-            bool graphPrefabHasAudienceBinding = GraphPrefab != null && GraphPrefab.GetComponentInChildren<SensorSampleAssembler>() != null;
-            bool shouldSpawnAudienceGraphVisuals = hasRedisEndpoint && redisReady && AutoSpawnGraphVisualsFromChannels && graphPrefabHasAudienceBinding;
+            bool graphPrefabHasVisualizerBinding = GraphPrefab != null &&
+                GraphPrefab.GetComponentInChildren<SensorVisualizationBinding>(true) != null &&
+                GraphPrefab.GetComponentInChildren<GraphVisualizer>(true) != null;
+            bool shouldSpawnAudienceGraphVisuals = hasRedisEndpoint && redisReady && AutoSpawnGraphVisualsFromChannels && graphPrefabHasVisualizerBinding;
             bool artistPrefabHasVisualizerBinding = ArtistVizPrefab != null &&
                 ArtistVizPrefab.GetComponentInChildren<SensorVisualizationBinding>(true) != null &&
                 ArtistVizPrefab.GetComponentInChildren<ArtistVizVisualizer>(true) != null;

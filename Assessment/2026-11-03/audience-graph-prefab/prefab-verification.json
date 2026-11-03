@@ -1,0 +1,10 @@
+{
+  "removed_component_ids": [
+    "6503009827529151861",
+    "7086274539701048422",
+    "9171372730100571172"
+  ],
+  "retained_blocks_byte_identical_except_cleared_live_source_and_root_component_list": true,
+  "unchanged_retained_blocks": 58,
+  "new_or_replaced_objects": false
+}

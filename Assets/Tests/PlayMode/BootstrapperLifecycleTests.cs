@@ -211,6 +211,81 @@ namespace AmpPortableDataViz.Tests.PlayMode
             Assert.AreEqual(0, _root.GetComponentsInChildren<RedisPhysioMetricsPump>(true).Length);
         }
 
+        [UnityTest]
+        public IEnumerator DisplayOnlyGraph_SelectedModeSpawnsReconfirmsAndReenables()
+        {
+            ConfigureAutomaticTemplates();
+            var template = BootstrapperTestConfiguration.Get<GameObject>(_bootstrapper, "GraphPrefab");
+            UnityEngine.Object.DestroyImmediate(template.GetComponent<SensorSampleAssembler>());
+            BootstrapperTestConfiguration.Set(_bootstrapper, "AutoSpawnAbstractViz", false);
+            _bootstrapper.BeginAfterEndpoint();
+
+            var visual = (GameObject)GetField(GetVisuals(_bootstrapper), "_selectedGraphVisual");
+            Assert.IsNotNull(visual, "The graph view must not depend on a prefab-local assembler.");
+            Assert.IsNull(visual.GetComponentInChildren<SensorSampleAssembler>(true));
+            var coordinator = _root.GetComponent<SensorStreamCoordinator>();
+            Assert.AreEqual(2, coordinator.SensorCount);
+            string firstSensor = coordinator.ActiveSensorId;
+            Assert.IsTrue(coordinator.SelectNextSensor());
+            Assert.AreNotEqual(firstSensor, coordinator.ActiveSensorId);
+            Assert.AreSame(visual, GetField(GetVisuals(_bootstrapper), "_selectedGraphVisual"));
+
+            _bootstrapper.BeginAfterEndpoint();
+            yield return null;
+            Assert.IsTrue(visual == null);
+            Assert.IsNotNull(GetField(GetVisuals(_bootstrapper), "_selectedGraphVisual"));
+            Assert.AreEqual(2, coordinator.SensorCount);
+
+            Invoke(_bootstrapper, "OnDisable");
+            yield return null;
+            Assert.AreEqual(0, coordinator.SensorCount);
+            Assert.AreEqual(0, _root.GetComponentsInChildren<RedisPhysioMetricsPump>(true).Length);
+            Invoke(_bootstrapper, "OnEnable");
+            Assert.IsNotNull(GetField(GetVisuals(_bootstrapper), "_selectedGraphVisual"));
+            Assert.AreEqual(2, coordinator.SensorCount);
+        }
+
+        [UnityTest]
+        public IEnumerator DisplayOnlyGraph_PerDeviceToSelectedModeReleasesLocalAssemblers()
+        {
+            ConfigureAutomaticTemplates();
+            var template = BootstrapperTestConfiguration.Get<GameObject>(_bootstrapper, "GraphPrefab");
+            UnityEngine.Object.DestroyImmediate(template.GetComponent<SensorSampleAssembler>());
+            BootstrapperTestConfiguration.Set(_bootstrapper, "AutoSpawnAbstractViz", false);
+            BootstrapperTestConfiguration.Set(_bootstrapper, "UseSingleSelectedSensorStream", false);
+            _bootstrapper.BeginAfterEndpoint();
+
+            var instances = (ICollection)GetField(GetVisuals(_bootstrapper), "_audienceGraphDeviceGroups");
+            Assert.AreEqual(2, instances.Count);
+            var ownedAssemblers = new System.Collections.Generic.List<SensorSampleAssembler>();
+            foreach (var instance in instances)
+            {
+                var visual = (GameObject)instance.GetType().GetField("GroupRoot").GetValue(instance);
+                var assembler = visual.GetComponentInChildren<SensorSampleAssembler>(true);
+                Assert.IsNotNull(assembler);
+                Assert.IsTrue(assembler.enabled);
+                ownedAssemblers.Add(assembler);
+                var visualizerBinding = visual.GetComponentInChildren<SensorVisualizationBinding>(true);
+                Assert.AreSame(assembler, GetField(visualizerBinding, "liveSource"));
+            }
+            Assert.IsNull(template.GetComponent<SensorSampleAssembler>());
+
+            BootstrapperTestConfiguration.Set(_bootstrapper, "UseSingleSelectedSensorStream", true);
+            Invoke(_bootstrapper, "ApplySignalConfiguration");
+            yield return null;
+            Assert.AreEqual(0, instances.Count);
+            foreach (var assembler in ownedAssemblers)
+            {
+                Assert.IsTrue(assembler == null, "Each per-device assembler must be destroyed with its graph group.");
+            }
+            Assert.IsNotNull(GetField(GetVisuals(_bootstrapper), "_selectedGraphVisual"));
+            Assert.AreEqual(2, _root.GetComponent<SensorStreamCoordinator>().SensorCount);
+            Assert.AreEqual(2, _root.GetComponentsInChildren<RedisPhysioMetricsPump>(true).Length);
+            Invoke(_bootstrapper, "OnDisable");
+            yield return null;
+            Assert.AreEqual(0, _root.GetComponentsInChildren<RedisPhysioMetricsPump>(true).Length);
+        }
+
         private void ConfigureAutomaticTemplates()
         {
             BootstrapperTestConfiguration.Set(_bootstrapper, "AutoSpawnAbstractViz", true);
