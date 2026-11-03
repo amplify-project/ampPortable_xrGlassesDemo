@@ -1900,14 +1900,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 477867e8dea98d8478798cc3a73521d0, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::AmpPortableDataViz.Presentation.Bootstrap.Bootstrapper
-  AnchorRegistry: {fileID: 0}
-  RedisSource: {fileID: 0}
   VisualPrefab: {fileID: 7070063373814244994, guid: 7fe113f1db4d2784d8f60c23f9c9137b, type: 3}
-  IsHost: 1
-  VisualId: SimpleDemo
-  ProfileId: Default
-  Seed: 12345
-  ActiveSignalSource: 1
   UseManualVisualizationDrivers: 0
   RedisHost: 10.215.55.160
   RedisPort: 6379
@@ -1960,16 +1953,8 @@ MonoBehaviour:
   GraphGroupLabelColor: {r: 1, g: 1, b: 1, a: 1}
   GraphItemBoundsSize: {x: 1, y: 1, z: 0.02}
   GraphGroupBoundsPadding: {x: 0.05, y: 0.05, z: 0.05}
-  AnchorLabel: Demo
   AnchorPosition: {x: 0, y: 1.2, z: 2}
   AnchorRotationEuler: {x: 0, y: 0, z: 0}
-  SpawnTopic: session/visual/spawn
-  ParamTopic: session/visual/param
-  MapperSettings:
-    Scale: 1
-    ClampRange: {x: 0, y: 1}
-    HueMin: 0.55
-    HueMax: 0.85
 --- !u!4 &1639454966
 Transform:
   m_ObjectHideFlags: 0

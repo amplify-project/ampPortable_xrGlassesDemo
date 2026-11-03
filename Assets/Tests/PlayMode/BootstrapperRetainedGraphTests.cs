@@ -1,6 +1,5 @@
 using System.Reflection;
 using AmpPortableDataViz.Presentation.Bootstrap;
-using AmpPortableDataViz.Presentation.Sources;
 using AmpPortableDataViz.Presentation.Visualization;
 using NUnit.Framework;
 #if UNITY_EDITOR
@@ -54,7 +53,6 @@ namespace AmpPortableDataViz.Tests.PlayMode
             bootstrapper.RedisHost = string.Empty;
             bootstrapper.GraphPrefab = LoadPrefab("GraphPrefab");
             bootstrapper.GraphGroupParent = _testRoot.transform;
-            bootstrapper.RedisSource = _testRoot.AddComponent<RedisDataPump>();
 
             Invoke(bootstrapper, "ApplySignalConfiguration");
 
@@ -62,7 +60,6 @@ namespace AmpPortableDataViz.Tests.PlayMode
             Assert.IsNotNull(driver);
             Assert.IsTrue(driver.enabled);
             Assert.IsNotNull(driver.GetComponent<GraphVisualizer>());
-            Assert.IsFalse(bootstrapper.RedisSource.enabled);
             AssertNoMissingScripts(driver.gameObject);
         }
 

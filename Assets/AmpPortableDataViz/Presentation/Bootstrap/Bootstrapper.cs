@@ -5,11 +5,8 @@ using System.Linq;
 using AmpPortableDataViz.Application;
 using AmpPortableDataViz.Core;
 using AmpPortableDataViz.Infra;
-using AmpPortableDataViz.Presentation.Anchors;
 using AmpPortableDataViz.Presentation.Interaction;
-using AmpPortableDataViz.Presentation.Mapping;
 using AmpPortableDataViz.Presentation.Sources;
-using AmpPortableDataViz.Presentation.Utility;
 using AmpPortableDataViz.Presentation.Visualization;
 using TMPro;
 using UnityEngine;
@@ -17,28 +14,12 @@ using UnityEngine;
 namespace AmpPortableDataViz.Presentation.Bootstrap
 {
     /// <summary>
-    /// Composition root for wiring the visualization session using Ports and Adapters.
+    /// Coordinates Redis sensor streams and visualization modes.
     /// </summary>
     public sealed class Bootstrapper : MonoBehaviour
     {
         [Header("Scene Dependencies")]
-        public AnchorRegistry AnchorRegistry;
-        public RedisDataPump RedisSource;
         public GameObject VisualPrefab;
-
-        public enum SignalSourceType
-        {
-            Redis = 1
-        }
-
-        [Header("Session Settings")]
-        public bool IsHost = true;
-        public string VisualId = "SimpleDemo";
-        public string ProfileId = "Default";
-        public int Seed = 12345;
-
-        [Header("Signal Source Selection")]
-        public SignalSourceType ActiveSignalSource = SignalSourceType.Redis;
 
         [Header("Manual Visualization Testing")]
         public bool UseManualVisualizationDrivers;
@@ -122,28 +103,10 @@ namespace AmpPortableDataViz.Presentation.Bootstrap
         public Vector3 GraphGroupBoundsPadding = new Vector3(0.05f, 0.05f, 0.05f);
 
         [Header("Anchor Settings")]
-        public string AnchorLabel = "Demo";
         public Vector3 AnchorPosition = new Vector3(0f, 1.2f, 2f);
         public Vector3 AnchorRotationEuler = Vector3.zero;
 
-        [Header("Network Topics")]
-        public string SpawnTopic = "session/visual/spawn";
-        public string ParamTopic = "session/visual/param";
-
-        [Header("Mapper Configuration")]
-        public FloatToSimpleParams.Settings MapperSettings = new FloatToSimpleParams.Settings
-        {
-            Scale = 1f,
-            ClampRange = new Vector2(0f, 1f),
-            HueMin = 0.55f,
-            HueMax = 0.85f
-        };
-
-        private VisualizationSessionController _sessionController;
-        private FloatToSimpleParams _floatToParamsMapper;
-        private Coroutine _initializationRoutine;
         private Coroutine _deviceDiscoveryRoutine;
-        private bool _sessionStarted;
         private readonly List<AudienceDeviceInstance> _audienceDeviceInstances = new List<AudienceDeviceInstance>();
         private readonly List<AudienceGraphDeviceGroupInstance> _audienceGraphDeviceGroups = new List<AudienceGraphDeviceGroupInstance>();
         private readonly List<SelectedSensorSourceInstance> _selectedSensorSources = new List<SelectedSensorSourceInstance>();
@@ -164,23 +127,7 @@ namespace AmpPortableDataViz.Presentation.Bootstrap
         private void Awake()
         {
             _redisEndpointReady = !RequireRedisEndpointConfirmation;
-            EnsureAnchorRegistry();
-            EnsureSources();
-            EnsureVisualPrefab();
             ApplySignalConfiguration();
-
-            var clock = new UnityClock();
-            var anchorService = new MockAnchorService();
-            var networkSync = new LocalLoopbackNetworkSync();
-            var visualizationFactory = new UnityVisualizationFactory(VisualPrefab);
-
-            _floatToParamsMapper = new FloatToSimpleParams(MapperSettings);
-            _sessionController = new VisualizationSessionController(
-                clock,
-                anchorService,
-                networkSync,
-                AnchorRegistry,
-                visualizationFactory);
         }
 
         private void OnEnable()
@@ -192,7 +139,6 @@ namespace AmpPortableDataViz.Presentation.Bootstrap
             }
 
             ApplySignalConfiguration();
-            BeginSessionIfReady();
         }
 
         public void BeginAfterEndpoint()
@@ -217,28 +163,17 @@ namespace AmpPortableDataViz.Presentation.Bootstrap
 
             Debug.Log("Bootstrapper: Applying signal configuration after endpoint confirmation.");
             ApplySignalConfiguration();
-            Debug.Log("Bootstrapper: Beginning session after endpoint confirmation.");
-            BeginSessionIfReady();
         }
 
         private void OnDisable()
         {
-            if (RedisSource != null)
-            {
-                RedisSource.enabled = false;
-            }
-
-            StopPendingWork();
-            StopSession();
+            StopRoutine(ref _deviceDiscoveryRoutine);
             ClearRuntimeVisuals();
         }
 
         private void OnDestroy()
         {
-            StopPendingWork();
-            _sessionController?.Dispose();
-            _sessionController = null;
-            _sessionStarted = false;
+            StopRoutine(ref _deviceDiscoveryRoutine);
             ClearRuntimeVisuals();
         }
 
@@ -247,19 +182,6 @@ namespace AmpPortableDataViz.Presentation.Bootstrap
             if (routine == null) return;
             StopCoroutine(routine);
             routine = null;
-        }
-
-        private void StopPendingWork()
-        {
-            StopRoutine(ref _initializationRoutine);
-            StopRoutine(ref _deviceDiscoveryRoutine);
-        }
-
-        private void StopSession()
-        {
-            StopRoutine(ref _initializationRoutine);
-            _sessionController?.Shutdown();
-            _sessionStarted = false;
         }
 
         private void ClearAutomaticVisuals()
@@ -276,73 +198,6 @@ namespace AmpPortableDataViz.Presentation.Bootstrap
             ClearManualDriverVisuals();
         }
 
-        private void EnsureAnchorRegistry()
-        {
-            if (AnchorRegistry != null) return;
-            AnchorRegistry = FindFirstObjectByType<AnchorRegistry>();
-            if (AnchorRegistry != null) return;
-
-            var registryGameObject = new GameObject("AnchorRegistry");
-            AnchorRegistry = registryGameObject.AddComponent<AnchorRegistry>();
-        }
-
-        private void EnsureSources()
-        {
-            if (RedisSource == null)
-            {
-                RedisSource = FindFirstObjectByType<RedisDataPump>();
-            }
-        }
-
-        private void EnsureVisualPrefab()
-        {
-            if (VisualPrefab != null) return;
-
-            VisualPrefab = GameObject.CreatePrimitive(PrimitiveType.Sphere);
-            VisualPrefab.name = "SimpleVisualizerPrefab";
-
-            if (VisualPrefab.GetComponent<SimpleVisualizer>() == null)
-            {
-                VisualPrefab.AddComponent<SimpleVisualizer>();
-            }
-
-            if (VisualPrefab.GetComponent<AnchoredVisualization>() == null)
-            {
-                VisualPrefab.AddComponent<AnchoredVisualization>();
-            }
-        }
-
-        private IEnumerator BeginSession()
-        {
-            var options = new VisualizationSessionOptions
-            {
-                IsHost = IsHost,
-                VisualId = VisualId,
-                ProfileId = ProfileId,
-                Seed = Seed,
-                AnchorLabel = AnchorLabel,
-                AnchorPosition = AnchorPosition,
-                AnchorRotation = Quaternion.Euler(AnchorRotationEuler),
-                SpawnTopic = SpawnTopic,
-                ParamTopic = ParamTopic
-            };
-
-            yield return _sessionController.InitializeAsync(options).AsIEnumerator();
-
-            // Audience visuals manage their own Redis sources; avoid a duplicate primary visual.
-            bool shouldBindPrimaryRedis = !AutoSpawnAudienceVisualsFromChannels && !AutoSpawnGraphVisualsFromChannels;
-            if (shouldBindPrimaryRedis && RedisSource != null && RedisSource.enabled)
-            {
-                _sessionController.BindExternalSignalSource(RedisSource, _floatToParamsMapper);
-            }
-            else if (shouldBindPrimaryRedis)
-            {
-                Debug.LogWarning("Bootstrapper: Remote server set to Redis but RedisDataPump not found.");
-            }
-
-            _initializationRoutine = null;
-        }
-
         private void ApplySignalConfiguration()
         {
             if (UseManualVisualizationDrivers)
@@ -353,48 +208,34 @@ namespace AmpPortableDataViz.Presentation.Bootstrap
 
             EnsureRedisEndpointFromRuntime();
 
-            if (!ShouldInitializeSessionController())
-            {
-                StopSession();
-            }
-
             ClearManualDriverVisuals();
 
             bool hasRedisEndpoint = !string.IsNullOrWhiteSpace(RedisHost);
-            bool useRedis = ActiveSignalSource == SignalSourceType.Redis;
 
             var redisChannels = GetRedisChannels();
-            var primaryRedisChannel = redisChannels[0];
 
-            if (useRedis && !hasRedisEndpoint)
+            if (!hasRedisEndpoint)
             {
                 Debug.LogWarning("Bootstrapper: Redis host is empty; skipping Redis configuration. Enter a host via the endpoint prompt.");
-                DisableRedisComponents();
+                ClearRuntimeVisuals();
             }
 
-            if (useRedis && RequireRedisEndpointConfirmation && !_redisEndpointReady)
+            if (RequireRedisEndpointConfirmation && !_redisEndpointReady)
             {
                 Debug.Log("Bootstrapper: Waiting for Redis endpoint confirmation before connecting.");
-                DisableRedisComponents();
+                ClearRuntimeVisuals();
             }
 
             bool redisReady = !RequireRedisEndpointConfirmation || _redisEndpointReady;
 
-            if (RedisSource != null && hasRedisEndpoint && redisReady)
-            {
-                Debug.Log($"Bootstrapper: Configuring RedisSource for {RedisHost}:{RedisPort} ({primaryRedisChannel})");
-                RedisSource.ConfigureConnection(RedisHost, RedisPort, primaryRedisChannel);
-                RedisSource.enabled = useRedis;
-            }
-
             bool visualPrefabHasAudienceBinding = VisualPrefab != null && VisualPrefab.GetComponentInChildren<AudienceSignalBinding>() != null;
-            bool shouldSpawnAudienceVisuals = useRedis && hasRedisEndpoint && redisReady && AutoSpawnAudienceVisualsFromChannels && visualPrefabHasAudienceBinding;
+            bool shouldSpawnAudienceVisuals = hasRedisEndpoint && redisReady && AutoSpawnAudienceVisualsFromChannels && visualPrefabHasAudienceBinding;
             bool graphPrefabHasAudienceBinding = GraphPrefab != null && GraphPrefab.GetComponentInChildren<AudienceSignalBinding>() != null;
-            bool shouldSpawnAudienceGraphVisuals = useRedis && hasRedisEndpoint && redisReady && AutoSpawnGraphVisualsFromChannels && graphPrefabHasAudienceBinding;
+            bool shouldSpawnAudienceGraphVisuals = hasRedisEndpoint && redisReady && AutoSpawnGraphVisualsFromChannels && graphPrefabHasAudienceBinding;
             bool artistPrefabHasVisualizerBinding = ArtistVizPrefab != null &&
                 ArtistVizPrefab.GetComponentInChildren<AudienceSignalVisualizerBinding>(true) != null &&
                 ArtistVizPrefab.GetComponentInChildren<ArtistVizVisualizer>(true) != null;
-            bool shouldSpawnArtistViz = useRedis && hasRedisEndpoint && redisReady &&
+            bool shouldSpawnArtistViz = hasRedisEndpoint && redisReady &&
                 UseSingleSelectedSensorStream && AutoSpawnArtistVizFromChannels && artistPrefabHasVisualizerBinding;
 
             if (shouldSpawnAudienceVisuals || shouldSpawnAudienceGraphVisuals || shouldSpawnArtistViz)
@@ -471,11 +312,6 @@ namespace AmpPortableDataViz.Presentation.Bootstrap
                 return false;
             }
 
-            if (ActiveSignalSource != SignalSourceType.Redis)
-            {
-                return false;
-            }
-
             EnsureRedisEndpointFromRuntime();
 
             if (string.IsNullOrWhiteSpace(RedisHost))
@@ -522,29 +358,11 @@ namespace AmpPortableDataViz.Presentation.Bootstrap
             }
 
             ApplySignalConfiguration();
-            BeginSessionIfReady();
             _deviceDiscoveryRoutine = null;
-        }
-
-        private void BeginSessionIfReady()
-        {
-            if (!ShouldInitializeSessionController() || _sessionStarted)
-            {
-                return;
-            }
-
-            StopRoutine(ref _initializationRoutine);
-            _sessionStarted = true;
-            _initializationRoutine = StartCoroutine(BeginSession());
         }
 
         private void ApplyManualDriverConfiguration()
         {
-            StopSession();
-            if (RedisSource != null)
-            {
-                RedisSource.enabled = false;
-            }
             ClearAutomaticVisuals();
             EnsureManualDriverVisuals();
         }
@@ -660,7 +478,6 @@ namespace AmpPortableDataViz.Presentation.Bootstrap
             }
 
             ApplySignalConfiguration();
-            BeginSessionIfReady();
         }
 #endif
 
@@ -1491,15 +1308,6 @@ namespace AmpPortableDataViz.Presentation.Bootstrap
             _manualDriverInstances.Clear();
         }
 
-        private void DisableRedisComponents()
-        {
-            if (RedisSource != null)
-            {
-                RedisSource.enabled = false;
-            }
-            ClearRuntimeVisuals();
-        }
-
         private void PositionEmotionVisual(Transform target, int index, bool useLocalSpace)
         {
             if (target == null)
@@ -1822,22 +1630,6 @@ namespace AmpPortableDataViz.Presentation.Bootstrap
                 return particleMeshVisualizer.transform;
             }
 
-            return ResolveVisualRoot(instance);
-        }
-
-        private static Transform ResolveVisualRoot(GameObject instance)
-        {
-            if (instance == null)
-            {
-                return null;
-            }
-
-            var anchored = instance.GetComponent<AnchoredVisualization>();
-            if (anchored != null && anchored.VisualRoot != null)
-            {
-                return anchored.VisualRoot;
-            }
-
             return instance.transform;
         }
 
@@ -1885,23 +1677,6 @@ namespace AmpPortableDataViz.Presentation.Bootstrap
         {
             public string SensorId;
             public string ChannelName;
-        }
-
-        private bool ShouldInitializeSessionController()
-        {
-            if (_sessionController == null)
-            {
-                return false;
-            }
-
-            if (UseManualVisualizationDrivers || ActiveSignalSource != SignalSourceType.Redis)
-            {
-                return false;
-            }
-
-            bool redisReady = !string.IsNullOrWhiteSpace(RedisHost) &&
-                (!RequireRedisEndpointConfirmation || _redisEndpointReady);
-            return redisReady && !AutoSpawnAudienceVisualsFromChannels && !AutoSpawnGraphVisualsFromChannels;
         }
     }
 }

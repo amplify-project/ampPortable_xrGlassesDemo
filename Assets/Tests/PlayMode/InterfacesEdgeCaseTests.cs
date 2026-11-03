@@ -1,5 +1,4 @@
 using System;
-using System.Threading.Tasks;
 using NUnit.Framework;
 using UnityEngine;
 using AmpPortableDataViz.Core;
@@ -36,42 +35,6 @@ namespace AmpPortableDataViz.Tests.Core
             Assert.AreEqual(0, frame.TimestampTicksUtc);
             Assert.AreEqual(0, frame.SequenceId);
             Assert.AreEqual(0, frame.Payload);
-        }
-    }
-
-    public class AnchorDescriptorEdgeCaseTests
-    {
-        [Test]
-        public void AnchorDescriptor_NullAndEmptyFields()
-        {
-            var desc = new AnchorDescriptor
-            {
-                AnchorId = null,
-                Label = null,
-                Position = Vector3.zero,
-                Rotation = Quaternion.identity
-            };
-            Assert.IsNull(desc.AnchorId);
-            Assert.IsNull(desc.Label);
-
-            desc.AnchorId = "";
-            desc.Label = "";
-            Assert.AreEqual("", desc.AnchorId);
-            Assert.AreEqual("", desc.Label);
-        }
-
-        [Test]
-        public void AnchorDescriptor_ExtremeValues()
-        {
-            var desc = new AnchorDescriptor
-            {
-                AnchorId = "id",
-                Label = "label",
-                Position = Vector3.positiveInfinity,
-                Rotation = new Quaternion(float.PositiveInfinity, 0, 0, 1)
-            };
-            Assert.IsTrue(float.IsInfinity(desc.Position.x));
-            Assert.IsTrue(float.IsInfinity(desc.Rotation.x));
         }
     }
 
@@ -190,107 +153,4 @@ namespace AmpPortableDataViz.Tests.Core
         }
     }
 
-    public class NetworkSyncEdgeCaseTests
-    {
-        class MockNetworkSync : INetworkSync
-        {
-            public string LastTopic;
-            public object LastPayload;
-            public long LastTimestamp;
-            public Action<object, long> Handler;
-            public void Publish<TPayload>(string topic, TPayload payload, long timestampTicksUtc)
-            {
-                LastTopic = topic;
-                LastPayload = payload;
-                LastTimestamp = timestampTicksUtc;
-            }
-            public IDisposable Subscribe(string topic, Action<object, long> messageHandler)
-            {
-                Handler = messageHandler;
-                return new DummyDisposable();
-            }
-            class DummyDisposable : IDisposable { public void Dispose() { } }
-        }
-
-        [Test]
-        public void INetworkSync_Publish_NullOrEmptyTopic()
-        {
-            var sync = new MockNetworkSync();
-            Assert.DoesNotThrow(() => sync.Publish(null, 42, 0));
-            Assert.DoesNotThrow(() => sync.Publish("", 42, 0));
-        }
-
-        [Test]
-        public void INetworkSync_Publish_NullPayload()
-        {
-            var sync = new MockNetworkSync();
-            Assert.DoesNotThrow(() => sync.Publish<object>("topic", null, 0));
-        }
-
-        [Test]
-        public void INetworkSync_Subscribe_NullHandler()
-        {
-            var sync = new MockNetworkSync();
-            Assert.DoesNotThrow(() => sync.Subscribe("topic", null));
-        }
-
-        [Test]
-        public void INetworkSync_Subscribe_NullOrEmptyTopic()
-        {
-            var sync = new MockNetworkSync();
-            Assert.DoesNotThrow(() => sync.Subscribe(null, (obj, ts) => { }));
-            Assert.DoesNotThrow(() => sync.Subscribe("", (obj, ts) => { }));
-        }
-
-        [Test]
-        public void INetworkSync_DisposeTwice_DoesNotThrow()
-        {
-            var sync = new MockNetworkSync();
-            var disposable = sync.Subscribe("topic", (obj, ts) => { });
-            Assert.DoesNotThrow(() => { disposable.Dispose(); disposable.Dispose(); });
-        }
-    }
-
-    public class AnchorServiceEdgeCaseTests
-    {
-        class MockAnchorService : IAnchorService
-        {
-            public Task<string> CreateAsync(string label, Vector3 position, Quaternion rotation) => Task.FromResult(label ?? "null");
-            public Task<bool> LoadAsync(string anchorId) => Task.FromResult(anchorId == "exists");
-            public Task<AnchorDescriptor> ExportDescriptorAsync(string anchorId) => Task.FromResult(anchorId == "exists" ? new AnchorDescriptor { AnchorId = anchorId } : null);
-            public Task<string> ImportAndResolveAsync(AnchorDescriptor descriptor) => Task.FromResult(descriptor?.AnchorId ?? "null");
-            public Transform GetTransform(string anchorId) => null;
-        }
-
-        [Test]
-        public async Task IAnchorService_NullOrEmptyArguments()
-        {
-            var service = new MockAnchorService();
-            var id = await service.CreateAsync(null, Vector3.zero, Quaternion.identity);
-            Assert.AreEqual("null", id);
-
-            var loaded = await service.LoadAsync(null);
-            Assert.IsFalse(loaded);
-
-            var desc = await service.ExportDescriptorAsync(null);
-            Assert.IsNull(desc);
-
-            var resolved = await service.ImportAndResolveAsync(null);
-            Assert.AreEqual("null", resolved);
-        }
-
-        [Test]
-        public async Task IAnchorService_NonexistentAnchor()
-        {
-            var service = new MockAnchorService();
-            var loaded = await service.LoadAsync("doesnotexist");
-            Assert.IsFalse(loaded);
-
-            var desc = await service.ExportDescriptorAsync("doesnotexist");
-            Assert.IsNull(desc);
-
-            var transform = service.GetTransform("doesnotexist");
-            Assert.IsNull(transform);
-        }
-    }
 }

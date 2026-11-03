@@ -1,0 +1,25 @@
+{
+  "retired_test_count": 18,
+  "retained_test_count": 192,
+  "retired_test_names": [
+    "AmpPortableDataViz.Tests.Core.AnchorDescriptorEdgeCaseTests.AnchorDescriptor_ExtremeValues",
+    "AmpPortableDataViz.Tests.Core.AnchorDescriptorEdgeCaseTests.AnchorDescriptor_NullAndEmptyFields",
+    "AmpPortableDataViz.Tests.Core.AnchorDescriptorTests.AnchorDescriptor_Properties_SetAndGet",
+    "AmpPortableDataViz.Tests.Core.AnchorServiceEdgeCaseTests.IAnchorService_NonexistentAnchor",
+    "AmpPortableDataViz.Tests.Core.AnchorServiceEdgeCaseTests.IAnchorService_NullOrEmptyArguments",
+    "AmpPortableDataViz.Tests.Core.InterfaceTests.IAnchorService_Methods_Work",
+    "AmpPortableDataViz.Tests.Core.InterfaceTests.INetworkSync_Publish_SetsValues",
+    "AmpPortableDataViz.Tests.Core.InterfaceTests.INetworkSync_Subscribe_ReturnsDisposable",
+    "AmpPortableDataViz.Tests.Core.NetworkSyncEdgeCaseTests.INetworkSync_DisposeTwice_DoesNotThrow",
+    "AmpPortableDataViz.Tests.Core.NetworkSyncEdgeCaseTests.INetworkSync_Publish_NullOrEmptyTopic",
+    "AmpPortableDataViz.Tests.Core.NetworkSyncEdgeCaseTests.INetworkSync_Publish_NullPayload",
+    "AmpPortableDataViz.Tests.Core.NetworkSyncEdgeCaseTests.INetworkSync_Subscribe_NullHandler",
+    "AmpPortableDataViz.Tests.Core.NetworkSyncEdgeCaseTests.INetworkSync_Subscribe_NullOrEmptyTopic",
+    "AmpPortableDataViz.Tests.PlayMode.BootstrapperLifecycleTests.PrimaryRedis_DisableReenableAndDestroyReleaseSubscriptions",
+    "AmpPortableDataViz.Tests.PlayMode.BootstrapperLifecycleTests.PrimaryRedis_RepeatedConfirmationBindsAndSpawnsOnce",
+    "AmpPortableDataViz.Tests.PlayMode.BootstrapperLifecycleTests.PrimaryRedis_WaitsForEndpointConfirmation",
+    "AmpPortableDataViz.Tests.PlayMode.BootstrapperLifecycleTests.PrimaryToManualTransition_StopsSessionAndCanReturnToRedis",
+    "AmpPortableDataViz.Tests.PlayMode.BootstrapperLifecycleTests.RedisIsDefault_AndRetiredSourceValueCannotStartSession"
+  ],
+  "all_other_prior_test_identities_retained": true
+}
