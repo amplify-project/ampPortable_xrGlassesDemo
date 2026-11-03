@@ -1,0 +1,5 @@
+{
+  "Bootstrapper: _settings.AbstractVizPrefab is missing, cannot spawn audience signal instances.": "Bootstrapper: AbstractViz Prefab is missing, cannot spawn audience signal instances.",
+  "Bootstrapper: _settings.GraphPrefab is missing, cannot spawn audience graph instances.": "Bootstrapper: Graph Prefab is missing, cannot spawn audience graph instances.",
+  "Bootstrapper: Audience _settings.GraphPrefab must include AudienceSignalBinding, AudienceSignalVisualizerBinding, and at least one GraphVisualizer component. Audience graph metrics are configured on the prefab's AudienceSignalVisualizerBinding.": "Bootstrapper: Audience Graph Prefab must include AudienceSignalBinding, AudienceSignalVisualizerBinding, and at least one GraphVisualizer component. Audience graph metrics are configured on the prefab's AudienceSignalVisualizerBinding."
+}

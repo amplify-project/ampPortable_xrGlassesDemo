@@ -37,17 +37,17 @@ namespace AmpPortableDataViz.Tests.PlayMode
             _root = new GameObject(nameof(BootstrapperLifecycleTests));
             _root.SetActive(false);
             _bootstrapper = _root.AddComponent<Bootstrapper>();
-            _bootstrapper.AbstractVizPrefab = Child("VisualTemplate");
-            _bootstrapper.AbstractVizParent = _root.transform;
-            _bootstrapper.GraphGroupParent = _root.transform;
-            _bootstrapper.AutoDetectSensorIds = false;
-            _bootstrapper.IncludeSensorChannels = false;
-            _bootstrapper.UseIndividualSensorEngagement = false;
-            _bootstrapper.AutoSpawnAbstractViz = false;
-            _bootstrapper.AutoSpawnGraphVisualsFromChannels = false;
-            _bootstrapper.AutoSpawnArtistVizFromChannels = false;
-            _bootstrapper.RequireRedisEndpointConfirmation = true;
-            _bootstrapper.RedisHost = "127.0.0.1";
+            BootstrapperTestConfiguration.Set(_bootstrapper, "AbstractVizPrefab", Child("VisualTemplate"));
+            BootstrapperTestConfiguration.Set(_bootstrapper, "AbstractVizParent", _root.transform);
+            BootstrapperTestConfiguration.Set(_bootstrapper, "GraphGroupParent", _root.transform);
+            BootstrapperTestConfiguration.Set(_bootstrapper, "AutoDetectSensorIds", false);
+            BootstrapperTestConfiguration.Set(_bootstrapper, "IncludeSensorChannels", false);
+            BootstrapperTestConfiguration.Set(_bootstrapper, "UseIndividualSensorEngagement", false);
+            BootstrapperTestConfiguration.Set(_bootstrapper, "AutoSpawnAbstractViz", false);
+            BootstrapperTestConfiguration.Set(_bootstrapper, "AutoSpawnGraphVisualsFromChannels", false);
+            BootstrapperTestConfiguration.Set(_bootstrapper, "AutoSpawnArtistVizFromChannels", false);
+            BootstrapperTestConfiguration.Set(_bootstrapper, "RequireRedisEndpointConfirmation", true);
+            BootstrapperTestConfiguration.Set(_bootstrapper, "RedisHost", "127.0.0.1");
         }
 
         [TearDown]
@@ -65,9 +65,9 @@ namespace AmpPortableDataViz.Tests.PlayMode
         [UnityTest]
         public IEnumerator ManualMode_ReconfigurationReusesAndDisableReenableRecreatesVisuals()
         {
-            _bootstrapper.UseManualVisualizationDrivers = true;
-            _bootstrapper.GraphPrefab = Child("ManualGraphTemplate");
-            _bootstrapper.GraphPrefab.AddComponent<GraphManualDriver>();
+            BootstrapperTestConfiguration.Set(_bootstrapper, "UseManualVisualizationDrivers", true);
+            BootstrapperTestConfiguration.Set(_bootstrapper, "GraphPrefab", Child("ManualGraphTemplate"));
+            BootstrapperTestConfiguration.Get<GameObject>(_bootstrapper, "GraphPrefab").AddComponent<GraphManualDriver>();
             Invoke(_bootstrapper, "ApplySignalConfiguration");
             var instances = (IList)GetField(GetVisuals(_bootstrapper), "_manualDriverInstances");
             Assert.AreEqual(1, instances.Count);
@@ -127,7 +127,7 @@ namespace AmpPortableDataViz.Tests.PlayMode
         public IEnumerator PerDeviceToSelectedToManual_ReleasesSharedPumpsAndTargets()
         {
             ConfigureAutomaticTemplates();
-            _bootstrapper.UseSingleSelectedSensorStream = false;
+            BootstrapperTestConfiguration.Set(_bootstrapper, "UseSingleSelectedSensorStream", false);
             _bootstrapper.BeginAfterEndpoint();
             Assert.AreEqual(2, ((ICollection)GetField(GetVisuals(_bootstrapper), "_audienceDeviceInstances")).Count);
             Assert.AreEqual(2, ((ICollection)GetField(GetVisuals(_bootstrapper), "_audienceGraphDeviceGroups")).Count);
@@ -138,7 +138,7 @@ namespace AmpPortableDataViz.Tests.PlayMode
                 Assert.AreEqual(2, handle.GetType().GetField("ReferenceCount").GetValue(handle));
             }
 
-            _bootstrapper.UseSingleSelectedSensorStream = true;
+            BootstrapperTestConfiguration.Set(_bootstrapper, "UseSingleSelectedSensorStream", true);
             Invoke(_bootstrapper, "ApplySignalConfiguration");
             yield return null;
             Assert.AreEqual(0, ((ICollection)GetField(GetVisuals(_bootstrapper), "_audienceDeviceInstances")).Count);
@@ -146,7 +146,7 @@ namespace AmpPortableDataViz.Tests.PlayMode
             Assert.AreEqual(2, _root.GetComponentsInChildren<RedisPhysioMetricsPump>(true).Length);
             Assert.AreEqual(2, _root.GetComponent<SensorStreamCoordinator>().SensorCount);
 
-            _bootstrapper.UseManualVisualizationDrivers = true;
+            BootstrapperTestConfiguration.Set(_bootstrapper, "UseManualVisualizationDrivers", true);
             Invoke(_bootstrapper, "ApplySignalConfiguration");
             yield return null;
             Assert.AreEqual(0, _root.GetComponent<SensorStreamCoordinator>().SensorCount);
@@ -157,19 +157,19 @@ namespace AmpPortableDataViz.Tests.PlayMode
 
         private void ConfigureAutomaticTemplates()
         {
-            _bootstrapper.AutoSpawnAbstractViz = true;
-            _bootstrapper.AutoSpawnGraphVisualsFromChannels = true;
-            _bootstrapper.ShowDeviceLabels = false;
-            _bootstrapper.ShowGraphGroupLabels = false;
-            _bootstrapper.RedisChannels = new[] { "device:a:physio_metrics", "device:b:physio_metrics" };
-            _bootstrapper.SensorIds = Array.Empty<string>();
-            _bootstrapper.AbstractVizPrefab.AddComponent<AudienceSignalBinding>();
-            _bootstrapper.AbstractVizPrefab.AddComponent<AudienceSignalVisualizerBinding>();
-            _bootstrapper.GraphPrefab = Child("GraphTemplate");
-            _bootstrapper.GraphPrefab.AddComponent<AudienceSignalBinding>();
-            _bootstrapper.GraphPrefab.AddComponent<AudienceSignalVisualizerBinding>();
-            _bootstrapper.GraphPrefab.AddComponent<GraphVisualizer>();
-            _bootstrapper.SensorHudCamera = Child("HudCamera").AddComponent<Camera>();
+            BootstrapperTestConfiguration.Set(_bootstrapper, "AutoSpawnAbstractViz", true);
+            BootstrapperTestConfiguration.Set(_bootstrapper, "AutoSpawnGraphVisualsFromChannels", true);
+            BootstrapperTestConfiguration.Set(_bootstrapper, "ShowDeviceLabels", false);
+            BootstrapperTestConfiguration.Set(_bootstrapper, "ShowGraphGroupLabels", false);
+            BootstrapperTestConfiguration.Set(_bootstrapper, "RedisChannels", new[] { "device:a:physio_metrics", "device:b:physio_metrics" });
+            BootstrapperTestConfiguration.Set(_bootstrapper, "SensorIds", Array.Empty<string>());
+            BootstrapperTestConfiguration.Get<GameObject>(_bootstrapper, "AbstractVizPrefab").AddComponent<AudienceSignalBinding>();
+            BootstrapperTestConfiguration.Get<GameObject>(_bootstrapper, "AbstractVizPrefab").AddComponent<AudienceSignalVisualizerBinding>();
+            BootstrapperTestConfiguration.Set(_bootstrapper, "GraphPrefab", Child("GraphTemplate"));
+            BootstrapperTestConfiguration.Get<GameObject>(_bootstrapper, "GraphPrefab").AddComponent<AudienceSignalBinding>();
+            BootstrapperTestConfiguration.Get<GameObject>(_bootstrapper, "GraphPrefab").AddComponent<AudienceSignalVisualizerBinding>();
+            BootstrapperTestConfiguration.Get<GameObject>(_bootstrapper, "GraphPrefab").AddComponent<GraphVisualizer>();
+            BootstrapperTestConfiguration.Set(_bootstrapper, "SensorHudCamera", Child("HudCamera").AddComponent<Camera>());
         }
 
         private GameObject Child(string name)

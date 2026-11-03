@@ -20,14 +20,14 @@ namespace AmpPortableDataViz.Tests.PlayMode
             _root.SetActive(false);
             _root.transform.SetPositionAndRotation(new Vector3(20f, 30f, 40f), Quaternion.Euler(0f, 35f, 0f));
             _bootstrapper = _root.AddComponent<Bootstrapper>();
-            _bootstrapper.SpawnPosition = new Vector3(3f, 4f, 5f);
-            _bootstrapper.SpawnRotationEuler = new Vector3(10f, 20f, 30f);
-            _bootstrapper.AbstractVizOriginOffset = new Vector3(1f, 2f, 3f);
-            _bootstrapper.AbstractVizSpacing = new Vector3(4f, 5f, 6f);
-            _bootstrapper.AbstractVizPerRow = 2;
-            _bootstrapper.GraphGroupOriginOffset = new Vector3(2f, 3f, 4f);
-            _bootstrapper.GraphGroupSpacing = new Vector3(5f, 6f, 7f);
-            _bootstrapper.GraphGroupsPerRow = 2;
+            BootstrapperTestConfiguration.Set(_bootstrapper, "SpawnPosition", new Vector3(3f, 4f, 5f));
+            BootstrapperTestConfiguration.Set(_bootstrapper, "SpawnRotationEuler", new Vector3(10f, 20f, 30f));
+            BootstrapperTestConfiguration.Set(_bootstrapper, "AbstractVizOriginOffset", new Vector3(1f, 2f, 3f));
+            BootstrapperTestConfiguration.Set(_bootstrapper, "AbstractVizSpacing", new Vector3(4f, 5f, 6f));
+            BootstrapperTestConfiguration.Set(_bootstrapper, "AbstractVizPerRow", 2);
+            BootstrapperTestConfiguration.Set(_bootstrapper, "GraphGroupOriginOffset", new Vector3(2f, 3f, 4f));
+            BootstrapperTestConfiguration.Set(_bootstrapper, "GraphGroupSpacing", new Vector3(5f, 6f, 7f));
+            BootstrapperTestConfiguration.Set(_bootstrapper, "GraphGroupsPerRow", 2);
             _target = new GameObject("Target").transform;
             _target.SetParent(_root.transform, false);
         }
@@ -69,11 +69,11 @@ namespace AmpPortableDataViz.Tests.PlayMode
         {
             var cameraObject = new GameObject("HudCamera");
             cameraObject.transform.SetParent(_root.transform, false);
-            _bootstrapper.SensorHudCamera = cameraObject.AddComponent<Camera>();
-            _bootstrapper.SensorHudLocalPosition = new Vector3(1f, 2f, 3f);
-            _bootstrapper.SensorHudLocalScale = scale;
-            _bootstrapper.SensorHudFontSize = fontSize;
-            _bootstrapper.SensorHudColor = Color.cyan;
+            BootstrapperTestConfiguration.Set(_bootstrapper, "SensorHudCamera", cameraObject.AddComponent<Camera>());
+            BootstrapperTestConfiguration.Set(_bootstrapper, "SensorHudLocalPosition", new Vector3(1f, 2f, 3f));
+            BootstrapperTestConfiguration.Set(_bootstrapper, "SensorHudLocalScale", scale);
+            BootstrapperTestConfiguration.Set(_bootstrapper, "SensorHudFontSize", fontSize);
+            BootstrapperTestConfiguration.Set(_bootstrapper, "SensorHudColor", Color.cyan);
             var coordinator = _root.AddComponent<SensorStreamCoordinator>();
             var layout = (VisualizationLayout)typeof(Bootstrapper).GetProperty(
                 "Layout", BindingFlags.Instance | BindingFlags.NonPublic).GetValue(_bootstrapper);

@@ -73,10 +73,10 @@ namespace AmpPortableDataViz.Tests.PlayMode
         public void GraphLabel_PreservesConfiguredPosition(
             Vector3 bounds, Vector3 padding, Vector3 offset, float verticalOffset, Vector3 expected)
         {
-            _bootstrapper.GraphItemBoundsSize = bounds;
-            _bootstrapper.GraphGroupBoundsPadding = padding;
-            _bootstrapper.GraphGroupLabelOffset = offset;
-            _bootstrapper.GraphGroupLabelVerticalOffset = verticalOffset;
+            BootstrapperTestConfiguration.Set(_bootstrapper, "GraphItemBoundsSize", bounds);
+            BootstrapperTestConfiguration.Set(_bootstrapper, "GraphGroupBoundsPadding", padding);
+            BootstrapperTestConfiguration.Set(_bootstrapper, "GraphGroupLabelOffset", offset);
+            BootstrapperTestConfiguration.Set(_bootstrapper, "GraphGroupLabelVerticalOffset", verticalOffset);
 
             AttachLabel();
 

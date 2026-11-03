@@ -48,11 +48,11 @@ namespace AmpPortableDataViz.Tests.PlayMode
         public void ManualMode_SpawnsGraphWithRedisEndpointUnconfirmed()
         {
             Bootstrapper bootstrapper = CreateBootstrapper();
-            bootstrapper.UseManualVisualizationDrivers = true;
-            bootstrapper.RequireRedisEndpointConfirmation = true;
-            bootstrapper.RedisHost = string.Empty;
-            bootstrapper.GraphPrefab = LoadPrefab("GraphPrefab");
-            bootstrapper.GraphGroupParent = _testRoot.transform;
+            BootstrapperTestConfiguration.Set(bootstrapper, "UseManualVisualizationDrivers", true);
+            BootstrapperTestConfiguration.Set(bootstrapper, "RequireRedisEndpointConfirmation", true);
+            BootstrapperTestConfiguration.Set(bootstrapper, "RedisHost", string.Empty);
+            BootstrapperTestConfiguration.Set(bootstrapper, "GraphPrefab", LoadPrefab("GraphPrefab"));
+            BootstrapperTestConfiguration.Set(bootstrapper, "GraphGroupParent", _testRoot.transform);
 
             Invoke(bootstrapper, "ApplySignalConfiguration");
 

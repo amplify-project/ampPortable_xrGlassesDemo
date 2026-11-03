@@ -19,105 +19,105 @@ namespace AmpPortableDataViz.Presentation.Bootstrap
         [Header("Scene Dependencies")]
         [FormerlySerializedAs("VisualPrefab")]
         [InspectorName("AbstractViz Prefab")]
-        public GameObject AbstractVizPrefab;
+        [SerializeField] private GameObject AbstractVizPrefab;
 
         [Header("Manual Visualization Testing")]
-        public bool UseManualVisualizationDrivers;
+        [SerializeField] private bool UseManualVisualizationDrivers;
 
         [Header("Redis Settings")]
-        public string RedisHost = "192.168.0.6";
-        public int RedisPort = 6379;
-        public string RedisChannel = RedisEmotionChannels.BroadcastChannel;
-        public string[] RedisChannels = Array.Empty<string>();
+        [SerializeField] private string RedisHost = "192.168.0.6";
+        [SerializeField] private int RedisPort = 6379;
+        [SerializeField] private string RedisChannel = RedisEmotionChannels.BroadcastChannel;
+        [SerializeField] private string[] RedisChannels = Array.Empty<string>();
         [Header("Redis Prompt")]
-        public bool RequireRedisEndpointConfirmation = true;
+        [SerializeField] private bool RequireRedisEndpointConfirmation = true;
 
         [Header("Sensor Discovery")]
         [FormerlySerializedAs("IncludeEmotionChannels")]
-        public bool IncludeSensorChannels = true;
+        [SerializeField] private bool IncludeSensorChannels = true;
         [FormerlySerializedAs("EmotionDeviceIds")]
-        public string[] SensorIds = RedisEmotionChannels.GetDefaultDeviceIds();
+        [SerializeField] private string[] SensorIds = RedisEmotionChannels.GetDefaultDeviceIds();
         [FormerlySerializedAs("AutoDetectEmotionDeviceIds")]
-        public bool AutoDetectSensorIds = true;
-        public int RedisDiscoveryTimeoutMs = 2000;
+        [SerializeField] private bool AutoDetectSensorIds = true;
+        [SerializeField] private int RedisDiscoveryTimeoutMs = 2000;
 
         [Header("AbstractViz Layout")]
         [FormerlySerializedAs("EmotionVisualParent")]
-        public Transform AbstractVizParent;
+        [SerializeField] private Transform AbstractVizParent;
         [FormerlySerializedAs("EmotionVisualOriginOffset")]
-        public Vector3 AbstractVizOriginOffset = Vector3.zero;
+        [SerializeField] private Vector3 AbstractVizOriginOffset = Vector3.zero;
         [FormerlySerializedAs("EmotionVisualSpacing")]
-        public Vector3 AbstractVizSpacing = new Vector3(0.75f, 0f, 0.75f);
+        [SerializeField] private Vector3 AbstractVizSpacing = new Vector3(0.75f, 0f, 0.75f);
         [Min(1)]
         [FormerlySerializedAs("EmotionVisualsPerRow")]
-        public int AbstractVizPerRow = 2;
+        [SerializeField] private int AbstractVizPerRow = 2;
         [Header("Sensor Labels")]
-        public bool ShowDeviceLabels = true;
-        public Vector3 DeviceLabelOffset = new Vector3(0f, -0.35f, 0f);
-        public float DeviceLabelFontSize = 0.22f;
-        public Color DeviceLabelColor = Color.white;
+        [SerializeField] private bool ShowDeviceLabels = true;
+        [SerializeField] private Vector3 DeviceLabelOffset = new Vector3(0f, -0.35f, 0f);
+        [SerializeField] private float DeviceLabelFontSize = 0.22f;
+        [SerializeField] private Color DeviceLabelColor = Color.white;
 
         [Header("AbstractViz Settings")]
         [FormerlySerializedAs("AutoSpawnAudienceVisualsFromChannels")]
         [InspectorName("Auto Spawn AbstractViz")]
-        public bool AutoSpawnAbstractViz = true;
+        [SerializeField] private bool AutoSpawnAbstractViz = true;
 
         [Header("Artist Visual Settings")]
-        public bool AutoSpawnArtistVizFromChannels = true;
-        public GameObject ArtistVizPrefab;
-        public Transform ArtistVizParent;
+        [SerializeField] private bool AutoSpawnArtistVizFromChannels = true;
+        [SerializeField] private GameObject ArtistVizPrefab;
+        [SerializeField] private Transform ArtistVizParent;
 
         [Header("Individual Sensor Engagement")]
-        public bool UseIndividualSensorEngagement = true;
+        [SerializeField] private bool UseIndividualSensorEngagement = true;
         [Tooltip("Use {serial}, {sensorId}, or {0} where the sensor serial belongs in the Redis channel name.")]
-        public string SensorEngagementChannelTemplate = RedisAudienceChannels.SensorEngagementTemplate;
-        public SensorEngagementChannelOverride[] SensorEngagementChannelOverrides =
+        [SerializeField] private string SensorEngagementChannelTemplate = RedisAudienceChannels.SensorEngagementTemplate;
+        [SerializeField] private SensorEngagementChannelOverride[] SensorEngagementChannelOverrides =
             Array.Empty<SensorEngagementChannelOverride>();
         [Min(0f)]
-        public float SensorEngagementTimeoutSeconds = 10f;
+        [SerializeField] private float SensorEngagementTimeoutSeconds = 10f;
         [Range(0f, 1f)]
-        public float SensorEngagementNeutralValue = 0.5f;
-        public SensorEngagementJsonFormat SensorEngagementPayloadFormat =
+        [SerializeField] private float SensorEngagementNeutralValue = 0.5f;
+        [SerializeField] private SensorEngagementJsonFormat SensorEngagementPayloadFormat =
             SensorEngagementJsonFormat.CreateDefault();
 
         [Header("RayNeo Selected Sensor Stream")]
-        public bool UseSingleSelectedSensorStream = true;
-        public Camera SensorHudCamera;
-        public Vector3 SensorHudLocalPosition = new Vector3(0f, -0.22f, 1.2f);
+        [SerializeField] private bool UseSingleSelectedSensorStream = true;
+        [SerializeField] private Camera SensorHudCamera;
+        [SerializeField] private Vector3 SensorHudLocalPosition = new Vector3(0f, -0.22f, 1.2f);
         [Min(0.0001f)]
-        public float SensorHudLocalScale = 0.01f;
+        [SerializeField] private float SensorHudLocalScale = 0.01f;
         [Min(0.01f)]
-        public float SensorHudFontSize = 2f;
-        public Color SensorHudColor = Color.white;
+        [SerializeField] private float SensorHudFontSize = 2f;
+        [SerializeField] private Color SensorHudColor = Color.white;
 
         [Header("Graph Visual Settings")]
-        public bool AutoSpawnGraphVisualsFromChannels = true;
-        public GameObject GraphPrefab;
-        public Transform GraphGroupParent;
-        public Vector3 GraphGroupOriginOffset = Vector3.zero;
-        public Vector3 GraphGroupSpacing = new Vector3(1.6f, 0f, 0.75f);
+        [SerializeField] private bool AutoSpawnGraphVisualsFromChannels = true;
+        [SerializeField] private GameObject GraphPrefab;
+        [SerializeField] private Transform GraphGroupParent;
+        [SerializeField] private Vector3 GraphGroupOriginOffset = Vector3.zero;
+        [SerializeField] private Vector3 GraphGroupSpacing = new Vector3(1.6f, 0f, 0.75f);
         [Min(1)]
-        public int GraphGroupsPerRow = 2;
+        [SerializeField] private int GraphGroupsPerRow = 2;
 
         [Header("Graph Group Labels")]
-        public bool ShowGraphGroupLabels = true;
-        public Vector3 GraphGroupLabelOffset = Vector3.zero;
+        [SerializeField] private bool ShowGraphGroupLabels = true;
+        [SerializeField] private Vector3 GraphGroupLabelOffset = Vector3.zero;
         [Min(0f)]
-        public float GraphGroupLabelVerticalOffset = 0.2f;
-        public float GraphGroupLabelFontSize = 0.24f;
-        public Color GraphGroupLabelColor = Color.white;
+        [SerializeField] private float GraphGroupLabelVerticalOffset = 0.2f;
+        [SerializeField] private float GraphGroupLabelFontSize = 0.24f;
+        [SerializeField] private Color GraphGroupLabelColor = Color.white;
 
         [Header("Graph Group Layout")]
-        public Vector3 GraphItemBoundsSize = new Vector3(1f, 1f, 0.02f);
-        public Vector3 GraphGroupBoundsPadding = new Vector3(0.05f, 0.05f, 0.05f);
+        [SerializeField] private Vector3 GraphItemBoundsSize = new Vector3(1f, 1f, 0.02f);
+        [SerializeField] private Vector3 GraphGroupBoundsPadding = new Vector3(0.05f, 0.05f, 0.05f);
 
         [Header("Visualization Spawn Placement")]
         [FormerlySerializedAs("AnchorPosition")]
         [Tooltip("World-space spawn position used when no visualization parent is assigned.")]
-        public Vector3 SpawnPosition = new Vector3(0f, 1.2f, 2f);
+        [SerializeField] private Vector3 SpawnPosition = new Vector3(0f, 1.2f, 2f);
         [FormerlySerializedAs("AnchorRotationEuler")]
         [Tooltip("World-space spawn rotation in degrees used when no visualization parent is assigned.")]
-        public Vector3 SpawnRotationEuler = Vector3.zero;
+        [SerializeField] private Vector3 SpawnRotationEuler = Vector3.zero;
 
         private VisualizationLayout _layout;
         private VisualizationLayout Layout

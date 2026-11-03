@@ -377,7 +377,7 @@ namespace AmpPortableDataViz.Presentation.Bootstrap
 
             if (_settings.AbstractVizPrefab == null)
             {
-                Debug.LogWarning("Bootstrapper: _settings.AbstractVizPrefab is missing, cannot spawn audience signal instances.");
+                Debug.LogWarning("Bootstrapper: AbstractViz Prefab is missing, cannot spawn audience signal instances.");
                 ClearAudienceDeviceVisuals();
                 return;
             }
@@ -472,7 +472,7 @@ namespace AmpPortableDataViz.Presentation.Bootstrap
 
             if (_settings.GraphPrefab == null)
             {
-                Debug.LogWarning("Bootstrapper: _settings.GraphPrefab is missing, cannot spawn audience graph instances.");
+                Debug.LogWarning("Bootstrapper: Graph Prefab is missing, cannot spawn audience graph instances.");
                 ClearAudienceGraphDeviceVisuals();
                 return;
             }
@@ -488,7 +488,7 @@ namespace AmpPortableDataViz.Presentation.Bootstrap
             bool hasGraphVisualizer = _settings.GraphPrefab.GetComponentInChildren<GraphVisualizer>() != null;
             if (!hasAudienceBinding || !hasAudienceVisualizerBinding || !hasGraphVisualizer)
             {
-                Debug.LogWarning("Bootstrapper: Audience _settings.GraphPrefab must include AudienceSignalBinding, AudienceSignalVisualizerBinding, and at least one GraphVisualizer component. Audience graph metrics are configured on the prefab's AudienceSignalVisualizerBinding.");
+                Debug.LogWarning("Bootstrapper: Audience Graph Prefab must include AudienceSignalBinding, AudienceSignalVisualizerBinding, and at least one GraphVisualizer component. Audience graph metrics are configured on the prefab's AudienceSignalVisualizerBinding.");
                 ClearAudienceGraphDeviceVisuals();
                 return;
             }

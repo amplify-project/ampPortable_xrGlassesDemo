@@ -1,0 +1,9 @@
+{
+  "Assets/Tests/PlayMode/BootstrapperArtistVizTests.cs": "323277d6e9515040725641fda824e1ca8fbaa5182d3993e7c9df969ed91b86cf",
+  "Assets/Tests/PlayMode/BootstrapperChannelAndLabelTests.cs": "85556c25e46c48e0521931c20655ad71ceabdbc6e8546d81b0fb84b1a0a34ef5",
+  "Assets/Tests/PlayMode/BootstrapperLifecycleTests.cs": "51f5cd0e923b9d9aec08bab4375bb21e94f8dc4326a1220df4a51edf5885156b",
+  "Assets/Tests/PlayMode/BootstrapperPlacementTests.cs": "1ea4f7d174d5cbc40f5aee75965f5805891b44873a11c6dfde6127f9ed71be84",
+  "Assets/Tests/PlayMode/BootstrapperRetainedGraphTests.cs": "78fee4b632d789825ad097971a573b43e66e2e79aed3d99512152c61ffe55781",
+  "Assets/Tests/PlayMode/BootstrapperSerializationTests.cs": "5c98d46d77452cb735b2be43c0515e56d1352145519c68b7d3445b9d9a233e5a",
+  "Assets/Tests/PlayMode/BootstrapperTestConfiguration.cs": "4f62972388dd579ed20619dc5cc0c6da30fbf85d8d429215a0c5906d60348fe2"
+}
