@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="utf-8"?>
+<test-run id="2" testcasecount="6" result="Passed" total="6" passed="6" failed="0" inconclusive="0" skipped="0" asserts="0" engine-version="3.5.0.0" clr-version="4.0.30319.42000" start-time="2026-11-03 11:32:03Z" end-time="2026-11-03 11:32:03Z" duration="0.0588219">
+  <test-suite type="TestSuite" id="1257" name="XR Score Viewer" fullname="XR Score Viewer" runstate="Runnable" testcasecount="198" result="Passed" start-time="2026-11-03 11:32:03Z" end-time="2026-11-03 11:32:03Z" duration="0.058822" total="6" passed="6" failed="0" inconclusive="0" skipped="0" asserts="0">
+    <properties>
+      <property name="platform" value="PlayMode" />
+    </properties>
+    <test-suite type="Assembly" id="1249" name="Tests.dll" fullname="C:/Users/Bryan Dunphy/AppData/Local/Temp/rnc1030/project/Library/ScriptAssemblies/Tests.dll" runstate="Runnable" testcasecount="198" result="Passed" start-time="2026-11-03 11:32:03Z" end-time="2026-11-03 11:32:03Z" duration="0.050876" total="6" passed="6" failed="0" inconclusive="0" skipped="0" asserts="0">
+      <properties>
+        <property name="_PID" value="9124" />
+        <property name="_APPDOMAIN" value="Unity Child Domain" />
+        <property name="platform" value="PlayMode" />
+        <property name="EditorOnly" value="False" />
+      </properties>
+      <test-suite type="TestSuite" id="1250" name="AmpPortableDataViz" fullname="AmpPortableDataViz" runstate="Runnable" testcasecount="198" result="Passed" start-time="2026-11-03 11:32:03Z" end-time="2026-11-03 11:32:03Z" duration="0.048448" total="6" passed="6" failed="0" inconclusive="0" skipped="0" asserts="0">
+        <properties />
+        <test-suite type="TestSuite" id="1251" name="Tests" fullname="AmpPortableDataViz.Tests" runstate="Runnable" testcasecount="198" result="Passed" start-time="2026-11-03 11:32:03Z" end-time="2026-11-03 11:32:03Z" duration="0.046380" total="6" passed="6" failed="0" inconclusive="0" skipped="0" asserts="0">
+          <properties />
+          <test-suite type="TestSuite" id="1254" name="PlayMode" fullname="AmpPortableDataViz.Tests.PlayMode" runstate="Runnable" testcasecount="175" result="Passed" start-time="2026-11-03 11:32:03Z" end-time="2026-11-03 11:32:03Z" duration="0.044491" total="6" passed="6" failed="0" inconclusive="0" skipped="0" asserts="0">
+            <properties />
+            <test-suite type="TestFixture" id="1117" name="BootstrapperPlacementTests" fullname="AmpPortableDataViz.Tests.PlayMode.BootstrapperPlacementTests" classname="AmpPortableDataViz.Tests.PlayMode.BootstrapperPlacementTests" runstate="Runnable" testcasecount="6" result="Passed" start-time="2026-11-03 11:32:03Z" end-time="2026-11-03 11:32:03Z" duration="0.041130" total="6" passed="6" failed="0" inconclusive="0" skipped="0" asserts="0">
+              <properties />
+              <test-suite type="ParameterizedMethod" id="1120" name="AbstractPlacement_PreservesParentLocalAndWorldFallback" fullname="AmpPortableDataViz.Tests.PlayMode.BootstrapperPlacementTests.AbstractPlacement_PreservesParentLocalAndWorldFallback" classname="AmpPortableDataViz.Tests.PlayMode.BootstrapperPlacementTests" runstate="Runnable" testcasecount="2" result="Passed" start-time="2026-11-03 11:32:03Z" end-time="2026-11-03 11:32:03Z" duration="0.035306" total="2" passed="2" failed="0" inconclusive="0" skipped="0" asserts="0">
+                <properties />
+                <test-case id="1118" name="AbstractPlacement_PreservesParentLocalAndWorldFallback(True)" fullname="AmpPortableDataViz.Tests.PlayMode.BootstrapperPlacementTests.AbstractPlacement_PreservesParentLocalAndWorldFallback(True)" methodname="AbstractPlacement_PreservesParentLocalAndWorldFallback" classname="AmpPortableDataViz.Tests.PlayMode.BootstrapperPlacementTests" runstate="Runnable" seed="74805792" result="Passed" start-time="2026-11-03 11:32:03Z" end-time="2026-11-03 11:32:03Z" duration="0.021007" asserts="0">
+                  <properties>
+                    <property name="retryIteration" value="0" />
+                    <property name="repeatIteration" value="0" />
+                  </properties>
+                </test-case>
+                <test-case id="1119" name="AbstractPlacement_PreservesParentLocalAndWorldFallback(False)" fullname="AmpPortableDataViz.Tests.PlayMode.BootstrapperPlacementTests.AbstractPlacement_PreservesParentLocalAndWorldFallback(False)" methodname="AbstractPlacement_PreservesParentLocalAndWorldFallback" classname="AmpPortableDataViz.Tests.PlayMode.BootstrapperPlacementTests" runstate="Runnable" seed="1347525182" result="Passed" start-time="2026-11-03 11:32:03Z" end-time="2026-11-03 11:32:03Z" duration="0.000741" asserts="0">
+                  <properties>
+                    <property name="retryIteration" value="0" />
+                    <property name="repeatIteration" value="0" />
+                  </properties>
+                </test-case>
+              </test-suite>
+              <test-suite type="ParameterizedMethod" id="1126" name="ArtistPlacement_PreservesParentOriginAndWorldFallback" fullname="AmpPortableDataViz.Tests.PlayMode.BootstrapperPlacementTests.ArtistPlacement_PreservesParentOriginAndWorldFallback" classname="AmpPortableDataViz.Tests.PlayMode.BootstrapperPlacementTests" runstate="Runnable" testcasecount="2" result="Passed" start-time="2026-11-03 11:32:03Z" end-time="2026-11-03 11:32:03Z" duration="0.001809" total="2" passed="2" failed="0" inconclusive="0" skipped="0" asserts="0">
+                <properties />
+                <test-case id="1124" name="ArtistPlacement_PreservesParentOriginAndWorldFallback(True)" fullname="AmpPortableDataViz.Tests.PlayMode.BootstrapperPlacementTests.ArtistPlacement_PreservesParentOriginAndWorldFallback(True)" methodname="ArtistPlacement_PreservesParentOriginAndWorldFallback" classname="AmpPortableDataViz.Tests.PlayMode.BootstrapperPlacementTests" runstate="Runnable" seed="1303750066" result="Passed" start-time="2026-11-03 11:32:03Z" end-time="2026-11-03 11:32:03Z" duration="0.000623" asserts="0">
+                  <properties>
+                    <property name="retryIteration" value="0" />
+                    <property name="repeatIteration" value="0" />
+                  </properties>
+                </test-case>
+                <test-case id="1125" name="ArtistPlacement_PreservesParentOriginAndWorldFallback(False)" fullname="AmpPortableDataViz.Tests.PlayMode.BootstrapperPlacementTests.ArtistPlacement_PreservesParentOriginAndWorldFallback(False)" methodname="ArtistPlacement_PreservesParentOriginAndWorldFallback" classname="AmpPortableDataViz.Tests.PlayMode.BootstrapperPlacementTests" runstate="Runnable" seed="1565590716" result="Passed" start-time="2026-11-03 11:32:03Z" end-time="2026-11-03 11:32:03Z" duration="0.000255" asserts="0">
+                  <properties>
+                    <property name="retryIteration" value="0" />
+                    <property name="repeatIteration" value="0" />
+                  </properties>
+                </test-case>
+              </test-suite>
+              <test-suite type="ParameterizedMethod" id="1123" name="GraphPlacement_PreservesParentLocalAndWorldFallback" fullname="AmpPortableDataViz.Tests.PlayMode.BootstrapperPlacementTests.GraphPlacement_PreservesParentLocalAndWorldFallback" classname="AmpPortableDataViz.Tests.PlayMode.BootstrapperPlacementTests" runstate="Runnable" testcasecount="2" result="Passed" start-time="2026-11-03 11:32:03Z" end-time="2026-11-03 11:32:03Z" duration="0.001676" total="2" passed="2" failed="0" inconclusive="0" skipped="0" asserts="0">
+                <properties />
+                <test-case id="1121" name="GraphPlacement_PreservesParentLocalAndWorldFallback(True)" fullname="AmpPortableDataViz.Tests.PlayMode.BootstrapperPlacementTests.GraphPlacement_PreservesParentLocalAndWorldFallback(True)" methodname="GraphPlacement_PreservesParentLocalAndWorldFallback" classname="AmpPortableDataViz.Tests.PlayMode.BootstrapperPlacementTests" runstate="Runnable" seed="937882842" result="Passed" start-time="2026-11-03 11:32:03Z" end-time="2026-11-03 11:32:03Z" duration="0.000609" asserts="0">
+                  <properties>
+                    <property name="retryIteration" value="0" />
+                    <property name="repeatIteration" value="0" />
+                  </properties>
+                </test-case>
+                <test-case id="1122" name="GraphPlacement_PreservesParentLocalAndWorldFallback(False)" fullname="AmpPortableDataViz.Tests.PlayMode.BootstrapperPlacementTests.GraphPlacement_PreservesParentLocalAndWorldFallback(False)" methodname="GraphPlacement_PreservesParentLocalAndWorldFallback" classname="AmpPortableDataViz.Tests.PlayMode.BootstrapperPlacementTests" runstate="Runnable" seed="249072345" result="Passed" start-time="2026-11-03 11:32:03Z" end-time="2026-11-03 11:32:03Z" duration="0.000329" asserts="0">
+                  <properties>
+                    <property name="retryIteration" value="0" />
+                    <property name="repeatIteration" value="0" />
+                  </properties>
+                  <output><![CDATA[Saving results to: C:\Users\Bryan Dunphy\Documents\UnityProjects\ampPortable_xrGlassesDemo\Assessment\2026-11-03\bootstrapper-session-retirement\placement-before.xml
+]]></output>
+                </test-case>
+              </test-suite>
+            </test-suite>
+          </test-suite>
+        </test-suite>
+      </test-suite>
+    </test-suite>
+  </test-suite>
+</test-run>

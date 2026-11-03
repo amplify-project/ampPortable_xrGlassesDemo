@@ -1,0 +1,40 @@
+{
+  "base_head": "611c95b07c1b4266ad92372cea9aa044efe9fcc1",
+  "serialized_private_field_count": 50,
+  "field_names_types_defaults_attributes_and_flat_layout_preserved": true,
+  "bootstrapper_runtime_method_bodies_unchanged": true,
+  "presenter_only_diagnostic_setting_names_changed": true,
+  "diagnostic_messages_renamed": 3,
+  "existing_and_new_tests_identical_before_after_visibility_change": true,
+  "all_scene_prefab_package_projectsettings_bytes_unchanged": true,
+  "public_endpoint_unityevent_method_preserved": true,
+  "changed_sources": [
+    "Assets/AmpPortableDataViz/Presentation/Bootstrap/Bootstrapper.cs",
+    "Assets/AmpPortableDataViz/Presentation/Bootstrap/VisualizationPresenter.cs",
+    "Assets/Tests/PlayMode/BootstrapperArtistVizTests.cs",
+    "Assets/Tests/PlayMode/BootstrapperChannelAndLabelTests.cs",
+    "Assets/Tests/PlayMode/BootstrapperLifecycleTests.cs",
+    "Assets/Tests/PlayMode/BootstrapperPlacementTests.cs",
+    "Assets/Tests/PlayMode/BootstrapperRetainedGraphTests.cs",
+    "Assets/Tests/PlayMode/BootstrapperSerializationTests.cs"
+  ],
+  "added_sources": [
+    "Assets/Tests/PlayMode/BootstrapperTestConfiguration.cs",
+    "Assets/Tests/PlayMode/BootstrapperTestConfiguration.cs.meta"
+  ],
+  "removed_sources": [],
+  "other_original_files_byte_identical": 1679,
+  "step7_started": false,
+  "final_sha256": {
+    "Assets/AmpPortableDataViz/Presentation/Bootstrap/Bootstrapper.cs": "d584b22a7a34fe99e7996fa439b579dbfe770f6e37b0d60595e6ce5ea8cf31c5",
+    "Assets/AmpPortableDataViz/Presentation/Bootstrap/VisualizationPresenter.cs": "e8e5f5dfbfddb4a5e4b7fc14c72e670869a3ee46504ef4db5456648d4593cc99",
+    "Assets/Tests/PlayMode/BootstrapperArtistVizTests.cs": "323277d6e9515040725641fda824e1ca8fbaa5182d3993e7c9df969ed91b86cf",
+    "Assets/Tests/PlayMode/BootstrapperChannelAndLabelTests.cs": "85556c25e46c48e0521931c20655ad71ceabdbc6e8546d81b0fb84b1a0a34ef5",
+    "Assets/Tests/PlayMode/BootstrapperLifecycleTests.cs": "51f5cd0e923b9d9aec08bab4375bb21e94f8dc4326a1220df4a51edf5885156b",
+    "Assets/Tests/PlayMode/BootstrapperPlacementTests.cs": "1ea4f7d174d5cbc40f5aee75965f5805891b44873a11c6dfde6127f9ed71be84",
+    "Assets/Tests/PlayMode/BootstrapperRetainedGraphTests.cs": "78fee4b632d789825ad097971a573b43e66e2e79aed3d99512152c61ffe55781",
+    "Assets/Tests/PlayMode/BootstrapperSerializationTests.cs": "5c98d46d77452cb735b2be43c0515e56d1352145519c68b7d3445b9d9a233e5a",
+    "Assets/Tests/PlayMode/BootstrapperTestConfiguration.cs": "4f62972388dd579ed20619dc5cc0c6da30fbf85d8d429215a0c5906d60348fe2",
+    "Assets/Tests/PlayMode/BootstrapperTestConfiguration.cs.meta": "dcb96e590e0c0a50e52a15e249368436f6db5db5b551b372a47209b6486ab1f9"
+  }
+}

@@ -1,0 +1,56 @@
+{
+  "runs": {
+    "streams-full": {
+      "total": 203,
+      "passed": 203,
+      "failed": 0,
+      "skipped": 0,
+      "exit_code": 0,
+      "xml_sha256": "dc6cd9a31b94db8952369c1aace56336baba9899a1ace016668742ab53da43b1"
+    },
+    "visuals-full": {
+      "total": 203,
+      "passed": 203,
+      "failed": 0,
+      "skipped": 0,
+      "exit_code": 0,
+      "xml_sha256": "9ca72aee29b52f575273ad1e3f8d0cda8a0a46e44a58e61d1a08b67c63d362ef"
+    },
+    "layout-full": {
+      "total": 205,
+      "passed": 205,
+      "failed": 0,
+      "skipped": 0,
+      "exit_code": 0,
+      "xml_sha256": "37bfb74d2ba800b6242b75399ed9231632614176a6a3521dee6774d72bb279a0"
+    }
+  },
+  "all_199_prior_cases_retained": true,
+  "new_test_cases": [
+    "AmpPortableDataViz.Tests.PlayMode.BootstrapperPlacementTests.SensorHud_PreservesCameraPlacementStyleAndSizeFallback(0.025f,8.0f,0.025f,8.0f)",
+    "AmpPortableDataViz.Tests.PlayMode.BootstrapperPlacementTests.SensorHud_PreservesCameraPlacementStyleAndSizeFallback(0.0f,0.0f,0.0001f,0.01f)",
+    "AmpPortableDataViz.Tests.PlayMode.RedisStreamRegistryTests.EndpointChange_ReconfiguresTheSharedPump",
+    "AmpPortableDataViz.Tests.PlayMode.RedisStreamRegistryTests.EngagementBackend_ReusesUnchangedConfigurationAndReplacesChangedConfiguration",
+    "AmpPortableDataViz.Tests.PlayMode.RedisStreamRegistryTests.RawChannelSpelling_RemainsPartOfPumpIdentity",
+    "AmpPortableDataViz.Tests.PlayMode.RedisStreamRegistryTests.SharedPump_SurvivesUntilItsLastConsumerReleasesIt"
+  ],
+  "android": {
+    "result": "Succeeded",
+    "errors": 0,
+    "warnings": 20,
+    "durationSeconds": 108.0912055
+  },
+  "all_build_warning_messages_unchanged": true,
+  "scene": {
+    "missingScriptCount": 0,
+    "brokenObjectReferenceCount": 0,
+    "blockerCount": 0,
+    "componentsScanned": 248,
+    "prefabsScanned": 8,
+    "materialsScanned": 17
+  },
+  "user_scene_edit_preserved": true,
+  "step6_started": false,
+  "remote_push_performed": false,
+  "device_install_or_test_performed": false
+}

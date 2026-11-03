@@ -1,0 +1,106 @@
+{
+  "generated_utc": "2026-10-30T15:26:55.117393+00:00",
+  "branch": "cleanup/obsolete-code",
+  "commit": "f3148ba687c835385e694722e7c87d8af0a94bc0",
+  "review_classification_commit": "60e2ff9d0c7ee9c7604ebf1745e7b87202cc2a19",
+  "review_commit_matches_HEAD": false,
+  "script_scope": "Assets/AmpPortableDataViz",
+  "caller_scope": "All .cs files under Assets, including Assets/Tests; excludes Packages/Library/Temp/external SDK directories",
+  "serialized_scope": "All matching file suffixes under Assets, including _Recovery and inactive/non-build assets",
+  "serialized_suffixes": [
+    ".anim",
+    ".asset",
+    ".controller",
+    ".overridecontroller",
+    ".playable",
+    ".prefab",
+    ".unity"
+  ],
+  "script_count": 86,
+  "csharp_caller_files_scanned": 160,
+  "test_caller_files_scanned": 29,
+  "serialized_files_scanned": 164,
+  "metadata_files_scanned": 988,
+  "defined_type_declarations_lexical": 188,
+  "classification_counts": {
+    "assembly_test_support_retained": 1,
+    "development_manual_retained": 5,
+    "development_test_feature_retained": 5,
+    "legacy_wrapper_candidate": 1,
+    "optional_hud_subsystem_candidate": 1,
+    "optional_livekit_subsystem_candidate": 2,
+    "optional_plasma_subsystem_candidate": 5,
+    "recovery_scene_retained": 2,
+    "runtime_active_reviewed": 44,
+    "runtime_alternate_retained": 8,
+    "runtime_development_retained": 1,
+    "runtime_fallback_retained": 11
+  },
+  "layer_counts": {
+    "Application": 7,
+    "Core": 10,
+    "Infra": 9,
+    "Presentation": 59,
+    "root": 1
+  },
+  "missing_script_metadata": [],
+  "invalid_script_metadata": [],
+  "invalid_asset_metadata": [],
+  "duplicate_asset_guid_groups": {},
+  "duplicate_inventory_script_guid_groups": {},
+  "ambiguous_type_names": {
+    "AffectLevelQuantizer": [
+      "Assets/AmpPortableDataViz/Presentation/Visualization/EmotionPlasmaBinding.cs",
+      "Assets/AmpPortableDataViz/Presentation/Visualization/EmotionRayPlasmaBinding.cs"
+    ],
+    "GraphMetricBinding": [
+      "Assets/AmpPortableDataViz/Presentation/Visualization/AudienceSignalBinding.cs",
+      "Assets/AmpPortableDataViz/Presentation/Visualization/AudienceSignalVisualizerBinding.cs"
+    ],
+    "Settings": [
+      "Assets/AmpPortableDataViz/Presentation/Mapping/AudienceSignalToArtistVizMapper.cs",
+      "Assets/AmpPortableDataViz/Presentation/Mapping/AudienceSignalToParticleMeshMapper.cs",
+      "Assets/AmpPortableDataViz/Presentation/Mapping/EngagementToHudSideMapper.cs",
+      "Assets/AmpPortableDataViz/Presentation/Mapping/FloatToSimpleParams.cs",
+      "Assets/AmpPortableDataViz/Presentation/Mapping/GraphSeriesToGraphParamsMapper.cs"
+    ],
+    "SourceMode": [
+      "Assets/AmpPortableDataViz/Presentation/Visualization/AudienceDataManualDriver.cs",
+      "Assets/AmpPortableDataViz/Presentation/Visualization/AudienceSignalVisualizerBinding.cs",
+      "Assets/AmpPortableDataViz/Presentation/Visualization/GraphManualDriver.cs",
+      "Assets/AmpPortableDataViz/Presentation/Visualization/ParticleMeshManualDriver.cs"
+    ]
+  },
+  "no_declared_types": [
+    "Assets/AmpPortableDataViz/AssemblyInfo.cs"
+  ],
+  "unreviewed_rows": [],
+  "independent_rg_verification": {
+    "command": "rg --files Assets/AmpPortableDataViz -g *.cs",
+    "exit_code": 0,
+    "rg_count": 86,
+    "python_count": 86,
+    "paths_match": true,
+    "python_only": [],
+    "rg_only": []
+  },
+  "csv_sha256": "863363d6dc925ccd351d75d7e43705851dcc175a86ae915c0ecb416dfa0b08f3",
+  "review_report_sha256": {
+    "legacy-code-review.md": "8694715d69f2db6ecc1c04dd41f7f36ad46080f3533621b5f2c58fd137846792",
+    "runtime-code-review.md": "f06aaae98f4549584d4dd691ea8840610b9d3cc36d846d83dd335e462f738d68"
+  },
+  "read_warnings": [
+    "Non-UTF8 content read with replacement: Assets/Tests/PlayMode/UnityClockTests.cs"
+  ],
+  "skipped_symlinks": [],
+  "caveats": [
+    "Identifier references are lexical evidence, not semantic calls, type resolution, or runtime reachability.",
+    "Comments and string/character literals are masked for C# identifiers; interpolated-string expressions may be missed. Both sides of preprocessor branches are scanned.",
+    "Types include nested declarations. Common names such as Settings can refer to unrelated types; ambiguous names are reported separately. Namespaces/generic arity/accessibility are not resolved.",
+    "Extension method identifiers are included separately because callers need not spell the containing type name. Their names can also be ambiguous.",
+    "GUID references include disabled components, inactive roots, variants, non-build scenes and recovery assets. A reference is not proof that a component executes; missing direct GUID references do not imply absence from inherited prefabs.",
+    "Persistent UnityEvent type names are listed, but object/fileID and callback-method validity are not resolved. Awake/Start/OnEnable, Inspector callbacks and SDK event listeners need no external C# caller.",
+    "Runtime AddComponent/new/lookups, Resources string loading, Java UnitySendMessage callbacks, external scenes/bundles and SDK code can create dependencies. The scan excludes Packages, Library, Temp and external SDK folders.",
+    "Zero references never establish safe deletion. Review classifications describe the assessed commit and require re-review after changes; no source is modified by this script."
+  ]
+}

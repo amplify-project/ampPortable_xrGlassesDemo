@@ -1,0 +1,58 @@
+{
+  "renames": {
+    "Assets/AmpPortableDataViz/Presentation/Visualization/AudienceSignalBinding.cs": "Assets/AmpPortableDataViz/Presentation/Visualization/SensorSampleAssembler.cs",
+    "Assets/AmpPortableDataViz/Presentation/Visualization/AudienceSignalBinding.cs.meta": "Assets/AmpPortableDataViz/Presentation/Visualization/SensorSampleAssembler.cs.meta",
+    "Assets/AmpPortableDataViz/Presentation/Visualization/AudienceDataManualDriver.cs": "Assets/AmpPortableDataViz/Presentation/Visualization/SensorDataSimulator.cs",
+    "Assets/AmpPortableDataViz/Presentation/Visualization/AudienceDataManualDriver.cs.meta": "Assets/AmpPortableDataViz/Presentation/Visualization/SensorDataSimulator.cs.meta",
+    "Assets/AmpPortableDataViz/Presentation/Visualization/AudienceSignalVisualizerBinding.cs": "Assets/AmpPortableDataViz/Presentation/Visualization/SensorVisualizationBinding.cs",
+    "Assets/AmpPortableDataViz/Presentation/Visualization/AudienceSignalVisualizerBinding.cs.meta": "Assets/AmpPortableDataViz/Presentation/Visualization/SensorVisualizationBinding.cs.meta",
+    "Assets/Tests/PlayMode/AudienceSignalVisualizerBindingSmoothingTests.cs": "Assets/Tests/PlayMode/SensorVisualizationBindingSmoothingTests.cs",
+    "Assets/Tests/PlayMode/AudienceSignalVisualizerBindingSmoothingTests.cs.meta": "Assets/Tests/PlayMode/SensorVisualizationBindingSmoothingTests.cs.meta"
+  },
+  "all_renamed_metadata_byte_identical": true,
+  "unchanged_original_inputs": 1669,
+  "changed_existing_paths": [
+    "Assets/AmpPortableDataViz/Presentation/Bootstrap/Bootstrapper.cs",
+    "Assets/AmpPortableDataViz/Presentation/Bootstrap/VisualizationPresenter.cs",
+    "Assets/AmpPortableDataViz/Presentation/Visualization/SensorStreamCoordinator.cs",
+    "Assets/Prefabs/AudienceGraphPrefab.prefab",
+    "Assets/Prefabs/ParticleMeshViz.prefab",
+    "Assets/Prefabs/ParticleMeshVizRoot_RayNeo.prefab",
+    "Assets/Tests/PlayMode/ArtistVizAssetWiringTests.cs",
+    "Assets/Tests/PlayMode/ArtistVizBindingTests.cs",
+    "Assets/Tests/PlayMode/BootstrapperArtistVizTests.cs",
+    "Assets/Tests/PlayMode/BootstrapperLifecycleTests.cs",
+    "Assets/Tests/PlayMode/BootstrapperRetainedGraphTests.cs",
+    "Assets/Tests/PlayMode/SensorEngagementIntegrationTests.cs"
+  ],
+  "new_test_paths": [
+    "Assets/Tests/PlayMode/RayNeoParticlePrefabTests.cs",
+    "Assets/Tests/PlayMode/RayNeoParticlePrefabTests.cs.meta"
+  ],
+  "particle_mesh_renderer_unchanged": true,
+  "shared_root_prefab_unchanged": true,
+  "all_scenes_packages_project_settings_unchanged": true,
+  "existing_user_project_settings_changes_preserved": true,
+  "previous_test_count": 208,
+  "all_previous_tests_retained_with_fixture_rename": true,
+  "new_tests": [
+    "AmpPortableDataViz.Tests.PlayMode.BootstrapperLifecycleTests.DisplayOnlyPrefab_PerDeviceModeCreatesAndReleasesAssemblers",
+    "AmpPortableDataViz.Tests.PlayMode.BootstrapperLifecycleTests.DisplayOnlyPrefab_SelectedModeSpawnsAndSwitchesWithoutLocalAssembler",
+    "AmpPortableDataViz.Tests.PlayMode.RayNeoParticlePrefabTests.RayNeoVariant_ColliderStillSupportsGazeRaycastsWithoutRigidbody",
+    "AmpPortableDataViz.Tests.PlayMode.RayNeoParticlePrefabTests.RayNeoVariant_HasDisplayBindingAndSimulatorWithoutGrabPhysicsOrLocalAssembler",
+    "AmpPortableDataViz.Tests.PlayMode.RayNeoParticlePrefabTests.RayNeoVariant_ManualModeStillSpawnsAndEmitsWithoutRedis",
+    "AmpPortableDataViz.Tests.PlayMode.RayNeoParticlePrefabTests.RayNeoVariant_SelectedSourceUpdatesRendererAndReplaysAfterReenable",
+    "AmpPortableDataViz.Tests.PlayMode.RayNeoParticlePrefabTests.RenamedComponents_AllRelatedPrefabsHaveNoMissingScripts(\"ArtistViz\")",
+    "AmpPortableDataViz.Tests.PlayMode.RayNeoParticlePrefabTests.RenamedComponents_AllRelatedPrefabsHaveNoMissingScripts(\"AudienceGraphPrefab\")",
+    "AmpPortableDataViz.Tests.PlayMode.RayNeoParticlePrefabTests.RenamedComponents_AllRelatedPrefabsHaveNoMissingScripts(\"ParticleMeshViz\")",
+    "AmpPortableDataViz.Tests.PlayMode.RayNeoParticlePrefabTests.RenamedComponents_AllRelatedPrefabsHaveNoMissingScripts(\"ParticleMeshVizRoot\")",
+    "AmpPortableDataViz.Tests.PlayMode.RayNeoParticlePrefabTests.RenamedComponents_AllRelatedPrefabsHaveNoMissingScripts(\"ParticleMeshVizRoot_RayNeo\")"
+  ],
+  "final_full_suite": {
+    "result": "Passed",
+    "total": "219",
+    "passed": "219",
+    "failed": "0",
+    "skipped": "0"
+  }
+}

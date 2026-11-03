@@ -1,0 +1,31 @@
+{
+  "smoothing_rate_per_second": 6,
+  "neutral_deadband": 0.06,
+  "signal_step_magnitude": 1,
+  "neutral_band_exit_time_seconds": 0.010312567286347921,
+  "equation": "absolute smoothed response = 1 - exp(-6 * elapsedSeconds)",
+  "observations": [
+    {
+      "case": "CornerHalos_DirectionCheck_WithOneMillisecondFrames",
+      "result": "Failed",
+      "frame_delta_seconds": 0.001,
+      "smoothed_negative": -0.0119282976,
+      "smoothed_positive": 0.0119282976,
+      "neutral_deadband": 0.06,
+      "predicted_absolute_signal_after_two_updates": 0.011928287138069482,
+      "failure_message": "  Expected: less than 0.0800000057f\n  But was:  0.0800000057f\n"
+    },
+    {
+      "case": "CornerHalos_DirectionCheck_WithSixtyHertzFrames",
+      "result": "Passed",
+      "frame_delta_seconds": 0.0166666675,
+      "smoothed_negative": -0.181269228,
+      "smoothed_positive": 0.181269228,
+      "neutral_deadband": 0.06,
+      "predicted_absolute_signal_after_two_updates": 0.18126925510932568,
+      "failure_message": null
+    }
+  ],
+  "cause": "The test measured geometry after a frame count before the smoothed input had left its intentional neutral band.",
+  "fix": "Wait for signed nonneutral response magnitude >= 0.1, bounded by five seconds realtime, then keep the original strict rendered-radius and four-corner synchronization assertions."
+}

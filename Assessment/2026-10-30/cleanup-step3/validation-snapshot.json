@@ -1,0 +1,29 @@
+{
+  "generated_utc": "2026-10-30T15:14:12.506670+00:00",
+  "project": "C:\\Users\\Bryan Dunphy\\AppData\\Local\\Temp\\rnc1030\\project",
+  "source_head": "369c06c8b873817dedaa01fe9f2cf16af21da423",
+  "verified_source_files": 1809,
+  "all_source_bytes_match_before_unity": true,
+  "removed_files": [
+    "Assets/AmpPortableDataViz/Presentation/Interaction/XRealControllerQuitter.cs",
+    "Assets/AmpPortableDataViz/Presentation/Interaction/XRealControllerQuitter.cs.meta",
+    "Assets/AmpPortableDataViz/Presentation/Visualization/FaceUserSmooth.cs",
+    "Assets/AmpPortableDataViz/Presentation/Visualization/FaceUserSmooth.cs.meta",
+    "Assets/AmpPortableDataViz/Presentation/Visualization/RuntimeImageBoard.cs",
+    "Assets/AmpPortableDataViz/Presentation/Visualization/RuntimeImageBoard.cs.meta",
+    "Assets/AmpPortableDataViz/Presentation/Visualization/URPImageBoardApplier.cs",
+    "Assets/AmpPortableDataViz/Presentation/Visualization/URPImageBoardApplier.cs.meta"
+  ],
+  "synchronized_files": [
+    "Assets/Settings/PC_Renderer.asset"
+  ],
+  "validation_only_extra_files": [
+    "Assets/Editor.meta",
+    "Assets/Editor/MonoScriptProbe.cs",
+    "Assets/Editor/MonoScriptProbe.cs.meta",
+    "Assets/Editor/PreMergeValidation.cs",
+    "Assets/Editor/PreMergeValidation.cs.meta"
+  ],
+  "helper_sha256": "83ad143f5c5da45a9262193612b933c3d3c53525215c35e66bb101dca65369e5",
+  "note": "Reuses the canonical baseline validation project and its Unity-managed cache; synchronizes current source inputs, removes only the eight authorized files, preserves historical assessment output files. Unity-generated snapshot drift will be recorded separately."
+}

@@ -1,0 +1,26 @@
+{
+  "phase": "before-migration",
+  "project": "C:\\Users\\Bryan Dunphy\\AppData\\Local\\Temp\\rnc1030\\project",
+  "source_files": 1691,
+  "all_source_bytes_match": true,
+  "copied": [
+    "Assets/AmpPortableDataViz/Presentation/Bootstrap/Bootstrapper.cs",
+    "Assets/AmpPortableDataViz/Presentation/Bootstrap/VisualizationPresenter.cs",
+    "Assets/AmpPortableDataViz/Presentation/Visualization/SensorDataSimulator.cs",
+    "Assets/AmpPortableDataViz/Presentation/Visualization/SensorSampleAssembler.cs",
+    "Assets/AmpPortableDataViz/Presentation/Visualization/SensorVisualizationBinding.cs",
+    "Assets/Tests/PlayMode/BootstrapperLifecycleTests.cs",
+    "Assets/Tests/PlayMode/RayNeoParticlePrefabTests.cs",
+    "Assets/Tests/PlayMode/RayNeoParticlePrefabTests.cs.meta"
+  ],
+  "removed": [],
+  "validation_only_extras": [
+    "Assets/Editor.meta",
+    "Assets/Editor/MonoScriptProbe.cs",
+    "Assets/Editor/MonoScriptProbe.cs.meta",
+    "Assets/Editor/PreMergeValidation.cs",
+    "Assets/Editor/PreMergeValidation.cs.meta",
+    "Assets/Editor/RayNeoParticlePrefabMigration.cs",
+    "Assets/Editor/RayNeoParticlePrefabMigration.cs.meta"
+  ]
+}

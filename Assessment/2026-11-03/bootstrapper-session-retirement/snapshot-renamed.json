@@ -1,0 +1,24 @@
+{
+  "phase": "renamed",
+  "project": "C:\\Users\\Bryan Dunphy\\AppData\\Local\\Temp\\rnc1030\\project",
+  "source_files": 1679,
+  "all_source_bytes_match": true,
+  "copied": [
+    "Assets/AmpPortableDataViz/Presentation/Bootstrap/Bootstrapper.cs",
+    "Assets/Scenes/ampPortable_xrGlassesDemo.unity",
+    "Assets/Tests/PlayMode/BootstrapperArtistVizTests.cs",
+    "Assets/Tests/PlayMode/BootstrapperChannelAndLabelTests.cs",
+    "Assets/Tests/PlayMode/BootstrapperLifecycleTests.cs",
+    "Assets/Tests/PlayMode/BootstrapperPlacementTests.cs",
+    "Assets/Tests/PlayMode/BootstrapperSerializationTests.cs",
+    "Assets/Tests/PlayMode/BootstrapperSerializationTests.cs.meta"
+  ],
+  "removed": [],
+  "validation_only_extras": [
+    "Assets/Editor.meta",
+    "Assets/Editor/MonoScriptProbe.cs",
+    "Assets/Editor/MonoScriptProbe.cs.meta",
+    "Assets/Editor/PreMergeValidation.cs",
+    "Assets/Editor/PreMergeValidation.cs.meta"
+  ]
+}

@@ -1,0 +1,32 @@
+{
+  "base_head": "1c68388552db9606f05edfacd24d4232b3a98f84",
+  "changed_sources": [
+    "Assets/Tests/PlayMode/ParticleMeshVisualizerOrthogonalityTests.cs"
+  ],
+  "other_original_input_files_byte_identical": 1688,
+  "all_runtime_scene_prefab_package_projectsettings_and_metadata_bytes_unchanged": true,
+  "reproduction_uses_unchanged_original_test_body": true,
+  "original_signal_samples_geometry_assertions_tolerances_and_cleanup_unchanged": true,
+  "other_original_test_and_helper_bodies_unchanged": [
+    "AssertCornerHaloCenter",
+    "AssertUpperSemicircle",
+    "CornerHalos_AreCreatedAtRenderedCornerParticles",
+    "CornerHalos_RenderOpenUpperSemicircles",
+    "CornerHalos_WhenGridDimensionsChange_RetargetNewCorners",
+    "CornerHalos_WhenHeartDataBecomesStale_FadeAllActiveRings",
+    "CornerHalos_WhenPhysiologyTimestampIsMissing_HideAllActiveRings",
+    "CornerIndices_ResolveAllFourGridCorners",
+    "CountHaloLines",
+    "CreateVisualizer",
+    "FindHaloLines",
+    "MainParticleSizeAndVisibility_DoNotDependOnOtherStreams",
+    "ReadHaloRadius",
+    "ReadPrivateField",
+    "SetPrivateField"
+  ],
+  "original_test_identity_retained": true,
+  "no_ignored_tests_added": true,
+  "shared_geometry_check_only_changes_timing_precondition": true,
+  "five_second_realtime_timeout_and_clock_restoration_present": true,
+  "final_test_sha256": "86059f9488470d03c39e3b7a3f0fd186b4510ed54cab6204cdb8d0295ba6174d"
+}

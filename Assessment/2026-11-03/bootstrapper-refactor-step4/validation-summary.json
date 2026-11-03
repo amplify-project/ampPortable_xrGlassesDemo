@@ -1,0 +1,81 @@
+{
+  "runs": {
+    "sine-removed": {
+      "total": 13,
+      "passed": 13,
+      "failed": 0,
+      "skipped": 0,
+      "exit_code": 0,
+      "result_sha256": "255f2d4244b5356a2a6521c95e39f65e84c7edf7cd2cad95b4d1d60f49af9d7e"
+    },
+    "lifecycle-before": {
+      "total": 7,
+      "passed": 2,
+      "failed": 5,
+      "skipped": 0,
+      "exit_code": 2,
+      "result_sha256": "5a28cfabf3704a712bbaf6a103d7fdd20aa35baa4ea7dd545b29e654b13c7ab1"
+    },
+    "lifecycle-before-corrected": {
+      "total": 7,
+      "passed": 3,
+      "failed": 4,
+      "skipped": 0,
+      "exit_code": 2,
+      "result_sha256": "64a2307ef40b2b0f21fe6d5a78229559990c6fbf2af367267a99db9c078dbe77"
+    },
+    "lifecycle-after": {
+      "total": 7,
+      "passed": 7,
+      "failed": 0,
+      "skipped": 0,
+      "exit_code": 0,
+      "result_sha256": "e0afeb4d02ab8e4c9681a0b42ea28f742576f04d0cfb7a3f9e0fa2a47c0e32ae"
+    },
+    "full": {
+      "total": 209,
+      "passed": 209,
+      "failed": 0,
+      "skipped": 0,
+      "exit_code": 0,
+      "result_sha256": "30036fbdb4d82bb0f9f83dd784d6c0c5726100d9f565691c3d7c364eae3b3ff1"
+    },
+    "full-final": {
+      "total": 210,
+      "passed": 210,
+      "failed": 0,
+      "skipped": 0,
+      "exit_code": 0,
+      "result_sha256": "65b81e41e9360b9157fe2fca508795de2ffd6042a8002c64365be6e1ed2d20dc"
+    }
+  },
+  "all_202_prior_cases_retained": true,
+  "new_cases": [
+    "AmpPortableDataViz.Tests.PlayMode.BootstrapperLifecycleTests.ManualMode_ReconfigurationReusesAndDisableReenableRecreatesVisuals",
+    "AmpPortableDataViz.Tests.PlayMode.BootstrapperLifecycleTests.PerDeviceToSelectedToManual_ReleasesSharedPumpsAndTargets",
+    "AmpPortableDataViz.Tests.PlayMode.BootstrapperLifecycleTests.PrimaryRedis_DisableReenableAndDestroyReleaseSubscriptions",
+    "AmpPortableDataViz.Tests.PlayMode.BootstrapperLifecycleTests.PrimaryRedis_RepeatedConfirmationBindsAndSpawnsOnce",
+    "AmpPortableDataViz.Tests.PlayMode.BootstrapperLifecycleTests.PrimaryRedis_WaitsForEndpointConfirmation",
+    "AmpPortableDataViz.Tests.PlayMode.BootstrapperLifecycleTests.PrimaryToManualTransition_StopsSessionAndCanReturnToRedis",
+    "AmpPortableDataViz.Tests.PlayMode.BootstrapperLifecycleTests.RedisIsDefault_AndRetiredSourceValueCannotStartSession",
+    "AmpPortableDataViz.Tests.PlayMode.BootstrapperLifecycleTests.SelectedStreams_ReconfirmationAndDisableClearOwnedObjects"
+  ],
+  "android": {
+    "result": "Succeeded",
+    "errors": 0,
+    "warnings": 20,
+    "durationSeconds": 87.8044267
+  },
+  "build_warnings_exactly_match_previous_build": true,
+  "scene": {
+    "missingScriptCount": 0,
+    "brokenObjectReferenceCount": 0,
+    "blockerCount": 0,
+    "componentsScanned": 248,
+    "prefabsScanned": 8,
+    "materialsScanned": 17
+  },
+  "step5_started": false,
+  "device_install_or_test_performed": false,
+  "remote_push_performed": false
+}

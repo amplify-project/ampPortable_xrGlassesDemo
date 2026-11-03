@@ -1,0 +1,385 @@
+{
+  "base_head": "3a7106d9b269fa6aedebc234307ff6f621faa0c8",
+  "source_scope": [
+    "Assets",
+    "Packages",
+    "ProjectSettings"
+  ],
+  "before_file_count": 1750,
+  "after_file_count": 1702,
+  "removed": [
+    {
+      "path": "Assets/AmpPortableDataViz/Core/AffectContracts.cs",
+      "before_sha256": "efb3278cf8cdc64636969d633910240488ec256ee9f75a25d68205661771cb3d"
+    },
+    {
+      "path": "Assets/AmpPortableDataViz/Core/AffectContracts.cs.meta",
+      "before_sha256": "f42c173a27c942261cadb6d5d7a0c8776179ee3cf21550d34299d7a332aa1908"
+    },
+    {
+      "path": "Assets/AmpPortableDataViz/Infra/LiveKitTelemetryService.cs",
+      "before_sha256": "c09343e53a8f048ca24cc6b6f8511d8e250910157e75a838d129ae160b5163e7"
+    },
+    {
+      "path": "Assets/AmpPortableDataViz/Infra/LiveKitTelemetryService.cs.meta",
+      "before_sha256": "f6aafc13692fabcae4557545e70d1c041190f51511262f421217e3c8a32a827a"
+    },
+    {
+      "path": "Assets/AmpPortableDataViz/Presentation/Mapping/ArousalValenceToEmotionPlasmaMapper.cs",
+      "before_sha256": "df68070098eb015eeb1e1cf938d715923b18f7516ea715e17df09b1585c3de15"
+    },
+    {
+      "path": "Assets/AmpPortableDataViz/Presentation/Mapping/ArousalValenceToEmotionPlasmaMapper.cs.meta",
+      "before_sha256": "ea0248e6ee787712a9165858759b3e3bad95c9125449ebeae68337b4c732c0ad"
+    },
+    {
+      "path": "Assets/AmpPortableDataViz/Presentation/Mapping/ArousalValenceToRaymarchPlasmaMapper.cs",
+      "before_sha256": "4294b124ca98d42423aedad6e0f14996b64ff18bffd459e9cbccf5403272e32d"
+    },
+    {
+      "path": "Assets/AmpPortableDataViz/Presentation/Mapping/ArousalValenceToRaymarchPlasmaMapper.cs.meta",
+      "before_sha256": "a9e4ea2aeb6af67a7e39b2261bfe0c92af1e06a9e828453b6146b87facc13f55"
+    },
+    {
+      "path": "Assets/AmpPortableDataViz/Presentation/Mapping/EngagementToHudSideMapper.cs",
+      "before_sha256": "9acaa61b40e63d59cc440a9627d520f3e4360c72f8aa2d3eb6948d7fa3230d7c"
+    },
+    {
+      "path": "Assets/AmpPortableDataViz/Presentation/Mapping/EngagementToHudSideMapper.cs.meta",
+      "before_sha256": "b7e7c8605638a0a74adbc9e2a85e29d01a6f974c33676af309a3a491cbb5e976"
+    },
+    {
+      "path": "Assets/AmpPortableDataViz/Presentation/Mapping/PlasmaAffectMapper.cs",
+      "before_sha256": "921210009baa85aa00844d9f662a3163ac3cfb06c199b713ef80bbfa2b5086ce"
+    },
+    {
+      "path": "Assets/AmpPortableDataViz/Presentation/Mapping/PlasmaAffectMapper.cs.meta",
+      "before_sha256": "daebcf553541719dc4d064f63b5c4bb40ca6b7ef58a96ae36128f4eee2238ad8"
+    },
+    {
+      "path": "Assets/AmpPortableDataViz/Presentation/Mapping/RaymarchPlasmaParamsMapper.cs",
+      "before_sha256": "db0475ed5ee8a7aa14906c4ed0dfb6142f5c64987d1a9680709a0aa3194d0213"
+    },
+    {
+      "path": "Assets/AmpPortableDataViz/Presentation/Mapping/RaymarchPlasmaParamsMapper.cs.meta",
+      "before_sha256": "ede69e501bdc8240f061308ac6f608f1bd8a6e29521d05d27ef4b8fdd21b9f05"
+    },
+    {
+      "path": "Assets/AmpPortableDataViz/Presentation/Sources/LiveKitTelemetryReceiver.cs",
+      "before_sha256": "3d52c460408748fdc98a2754b1a54e5926aebaa69c5da436a5d3d1c1d1dc223a"
+    },
+    {
+      "path": "Assets/AmpPortableDataViz/Presentation/Sources/LiveKitTelemetryReceiver.cs.meta",
+      "before_sha256": "f2171dbc58c2cf43898b0049becc5ac018043b38de081ad34a59eba61b41944b"
+    },
+    {
+      "path": "Assets/AmpPortableDataViz/Presentation/Sources/RedisManager.cs",
+      "before_sha256": "ec2b8cf65fbdd7aa78f41423bc7447a1ad5284a8bafeb4ec3a060dfd9bcd6df9"
+    },
+    {
+      "path": "Assets/AmpPortableDataViz/Presentation/Sources/RedisManager.cs.meta",
+      "before_sha256": "e46c1b5926aba9361f63a75e550628cdfcbd0fe09b71716582de19b1a0375ff6"
+    },
+    {
+      "path": "Assets/AmpPortableDataViz/Presentation/Visualization/ColourChangingHudSide.cs",
+      "before_sha256": "d28ee592866fc3241d22eff59a10e1d9a9c0df99c099c8c2aca87d0699599bb4"
+    },
+    {
+      "path": "Assets/AmpPortableDataViz/Presentation/Visualization/ColourChangingHudSide.cs.meta",
+      "before_sha256": "6bb0832091880db5947a3aa69ab309d47657f084079d2f7417db698a8705c56e"
+    },
+    {
+      "path": "Assets/AmpPortableDataViz/Presentation/Visualization/EmotionPlasmaBinding.cs",
+      "before_sha256": "cb2c528db91ebede2fbd90991ba10450a3473dc7c5ac23176a4b1911769fe1ad"
+    },
+    {
+      "path": "Assets/AmpPortableDataViz/Presentation/Visualization/EmotionPlasmaBinding.cs.meta",
+      "before_sha256": "6e4f4485443f2d110a914cd7e66bb085eed58cfc7f43025092a303e19de8ec36"
+    },
+    {
+      "path": "Assets/AmpPortableDataViz/Presentation/Visualization/EmotionPlasmaManualDriver.cs",
+      "before_sha256": "ab1c73d5ff58149d59ae5e92d8ed2c4ea9ec53f3fd37d731d692090ba46ec896"
+    },
+    {
+      "path": "Assets/AmpPortableDataViz/Presentation/Visualization/EmotionPlasmaManualDriver.cs.meta",
+      "before_sha256": "e6d2d7a1bdcb4137e8d97fb45f719a7e0d196d5953b22df87d70d8064c5bba79"
+    },
+    {
+      "path": "Assets/AmpPortableDataViz/Presentation/Visualization/EmotionPlasmaVisualizer.cs",
+      "before_sha256": "024d98a58bbec97d7c94f2da3e0b9421d98f7713edc5852929b57761c244d952"
+    },
+    {
+      "path": "Assets/AmpPortableDataViz/Presentation/Visualization/EmotionPlasmaVisualizer.cs.meta",
+      "before_sha256": "fc997bb5c15f2c6eb6ba86689dacfb9f33ec58d9cf741f729d8439e27dcd6e18"
+    },
+    {
+      "path": "Assets/AmpPortableDataViz/Presentation/Visualization/EmotionRayPlasmaBinding.cs",
+      "before_sha256": "78d221a3031a557ac7c95962a9a4bf318d7a7c489b1af8ce4d76dfa1d3f9dd95"
+    },
+    {
+      "path": "Assets/AmpPortableDataViz/Presentation/Visualization/EmotionRayPlasmaBinding.cs.meta",
+      "before_sha256": "bba411370fb796c47f5b8e9f41e5429c1b2a72215baf46da24d75e85e4008adc"
+    },
+    {
+      "path": "Assets/AmpPortableDataViz/Presentation/Visualization/EmotionRayPlasmaManualDriver.cs",
+      "before_sha256": "cd5fb0b8b23eaab2625fb61b06751a952f45dfe769aba4fd34294d553fcec9f0"
+    },
+    {
+      "path": "Assets/AmpPortableDataViz/Presentation/Visualization/EmotionRayPlasmaManualDriver.cs.meta",
+      "before_sha256": "cacc04129dc6cecec1feae30a18c035520d0c7ac91a6748bf9adf06d0cea04d9"
+    },
+    {
+      "path": "Assets/AmpPortableDataViz/Presentation/Visualization/EmotionRayPlasmaVisualizer.cs",
+      "before_sha256": "d17bededf6a546584e205958ea081a4d3bc34c2e56c496fc875affff234d23cf"
+    },
+    {
+      "path": "Assets/AmpPortableDataViz/Presentation/Visualization/EmotionRayPlasmaVisualizer.cs.meta",
+      "before_sha256": "9de3c7ce53f68bffaf0b54484a7622d242665aaa0b59714f94ff5d94cef7f0fe"
+    },
+    {
+      "path": "Assets/AmpPortableDataViz/Presentation/Visualization/EngagementHudBinding.cs",
+      "before_sha256": "6b8c11d578143843be7aba92ccd0aaf4cf2975e3908b7324a3a715d6bdff447f"
+    },
+    {
+      "path": "Assets/AmpPortableDataViz/Presentation/Visualization/EngagementHudBinding.cs.meta",
+      "before_sha256": "1d416c80601f80ec5e0a69aea29bad3faa26ff6ca7e762195cba5808fb4f3016"
+    },
+    {
+      "path": "Assets/AmpPortableDataViz/Presentation/Visualization/FrameSmoother.cs",
+      "before_sha256": "7299545cc41af0480a64a8a28db632105a64dca4f6f33dd7df98a5e8c59a0b66"
+    },
+    {
+      "path": "Assets/AmpPortableDataViz/Presentation/Visualization/FrameSmoother.cs.meta",
+      "before_sha256": "e55887e32c82d26a61bc22eb774a1361e5e07395a339857a8eb8a5084576f09c"
+    },
+    {
+      "path": "Assets/AmpPortableDataViz/Presentation/Visualization/GraphBinding.cs",
+      "before_sha256": "d084178dc41738754d519a597cdcb65988c3a9bb16279e509bdaea0eee94f26d"
+    },
+    {
+      "path": "Assets/AmpPortableDataViz/Presentation/Visualization/GraphBinding.cs.meta",
+      "before_sha256": "0c3de1dc5ba95bd43dcf82284dfb0bd175601f13aff704eaae2de849bdcc702a"
+    },
+    {
+      "path": "Assets/Prefabs/EmoPlasmaRay.prefab",
+      "before_sha256": "750a214808008455410054eb5065e77211479bdc63cbd8eef005e1245ade9f52"
+    },
+    {
+      "path": "Assets/Prefabs/EmoPlasmaRay.prefab.meta",
+      "before_sha256": "02be02be54e5507068653e3a301a2946e86b4a968bde2de3fef482708f471ef2"
+    },
+    {
+      "path": "Assets/Prefabs/EmotionPlasma.prefab",
+      "before_sha256": "188cf5bd412a50107d9543ac551c9d08aa80c1edda435acaa1cdcc2276e91943"
+    },
+    {
+      "path": "Assets/Prefabs/EmotionPlasma.prefab.meta",
+      "before_sha256": "4310f188b92c76e04606535b0a02f0cf3b2a39ad0c57cf688823fa4ae8e0ac48"
+    },
+    {
+      "path": "Assets/Prefabs/EmotionRaymarchPlasma.prefab",
+      "before_sha256": "ce262faae61475896d42b03c887c7c013e102c71de19288bdec7df9293fd3fcc"
+    },
+    {
+      "path": "Assets/Prefabs/EmotionRaymarchPlasma.prefab.meta",
+      "before_sha256": "1408c46e01ee174c54c55d41ab7ccd4a9bd3d88e80e2b76b8548bcf6795d1c09"
+    },
+    {
+      "path": "Assets/Prefabs/PlasmaVisual.prefab",
+      "before_sha256": "835557c3fb90999dce1abeda8985c51bcc6688b4b1fa6fd0a16a5fd65b9f6346"
+    },
+    {
+      "path": "Assets/Prefabs/PlasmaVisual.prefab.meta",
+      "before_sha256": "85d444e47238f11ce30c8b1d91f2d08f3ed4a49ae1bf18fa8b728f2fcea19b78"
+    },
+    {
+      "path": "Assets/Tests/PlayMode/LiveKitTelemetryReceiverTests.cs",
+      "before_sha256": "270fe7d4b0b53f6d3d525ed8d23dae2d0bc67620fad66d51837e7870979ccd33"
+    },
+    {
+      "path": "Assets/Tests/PlayMode/LiveKitTelemetryReceiverTests.cs.meta",
+      "before_sha256": "57339a9b18fcff0e54c740a9c6aeda0b303c000ff6d74dff8a84e4c646dfbecf"
+    },
+    {
+      "path": "Assets/Tests/PlayMode/LiveKitTelemetryServiceTests.cs",
+      "before_sha256": "8ddc89aeb595cb39b3e7d277f276b836b0271b425c4e65b5b4c2270051273fe5"
+    },
+    {
+      "path": "Assets/Tests/PlayMode/LiveKitTelemetryServiceTests.cs.meta",
+      "before_sha256": "46743b2263c286435727d0b14341f0951e75f4d9326bc2a5b26e0242e13d8bb8"
+    }
+  ],
+  "changed": [
+    {
+      "path": "Assets/AmpPortableDataViz/AmpPortableDataViz.asmdef",
+      "before_sha256": "36917cdd46693429b195c0bd4a2e38efb45809064cd113ca1d796f4726fc6b15",
+      "after_sha256": "63a1c3c93e519bfca2f579df38e66c7078691a7a60bed41b658a56f8b8065275"
+    },
+    {
+      "path": "Assets/AmpPortableDataViz/Presentation/Bootstrap/Bootstrapper.cs",
+      "before_sha256": "0fe73c3cb0717d7f886338a8ee262683c8a19f60d96e41d6cec80e70236f6599",
+      "after_sha256": "c4905f728d3b65b5ae51055a8756788df7f968110200bab4ae593a8384c4114e"
+    },
+    {
+      "path": "Assets/Prefabs/GraphPrefab.prefab",
+      "before_sha256": "5662ba6a6bd88ef05c3b9d31febf5d0575793804598e836b6982f5b21d7a1e76",
+      "after_sha256": "3022d3e5da34097d3adf67d18a83963d769c64e4af53e2371e6c3502ab03a00d"
+    },
+    {
+      "path": "Assets/Scenes/ampPortable_xrGlassesDemo.unity",
+      "before_sha256": "16c86d2e9159f04ecb96c6430e70dc88f5482e68b1b1f306ae8d3ba7945f6400",
+      "after_sha256": "5dc4640e11cc80c29fe30795acdc22eb608e04f079b3080886565c2654a81259"
+    }
+  ],
+  "added": [
+    {
+      "path": "Assets/Tests/PlayMode/BootstrapperRetainedGraphTests.cs",
+      "sha256": "5275af2c08e54fd7818cd9f74b02505ce1361664b16a7436dffc5909c8e3c317"
+    },
+    {
+      "path": "Assets/Tests/PlayMode/BootstrapperRetainedGraphTests.cs.meta",
+      "sha256": "808c758ddaf1d8581de843b3ade78e8584a3ac56e4ccab6a82ed006968ba8a75"
+    }
+  ],
+  "unchanged_input_count": 1696,
+  "removed_asset_guids": {
+    "3b924c1f4cf84d93af18ad2c6719d59f": "Assets/AmpPortableDataViz/Core/AffectContracts.cs",
+    "e9cd9d6e05eba3c4bae3a760579b5176": "Assets/AmpPortableDataViz/Infra/LiveKitTelemetryService.cs",
+    "9d7e7891a2bf40c1baf7cd8e6ce1de03": "Assets/AmpPortableDataViz/Presentation/Mapping/ArousalValenceToEmotionPlasmaMapper.cs",
+    "9eb1af1be6defec468d3beb509c605e9": "Assets/AmpPortableDataViz/Presentation/Mapping/ArousalValenceToRaymarchPlasmaMapper.cs",
+    "e9c55af6eefc27242bbc9fb5fb32fdaf": "Assets/AmpPortableDataViz/Presentation/Mapping/EngagementToHudSideMapper.cs",
+    "470d575c38a228442a7ae2f8ab3dec79": "Assets/AmpPortableDataViz/Presentation/Mapping/PlasmaAffectMapper.cs",
+    "e8b99dd7fd14b7b4185e5c8dfab53e01": "Assets/AmpPortableDataViz/Presentation/Mapping/RaymarchPlasmaParamsMapper.cs",
+    "5d19170f9f087e243bff58d78a98d9ac": "Assets/AmpPortableDataViz/Presentation/Sources/LiveKitTelemetryReceiver.cs",
+    "cefa4e9695b578d489b788eaafcddda1": "Assets/AmpPortableDataViz/Presentation/Sources/RedisManager.cs",
+    "f385243fd64024043bbfcd6441f0f5d4": "Assets/AmpPortableDataViz/Presentation/Visualization/ColourChangingHudSide.cs",
+    "8b6f4f89ea2540a78cec5e4342e29882": "Assets/AmpPortableDataViz/Presentation/Visualization/EmotionPlasmaBinding.cs",
+    "a9b63c4f5f500b24b805fe7711d68027": "Assets/AmpPortableDataViz/Presentation/Visualization/EmotionPlasmaManualDriver.cs",
+    "55d8d08b43be4fe9a863dceb65b0def7": "Assets/AmpPortableDataViz/Presentation/Visualization/EmotionPlasmaVisualizer.cs",
+    "398cb510321987a4897e287ad4047fb1": "Assets/AmpPortableDataViz/Presentation/Visualization/EmotionRayPlasmaBinding.cs",
+    "27b57e1e63f87ce498cd627ceab41433": "Assets/AmpPortableDataViz/Presentation/Visualization/EmotionRayPlasmaManualDriver.cs",
+    "0a9285bcbe76bb3468afbace3c7041e0": "Assets/AmpPortableDataViz/Presentation/Visualization/EmotionRayPlasmaVisualizer.cs",
+    "8054aab6a41c540439b1188d20441e2b": "Assets/AmpPortableDataViz/Presentation/Visualization/EngagementHudBinding.cs",
+    "94a3c688a0ee101428f7d2b8711bc83d": "Assets/AmpPortableDataViz/Presentation/Visualization/FrameSmoother.cs",
+    "36c9f222d0b09484a85e71cc40cc79bd": "Assets/AmpPortableDataViz/Presentation/Visualization/GraphBinding.cs",
+    "c9a590e20901af14ab56a8c38e566298": "Assets/Prefabs/EmoPlasmaRay.prefab",
+    "80e7ad267774ae148acddd79d82dadd2": "Assets/Prefabs/EmotionPlasma.prefab",
+    "b58615530f585244994540c483f2bd7f": "Assets/Prefabs/EmotionRaymarchPlasma.prefab",
+    "6181c8d3a60738646a748488a8ed7a7f": "Assets/Prefabs/PlasmaVisual.prefab",
+    "c5cdbf9d71a173946966d0a74601f985": "Assets/Tests/PlayMode/LiveKitTelemetryReceiverTests.cs",
+    "1ef96339272ed294f8a7d8dcf4ddc73a": "Assets/Tests/PlayMode/LiveKitTelemetryServiceTests.cs"
+  },
+  "removed_guid_reference_check": {
+    "command": [
+      "rg",
+      "-n",
+      "--no-ignore",
+      "--hidden",
+      "3b924c1f4cf84d93af18ad2c6719d59f|e9cd9d6e05eba3c4bae3a760579b5176|9d7e7891a2bf40c1baf7cd8e6ce1de03|9eb1af1be6defec468d3beb509c605e9|e9c55af6eefc27242bbc9fb5fb32fdaf|470d575c38a228442a7ae2f8ab3dec79|e8b99dd7fd14b7b4185e5c8dfab53e01|5d19170f9f087e243bff58d78a98d9ac|cefa4e9695b578d489b788eaafcddda1|f385243fd64024043bbfcd6441f0f5d4|8b6f4f89ea2540a78cec5e4342e29882|a9b63c4f5f500b24b805fe7711d68027|55d8d08b43be4fe9a863dceb65b0def7|398cb510321987a4897e287ad4047fb1|27b57e1e63f87ce498cd627ceab41433|0a9285bcbe76bb3468afbace3c7041e0|8054aab6a41c540439b1188d20441e2b|94a3c688a0ee101428f7d2b8711bc83d|36c9f222d0b09484a85e71cc40cc79bd|c9a590e20901af14ab56a8c38e566298|80e7ad267774ae148acddd79d82dadd2|b58615530f585244994540c483f2bd7f|6181c8d3a60738646a748488a8ed7a7f|c5cdbf9d71a173946966d0a74601f985|1ef96339272ed294f8a7d8dcf4ddc73a",
+      "Assets",
+      "Packages",
+      "ProjectSettings"
+    ],
+    "exit_code": 1,
+    "stdout": "",
+    "stderr": ""
+  },
+  "bootstrap_method_comparison": {
+    "removed": [
+      "AcquireRedisPumpForChannel",
+      "ApplyGraphHeightScale",
+      "ApplyGraphLayoutToGroups",
+      "AttachGraphGroupPanel",
+      "AttachGraphLabel",
+      "AttachGraphPanel",
+      "BuildDeviceChannelDefinitions",
+      "ClearEmotionDeviceVisuals",
+      "ClearEngagementHudBindings",
+      "ClearGraphDeviceVisuals",
+      "ClearGraphGroupDecorations",
+      "ConfigureEngagementHudBindings",
+      "CreatePanelQuad",
+      "EnsureEmotionDeviceVisuals",
+      "EnsureGraphDeviceVisuals",
+      "FilterToConfiguredDevices",
+      "FindEmotionBindingComponent",
+      "GetGraphGroupPanelMaterial",
+      "GetGraphPanelMaterial",
+      "GetOrCreatePanelMaterial",
+      "RefreshGraphLayoutForFrames",
+      "ReleaseRedisPump",
+      "RequestGraphLayoutRefresh",
+      "ResolveEngagementScoresChannel",
+      "ResolveGraphChannelLabel",
+      "ResolveGraphChannelOffset",
+      "SpawnGraphForChannel",
+      "TryConfigureEmotionBinding",
+      "UpdateGraphPanelSize"
+    ],
+    "changed_retained": [
+      "ApplyManualDriverConfiguration",
+      "ApplySignalConfiguration",
+      "BeginSession",
+      "ConfigureManualDriverInstance",
+      "DisableRedisComponents",
+      "EnsureAudienceGraphDeviceVisuals",
+      "EnsureSources",
+      "GetRedisChannels",
+      "OnDestroy",
+      "OnDisable",
+      "ShouldInitializeSessionController",
+      "SpawnSelectedSensorVisual"
+    ],
+    "unchanged_retained": [
+      "AcquirePhysioPumpForChannel",
+      "AddVisualizerBindings",
+      "AttachDeviceLabel",
+      "AttachGraphGroupLabel",
+      "Awake",
+      "BeginAfterEndpoint",
+      "BeginSessionIfReady",
+      "BuildAudienceDeviceChannelDefinitions",
+      "BuildSensorEngagementConfigurationKey",
+      "BuildSensorEngagementRoutes",
+      "ClearAudienceDeviceVisuals",
+      "ClearAudienceGraphDeviceVisuals",
+      "ClearManualDriverVisuals",
+      "ClearSelectedSensorStreamMode",
+      "ClearSensorEngagementBackend",
+      "DisableManualDrivers",
+      "DiscoverEmotionDevicesThenApply",
+      "EnsureAnchorRegistry",
+      "EnsureAudienceDeviceVisuals",
+      "EnsureManualDriverVisuals",
+      "EnsureRedisEndpointFromRuntime",
+      "EnsureSelectedSensorStreamMode",
+      "EnsureSensorEngagementBackend",
+      "EnsureSensorHud",
+      "EnsureSensorStreamPresentation",
+      "EnsureVisualPrefab",
+      "ExtractTrailingDigits",
+      "FillAudienceChannelDefaults",
+      "FilterAudienceToConfiguredDevices",
+      "FormatDeviceLabel",
+      "FormatGraphGroupLabel",
+      "GetOrCreateAudienceDefinition",
+      "OnEnable",
+      "OnValidate",
+      "PositionAtParentOrigin",
+      "PositionEmotionVisual",
+      "PositionGraphGroup",
+      "ReleasePhysioPump",
+      "ResolveDeviceLabelParent",
+      "ResolveSensorEngagementChannel",
+      "ResolveSensorEngagementSource",
+      "ResolveVisualRoot",
+      "ShouldAutoDetectEmotionDeviceIds",
+      "SpawnManualDriverPrefab",
+      "StartDeviceDiscovery",
+      "TryCalculateGraphGroupBounds",
+      "TryConfigureAudienceBinding"
+    ]
+  },
+  "packages_and_current_visualizers_unchanged": true,
+  "note": "Only project inputs listed changed; source scope excludes documentation. Package pruning deferred. Method comparison normalizes line endings only."
+}

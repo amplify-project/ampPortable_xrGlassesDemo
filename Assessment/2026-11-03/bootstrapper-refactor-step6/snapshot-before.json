@@ -1,0 +1,24 @@
+{
+  "phase": "before",
+  "project": "C:\\Users\\Bryan Dunphy\\AppData\\Local\\Temp\\rnc1030\\project",
+  "source_files": 1689,
+  "all_source_bytes_match": true,
+  "copied": [
+    "Assets/Tests/PlayMode/BootstrapperArtistVizTests.cs",
+    "Assets/Tests/PlayMode/BootstrapperChannelAndLabelTests.cs",
+    "Assets/Tests/PlayMode/BootstrapperLifecycleTests.cs",
+    "Assets/Tests/PlayMode/BootstrapperPlacementTests.cs",
+    "Assets/Tests/PlayMode/BootstrapperRetainedGraphTests.cs",
+    "Assets/Tests/PlayMode/BootstrapperSerializationTests.cs",
+    "Assets/Tests/PlayMode/BootstrapperTestConfiguration.cs",
+    "Assets/Tests/PlayMode/BootstrapperTestConfiguration.cs.meta"
+  ],
+  "removed": [],
+  "validation_only_extras": [
+    "Assets/Editor.meta",
+    "Assets/Editor/MonoScriptProbe.cs",
+    "Assets/Editor/MonoScriptProbe.cs.meta",
+    "Assets/Editor/PreMergeValidation.cs",
+    "Assets/Editor/PreMergeValidation.cs.meta"
+  ]
+}

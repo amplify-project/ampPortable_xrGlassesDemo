@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Reflection;
 using AmpPortableDataViz.Core;
+using AmpPortableDataViz.Presentation.Mapping;
 using AmpPortableDataViz.Presentation.Visualization;
 using NUnit.Framework;
 using UnityEngine;
@@ -129,6 +130,11 @@ namespace AmpPortableDataViz.Tests.PlayMode
         [UnityTest]
         public IEnumerator CornerHalos_StaySynchronizedWithNegativeInsideAndPositiveOutside()
         {
+            return VerifySynchronizedHaloDirections();
+        }
+
+        private IEnumerator VerifySynchronizedHaloDirections()
+        {
             GameObject negativeObject = CreateVisualizer("negative-heart-rate");
             GameObject positiveObject = CreateVisualizer("positive-heart-rate");
 
@@ -141,8 +147,14 @@ namespace AmpPortableDataViz.Tests.PlayMode
                     new ParticleMeshSignalSample("device-b", 0f, 0f, 0f, 1f, 1f),
                     1L);
 
-                yield return null;
-                yield return null;
+                IEnumerator readiness = WaitForHeartRateResponse(
+                    negativeObject.GetComponent<ParticleMeshVisualizer>(),
+                    positiveObject.GetComponent<ParticleMeshVisualizer>());
+                // Keep failures in this iterator so its caller's clock-restoration finally runs.
+                while (readiness.MoveNext())
+                {
+                    yield return readiness.Current;
+                }
 
                 LineRenderer[] negativeReferences = FindHaloLines(negativeObject, "Heart Rate Neutral Reference");
                 LineRenderer[] negativeActives = FindHaloLines(negativeObject, "Heart Rate Active Halo");
@@ -168,6 +180,71 @@ namespace AmpPortableDataViz.Tests.PlayMode
             {
                 Object.Destroy(negativeObject);
                 Object.Destroy(positiveObject);
+            }
+        }
+
+        [UnityTest]
+        public IEnumerator CornerHalos_DirectionCheck_WithOneMillisecondFrames()
+        {
+            return RunHaloDirectionCheckWithFrameDuration(0.001f);
+        }
+
+        [UnityTest]
+        public IEnumerator CornerHalos_DirectionCheck_WithSixtyHertzFrames()
+        {
+            return RunHaloDirectionCheckWithFrameDuration(1f / 60f);
+        }
+
+        private IEnumerator RunHaloDirectionCheckWithFrameDuration(float frameDuration)
+        {
+            float previousCaptureDeltaTime = Time.captureDeltaTime;
+            try
+            {
+                Time.captureDeltaTime = frameDuration;
+                // Let Unity adopt the controlled duration before creating the visualizers.
+                yield return null;
+                yield return null;
+
+                IEnumerator check = VerifySynchronizedHaloDirections();
+                try
+                {
+                    while (check.MoveNext())
+                    {
+                        yield return check.Current;
+                    }
+                }
+                finally
+                {
+                    (check as System.IDisposable)?.Dispose();
+                }
+            }
+            finally
+            {
+                Time.captureDeltaTime = previousCaptureDeltaTime;
+            }
+        }
+
+        private static IEnumerator WaitForHeartRateResponse(
+            ParticleMeshVisualizer negative, ParticleMeshVisualizer positive)
+        {
+            // Smoothing uses elapsed time, so two fast Editor frames can still be neutral.
+            // Wait for an input-response precondition, then independently check rendered radii.
+            double deadline = Time.realtimeSinceStartupAsDouble + 5d;
+            while (true)
+            {
+                var negativeResponse = ReadPrivateField<HeartRateVisualResponse>(negative, "_heartRateVisualResponse");
+                var positiveResponse = ReadPrivateField<HeartRateVisualResponse>(positive, "_heartRateVisualResponse");
+                if (negativeResponse.Direction < 0f && negativeResponse.Magnitude >= 0.1f &&
+                    positiveResponse.Direction > 0f && positiveResponse.Magnitude >= 0.1f)
+                {
+                    yield break;
+                }
+
+                Assert.Less(Time.realtimeSinceStartupAsDouble, deadline,
+                    $"Heart-rate responses did not leave the neutral band: " +
+                    $"negative direction/magnitude={negativeResponse.Direction}/{negativeResponse.Magnitude}, " +
+                    $"positive direction/magnitude={positiveResponse.Direction}/{positiveResponse.Magnitude}.");
+                yield return null;
             }
         }
 

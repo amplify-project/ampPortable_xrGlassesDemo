@@ -1,0 +1,13 @@
+{
+  "workspace_files": 1691,
+  "all_workspace_inputs_match_tested_snapshot": true,
+  "unexpected_snapshot_inputs": [
+    "Assets/Editor.meta",
+    "Assets/Editor/MonoScriptProbe.cs",
+    "Assets/Editor/MonoScriptProbe.cs.meta",
+    "Assets/Editor/PreMergeValidation.cs",
+    "Assets/Editor/PreMergeValidation.cs.meta",
+    "Assets/Editor/RayNeoParticlePrefabMigration.cs",
+    "Assets/Editor/RayNeoParticlePrefabMigration.cs.meta"
+  ]
+}

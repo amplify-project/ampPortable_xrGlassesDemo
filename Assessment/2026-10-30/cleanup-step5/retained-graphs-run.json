@@ -1,0 +1,28 @@
+﻿{
+    "stage":  "PlayMode",
+    "attempt":  "retained-graphs",
+    "started_utc":  "2026-10-30T15:48:35.9456260Z",
+    "finished_utc":  "2026-10-30T15:49:04.0137391Z",
+    "exit_code":  0,
+    "editor":  "C:\\Program Files\\Unity\\Hub\\Editor\\2022.3.36f1\\Editor\\Unity.exe",
+    "arguments":  [
+                      "-batchmode",
+                      "-projectPath",
+                      "\"C:\\Users\\Bryan Dunphy\\AppData\\Local\\Temp\\rnc1030\\project\"",
+                      "-buildTarget",
+                      "Android",
+                      "-logFile",
+                      "\"C:\\Users\\Bryan Dunphy\\Documents\\UnityProjects\\ampPortable_xrGlassesDemo\\Temp\\CleanupStep5-20261030\\retained-graphs.log\"",
+                      "-forgetProjectPath",
+                      "-runTests",
+                      "-testPlatform",
+                      "PlayMode",
+                      "-testResults",
+                      "\"C:\\Users\\Bryan Dunphy\\Documents\\UnityProjects\\ampPortable_xrGlassesDemo\\Assessment\\2026-10-30\\cleanup-step5\\retained-graphs.xml\"",
+                      "-testFilter",
+                      "\"AmpPortableDataViz.Tests.PlayMode.BootstrapperRetainedGraphTests\""
+                  ],
+    "process_git_longpaths":  true,
+    "process_java_windows_trust":  false,
+    "log":  "C:\\Users\\Bryan Dunphy\\Documents\\UnityProjects\\ampPortable_xrGlassesDemo\\Temp\\CleanupStep5-20261030\\retained-graphs.log"
+}

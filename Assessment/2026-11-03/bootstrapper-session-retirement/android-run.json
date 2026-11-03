@@ -1,0 +1,24 @@
+﻿{
+    "stage":  "Build",
+    "attempt":  "android",
+    "started_utc":  "2026-11-03T11:38:50.2078625Z",
+    "finished_utc":  "2026-11-03T11:40:58.5675360Z",
+    "exit_code":  0,
+    "editor":  "C:\\Program Files\\Unity\\Hub\\Editor\\2022.3.36f1\\Editor\\Unity.exe",
+    "arguments":  [
+                      "-batchmode",
+                      "-projectPath",
+                      "\"C:\\Users\\Bryan Dunphy\\AppData\\Local\\Temp\\rnc1030\\project\"",
+                      "-buildTarget",
+                      "Android",
+                      "-logFile",
+                      "\"C:\\Users\\Bryan Dunphy\\Documents\\UnityProjects\\ampPortable_xrGlassesDemo\\Temp\\BootstrapperSessionRetirement-20261103\\android.log\"",
+                      "-forgetProjectPath",
+                      "-executeMethod",
+                      "PreMergeValidation.InspectAndBuildAndroid",
+                      "-quit"
+                  ],
+    "process_git_longpaths":  true,
+    "process_java_windows_trust":  true,
+    "log":  "C:\\Users\\Bryan Dunphy\\Documents\\UnityProjects\\ampPortable_xrGlassesDemo\\Temp\\BootstrapperSessionRetirement-20261103\\android.log"
+}

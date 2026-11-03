@@ -1,0 +1,23 @@
+﻿{
+    "stage":  "MigratePrefab",
+    "attempt":  "migrate",
+    "started_utc":  "2026-11-03T16:08:57.2221595Z",
+    "finished_utc":  "2026-11-03T16:09:15.3392447Z",
+    "exit_code":  0,
+    "editor":  "C:\\Program Files\\Unity\\Hub\\Editor\\2022.3.36f1\\Editor\\Unity.exe",
+    "arguments":  [
+                      "-batchmode",
+                      "-projectPath",
+                      "\"C:\\Users\\Bryan Dunphy\\AppData\\Local\\Temp\\rnc1030\\project\"",
+                      "-buildTarget",
+                      "Android",
+                      "-logFile",
+                      "\"C:\\Users\\Bryan Dunphy\\Documents\\UnityProjects\\ampPortable_xrGlassesDemo\\Temp\\AudienceGraphPrefab-20261103\\migrate.log\"",
+                      "-forgetProjectPath",
+                      "-executeMethod",
+                      "AudienceGraphPrefabMigration.Apply",
+                      "-quit"
+                  ],
+    "process_git_longpaths":  true,
+    "log":  "C:\\Users\\Bryan Dunphy\\Documents\\UnityProjects\\ampPortable_xrGlassesDemo\\Temp\\AudienceGraphPrefab-20261103\\migrate.log"
+}

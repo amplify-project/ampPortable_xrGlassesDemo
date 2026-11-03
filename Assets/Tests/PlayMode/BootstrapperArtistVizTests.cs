@@ -29,14 +29,14 @@ namespace AmpPortableDataViz.Tests.PlayMode
             _testRoot.SetActive(false);
 
             var bootstrapper = _testRoot.AddComponent<Bootstrapper>();
-            bootstrapper.EmotionVisualOriginOffset = new Vector3(1f, 2f, 3f);
+            BootstrapperTestConfiguration.Set(bootstrapper, "AbstractVizOriginOffset", new Vector3(1f, 2f, 3f));
             var parentObject = new GameObject("ArtistVizParent");
             parentObject.transform.SetParent(_testRoot.transform, false);
 
             var template = new GameObject("ArtistVizTemplate");
             template.transform.SetParent(_testRoot.transform, false);
             template.AddComponent<ArtistVizVisualizer>();
-            template.AddComponent<AudienceSignalVisualizerBinding>();
+            template.AddComponent<SensorVisualizationBinding>();
 
             GameObject instance = InvokeSpawnSelectedSensorVisual(
                 bootstrapper,
@@ -48,16 +48,16 @@ namespace AmpPortableDataViz.Tests.PlayMode
             Assert.AreEqual(Vector3.zero, instance.transform.localPosition);
             Assert.IsNotNull(instance.GetComponent<ArtistVizVisualizer>());
 
-            var bindings = new List<AudienceSignalVisualizerBinding>();
+            var bindings = new List<SensorVisualizationBinding>();
             InvokeAddVisualizerBindings(instance, bindings);
             Assert.AreEqual(1, bindings.Count);
 
-            SetField(bootstrapper, "_selectedArtistVisual", instance);
-            Invoke(bootstrapper, "ClearSelectedSensorStreamMode");
+            SetField(GetVisuals(bootstrapper), "_selectedArtistVisual", instance);
+            Invoke(GetVisuals(bootstrapper), "ClearSelectedSensorStreamMode");
             yield return null;
 
             Assert.IsTrue(instance == null);
-            Assert.IsNull(GetField(bootstrapper, "_selectedArtistVisual"));
+            Assert.IsNull(GetField(GetVisuals(bootstrapper), "_selectedArtistVisual"));
         }
 
         private static GameObject InvokeSpawnSelectedSensorVisual(
@@ -66,7 +66,7 @@ namespace AmpPortableDataViz.Tests.PlayMode
             Transform parent)
         {
             return (GameObject)Invoke(
-                bootstrapper,
+                GetVisuals(bootstrapper),
                 "SpawnSelectedSensorVisual",
                 prefab,
                 parent,
@@ -77,13 +77,19 @@ namespace AmpPortableDataViz.Tests.PlayMode
 
         private static void InvokeAddVisualizerBindings(
             GameObject instance,
-            ICollection<AudienceSignalVisualizerBinding> bindings)
+            ICollection<SensorVisualizationBinding> bindings)
         {
-            MethodInfo method = typeof(Bootstrapper).GetMethod(
+            MethodInfo method = typeof(VisualizationPresenter).GetMethod(
                 "AddVisualizerBindings",
                 BindingFlags.Static | BindingFlags.NonPublic);
             Assert.IsNotNull(method);
             method.Invoke(null, new object[] { instance, bindings });
+        }
+
+        private static VisualizationPresenter GetVisuals(Bootstrapper bootstrapper)
+        {
+            return (VisualizationPresenter)typeof(Bootstrapper).GetProperty(
+                "Visuals", BindingFlags.Instance | BindingFlags.NonPublic).GetValue(bootstrapper);
         }
 
         private static object Invoke(object target, string methodName, params object[] arguments)

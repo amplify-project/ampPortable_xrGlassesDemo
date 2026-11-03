@@ -1,0 +1,41 @@
+{
+  "recorded_utc": "2026-11-02T13:28:57.596601+00:00",
+  "scope": "Bootstrapper refactor step1 execution-path documentation only",
+  "source_fingerprint_method": "SHA-256 over sorted compact JSON arrays [POSIX path, byte length, SHA-256 of raw bytes], each followed by LF. Scope: Assets, Packages, ProjectSettings.",
+  "before": {
+    "file_count": 1702,
+    "total_bytes": 150761817,
+    "aggregate_sha256": "a2b926e9758cdc55d36ad454a8b440f184deb543ee23319c7570eac3653c3e79",
+    "head": "4969cf919b7ae4a28925c6ad9663c51a6b49e966",
+    "branch": "cleanup/obsolete-code"
+  },
+  "after": {
+    "file_count": 1702,
+    "total_bytes": 150761817,
+    "aggregate_sha256": "a2b926e9758cdc55d36ad454a8b440f184deb543ee23319c7570eac3653c3e79",
+    "head": "4969cf919b7ae4a28925c6ad9663c51a6b49e966",
+    "branch": "cleanup/obsolete-code"
+  },
+  "source_inputs_unchanged": true,
+  "bootstrapper_sha256": "c4905f728d3b65b5ae51055a8756788df7f968110200bab4ae593a8384c4114e",
+  "method_declarations": 59,
+  "public_configuration_fields": 62,
+  "entry_points": [
+    "Awake",
+    "OnEnable",
+    "BeginAfterEndpoint",
+    "OnDisable",
+    "OnDestroy",
+    "OnValidate"
+  ],
+  "all_methods_lexically_reachable_from_entry_points": true,
+  "all_public_fields_named_in_document": true,
+  "local_document_links_valid": true,
+  "documentation_sha256": "a9b7e9040973416d0700e2b10f445362bde307273226369b1a3a5bed0fca986e",
+  "method_field_map_sha256": "770ee2334f5e855f101ce0c8ecd6f0ce78fca73c2672f43e4d779711ae01a5d4",
+  "unity_tests_run": false,
+  "android_build_run": false,
+  "device_action_performed": false,
+  "step2_started": false,
+  "limits": "Lexical call reachability ignores branch conditions and dynamic/type semantics; it is not proof that every method executes in the saved configuration. Historical test results were read, not rerun."
+}

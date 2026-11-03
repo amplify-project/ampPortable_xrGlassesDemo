@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="utf-8"?>
+<test-run id="2" testcasecount="2" result="Failed(Child)" total="2" passed="1" failed="1" inconclusive="0" skipped="0" asserts="0" engine-version="3.5.0.0" clr-version="4.0.30319.42000" start-time="2026-11-03 13:25:36Z" end-time="2026-11-03 13:25:36Z" duration="0.1124146">
+  <test-suite type="TestSuite" id="1270" name="XR Score Viewer" fullname="XR Score Viewer" runstate="Runnable" testcasecount="208" result="Failed" site="Child" start-time="2026-11-03 13:25:36Z" end-time="2026-11-03 13:25:36Z" duration="0.112415" total="2" passed="1" failed="1" inconclusive="0" skipped="0" asserts="0">
+    <properties>
+      <property name="platform" value="PlayMode" />
+    </properties>
+    <failure>
+      <message><![CDATA[One or more child tests had errors]]></message>
+    </failure>
+    <test-suite type="Assembly" id="1262" name="Tests.dll" fullname="C:/Users/Bryan Dunphy/AppData/Local/Temp/rnc1030/project/Library/ScriptAssemblies/Tests.dll" runstate="Runnable" testcasecount="208" result="Failed" site="Child" start-time="2026-11-03 13:25:36Z" end-time="2026-11-03 13:25:36Z" duration="0.105523" total="2" passed="1" failed="1" inconclusive="0" skipped="0" asserts="0">
+      <properties>
+        <property name="_PID" value="13468" />
+        <property name="_APPDOMAIN" value="Unity Child Domain" />
+        <property name="platform" value="PlayMode" />
+        <property name="EditorOnly" value="False" />
+      </properties>
+      <failure>
+        <message><![CDATA[One or more child tests had errors]]></message>
+      </failure>
+      <test-suite type="TestSuite" id="1263" name="AmpPortableDataViz" fullname="AmpPortableDataViz" runstate="Runnable" testcasecount="208" result="Failed" site="Child" start-time="2026-11-03 13:25:36Z" end-time="2026-11-03 13:25:36Z" duration="0.102764" total="2" passed="1" failed="1" inconclusive="0" skipped="0" asserts="0">
+        <properties />
+        <failure>
+          <message><![CDATA[One or more child tests had errors]]></message>
+        </failure>
+        <test-suite type="TestSuite" id="1264" name="Tests" fullname="AmpPortableDataViz.Tests" runstate="Runnable" testcasecount="208" result="Failed" site="Child" start-time="2026-11-03 13:25:36Z" end-time="2026-11-03 13:25:36Z" duration="0.100148" total="2" passed="1" failed="1" inconclusive="0" skipped="0" asserts="0">
+          <properties />
+          <failure>
+            <message><![CDATA[One or more child tests had errors]]></message>
+          </failure>
+          <test-suite type="TestSuite" id="1267" name="PlayMode" fullname="AmpPortableDataViz.Tests.PlayMode" runstate="Runnable" testcasecount="185" result="Failed" site="Child" start-time="2026-11-03 13:25:36Z" end-time="2026-11-03 13:25:36Z" duration="0.097847" total="2" passed="1" failed="1" inconclusive="0" skipped="0" asserts="0">
+            <properties />
+            <failure>
+              <message><![CDATA[One or more child tests had errors]]></message>
+            </failure>
+            <test-suite type="TestFixture" id="1168" name="ParticleMeshVisualizerOrthogonalityTests" fullname="AmpPortableDataViz.Tests.PlayMode.ParticleMeshVisualizerOrthogonalityTests" classname="AmpPortableDataViz.Tests.PlayMode.ParticleMeshVisualizerOrthogonalityTests" runstate="Runnable" testcasecount="11" result="Failed" site="Child" start-time="2026-11-03 13:25:36Z" end-time="2026-11-03 13:25:36Z" duration="0.094351" total="2" passed="1" failed="1" inconclusive="0" skipped="0" asserts="0">
+              <properties />
+              <failure>
+                <message><![CDATA[One or more child tests had errors]]></message>
+              </failure>
+              <test-case id="1176" name="CornerHalos_DirectionCheck_WithOneMillisecondFrames" fullname="AmpPortableDataViz.Tests.PlayMode.ParticleMeshVisualizerOrthogonalityTests.CornerHalos_DirectionCheck_WithOneMillisecondFrames" methodname="CornerHalos_DirectionCheck_WithOneMillisecondFrames" classname="AmpPortableDataViz.Tests.PlayMode.ParticleMeshVisualizerOrthogonalityTests" runstate="Runnable" seed="1180533206" result="Failed" start-time="2026-11-03 13:25:36Z" end-time="2026-11-03 13:25:36Z" duration="0.064614" asserts="0">
+                <properties>
+                  <property name="_JOINTYPE" value="UnityCombinatorial" />
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+                <failure>
+                  <message><![CDATA[  Expected: less than 0.0800000057f
+  But was:  0.0800000057f
+]]></message>
+                  <stack-trace><![CDATA[at AmpPortableDataViz.Tests.PlayMode.ParticleMeshVisualizerOrthogonalityTests+<CornerHalos_StaySynchronizedWithNegativeInsideAndPositiveOutside>d__4.MoveNext () [0x0016b] in C:\Users\Bryan Dunphy\AppData\Local\Temp\rnc1030\project\Assets\Tests\PlayMode\ParticleMeshVisualizerOrthogonalityTests.cs:156
+at AmpPortableDataViz.Tests.PlayMode.ParticleMeshVisualizerOrthogonalityTests+<RunHaloDirectionCheckWithFrameDuration>d__7.MoveNext () [0x00182] in C:\Users\Bryan Dunphy\AppData\Local\Temp\rnc1030\project\Assets\Tests\PlayMode\ParticleMeshVisualizerOrthogonalityTests.cs:200
+at UnityEngine.TestTools.TestEnumerator+<Execute>d__7.MoveNext () [0x0003a] in .\Library\PackageCache\com.unity.test-framework@1.4.6\UnityEngine.TestRunner\NUnitExtensions\Attributes\TestEnumerator.cs:44
+]]></stack-trace>
+                </failure>
+                <output><![CDATA[SendMessage cannot be called during Awake, CheckConsistency, or OnValidate (negative-heart-rate: OnMeshFilterChanged)
+SendMessage cannot be called during Awake, CheckConsistency, or OnValidate (positive-heart-rate: OnMeshFilterChanged)
+ParticleMeshVisualizer received seq=n/a ts=1 Device=device-a, TonicEDA=0.000, TempRate=0.000, SCRFreq=0.000, HeartRate=-1.000, Engagement=0.000
+ParticleMeshVisualizer received seq=n/a ts=1 Device=device-b, TonicEDA=0.000, TempRate=0.000, SCRFreq=0.000, HeartRate=1.000, Engagement=1.000
+Halo timing after two frames: dt=0.001, negative=-0.0119282976, positive=0.0119282976, deadBand=0.06
+]]></output>
+              </test-case>
+              <test-case id="1177" name="CornerHalos_DirectionCheck_WithSixtyHertzFrames" fullname="AmpPortableDataViz.Tests.PlayMode.ParticleMeshVisualizerOrthogonalityTests.CornerHalos_DirectionCheck_WithSixtyHertzFrames" methodname="CornerHalos_DirectionCheck_WithSixtyHertzFrames" classname="AmpPortableDataViz.Tests.PlayMode.ParticleMeshVisualizerOrthogonalityTests" runstate="Runnable" seed="685806971" result="Passed" start-time="2026-11-03 13:25:36Z" end-time="2026-11-03 13:25:36Z" duration="0.016979" asserts="0">
+                <properties>
+                  <property name="_JOINTYPE" value="UnityCombinatorial" />
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+                <output><![CDATA[SendMessage cannot be called during Awake, CheckConsistency, or OnValidate (negative-heart-rate: OnMeshFilterChanged)
+SendMessage cannot be called during Awake, CheckConsistency, or OnValidate (positive-heart-rate: OnMeshFilterChanged)
+ParticleMeshVisualizer received seq=n/a ts=1 Device=device-a, TonicEDA=0.000, TempRate=0.000, SCRFreq=0.000, HeartRate=-1.000, Engagement=0.000
+ParticleMeshVisualizer received seq=n/a ts=1 Device=device-b, TonicEDA=0.000, TempRate=0.000, SCRFreq=0.000, HeartRate=1.000, Engagement=1.000
+Halo timing after two frames: dt=0.0166666675, negative=-0.181269228, positive=0.181269228, deadBand=0.06
+Saving results to: C:\Users\Bryan Dunphy\Documents\UnityProjects\ampPortable_xrGlassesDemo\Assessment\2026-11-03\halo-timing-fix\reproduction-before.xml
+]]></output>
+              </test-case>
+            </test-suite>
+          </test-suite>
+        </test-suite>
+      </test-suite>
+    </test-suite>
+  </test-suite>
+</test-run>

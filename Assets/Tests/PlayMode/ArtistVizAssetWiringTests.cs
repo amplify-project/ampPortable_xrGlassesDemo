@@ -31,7 +31,7 @@ namespace AmpPortableDataViz.Tests.PlayMode
 
             Assert.IsNotNull(prefab);
             var visualizer = prefab.GetComponent<ArtistVizVisualizer>();
-            var binding = prefab.GetComponent<AudienceSignalVisualizerBinding>();
+            var binding = prefab.GetComponent<SensorVisualizationBinding>();
             Assert.IsNotNull(visualizer);
             Assert.IsNotNull(binding);
             Assert.AreSame(visualizer, GetField(binding, "artistVizVisualizer"));

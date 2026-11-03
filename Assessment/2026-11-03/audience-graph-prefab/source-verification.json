@@ -1,0 +1,36 @@
+{
+  "base_commit": "35bc7ed1b4b00e20a347521e6362ac92a8e74983",
+  "changed_existing_inputs": [
+    "Assets/AmpPortableDataViz/Presentation/Bootstrap/Bootstrapper.cs",
+    "Assets/AmpPortableDataViz/Presentation/Bootstrap/VisualizationPresenter.cs",
+    "Assets/Prefabs/AudienceGraphPrefab.prefab",
+    "Assets/Tests/PlayMode/BootstrapperLifecycleTests.cs"
+  ],
+  "unchanged_original_inputs": 1687,
+  "new_test_inputs": [
+    "Assets/Tests/PlayMode/AudienceGraphPrefabTests.cs",
+    "Assets/Tests/PlayMode/AudienceGraphPrefabTests.cs.meta"
+  ],
+  "all_workspace_inputs_match_tested_snapshot": true,
+  "retained_prefab_settings_graphs_transforms_and_colliders_identical": true,
+  "only_three_components_removed_and_live_source_cleared": true,
+  "all_original_metadata_scenes_packages_project_settings_preserved": true,
+  "existing_user_project_settings_changes_preserved": true,
+  "all_previous_tests_retained": true,
+  "previous_test_count": 219,
+  "new_tests": [
+    "AmpPortableDataViz.Tests.PlayMode.AudienceGraphPrefabTests.ManualMode_EmitsSamplesIntoAllFiveGraphsWithoutRedis",
+    "AmpPortableDataViz.Tests.PlayMode.AudienceGraphPrefabTests.Prefab_ColliderSupportsGazeRaycastsWithoutRigidbody",
+    "AmpPortableDataViz.Tests.PlayMode.AudienceGraphPrefabTests.Prefab_KeepsFiveGraphTargetsAndSimulatorWithoutGrabPhysicsOrLocalAssembler",
+    "AmpPortableDataViz.Tests.PlayMode.AudienceGraphPrefabTests.SelectedSensor_UpdatesAllGraphsAndResetsHistoryOnSwitchAndReenable",
+    "AmpPortableDataViz.Tests.PlayMode.BootstrapperLifecycleTests.DisplayOnlyGraph_PerDeviceToSelectedModeReleasesLocalAssemblers",
+    "AmpPortableDataViz.Tests.PlayMode.BootstrapperLifecycleTests.DisplayOnlyGraph_SelectedModeSpawnsReconfirmsAndReenables"
+  ],
+  "full_suite": {
+    "result": "Passed",
+    "total": "225",
+    "passed": "225",
+    "failed": "0",
+    "skipped": "0"
+  }
+}

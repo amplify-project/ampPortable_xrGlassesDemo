@@ -1,0 +1,47 @@
+{
+  "runs": {
+    "before-focused": {
+      "total": 26,
+      "passed": 26,
+      "failed": 0,
+      "skipped": 0,
+      "exit_code": 0,
+      "xml_sha256": "8ed7c99c51baf9058a971be91eb139b251a6b5a8497744ffd20ed64f1ef48648"
+    },
+    "full": {
+      "total": 206,
+      "passed": 206,
+      "failed": 0,
+      "skipped": 0,
+      "exit_code": 0,
+      "xml_sha256": "7d9428642dbda375f2ec90eb8ee3fea86819224d57b24dfad5fd1afea2bae807"
+    }
+  },
+  "all_205_prior_test_identities_retained": true,
+  "new_test_cases": [
+    "AmpPortableDataViz.Tests.PlayMode.BootstrapperSerializationTests.CurrentPrefab_RoundTripsEveryConfigurationField"
+  ],
+  "serialized_configuration_fields_round_tripped": 50,
+  "android": {
+    "result": "Succeeded",
+    "errors": 0,
+    "warnings": 18,
+    "durationSeconds": 53.924802
+  },
+  "new_build_warning_messages": [],
+  "previous_warnings_not_reemitted": {
+    "Script attached to 'ShowFps' in scene '' is missing or no valid script is attached.": 2
+  },
+  "scene": {
+    "missingScriptCount": 0,
+    "brokenObjectReferenceCount": 0,
+    "blockerCount": 0,
+    "componentsScanned": 248,
+    "prefabsScanned": 8,
+    "materialsScanned": 17
+  },
+  "remote_push_requested": true,
+  "push_target": "origin/cleanup/obsolete-code",
+  "device_install_or_test_performed": false,
+  "step7_started": false
+}

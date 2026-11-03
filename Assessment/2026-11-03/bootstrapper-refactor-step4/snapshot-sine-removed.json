@@ -1,0 +1,22 @@
+{
+  "phase": "sine-removed",
+  "project": "C:\\Users\\Bryan Dunphy\\AppData\\Local\\Temp\\rnc1030\\project",
+  "source_files": 1702,
+  "all_source_bytes_match": true,
+  "copied": [
+    "Assets/AmpPortableDataViz/Presentation/Bootstrap/Bootstrapper.cs",
+    "Assets/Scenes/ampPortable_xrGlassesDemo.unity",
+    "Assets/Tests/PlayMode/BootstrapperRetainedGraphTests.cs"
+  ],
+  "removed": [
+    "Assets/AmpPortableDataViz/Presentation/Sources/SineWaveSource.cs",
+    "Assets/AmpPortableDataViz/Presentation/Sources/SineWaveSource.cs.meta"
+  ],
+  "validation_only_extras": [
+    "Assets/Editor.meta",
+    "Assets/Editor/MonoScriptProbe.cs",
+    "Assets/Editor/MonoScriptProbe.cs.meta",
+    "Assets/Editor/PreMergeValidation.cs",
+    "Assets/Editor/PreMergeValidation.cs.meta"
+  ]
+}

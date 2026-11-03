@@ -1,0 +1,1393 @@
+{
+  "reviewed_head": "4969cf919b7ae4a28925c6ad9663c51a6b49e966",
+  "source_path": "Assets/AmpPortableDataViz/Presentation/Bootstrap/Bootstrapper.cs",
+  "source_sha256": "c4905f728d3b65b5ae51055a8756788df7f968110200bab4ae593a8384c4114e",
+  "line_count": 1998,
+  "top_level_public_fields": [
+    {
+      "name": "AnchorRegistry",
+      "type": "AnchorRegistry",
+      "line": 25,
+      "method_mentions": [
+        "Awake",
+        "EnsureAnchorRegistry"
+      ]
+    },
+    {
+      "name": "SineSource",
+      "type": "SineWaveSource",
+      "line": 26,
+      "method_mentions": [
+        "EnsureSources",
+        "BeginSession",
+        "ApplySignalConfiguration",
+        "ApplyManualDriverConfiguration"
+      ]
+    },
+    {
+      "name": "RedisSource",
+      "type": "RedisDataPump",
+      "line": 27,
+      "method_mentions": [
+        "OnDisable",
+        "EnsureSources",
+        "BeginSession",
+        "ApplySignalConfiguration",
+        "ApplyManualDriverConfiguration",
+        "DisableRedisComponents"
+      ]
+    },
+    {
+      "name": "VisualPrefab",
+      "type": "GameObject",
+      "line": 28,
+      "method_mentions": [
+        "Awake",
+        "EnsureVisualPrefab",
+        "ApplySignalConfiguration",
+        "EnsureManualDriverVisuals",
+        "EnsureSelectedSensorStreamMode",
+        "EnsureAudienceDeviceVisuals"
+      ]
+    },
+    {
+      "name": "IsHost",
+      "type": "bool",
+      "line": 37,
+      "method_mentions": [
+        "EnsureSources",
+        "BeginSession"
+      ]
+    },
+    {
+      "name": "VisualId",
+      "type": "string",
+      "line": 38,
+      "method_mentions": [
+        "BeginSession"
+      ]
+    },
+    {
+      "name": "ProfileId",
+      "type": "string",
+      "line": 39,
+      "method_mentions": [
+        "BeginSession"
+      ]
+    },
+    {
+      "name": "Seed",
+      "type": "int",
+      "line": 40,
+      "method_mentions": [
+        "BeginSession"
+      ]
+    },
+    {
+      "name": "ActiveSignalSource",
+      "type": "SignalSourceType",
+      "line": 43,
+      "method_mentions": [
+        "BeginSession",
+        "ApplySignalConfiguration",
+        "ShouldAutoDetectEmotionDeviceIds",
+        "ShouldInitializeSessionController"
+      ]
+    },
+    {
+      "name": "UseManualVisualizationDrivers",
+      "type": "bool",
+      "line": 46,
+      "method_mentions": [
+        "ApplySignalConfiguration",
+        "ShouldAutoDetectEmotionDeviceIds",
+        "ShouldInitializeSessionController"
+      ]
+    },
+    {
+      "name": "RedisHost",
+      "type": "string",
+      "line": 49,
+      "method_mentions": [
+        "BeginAfterEndpoint",
+        "ApplySignalConfiguration",
+        "EnsureRedisEndpointFromRuntime",
+        "ShouldAutoDetectEmotionDeviceIds",
+        "DiscoverEmotionDevicesThenApply",
+        "EnsureSensorEngagementBackend",
+        "AcquirePhysioPumpForChannel"
+      ]
+    },
+    {
+      "name": "RedisPort",
+      "type": "int",
+      "line": 50,
+      "method_mentions": [
+        "BeginAfterEndpoint",
+        "ApplySignalConfiguration",
+        "EnsureRedisEndpointFromRuntime",
+        "DiscoverEmotionDevicesThenApply",
+        "EnsureSensorEngagementBackend",
+        "AcquirePhysioPumpForChannel"
+      ]
+    },
+    {
+      "name": "RedisChannel",
+      "type": "string",
+      "line": 51,
+      "method_mentions": [
+        "GetRedisChannels"
+      ]
+    },
+    {
+      "name": "RedisChannels",
+      "type": "string[]",
+      "line": 52,
+      "method_mentions": [
+        "GetRedisChannels"
+      ]
+    },
+    {
+      "name": "RequireRedisEndpointConfirmation",
+      "type": "bool",
+      "line": 54,
+      "method_mentions": [
+        "Awake",
+        "ApplySignalConfiguration",
+        "ShouldAutoDetectEmotionDeviceIds"
+      ]
+    },
+    {
+      "name": "IncludeEmotionChannels",
+      "type": "bool",
+      "line": 57,
+      "method_mentions": [
+        "ShouldAutoDetectEmotionDeviceIds",
+        "GetRedisChannels"
+      ]
+    },
+    {
+      "name": "EmotionDeviceIds",
+      "type": "string[]",
+      "line": 58,
+      "method_mentions": [
+        "ApplySignalConfiguration",
+        "DiscoverEmotionDevicesThenApply",
+        "EnsureSelectedSensorStreamMode",
+        "EnsureAudienceDeviceVisuals",
+        "EnsureAudienceGraphDeviceVisuals",
+        "GetRedisChannels"
+      ]
+    },
+    {
+      "name": "AutoDetectEmotionDeviceIds",
+      "type": "bool",
+      "line": 59,
+      "method_mentions": [
+        "ShouldAutoDetectEmotionDeviceIds"
+      ]
+    },
+    {
+      "name": "RedisDiscoveryTimeoutMs",
+      "type": "int",
+      "line": 60,
+      "method_mentions": [
+        "DiscoverEmotionDevicesThenApply"
+      ]
+    },
+    {
+      "name": "EmotionVisualParent",
+      "type": "Transform",
+      "line": 63,
+      "method_mentions": [
+        "EnsureManualDriverVisuals",
+        "EnsureSelectedSensorStreamMode",
+        "EnsureAudienceDeviceVisuals"
+      ]
+    },
+    {
+      "name": "EmotionVisualOriginOffset",
+      "type": "Vector3",
+      "line": 64,
+      "method_mentions": [
+        "PositionEmotionVisual"
+      ]
+    },
+    {
+      "name": "EmotionVisualSpacing",
+      "type": "Vector3",
+      "line": 65,
+      "method_mentions": [
+        "PositionEmotionVisual"
+      ]
+    },
+    {
+      "name": "EmotionVisualsPerRow",
+      "type": "int",
+      "line": 67,
+      "method_mentions": [
+        "PositionEmotionVisual"
+      ]
+    },
+    {
+      "name": "ShowDeviceLabels",
+      "type": "bool",
+      "line": 69,
+      "method_mentions": [
+        "AttachDeviceLabel"
+      ]
+    },
+    {
+      "name": "DeviceLabelOffset",
+      "type": "Vector3",
+      "line": 70,
+      "method_mentions": [
+        "AttachDeviceLabel"
+      ]
+    },
+    {
+      "name": "DeviceLabelFontSize",
+      "type": "float",
+      "line": 71,
+      "method_mentions": [
+        "AttachDeviceLabel"
+      ]
+    },
+    {
+      "name": "DeviceLabelColor",
+      "type": "Color",
+      "line": 72,
+      "method_mentions": [
+        "AttachDeviceLabel"
+      ]
+    },
+    {
+      "name": "AutoSpawnAudienceVisualsFromChannels",
+      "type": "bool",
+      "line": 75,
+      "method_mentions": [
+        "BeginSession",
+        "ApplySignalConfiguration",
+        "EnsureAudienceDeviceVisuals",
+        "ShouldInitializeSessionController"
+      ]
+    },
+    {
+      "name": "AutoSpawnArtistVizFromChannels",
+      "type": "bool",
+      "line": 78,
+      "method_mentions": [
+        "ApplySignalConfiguration"
+      ]
+    },
+    {
+      "name": "ArtistVizPrefab",
+      "type": "GameObject",
+      "line": 79,
+      "method_mentions": [
+        "ApplySignalConfiguration",
+        "EnsureSelectedSensorStreamMode"
+      ]
+    },
+    {
+      "name": "ArtistVizParent",
+      "type": "Transform",
+      "line": 80,
+      "method_mentions": [
+        "EnsureSelectedSensorStreamMode"
+      ]
+    },
+    {
+      "name": "UseIndividualSensorEngagement",
+      "type": "bool",
+      "line": 83,
+      "method_mentions": [
+        "EnsureSensorEngagementBackend",
+        "BuildSensorEngagementRoutes"
+      ]
+    },
+    {
+      "name": "SensorEngagementChannelTemplate",
+      "type": "string",
+      "line": 85,
+      "method_mentions": [
+        "ResolveSensorEngagementChannel"
+      ]
+    },
+    {
+      "name": "SensorEngagementChannelOverrides",
+      "type": "SensorEngagementChannelOverride[]",
+      "line": 86,
+      "method_mentions": [
+        "ResolveSensorEngagementChannel"
+      ]
+    },
+    {
+      "name": "SensorEngagementTimeoutSeconds",
+      "type": "float",
+      "line": 89,
+      "method_mentions": [
+        "EnsureSensorEngagementBackend"
+      ]
+    },
+    {
+      "name": "SensorEngagementNeutralValue",
+      "type": "float",
+      "line": 91,
+      "method_mentions": [
+        "EnsureSensorEngagementBackend"
+      ]
+    },
+    {
+      "name": "SensorEngagementPayloadFormat",
+      "type": "SensorEngagementJsonFormat",
+      "line": 92,
+      "method_mentions": [
+        "EnsureSensorEngagementBackend"
+      ]
+    },
+    {
+      "name": "UseSingleSelectedSensorStream",
+      "type": "bool",
+      "line": 96,
+      "method_mentions": [
+        "ApplySignalConfiguration"
+      ]
+    },
+    {
+      "name": "SensorHudCamera",
+      "type": "Camera",
+      "line": 97,
+      "method_mentions": [
+        "EnsureSensorHud"
+      ]
+    },
+    {
+      "name": "SensorHudLocalPosition",
+      "type": "Vector3",
+      "line": 98,
+      "method_mentions": [
+        "EnsureSensorHud"
+      ]
+    },
+    {
+      "name": "SensorHudLocalScale",
+      "type": "float",
+      "line": 100,
+      "method_mentions": [
+        "EnsureSensorHud"
+      ]
+    },
+    {
+      "name": "SensorHudFontSize",
+      "type": "float",
+      "line": 102,
+      "method_mentions": [
+        "EnsureSensorHud"
+      ]
+    },
+    {
+      "name": "SensorHudColor",
+      "type": "Color",
+      "line": 103,
+      "method_mentions": [
+        "EnsureSensorHud"
+      ]
+    },
+    {
+      "name": "AutoSpawnGraphVisualsFromChannels",
+      "type": "bool",
+      "line": 106,
+      "method_mentions": [
+        "BeginSession",
+        "ApplySignalConfiguration",
+        "EnsureAudienceGraphDeviceVisuals",
+        "ShouldInitializeSessionController"
+      ]
+    },
+    {
+      "name": "GraphPrefab",
+      "type": "GameObject",
+      "line": 107,
+      "method_mentions": [
+        "ApplySignalConfiguration",
+        "EnsureManualDriverVisuals",
+        "EnsureSelectedSensorStreamMode",
+        "EnsureAudienceGraphDeviceVisuals"
+      ]
+    },
+    {
+      "name": "GraphGroupParent",
+      "type": "Transform",
+      "line": 108,
+      "method_mentions": [
+        "EnsureManualDriverVisuals",
+        "EnsureSelectedSensorStreamMode",
+        "EnsureAudienceGraphDeviceVisuals"
+      ]
+    },
+    {
+      "name": "GraphGroupOriginOffset",
+      "type": "Vector3",
+      "line": 109,
+      "method_mentions": [
+        "PositionGraphGroup"
+      ]
+    },
+    {
+      "name": "GraphGroupSpacing",
+      "type": "Vector3",
+      "line": 110,
+      "method_mentions": [
+        "PositionGraphGroup"
+      ]
+    },
+    {
+      "name": "GraphGroupsPerRow",
+      "type": "int",
+      "line": 112,
+      "method_mentions": [
+        "PositionGraphGroup"
+      ]
+    },
+    {
+      "name": "ShowGraphGroupLabels",
+      "type": "bool",
+      "line": 115,
+      "method_mentions": [
+        "AttachGraphGroupLabel"
+      ]
+    },
+    {
+      "name": "GraphGroupLabelOffset",
+      "type": "Vector3",
+      "line": 116,
+      "method_mentions": [
+        "AttachGraphGroupLabel"
+      ]
+    },
+    {
+      "name": "GraphGroupLabelVerticalOffset",
+      "type": "float",
+      "line": 118,
+      "method_mentions": [
+        "AttachGraphGroupLabel"
+      ]
+    },
+    {
+      "name": "GraphGroupLabelFontSize",
+      "type": "float",
+      "line": 119,
+      "method_mentions": [
+        "AttachGraphGroupLabel"
+      ]
+    },
+    {
+      "name": "GraphGroupLabelColor",
+      "type": "Color",
+      "line": 120,
+      "method_mentions": [
+        "AttachGraphGroupLabel"
+      ]
+    },
+    {
+      "name": "GraphItemBoundsSize",
+      "type": "Vector3",
+      "line": 123,
+      "method_mentions": [
+        "TryCalculateGraphGroupBounds"
+      ]
+    },
+    {
+      "name": "GraphGroupBoundsPadding",
+      "type": "Vector3",
+      "line": 124,
+      "method_mentions": [
+        "TryCalculateGraphGroupBounds"
+      ]
+    },
+    {
+      "name": "AnchorLabel",
+      "type": "string",
+      "line": 127,
+      "method_mentions": [
+        "BeginSession"
+      ]
+    },
+    {
+      "name": "AnchorPosition",
+      "type": "Vector3",
+      "line": 128,
+      "method_mentions": [
+        "BeginSession",
+        "PositionAtParentOrigin",
+        "PositionEmotionVisual",
+        "PositionGraphGroup"
+      ]
+    },
+    {
+      "name": "AnchorRotationEuler",
+      "type": "Vector3",
+      "line": 129,
+      "method_mentions": [
+        "BeginSession",
+        "PositionAtParentOrigin",
+        "PositionEmotionVisual",
+        "PositionGraphGroup"
+      ]
+    },
+    {
+      "name": "SpawnTopic",
+      "type": "string",
+      "line": 132,
+      "method_mentions": [
+        "BeginSession"
+      ]
+    },
+    {
+      "name": "ParamTopic",
+      "type": "string",
+      "line": 133,
+      "method_mentions": [
+        "BeginSession"
+      ]
+    },
+    {
+      "name": "MapperSettings",
+      "type": "FloatToSimpleParams.Settings",
+      "line": 136,
+      "method_mentions": [
+        "Awake"
+      ]
+    }
+  ],
+  "methods": [
+    {
+      "name": "Awake",
+      "visibility": "private",
+      "line": 165,
+      "end_line": 185,
+      "local_method_mentions": [
+        "ApplySignalConfiguration",
+        "EnsureAnchorRegistry",
+        "EnsureSources",
+        "EnsureVisualPrefab"
+      ],
+      "public_field_mentions": [
+        "AnchorRegistry",
+        "MapperSettings",
+        "RequireRedisEndpointConfirmation",
+        "VisualPrefab"
+      ],
+      "entry_point": "Unity callback"
+    },
+    {
+      "name": "OnEnable",
+      "visibility": "private",
+      "line": 187,
+      "end_line": 197,
+      "local_method_mentions": [
+        "ApplySignalConfiguration",
+        "BeginSessionIfReady",
+        "ShouldAutoDetectEmotionDeviceIds",
+        "StartDeviceDiscovery"
+      ],
+      "public_field_mentions": [],
+      "entry_point": "Unity callback"
+    },
+    {
+      "name": "BeginAfterEndpoint",
+      "visibility": "public",
+      "line": 199,
+      "end_line": 233,
+      "local_method_mentions": [
+        "ApplySignalConfiguration",
+        "BeginSessionIfReady",
+        "ShouldAutoDetectEmotionDeviceIds",
+        "StartDeviceDiscovery"
+      ],
+      "public_field_mentions": [
+        "RedisHost",
+        "RedisPort"
+      ],
+      "entry_point": "Scene UnityEvent"
+    },
+    {
+      "name": "OnDisable",
+      "visibility": "private",
+      "line": 235,
+      "end_line": 260,
+      "local_method_mentions": [
+        "ClearAudienceDeviceVisuals",
+        "ClearAudienceGraphDeviceVisuals",
+        "ClearManualDriverVisuals",
+        "ClearSelectedSensorStreamMode",
+        "ClearSensorEngagementBackend"
+      ],
+      "public_field_mentions": [
+        "RedisSource"
+      ],
+      "entry_point": "Unity callback"
+    },
+    {
+      "name": "OnDestroy",
+      "visibility": "private",
+      "line": 262,
+      "end_line": 271,
+      "local_method_mentions": [
+        "ClearAudienceDeviceVisuals",
+        "ClearAudienceGraphDeviceVisuals",
+        "ClearManualDriverVisuals",
+        "ClearSelectedSensorStreamMode",
+        "ClearSensorEngagementBackend"
+      ],
+      "public_field_mentions": [],
+      "entry_point": "Unity callback"
+    },
+    {
+      "name": "EnsureAnchorRegistry",
+      "visibility": "private",
+      "line": 273,
+      "end_line": 281,
+      "local_method_mentions": [],
+      "public_field_mentions": [
+        "AnchorRegistry"
+      ],
+      "entry_point": null
+    },
+    {
+      "name": "EnsureSources",
+      "visibility": "private",
+      "line": 283,
+      "end_line": 299,
+      "local_method_mentions": [],
+      "public_field_mentions": [
+        "IsHost",
+        "RedisSource",
+        "SineSource"
+      ],
+      "entry_point": null
+    },
+    {
+      "name": "EnsureVisualPrefab",
+      "visibility": "private",
+      "line": 301,
+      "end_line": 317,
+      "local_method_mentions": [],
+      "public_field_mentions": [
+        "VisualPrefab"
+      ],
+      "entry_point": null
+    },
+    {
+      "name": "BeginSession",
+      "visibility": "private",
+      "line": 319,
+      "end_line": 364,
+      "local_method_mentions": [],
+      "public_field_mentions": [
+        "ActiveSignalSource",
+        "AnchorLabel",
+        "AnchorPosition",
+        "AnchorRotationEuler",
+        "AutoSpawnAudienceVisualsFromChannels",
+        "AutoSpawnGraphVisualsFromChannels",
+        "IsHost",
+        "ParamTopic",
+        "ProfileId",
+        "RedisSource",
+        "Seed",
+        "SineSource",
+        "SpawnTopic",
+        "VisualId"
+      ],
+      "entry_point": null
+    },
+    {
+      "name": "ApplySignalConfiguration",
+      "visibility": "private",
+      "line": 366,
+      "end_line": 464,
+      "local_method_mentions": [
+        "ApplyManualDriverConfiguration",
+        "BuildAudienceDeviceChannelDefinitions",
+        "ClearAudienceDeviceVisuals",
+        "ClearAudienceGraphDeviceVisuals",
+        "ClearManualDriverVisuals",
+        "ClearSelectedSensorStreamMode",
+        "ClearSensorEngagementBackend",
+        "DisableRedisComponents",
+        "EnsureAudienceDeviceVisuals",
+        "EnsureAudienceGraphDeviceVisuals",
+        "EnsureRedisEndpointFromRuntime",
+        "EnsureSelectedSensorStreamMode",
+        "EnsureSensorEngagementBackend",
+        "FilterAudienceToConfiguredDevices",
+        "GetRedisChannels"
+      ],
+      "public_field_mentions": [
+        "ActiveSignalSource",
+        "ArtistVizPrefab",
+        "AutoSpawnArtistVizFromChannels",
+        "AutoSpawnAudienceVisualsFromChannels",
+        "AutoSpawnGraphVisualsFromChannels",
+        "EmotionDeviceIds",
+        "GraphPrefab",
+        "RedisHost",
+        "RedisPort",
+        "RedisSource",
+        "RequireRedisEndpointConfirmation",
+        "SineSource",
+        "UseManualVisualizationDrivers",
+        "UseSingleSelectedSensorStream",
+        "VisualPrefab"
+      ],
+      "entry_point": null
+    },
+    {
+      "name": "EnsureRedisEndpointFromRuntime",
+      "visibility": "private",
+      "line": 466,
+      "end_line": 480,
+      "local_method_mentions": [],
+      "public_field_mentions": [
+        "RedisHost",
+        "RedisPort"
+      ],
+      "entry_point": null
+    },
+    {
+      "name": "ShouldAutoDetectEmotionDeviceIds",
+      "visibility": "private",
+      "line": 482,
+      "end_line": 512,
+      "local_method_mentions": [
+        "EnsureRedisEndpointFromRuntime"
+      ],
+      "public_field_mentions": [
+        "ActiveSignalSource",
+        "AutoDetectEmotionDeviceIds",
+        "IncludeEmotionChannels",
+        "RedisHost",
+        "RequireRedisEndpointConfirmation",
+        "UseManualVisualizationDrivers"
+      ],
+      "entry_point": null
+    },
+    {
+      "name": "StartDeviceDiscovery",
+      "visibility": "private",
+      "line": 514,
+      "end_line": 523,
+      "local_method_mentions": [
+        "DiscoverEmotionDevicesThenApply"
+      ],
+      "public_field_mentions": [],
+      "entry_point": null
+    },
+    {
+      "name": "DiscoverEmotionDevicesThenApply",
+      "visibility": "private",
+      "line": 525,
+      "end_line": 552,
+      "local_method_mentions": [
+        "ApplySignalConfiguration",
+        "BeginSessionIfReady",
+        "EnsureRedisEndpointFromRuntime"
+      ],
+      "public_field_mentions": [
+        "EmotionDeviceIds",
+        "RedisDiscoveryTimeoutMs",
+        "RedisHost",
+        "RedisPort"
+      ],
+      "entry_point": null
+    },
+    {
+      "name": "BeginSessionIfReady",
+      "visibility": "private",
+      "line": 554,
+      "end_line": 568,
+      "local_method_mentions": [
+        "BeginSession",
+        "ShouldInitializeSessionController"
+      ],
+      "public_field_mentions": [],
+      "entry_point": null
+    },
+    {
+      "name": "ApplyManualDriverConfiguration",
+      "visibility": "private",
+      "line": 570,
+      "end_line": 586,
+      "local_method_mentions": [
+        "ClearAudienceDeviceVisuals",
+        "ClearAudienceGraphDeviceVisuals",
+        "ClearSelectedSensorStreamMode",
+        "ClearSensorEngagementBackend",
+        "EnsureManualDriverVisuals"
+      ],
+      "public_field_mentions": [
+        "RedisSource",
+        "SineSource"
+      ],
+      "entry_point": null
+    },
+    {
+      "name": "EnsureManualDriverVisuals",
+      "visibility": "private",
+      "line": 588,
+      "end_line": 597,
+      "local_method_mentions": [
+        "SpawnManualDriverPrefab"
+      ],
+      "public_field_mentions": [
+        "EmotionVisualParent",
+        "GraphGroupParent",
+        "GraphPrefab",
+        "VisualPrefab"
+      ],
+      "entry_point": null
+    },
+    {
+      "name": "SpawnManualDriverPrefab",
+      "visibility": "private",
+      "line": 599,
+      "end_line": 633,
+      "local_method_mentions": [
+        "ConfigureManualDriverInstance",
+        "PositionEmotionVisual",
+        "PositionGraphGroup"
+      ],
+      "public_field_mentions": [],
+      "entry_point": null
+    },
+    {
+      "name": "ConfigureManualDriverInstance",
+      "visibility": "private",
+      "line": 635,
+      "end_line": 688,
+      "local_method_mentions": [],
+      "public_field_mentions": [],
+      "entry_point": null
+    },
+    {
+      "name": "OnValidate",
+      "visibility": "private",
+      "line": 691,
+      "end_line": 699,
+      "local_method_mentions": [
+        "ApplySignalConfiguration"
+      ],
+      "public_field_mentions": [],
+      "entry_point": "Unity callback"
+    },
+    {
+      "name": "EnsureSelectedSensorStreamMode",
+      "visibility": "private",
+      "line": 702,
+      "end_line": 803,
+      "local_method_mentions": [
+        "AcquirePhysioPumpForChannel",
+        "AddVisualizerBindings",
+        "BuildAudienceDeviceChannelDefinitions",
+        "ClearSelectedSensorStreamMode",
+        "EnsureSensorStreamPresentation",
+        "FilterAudienceToConfiguredDevices",
+        "ReleasePhysioPump",
+        "ResolveSensorEngagementSource",
+        "SpawnSelectedSensorVisual"
+      ],
+      "public_field_mentions": [
+        "ArtistVizParent",
+        "ArtistVizPrefab",
+        "EmotionDeviceIds",
+        "EmotionVisualParent",
+        "GraphGroupParent",
+        "GraphPrefab",
+        "VisualPrefab"
+      ],
+      "entry_point": null
+    },
+    {
+      "name": "SpawnSelectedSensorVisual",
+      "visibility": "private",
+      "line": 805,
+      "end_line": 856,
+      "local_method_mentions": [
+        "DisableManualDrivers",
+        "PositionAtParentOrigin",
+        "PositionEmotionVisual",
+        "PositionGraphGroup"
+      ],
+      "public_field_mentions": [],
+      "entry_point": null
+    },
+    {
+      "name": "PositionAtParentOrigin",
+      "visibility": "private",
+      "line": 858,
+      "end_line": 874,
+      "local_method_mentions": [],
+      "public_field_mentions": [
+        "AnchorPosition",
+        "AnchorRotationEuler"
+      ],
+      "entry_point": null
+    },
+    {
+      "name": "EnsureSensorStreamPresentation",
+      "visibility": "private",
+      "line": 876,
+      "end_line": 903,
+      "local_method_mentions": [
+        "EnsureSensorHud"
+      ],
+      "public_field_mentions": [],
+      "entry_point": null
+    },
+    {
+      "name": "EnsureSensorHud",
+      "visibility": "private",
+      "line": 905,
+      "end_line": 941,
+      "local_method_mentions": [],
+      "public_field_mentions": [
+        "SensorHudCamera",
+        "SensorHudColor",
+        "SensorHudFontSize",
+        "SensorHudLocalPosition",
+        "SensorHudLocalScale"
+      ],
+      "entry_point": null
+    },
+    {
+      "name": "AddVisualizerBindings",
+      "visibility": "private",
+      "line": 943,
+      "end_line": 959,
+      "local_method_mentions": [],
+      "public_field_mentions": [],
+      "entry_point": null
+    },
+    {
+      "name": "EnsureAudienceDeviceVisuals",
+      "visibility": "private",
+      "line": 961,
+      "end_line": 1056,
+      "local_method_mentions": [
+        "AcquirePhysioPumpForChannel",
+        "AttachDeviceLabel",
+        "BuildAudienceDeviceChannelDefinitions",
+        "ClearAudienceDeviceVisuals",
+        "DisableManualDrivers",
+        "FilterAudienceToConfiguredDevices",
+        "PositionEmotionVisual",
+        "ReleasePhysioPump",
+        "ResolveSensorEngagementSource",
+        "TryConfigureAudienceBinding"
+      ],
+      "public_field_mentions": [
+        "AutoSpawnAudienceVisualsFromChannels",
+        "EmotionDeviceIds",
+        "EmotionVisualParent",
+        "VisualPrefab"
+      ],
+      "entry_point": null
+    },
+    {
+      "name": "EnsureAudienceGraphDeviceVisuals",
+      "visibility": "private",
+      "line": 1058,
+      "end_line": 1150,
+      "local_method_mentions": [
+        "AcquirePhysioPumpForChannel",
+        "AttachGraphGroupLabel",
+        "BuildAudienceDeviceChannelDefinitions",
+        "ClearAudienceGraphDeviceVisuals",
+        "DisableManualDrivers",
+        "FilterAudienceToConfiguredDevices",
+        "PositionGraphGroup",
+        "ReleasePhysioPump",
+        "ResolveSensorEngagementSource",
+        "TryConfigureAudienceBinding"
+      ],
+      "public_field_mentions": [
+        "AutoSpawnGraphVisualsFromChannels",
+        "EmotionDeviceIds",
+        "GraphGroupParent",
+        "GraphPrefab"
+      ],
+      "entry_point": null
+    },
+    {
+      "name": "EnsureSensorEngagementBackend",
+      "visibility": "private",
+      "line": 1152,
+      "end_line": 1209,
+      "local_method_mentions": [
+        "BuildSensorEngagementConfigurationKey",
+        "BuildSensorEngagementRoutes",
+        "ClearSensorEngagementBackend"
+      ],
+      "public_field_mentions": [
+        "RedisHost",
+        "RedisPort",
+        "SensorEngagementNeutralValue",
+        "SensorEngagementPayloadFormat",
+        "SensorEngagementTimeoutSeconds",
+        "UseIndividualSensorEngagement"
+      ],
+      "entry_point": null
+    },
+    {
+      "name": "BuildSensorEngagementRoutes",
+      "visibility": "private",
+      "line": 1211,
+      "end_line": 1229,
+      "local_method_mentions": [
+        "ResolveSensorEngagementChannel"
+      ],
+      "public_field_mentions": [
+        "UseIndividualSensorEngagement"
+      ],
+      "entry_point": null
+    },
+    {
+      "name": "ResolveSensorEngagementChannel",
+      "visibility": "private",
+      "line": 1231,
+      "end_line": 1256,
+      "local_method_mentions": [],
+      "public_field_mentions": [
+        "SensorEngagementChannelOverrides",
+        "SensorEngagementChannelTemplate"
+      ],
+      "entry_point": null
+    },
+    {
+      "name": "BuildSensorEngagementConfigurationKey",
+      "visibility": "private",
+      "line": 1258,
+      "end_line": 1269,
+      "local_method_mentions": [],
+      "public_field_mentions": [],
+      "entry_point": null
+    },
+    {
+      "name": "ResolveSensorEngagementSource",
+      "visibility": "private",
+      "line": 1271,
+      "end_line": 1274,
+      "local_method_mentions": [],
+      "public_field_mentions": [],
+      "entry_point": null
+    },
+    {
+      "name": "ClearSensorEngagementBackend",
+      "visibility": "private",
+      "line": 1276,
+      "end_line": 1287,
+      "local_method_mentions": [],
+      "public_field_mentions": [],
+      "entry_point": null
+    },
+    {
+      "name": "AcquirePhysioPumpForChannel",
+      "visibility": "private",
+      "line": 1289,
+      "end_line": 1327,
+      "local_method_mentions": [],
+      "public_field_mentions": [
+        "RedisHost",
+        "RedisPort"
+      ],
+      "entry_point": null
+    },
+    {
+      "name": "ReleasePhysioPump",
+      "visibility": "private",
+      "line": 1329,
+      "end_line": 1353,
+      "local_method_mentions": [],
+      "public_field_mentions": [],
+      "entry_point": null
+    },
+    {
+      "name": "TryConfigureAudienceBinding",
+      "visibility": "private",
+      "line": 1355,
+      "end_line": 1392,
+      "local_method_mentions": [],
+      "public_field_mentions": [],
+      "entry_point": null
+    },
+    {
+      "name": "DisableManualDrivers",
+      "visibility": "private",
+      "line": 1394,
+      "end_line": 1418,
+      "local_method_mentions": [],
+      "public_field_mentions": [],
+      "entry_point": null
+    },
+    {
+      "name": "ClearAudienceDeviceVisuals",
+      "visibility": "private",
+      "line": 1420,
+      "end_line": 1442,
+      "local_method_mentions": [
+        "ReleasePhysioPump"
+      ],
+      "public_field_mentions": [],
+      "entry_point": null
+    },
+    {
+      "name": "ClearAudienceGraphDeviceVisuals",
+      "visibility": "private",
+      "line": 1444,
+      "end_line": 1466,
+      "local_method_mentions": [
+        "ReleasePhysioPump"
+      ],
+      "public_field_mentions": [],
+      "entry_point": null
+    },
+    {
+      "name": "ClearSelectedSensorStreamMode",
+      "visibility": "private",
+      "line": 1468,
+      "end_line": 1515,
+      "local_method_mentions": [
+        "ReleasePhysioPump"
+      ],
+      "public_field_mentions": [],
+      "entry_point": null
+    },
+    {
+      "name": "ClearManualDriverVisuals",
+      "visibility": "private",
+      "line": 1517,
+      "end_line": 1533,
+      "local_method_mentions": [],
+      "public_field_mentions": [],
+      "entry_point": null
+    },
+    {
+      "name": "DisableRedisComponents",
+      "visibility": "private",
+      "line": 1535,
+      "end_line": 1546,
+      "local_method_mentions": [
+        "ClearAudienceDeviceVisuals",
+        "ClearAudienceGraphDeviceVisuals",
+        "ClearManualDriverVisuals",
+        "ClearSelectedSensorStreamMode",
+        "ClearSensorEngagementBackend"
+      ],
+      "public_field_mentions": [
+        "RedisSource"
+      ],
+      "entry_point": null
+    },
+    {
+      "name": "PositionEmotionVisual",
+      "visibility": "private",
+      "line": 1548,
+      "end_line": 1574,
+      "local_method_mentions": [],
+      "public_field_mentions": [
+        "AnchorPosition",
+        "AnchorRotationEuler",
+        "EmotionVisualOriginOffset",
+        "EmotionVisualSpacing",
+        "EmotionVisualsPerRow"
+      ],
+      "entry_point": null
+    },
+    {
+      "name": "PositionGraphGroup",
+      "visibility": "private",
+      "line": 1576,
+      "end_line": 1602,
+      "local_method_mentions": [],
+      "public_field_mentions": [
+        "AnchorPosition",
+        "AnchorRotationEuler",
+        "GraphGroupOriginOffset",
+        "GraphGroupSpacing",
+        "GraphGroupsPerRow"
+      ],
+      "entry_point": null
+    },
+    {
+      "name": "TryCalculateGraphGroupBounds",
+      "visibility": "private",
+      "line": 1604,
+      "end_line": 1635,
+      "local_method_mentions": [],
+      "public_field_mentions": [
+        "GraphGroupBoundsPadding",
+        "GraphItemBoundsSize"
+      ],
+      "entry_point": null
+    },
+    {
+      "name": "BuildAudienceDeviceChannelDefinitions",
+      "visibility": "private",
+      "line": 1637,
+      "end_line": 1673,
+      "local_method_mentions": [
+        "FillAudienceChannelDefaults",
+        "GetOrCreateAudienceDefinition"
+      ],
+      "public_field_mentions": [],
+      "entry_point": null
+    },
+    {
+      "name": "GetOrCreateAudienceDefinition",
+      "visibility": "private",
+      "line": 1675,
+      "end_line": 1687,
+      "local_method_mentions": [],
+      "public_field_mentions": [],
+      "entry_point": null
+    },
+    {
+      "name": "FillAudienceChannelDefaults",
+      "visibility": "private",
+      "line": 1689,
+      "end_line": 1695,
+      "local_method_mentions": [],
+      "public_field_mentions": [],
+      "entry_point": null
+    },
+    {
+      "name": "FilterAudienceToConfiguredDevices",
+      "visibility": "private",
+      "line": 1697,
+      "end_line": 1720,
+      "local_method_mentions": [],
+      "public_field_mentions": [],
+      "entry_point": null
+    },
+    {
+      "name": "GetRedisChannels",
+      "visibility": "private",
+      "line": 1722,
+      "end_line": 1770,
+      "local_method_mentions": [],
+      "public_field_mentions": [
+        "EmotionDeviceIds",
+        "IncludeEmotionChannels",
+        "RedisChannel",
+        "RedisChannels"
+      ],
+      "entry_point": null
+    },
+    {
+      "name": "AttachDeviceLabel",
+      "visibility": "private",
+      "line": 1772,
+      "end_line": 1801,
+      "local_method_mentions": [
+        "FormatDeviceLabel",
+        "ResolveDeviceLabelParent"
+      ],
+      "public_field_mentions": [
+        "DeviceLabelColor",
+        "DeviceLabelFontSize",
+        "DeviceLabelOffset",
+        "ShowDeviceLabels"
+      ],
+      "entry_point": null
+    },
+    {
+      "name": "AttachGraphGroupLabel",
+      "visibility": "private",
+      "line": 1803,
+      "end_line": 1841,
+      "local_method_mentions": [
+        "FormatGraphGroupLabel",
+        "TryCalculateGraphGroupBounds"
+      ],
+      "public_field_mentions": [
+        "GraphGroupLabelColor",
+        "GraphGroupLabelFontSize",
+        "GraphGroupLabelOffset",
+        "GraphGroupLabelVerticalOffset",
+        "ShowGraphGroupLabels"
+      ],
+      "entry_point": null
+    },
+    {
+      "name": "FormatGraphGroupLabel",
+      "visibility": "private",
+      "line": 1843,
+      "end_line": 1851,
+      "local_method_mentions": [],
+      "public_field_mentions": [],
+      "entry_point": null
+    },
+    {
+      "name": "FormatDeviceLabel",
+      "visibility": "private",
+      "line": 1853,
+      "end_line": 1867,
+      "local_method_mentions": [
+        "ExtractTrailingDigits"
+      ],
+      "public_field_mentions": [],
+      "entry_point": null
+    },
+    {
+      "name": "ExtractTrailingDigits",
+      "visibility": "private",
+      "line": 1869,
+      "end_line": 1895,
+      "local_method_mentions": [],
+      "public_field_mentions": [],
+      "entry_point": null
+    },
+    {
+      "name": "ResolveDeviceLabelParent",
+      "visibility": "private",
+      "line": 1897,
+      "end_line": 1911,
+      "local_method_mentions": [
+        "ResolveVisualRoot"
+      ],
+      "public_field_mentions": [],
+      "entry_point": null
+    },
+    {
+      "name": "ResolveVisualRoot",
+      "visibility": "private",
+      "line": 1913,
+      "end_line": 1927,
+      "local_method_mentions": [],
+      "public_field_mentions": [],
+      "entry_point": null
+    },
+    {
+      "name": "ShouldInitializeSessionController",
+      "visibility": "private",
+      "line": 1981,
+      "end_line": 1996,
+      "local_method_mentions": [],
+      "public_field_mentions": [
+        "ActiveSignalSource",
+        "AutoSpawnAudienceVisualsFromChannels",
+        "AutoSpawnGraphVisualsFromChannels",
+        "UseManualVisualizationDrivers"
+      ],
+      "entry_point": null
+    }
+  ],
+  "limitations": [
+    "Lexical identifier/call evidence only; no type resolution, aliasing or runtime reachability proof.",
+    "Nested runtime-record fields are covered in the accompanying ownership table, not the top-level public-field list.",
+    "Unity callbacks and serialized UnityEvents are roots even without C# callers. Reflection-based test calls need separate review.",
+    "Names are preserved as declared; classification as a supported path is a retention decision, not a fresh runtime test result."
+  ]
+}

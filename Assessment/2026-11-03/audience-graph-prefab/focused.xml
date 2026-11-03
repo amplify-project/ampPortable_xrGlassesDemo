@@ -1,0 +1,238 @@
+<?xml version="1.0" encoding="utf-8"?>
+<test-run id="2" testcasecount="17" result="Failed(Child)" total="17" passed="16" failed="1" inconclusive="0" skipped="0" asserts="0" engine-version="3.5.0.0" clr-version="4.0.30319.42000" start-time="2026-11-03 16:11:04Z" end-time="2026-11-03 16:11:05Z" duration="0.2282987">
+  <test-suite type="TestSuite" id="1290" name="XR Score Viewer" fullname="XR Score Viewer" runstate="Runnable" testcasecount="225" result="Failed" site="Child" start-time="2026-11-03 16:11:04Z" end-time="2026-11-03 16:11:05Z" duration="0.228299" total="17" passed="16" failed="1" inconclusive="0" skipped="0" asserts="0">
+    <properties>
+      <property name="platform" value="PlayMode" />
+    </properties>
+    <failure>
+      <message><![CDATA[One or more child tests had errors]]></message>
+    </failure>
+    <test-suite type="Assembly" id="1282" name="Tests.dll" fullname="C:/Users/Bryan Dunphy/AppData/Local/Temp/rnc1030/project/Library/ScriptAssemblies/Tests.dll" runstate="Runnable" testcasecount="225" result="Failed" site="Child" start-time="2026-11-03 16:11:04Z" end-time="2026-11-03 16:11:05Z" duration="0.221348" total="17" passed="16" failed="1" inconclusive="0" skipped="0" asserts="0">
+      <properties>
+        <property name="_PID" value="47208" />
+        <property name="_APPDOMAIN" value="Unity Child Domain" />
+        <property name="platform" value="PlayMode" />
+        <property name="EditorOnly" value="False" />
+      </properties>
+      <failure>
+        <message><![CDATA[One or more child tests had errors]]></message>
+      </failure>
+      <test-suite type="TestSuite" id="1283" name="AmpPortableDataViz" fullname="AmpPortableDataViz" runstate="Runnable" testcasecount="225" result="Failed" site="Child" start-time="2026-11-03 16:11:04Z" end-time="2026-11-03 16:11:05Z" duration="0.218953" total="17" passed="16" failed="1" inconclusive="0" skipped="0" asserts="0">
+        <properties />
+        <failure>
+          <message><![CDATA[One or more child tests had errors]]></message>
+        </failure>
+        <test-suite type="TestSuite" id="1284" name="Tests" fullname="AmpPortableDataViz.Tests" runstate="Runnable" testcasecount="225" result="Failed" site="Child" start-time="2026-11-03 16:11:04Z" end-time="2026-11-03 16:11:05Z" duration="0.216915" total="17" passed="16" failed="1" inconclusive="0" skipped="0" asserts="0">
+          <properties />
+          <failure>
+            <message><![CDATA[One or more child tests had errors]]></message>
+          </failure>
+          <test-suite type="TestSuite" id="1287" name="PlayMode" fullname="AmpPortableDataViz.Tests.PlayMode" runstate="Runnable" testcasecount="202" result="Failed" site="Child" start-time="2026-11-03 16:11:04Z" end-time="2026-11-03 16:11:05Z" duration="0.214463" total="17" passed="16" failed="1" inconclusive="0" skipped="0" asserts="0">
+            <properties />
+            <failure>
+              <message><![CDATA[One or more child tests had errors]]></message>
+            </failure>
+            <test-suite type="TestFixture" id="1096" name="AudienceGraphPrefabTests" fullname="AmpPortableDataViz.Tests.PlayMode.AudienceGraphPrefabTests" classname="AmpPortableDataViz.Tests.PlayMode.AudienceGraphPrefabTests" runstate="Runnable" testcasecount="4" result="Failed" site="Child" start-time="2026-11-03 16:11:04Z" end-time="2026-11-03 16:11:05Z" duration="0.131658" total="4" passed="3" failed="1" inconclusive="0" skipped="0" asserts="0">
+              <properties />
+              <failure>
+                <message><![CDATA[One or more child tests had errors]]></message>
+              </failure>
+              <test-case id="1100" name="ManualMode_EmitsSamplesIntoAllFiveGraphsWithoutRedis" fullname="AmpPortableDataViz.Tests.PlayMode.AudienceGraphPrefabTests.ManualMode_EmitsSamplesIntoAllFiveGraphsWithoutRedis" methodname="ManualMode_EmitsSamplesIntoAllFiveGraphsWithoutRedis" classname="AmpPortableDataViz.Tests.PlayMode.AudienceGraphPrefabTests" runstate="Runnable" seed="646600030" result="Failed" start-time="2026-11-03 16:11:04Z" end-time="2026-11-03 16:11:05Z" duration="0.095168" asserts="0">
+                <properties>
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+                <failure>
+                  <message><![CDATA[  Expected: 2
+  But was:  1
+]]></message>
+                  <stack-trace><![CDATA[at AmpPortableDataViz.Tests.PlayMode.AudienceGraphPrefabTests.AssertGraphSampleCounts (AmpPortableDataViz.Presentation.Visualization.SensorVisualizationBinding binding, System.Int32 expected) [0x00029] in C:\Users\Bryan Dunphy\AppData\Local\Temp\rnc1030\project\Assets\Tests\PlayMode\AudienceGraphPrefabTests.cs:156
+at AmpPortableDataViz.Tests.PlayMode.AudienceGraphPrefabTests.ManualMode_EmitsSamplesIntoAllFiveGraphsWithoutRedis () [0x000f5] in C:\Users\Bryan Dunphy\AppData\Local\Temp\rnc1030\project\Assets\Tests\PlayMode\AudienceGraphPrefabTests.cs:136
+]]></stack-trace>
+                </failure>
+              </test-case>
+              <test-case id="1098" name="Prefab_ColliderSupportsGazeRaycastsWithoutRigidbody" fullname="AmpPortableDataViz.Tests.PlayMode.AudienceGraphPrefabTests.Prefab_ColliderSupportsGazeRaycastsWithoutRigidbody" methodname="Prefab_ColliderSupportsGazeRaycastsWithoutRigidbody" classname="AmpPortableDataViz.Tests.PlayMode.AudienceGraphPrefabTests" runstate="Runnable" seed="1638522160" result="Passed" start-time="2026-11-03 16:11:05Z" end-time="2026-11-03 16:11:05Z" duration="0.006186" asserts="0">
+                <properties>
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+              </test-case>
+              <test-case id="1097" name="Prefab_KeepsFiveGraphTargetsAndSimulatorWithoutGrabPhysicsOrLocalAssembler" fullname="AmpPortableDataViz.Tests.PlayMode.AudienceGraphPrefabTests.Prefab_KeepsFiveGraphTargetsAndSimulatorWithoutGrabPhysicsOrLocalAssembler" methodname="Prefab_KeepsFiveGraphTargetsAndSimulatorWithoutGrabPhysicsOrLocalAssembler" classname="AmpPortableDataViz.Tests.PlayMode.AudienceGraphPrefabTests" runstate="Runnable" seed="1937960776" result="Passed" start-time="2026-11-03 16:11:05Z" end-time="2026-11-03 16:11:05Z" duration="0.005919" asserts="0">
+                <properties>
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+              </test-case>
+              <test-case id="1099" name="SelectedSensor_UpdatesAllGraphsAndResetsHistoryOnSwitchAndReenable" fullname="AmpPortableDataViz.Tests.PlayMode.AudienceGraphPrefabTests.SelectedSensor_UpdatesAllGraphsAndResetsHistoryOnSwitchAndReenable" methodname="SelectedSensor_UpdatesAllGraphsAndResetsHistoryOnSwitchAndReenable" classname="AmpPortableDataViz.Tests.PlayMode.AudienceGraphPrefabTests" runstate="Runnable" seed="1597092089" result="Passed" start-time="2026-11-03 16:11:05Z" end-time="2026-11-03 16:11:05Z" duration="0.012218" asserts="0">
+                <properties>
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+                <output><![CDATA[SensorStreamCoordinator: Active stream is sensor-a (1/2).
+SensorStreamCoordinator: Active stream is sensor-b (2/2).
+]]></output>
+              </test-case>
+            </test-suite>
+            <test-suite type="TestFixture" id="1114" name="BootstrapperLifecycleTests" fullname="AmpPortableDataViz.Tests.PlayMode.BootstrapperLifecycleTests" classname="AmpPortableDataViz.Tests.PlayMode.BootstrapperLifecycleTests" runstate="Runnable" testcasecount="7" result="Passed" start-time="2026-11-03 16:11:05Z" end-time="2026-11-03 16:11:05Z" duration="0.062603" total="7" passed="7" failed="0" inconclusive="0" skipped="0" asserts="0">
+              <properties />
+              <test-case id="1121" name="DisplayOnlyGraph_PerDeviceToSelectedModeReleasesLocalAssemblers" fullname="AmpPortableDataViz.Tests.PlayMode.BootstrapperLifecycleTests.DisplayOnlyGraph_PerDeviceToSelectedModeReleasesLocalAssemblers" methodname="DisplayOnlyGraph_PerDeviceToSelectedModeReleasesLocalAssemblers" classname="AmpPortableDataViz.Tests.PlayMode.BootstrapperLifecycleTests" runstate="Runnable" seed="317264138" result="Passed" start-time="2026-11-03 16:11:05Z" end-time="2026-11-03 16:11:05Z" duration="0.025686" asserts="0">
+                <properties>
+                  <property name="_JOINTYPE" value="UnityCombinatorial" />
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+                <output><![CDATA[Bootstrapper: BeginAfterEndpoint invoked from Redis endpoint prompt.
+Bootstrapper: Redis endpoint confirmed -> 127.0.0.1:6379
+Bootstrapper: Applying signal configuration after endpoint confirmation.
+Bootstrapper: Spawning audience graph groups for 2 devices: a, b
+SensorStreamCoordinator: Active stream is a (1/2).
+Bootstrapper: Configured one persistent visualization target for 2 selectable sensor streams.
+SensorStreamCoordinator: Active stream is no available sensor.
+]]></output>
+              </test-case>
+              <test-case id="1120" name="DisplayOnlyGraph_SelectedModeSpawnsReconfirmsAndReenables" fullname="AmpPortableDataViz.Tests.PlayMode.BootstrapperLifecycleTests.DisplayOnlyGraph_SelectedModeSpawnsReconfirmsAndReenables" methodname="DisplayOnlyGraph_SelectedModeSpawnsReconfirmsAndReenables" classname="AmpPortableDataViz.Tests.PlayMode.BootstrapperLifecycleTests" runstate="Runnable" seed="1815843745" result="Passed" start-time="2026-11-03 16:11:05Z" end-time="2026-11-03 16:11:05Z" duration="0.007842" asserts="0">
+                <properties>
+                  <property name="_JOINTYPE" value="UnityCombinatorial" />
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+                <output><![CDATA[Bootstrapper: BeginAfterEndpoint invoked from Redis endpoint prompt.
+Bootstrapper: Redis endpoint confirmed -> 127.0.0.1:6379
+Bootstrapper: Applying signal configuration after endpoint confirmation.
+SensorStreamCoordinator: Active stream is a (1/2).
+Bootstrapper: Configured one persistent visualization target for 2 selectable sensor streams.
+SensorStreamCoordinator: Active stream is b (2/2).
+Bootstrapper: BeginAfterEndpoint invoked from Redis endpoint prompt.
+Bootstrapper: Redis endpoint confirmed -> 127.0.0.1:6379
+Bootstrapper: Applying signal configuration after endpoint confirmation.
+SensorStreamCoordinator: Active stream is no available sensor.
+SensorStreamCoordinator: Active stream is a (1/2).
+Bootstrapper: Configured one persistent visualization target for 2 selectable sensor streams.
+SensorStreamCoordinator: Active stream is no available sensor.
+SensorStreamCoordinator: Active stream is a (1/2).
+Bootstrapper: Configured one persistent visualization target for 2 selectable sensor streams.
+]]></output>
+              </test-case>
+              <test-case id="1119" name="DisplayOnlyPrefab_PerDeviceModeCreatesAndReleasesAssemblers" fullname="AmpPortableDataViz.Tests.PlayMode.BootstrapperLifecycleTests.DisplayOnlyPrefab_PerDeviceModeCreatesAndReleasesAssemblers" methodname="DisplayOnlyPrefab_PerDeviceModeCreatesAndReleasesAssemblers" classname="AmpPortableDataViz.Tests.PlayMode.BootstrapperLifecycleTests" runstate="Runnable" seed="1778887911" result="Passed" start-time="2026-11-03 16:11:05Z" end-time="2026-11-03 16:11:05Z" duration="0.006010" asserts="0">
+                <properties>
+                  <property name="_JOINTYPE" value="UnityCombinatorial" />
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+                <output><![CDATA[Bootstrapper: BeginAfterEndpoint invoked from Redis endpoint prompt.
+Bootstrapper: Redis endpoint confirmed -> 127.0.0.1:6379
+Bootstrapper: Applying signal configuration after endpoint confirmation.
+Bootstrapper: Spawning audience visuals for 2 devices: a, b
+]]></output>
+              </test-case>
+              <test-case id="1118" name="DisplayOnlyPrefab_SelectedModeSpawnsAndSwitchesWithoutLocalAssembler" fullname="AmpPortableDataViz.Tests.PlayMode.BootstrapperLifecycleTests.DisplayOnlyPrefab_SelectedModeSpawnsAndSwitchesWithoutLocalAssembler" methodname="DisplayOnlyPrefab_SelectedModeSpawnsAndSwitchesWithoutLocalAssembler" classname="AmpPortableDataViz.Tests.PlayMode.BootstrapperLifecycleTests" runstate="Runnable" seed="2054755111" result="Passed" start-time="2026-11-03 16:11:05Z" end-time="2026-11-03 16:11:05Z" duration="0.003839" asserts="0">
+                <properties>
+                  <property name="_JOINTYPE" value="UnityCombinatorial" />
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+                <output><![CDATA[Bootstrapper: BeginAfterEndpoint invoked from Redis endpoint prompt.
+Bootstrapper: Redis endpoint confirmed -> 127.0.0.1:6379
+Bootstrapper: Applying signal configuration after endpoint confirmation.
+SensorStreamCoordinator: Active stream is a (1/2).
+Bootstrapper: Configured one persistent visualization target for 2 selectable sensor streams.
+SensorStreamCoordinator: Active stream is b (2/2).
+]]></output>
+              </test-case>
+              <test-case id="1115" name="ManualMode_ReconfigurationReusesAndDisableReenableRecreatesVisuals" fullname="AmpPortableDataViz.Tests.PlayMode.BootstrapperLifecycleTests.ManualMode_ReconfigurationReusesAndDisableReenableRecreatesVisuals" methodname="ManualMode_ReconfigurationReusesAndDisableReenableRecreatesVisuals" classname="AmpPortableDataViz.Tests.PlayMode.BootstrapperLifecycleTests" runstate="Runnable" seed="159590403" result="Passed" start-time="2026-11-03 16:11:05Z" end-time="2026-11-03 16:11:05Z" duration="0.002527" asserts="0">
+                <properties>
+                  <property name="_JOINTYPE" value="UnityCombinatorial" />
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+              </test-case>
+              <test-case id="1117" name="PerDeviceToSelectedToManual_ReleasesSharedPumpsAndTargets" fullname="AmpPortableDataViz.Tests.PlayMode.BootstrapperLifecycleTests.PerDeviceToSelectedToManual_ReleasesSharedPumpsAndTargets" methodname="PerDeviceToSelectedToManual_ReleasesSharedPumpsAndTargets" classname="AmpPortableDataViz.Tests.PlayMode.BootstrapperLifecycleTests" runstate="Runnable" seed="2124139113" result="Passed" start-time="2026-11-03 16:11:05Z" end-time="2026-11-03 16:11:05Z" duration="0.005538" asserts="0">
+                <properties>
+                  <property name="_JOINTYPE" value="UnityCombinatorial" />
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+                <output><![CDATA[Bootstrapper: BeginAfterEndpoint invoked from Redis endpoint prompt.
+Bootstrapper: Redis endpoint confirmed -> 127.0.0.1:6379
+Bootstrapper: Applying signal configuration after endpoint confirmation.
+Bootstrapper: Spawning audience visuals for 2 devices: a, b
+Bootstrapper: Spawning audience graph groups for 2 devices: a, b
+SensorStreamCoordinator: Active stream is a (1/2).
+Bootstrapper: Configured one persistent visualization target for 2 selectable sensor streams.
+SensorStreamCoordinator: Active stream is no available sensor.
+]]></output>
+              </test-case>
+              <test-case id="1116" name="SelectedStreams_ReconfirmationAndDisableClearOwnedObjects" fullname="AmpPortableDataViz.Tests.PlayMode.BootstrapperLifecycleTests.SelectedStreams_ReconfirmationAndDisableClearOwnedObjects" methodname="SelectedStreams_ReconfirmationAndDisableClearOwnedObjects" classname="AmpPortableDataViz.Tests.PlayMode.BootstrapperLifecycleTests" runstate="Runnable" seed="1971331575" result="Passed" start-time="2026-11-03 16:11:05Z" end-time="2026-11-03 16:11:05Z" duration="0.007582" asserts="0">
+                <properties>
+                  <property name="_JOINTYPE" value="UnityCombinatorial" />
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+                <output><![CDATA[Bootstrapper: BeginAfterEndpoint invoked from Redis endpoint prompt.
+Bootstrapper: Redis endpoint confirmed -> 127.0.0.1:6379
+Bootstrapper: Applying signal configuration after endpoint confirmation.
+SensorStreamCoordinator: Active stream is a (1/2).
+Bootstrapper: Configured one persistent visualization target for 2 selectable sensor streams.
+Bootstrapper: BeginAfterEndpoint invoked from Redis endpoint prompt.
+Bootstrapper: Redis endpoint confirmed -> 127.0.0.1:6379
+Bootstrapper: Applying signal configuration after endpoint confirmation.
+SensorStreamCoordinator: Active stream is no available sensor.
+SensorStreamCoordinator: Active stream is a (1/2).
+Bootstrapper: Configured one persistent visualization target for 2 selectable sensor streams.
+SensorStreamCoordinator: Active stream is no available sensor.
+SensorStreamCoordinator: Active stream is a (1/2).
+Bootstrapper: Configured one persistent visualization target for 2 selectable sensor streams.
+SensorStreamCoordinator: Active stream is no available sensor.
+]]></output>
+              </test-case>
+            </test-suite>
+            <test-suite type="TestFixture" id="1135" name="BootstrapperRetainedGraphTests" fullname="AmpPortableDataViz.Tests.PlayMode.BootstrapperRetainedGraphTests" classname="AmpPortableDataViz.Tests.PlayMode.BootstrapperRetainedGraphTests" runstate="Runnable" testcasecount="3" result="Passed" start-time="2026-11-03 16:11:05Z" end-time="2026-11-03 16:11:05Z" duration="0.006467" total="3" passed="3" failed="0" inconclusive="0" skipped="0" asserts="0">
+              <properties />
+              <test-case id="1136" name="ManualGraphPrefab_RendersWithoutLiveSource" fullname="AmpPortableDataViz.Tests.PlayMode.BootstrapperRetainedGraphTests.ManualGraphPrefab_RendersWithoutLiveSource" methodname="ManualGraphPrefab_RendersWithoutLiveSource" classname="AmpPortableDataViz.Tests.PlayMode.BootstrapperRetainedGraphTests" runstate="Runnable" seed="1495896211" result="Passed" start-time="2026-11-03 16:11:05Z" end-time="2026-11-03 16:11:05Z" duration="0.003338" asserts="0">
+                <properties>
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+              </test-case>
+              <test-case id="1137" name="ManualMode_SpawnsGraphWithRedisEndpointUnconfirmed" fullname="AmpPortableDataViz.Tests.PlayMode.BootstrapperRetainedGraphTests.ManualMode_SpawnsGraphWithRedisEndpointUnconfirmed" methodname="ManualMode_SpawnsGraphWithRedisEndpointUnconfirmed" classname="AmpPortableDataViz.Tests.PlayMode.BootstrapperRetainedGraphTests" runstate="Runnable" seed="1393310416" result="Passed" start-time="2026-11-03 16:11:05Z" end-time="2026-11-03 16:11:05Z" duration="0.000634" asserts="0">
+                <properties>
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+              </test-case>
+              <test-case id="1138" name="SelectedGraphPrefab_KeepsVisualizerBindingAndDisablesLocalSources" fullname="AmpPortableDataViz.Tests.PlayMode.BootstrapperRetainedGraphTests.SelectedGraphPrefab_KeepsVisualizerBindingAndDisablesLocalSources" methodname="SelectedGraphPrefab_KeepsVisualizerBindingAndDisablesLocalSources" classname="AmpPortableDataViz.Tests.PlayMode.BootstrapperRetainedGraphTests" runstate="Runnable" seed="833716548" result="Passed" start-time="2026-11-03 16:11:05Z" end-time="2026-11-03 16:11:05Z" duration="0.001376" asserts="0">
+                <properties>
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+              </test-case>
+            </test-suite>
+            <test-suite type="TestFixture" id="1278" name="SensorVisualizationBindingSmoothingTests" fullname="AmpPortableDataViz.Tests.PlayMode.SensorVisualizationBindingSmoothingTests" classname="AmpPortableDataViz.Tests.PlayMode.SensorVisualizationBindingSmoothingTests" runstate="Runnable" testcasecount="3" result="Passed" start-time="2026-11-03 16:11:05Z" end-time="2026-11-03 16:11:05Z" duration="0.003055" total="3" passed="3" failed="0" inconclusive="0" skipped="0" asserts="0">
+              <properties />
+              <test-case id="1280" name="AppendGraphSample_WhenSmoothingDisabled_StoresRawValue" fullname="AmpPortableDataViz.Tests.PlayMode.SensorVisualizationBindingSmoothingTests.AppendGraphSample_WhenSmoothingDisabled_StoresRawValue" methodname="AppendGraphSample_WhenSmoothingDisabled_StoresRawValue" classname="AmpPortableDataViz.Tests.PlayMode.SensorVisualizationBindingSmoothingTests" runstate="Runnable" seed="1607289373" result="Passed" start-time="2026-11-03 16:11:05Z" end-time="2026-11-03 16:11:05Z" duration="0.000813" asserts="0">
+                <properties>
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+              </test-case>
+              <test-case id="1279" name="AppendGraphSample_WhenSmoothingEnabled_StoresSmoothedValue" fullname="AmpPortableDataViz.Tests.PlayMode.SensorVisualizationBindingSmoothingTests.AppendGraphSample_WhenSmoothingEnabled_StoresSmoothedValue" methodname="AppendGraphSample_WhenSmoothingEnabled_StoresSmoothedValue" classname="AmpPortableDataViz.Tests.PlayMode.SensorVisualizationBindingSmoothingTests" runstate="Runnable" seed="1815810245" result="Passed" start-time="2026-11-03 16:11:05Z" end-time="2026-11-03 16:11:05Z" duration="0.000784" asserts="0">
+                <properties>
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+              </test-case>
+              <test-case id="1281" name="ResetGraphState_ClearsSmoothingHistory" fullname="AmpPortableDataViz.Tests.PlayMode.SensorVisualizationBindingSmoothingTests.ResetGraphState_ClearsSmoothingHistory" methodname="ResetGraphState_ClearsSmoothingHistory" classname="AmpPortableDataViz.Tests.PlayMode.SensorVisualizationBindingSmoothingTests" runstate="Runnable" seed="927812953" result="Passed" start-time="2026-11-03 16:11:05Z" end-time="2026-11-03 16:11:05Z" duration="0.000296" asserts="0">
+                <properties>
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+                <output><![CDATA[Saving results to: C:\Users\Bryan Dunphy\Documents\UnityProjects\ampPortable_xrGlassesDemo\Assessment\2026-11-03\audience-graph-prefab\focused.xml
+]]></output>
+              </test-case>
+            </test-suite>
+          </test-suite>
+        </test-suite>
+      </test-suite>
+    </test-suite>
+  </test-suite>
+</test-run>

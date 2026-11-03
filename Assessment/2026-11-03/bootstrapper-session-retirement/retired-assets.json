@@ -1,0 +1,76 @@
+[
+  {
+    "path": "Assets/AmpPortableDataViz/Presentation/Anchors/AnchorRegistry.cs",
+    "guid": "73405ee7099bb2142b2a8b5d67014bbe",
+    "old_asset_references": []
+  },
+  {
+    "path": "Assets/AmpPortableDataViz/Presentation/Visualization/AnchoredVisualization.cs",
+    "guid": "e0e935799c7ce904398a6fa7ae63c99e",
+    "old_asset_references": [
+      "Assets/Prefabs/SimpleVisualizerPrefab.prefab"
+    ]
+  },
+  {
+    "path": "Assets/AmpPortableDataViz/Presentation/Visualization/SimpleVisualizer.cs",
+    "guid": "967b20b14b8fec448a572ce557041830",
+    "old_asset_references": [
+      "Assets/Prefabs/SimpleVisualizerPrefab.prefab"
+    ]
+  },
+  {
+    "path": "Assets/AmpPortableDataViz/Presentation/Mapping/FloatToSimpleParams.cs",
+    "guid": "23bf38b1ccad02e4c9f7716269d63d50",
+    "old_asset_references": []
+  },
+  {
+    "path": "Assets/AmpPortableDataViz/Infra/UnityVisualizationFactory.cs",
+    "guid": "c70fc1d124b64b5489dbf250a15c8dae",
+    "old_asset_references": []
+  },
+  {
+    "path": "Assets/AmpPortableDataViz/Infra/MockAnchorService.cs",
+    "guid": "9b75721f2aa45a849bcab60363ed4fd9",
+    "old_asset_references": []
+  },
+  {
+    "path": "Assets/AmpPortableDataViz/Infra/LocalLoopbackNetworkSync.cs",
+    "guid": "416fe317e56cc67459c934b8422dc280",
+    "old_asset_references": []
+  },
+  {
+    "path": "Assets/AmpPortableDataViz/Application/VisualizationSessionController.cs",
+    "guid": "9d495ebc7f822414c99f48cdead2feb9",
+    "old_asset_references": []
+  },
+  {
+    "path": "Assets/AmpPortableDataViz/Application/VisualizationSessionOptions.cs",
+    "guid": "55280892530235c44ae269b114fcf888",
+    "old_asset_references": []
+  },
+  {
+    "path": "Assets/AmpPortableDataViz/Application/VisualizationMessages.cs",
+    "guid": "fdbc38ed2cd38d14d9bddd0d9c42b0a4",
+    "old_asset_references": []
+  },
+  {
+    "path": "Assets/AmpPortableDataViz/Core/Ports.cs",
+    "guid": "d543cc0e3a444ef409a54a19bd560840",
+    "old_asset_references": []
+  },
+  {
+    "path": "Assets/AmpPortableDataViz/Core/DomainModels.cs",
+    "guid": "bf9aed61938ff3a44a7b7a53729f5375",
+    "old_asset_references": []
+  },
+  {
+    "path": "Assets/AmpPortableDataViz/Presentation/Utility/TaskExtensions.cs",
+    "guid": "fa8fe124f57193645998e9d811f1c36c",
+    "old_asset_references": []
+  },
+  {
+    "path": "Assets/Prefabs/SimpleVisualizerPrefab.prefab",
+    "guid": "051cecbb1a02d6f4483850f6aeebe0eb",
+    "old_asset_references": []
+  }
+]

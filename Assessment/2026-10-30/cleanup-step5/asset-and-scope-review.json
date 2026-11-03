@@ -1,0 +1,45 @@
+{
+  "main_scene_only_retired_fields_removed": true,
+  "retired_main_scene_field_count": 35,
+  "all_other_scene_lines_identical": true,
+  "amp_assembly_only_livekit_reference_removed": true,
+  "external_removed_guid_check": {
+    "command": [
+      "rg",
+      "-n",
+      "--no-ignore",
+      "-g",
+      "*.meta",
+      "-g",
+      "*.unity",
+      "-g",
+      "*.prefab",
+      "-g",
+      "*.asset",
+      "-g",
+      "*.json",
+      "-g",
+      "*.asmdef",
+      "3b924c1f4cf84d93af18ad2c6719d59f|e9cd9d6e05eba3c4bae3a760579b5176|9d7e7891a2bf40c1baf7cd8e6ce1de03|9eb1af1be6defec468d3beb509c605e9|e9c55af6eefc27242bbc9fb5fb32fdaf|470d575c38a228442a7ae2f8ab3dec79|e8b99dd7fd14b7b4185e5c8dfab53e01|5d19170f9f087e243bff58d78a98d9ac|cefa4e9695b578d489b788eaafcddda1|f385243fd64024043bbfcd6441f0f5d4|8b6f4f89ea2540a78cec5e4342e29882|a9b63c4f5f500b24b805fe7711d68027|55d8d08b43be4fe9a863dceb65b0def7|398cb510321987a4897e287ad4047fb1|27b57e1e63f87ce498cd627ceab41433|0a9285bcbe76bb3468afbace3c7041e0|8054aab6a41c540439b1188d20441e2b|94a3c688a0ee101428f7d2b8711bc83d|36c9f222d0b09484a85e71cc40cc79bd|c9a590e20901af14ab56a8c38e566298|80e7ad267774ae148acddd79d82dadd2|b58615530f585244994540c483f2bd7f|6181c8d3a60738646a748488a8ed7a7f|c5cdbf9d71a173946966d0a74601f985|1ef96339272ed294f8a7d8dcf4ddc73a",
+      "Library/PackageCache",
+      "C:/Users/Bryan Dunphy/Documents/RayNeoSDK/RayNeo OpenXR Unity ARDK/RayNeo OpenXR Unity ARDK"
+    ],
+    "exit_code": 1,
+    "stdout": "",
+    "stderr": ""
+  },
+  "preserved_manual_drivers": [
+    "AudienceDataManualDriver",
+    "ParticleMeshManualDriver",
+    "GraphManualDriver"
+  ],
+  "retired_plasma_manual_drivers": [
+    "EmotionPlasmaManualDriver",
+    "EmotionRayPlasmaManualDriver"
+  ],
+  "dependencies_unchanged": [
+    "Packages/manifest.json",
+    "Packages/packages-lock.json"
+  ],
+  "step6_started": false
+}

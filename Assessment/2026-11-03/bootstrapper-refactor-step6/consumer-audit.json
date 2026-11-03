@@ -1,0 +1,668 @@
+{
+  "fields": [
+    {
+      "name": "AbstractVizPrefab",
+      "type": "GameObject",
+      "consumers": [
+        {
+          "file": "Assets/Tests/PlayMode/BootstrapperLifecycleTests.cs",
+          "line": 40,
+          "text": "_bootstrapper.AbstractVizPrefab = Child(\"VisualTemplate\");"
+        },
+        {
+          "file": "Assets/Tests/PlayMode/BootstrapperLifecycleTests.cs",
+          "line": 166,
+          "text": "_bootstrapper.AbstractVizPrefab.AddComponent<AudienceSignalBinding>();"
+        },
+        {
+          "file": "Assets/Tests/PlayMode/BootstrapperLifecycleTests.cs",
+          "line": 167,
+          "text": "_bootstrapper.AbstractVizPrefab.AddComponent<AudienceSignalVisualizerBinding>();"
+        },
+        {
+          "file": "Assets/Tests/PlayMode/BootstrapperSerializationTests.cs",
+          "line": 27,
+          "text": "bootstrapper.AbstractVizPrefab = prefab;"
+        },
+        {
+          "file": "Assets/Tests/PlayMode/BootstrapperSerializationTests.cs",
+          "line": 69,
+          "text": "Assert.AreSame(prefab, imported.AbstractVizPrefab);"
+        }
+      ]
+    },
+    {
+      "name": "UseManualVisualizationDrivers",
+      "type": "bool",
+      "consumers": [
+        {
+          "file": "Assets/Tests/PlayMode/BootstrapperLifecycleTests.cs",
+          "line": 68,
+          "text": "_bootstrapper.UseManualVisualizationDrivers = true;"
+        },
+        {
+          "file": "Assets/Tests/PlayMode/BootstrapperLifecycleTests.cs",
+          "line": 149,
+          "text": "_bootstrapper.UseManualVisualizationDrivers = true;"
+        },
+        {
+          "file": "Assets/Tests/PlayMode/BootstrapperRetainedGraphTests.cs",
+          "line": 51,
+          "text": "bootstrapper.UseManualVisualizationDrivers = true;"
+        }
+      ]
+    },
+    {
+      "name": "RedisHost",
+      "type": "string",
+      "consumers": [
+        {
+          "file": "Assets/Tests/PlayMode/BootstrapperLifecycleTests.cs",
+          "line": 50,
+          "text": "_bootstrapper.RedisHost = \"127.0.0.1\";"
+        },
+        {
+          "file": "Assets/Tests/PlayMode/BootstrapperRetainedGraphTests.cs",
+          "line": 53,
+          "text": "bootstrapper.RedisHost = string.Empty;"
+        }
+      ]
+    },
+    {
+      "name": "RedisPort",
+      "type": "int",
+      "consumers": []
+    },
+    {
+      "name": "RedisChannel",
+      "type": "string",
+      "consumers": []
+    },
+    {
+      "name": "RedisChannels",
+      "type": "string[]",
+      "consumers": [
+        {
+          "file": "Assets/Tests/PlayMode/BootstrapperLifecycleTests.cs",
+          "line": 164,
+          "text": "_bootstrapper.RedisChannels = new[] { \"device:a:physio_metrics\", \"device:b:physio_metrics\" };"
+        }
+      ]
+    },
+    {
+      "name": "RequireRedisEndpointConfirmation",
+      "type": "bool",
+      "consumers": [
+        {
+          "file": "Assets/Tests/PlayMode/BootstrapperLifecycleTests.cs",
+          "line": 49,
+          "text": "_bootstrapper.RequireRedisEndpointConfirmation = true;"
+        },
+        {
+          "file": "Assets/Tests/PlayMode/BootstrapperRetainedGraphTests.cs",
+          "line": 52,
+          "text": "bootstrapper.RequireRedisEndpointConfirmation = true;"
+        }
+      ]
+    },
+    {
+      "name": "IncludeSensorChannels",
+      "type": "bool",
+      "consumers": [
+        {
+          "file": "Assets/Tests/PlayMode/BootstrapperLifecycleTests.cs",
+          "line": 44,
+          "text": "_bootstrapper.IncludeSensorChannels = false;"
+        },
+        {
+          "file": "Assets/Tests/PlayMode/BootstrapperSerializationTests.cs",
+          "line": 29,
+          "text": "bootstrapper.IncludeSensorChannels = false;"
+        },
+        {
+          "file": "Assets/Tests/PlayMode/BootstrapperSerializationTests.cs",
+          "line": 71,
+          "text": "Assert.IsFalse(imported.IncludeSensorChannels);"
+        }
+      ]
+    },
+    {
+      "name": "SensorIds",
+      "type": "string[]",
+      "consumers": [
+        {
+          "file": "Assets/Tests/PlayMode/BootstrapperLifecycleTests.cs",
+          "line": 165,
+          "text": "_bootstrapper.SensorIds = Array.Empty<string>();"
+        },
+        {
+          "file": "Assets/Tests/PlayMode/BootstrapperSerializationTests.cs",
+          "line": 30,
+          "text": "bootstrapper.SensorIds = new[] { \"migration-a\", \"migration-b\" };"
+        },
+        {
+          "file": "Assets/Tests/PlayMode/BootstrapperSerializationTests.cs",
+          "line": 72,
+          "text": "CollectionAssert.AreEqual(new[] { \"migration-a\", \"migration-b\" }, imported.SensorIds);"
+        }
+      ]
+    },
+    {
+      "name": "AutoDetectSensorIds",
+      "type": "bool",
+      "consumers": [
+        {
+          "file": "Assets/Tests/PlayMode/BootstrapperLifecycleTests.cs",
+          "line": 43,
+          "text": "_bootstrapper.AutoDetectSensorIds = false;"
+        },
+        {
+          "file": "Assets/Tests/PlayMode/BootstrapperSerializationTests.cs",
+          "line": 31,
+          "text": "bootstrapper.AutoDetectSensorIds = false;"
+        },
+        {
+          "file": "Assets/Tests/PlayMode/BootstrapperSerializationTests.cs",
+          "line": 73,
+          "text": "Assert.IsFalse(imported.AutoDetectSensorIds);"
+        }
+      ]
+    },
+    {
+      "name": "RedisDiscoveryTimeoutMs",
+      "type": "int",
+      "consumers": []
+    },
+    {
+      "name": "AbstractVizParent",
+      "type": "Transform",
+      "consumers": [
+        {
+          "file": "Assets/Tests/PlayMode/BootstrapperLifecycleTests.cs",
+          "line": 41,
+          "text": "_bootstrapper.AbstractVizParent = _root.transform;"
+        },
+        {
+          "file": "Assets/Tests/PlayMode/BootstrapperSerializationTests.cs",
+          "line": 28,
+          "text": "bootstrapper.AbstractVizParent = root.transform;"
+        },
+        {
+          "file": "Assets/Tests/PlayMode/BootstrapperSerializationTests.cs",
+          "line": 70,
+          "text": "Assert.AreSame(importedRoot.transform, imported.AbstractVizParent);"
+        }
+      ]
+    },
+    {
+      "name": "AbstractVizOriginOffset",
+      "type": "Vector3",
+      "consumers": [
+        {
+          "file": "Assets/Tests/PlayMode/BootstrapperArtistVizTests.cs",
+          "line": 32,
+          "text": "bootstrapper.AbstractVizOriginOffset = new Vector3(1f, 2f, 3f);"
+        },
+        {
+          "file": "Assets/Tests/PlayMode/BootstrapperPlacementTests.cs",
+          "line": 25,
+          "text": "_bootstrapper.AbstractVizOriginOffset = new Vector3(1f, 2f, 3f);"
+        },
+        {
+          "file": "Assets/Tests/PlayMode/BootstrapperSerializationTests.cs",
+          "line": 32,
+          "text": "bootstrapper.AbstractVizOriginOffset = new Vector3(1f, 2f, 3f);"
+        },
+        {
+          "file": "Assets/Tests/PlayMode/BootstrapperSerializationTests.cs",
+          "line": 74,
+          "text": "Assert.AreEqual(new Vector3(1f, 2f, 3f), imported.AbstractVizOriginOffset);"
+        }
+      ]
+    },
+    {
+      "name": "AbstractVizSpacing",
+      "type": "Vector3",
+      "consumers": [
+        {
+          "file": "Assets/Tests/PlayMode/BootstrapperPlacementTests.cs",
+          "line": 26,
+          "text": "_bootstrapper.AbstractVizSpacing = new Vector3(4f, 5f, 6f);"
+        },
+        {
+          "file": "Assets/Tests/PlayMode/BootstrapperSerializationTests.cs",
+          "line": 33,
+          "text": "bootstrapper.AbstractVizSpacing = new Vector3(4f, 5f, 6f);"
+        },
+        {
+          "file": "Assets/Tests/PlayMode/BootstrapperSerializationTests.cs",
+          "line": 75,
+          "text": "Assert.AreEqual(new Vector3(4f, 5f, 6f), imported.AbstractVizSpacing);"
+        }
+      ]
+    },
+    {
+      "name": "AbstractVizPerRow",
+      "type": "int",
+      "consumers": [
+        {
+          "file": "Assets/Tests/PlayMode/BootstrapperPlacementTests.cs",
+          "line": 27,
+          "text": "_bootstrapper.AbstractVizPerRow = 2;"
+        },
+        {
+          "file": "Assets/Tests/PlayMode/BootstrapperSerializationTests.cs",
+          "line": 34,
+          "text": "bootstrapper.AbstractVizPerRow = 7;"
+        },
+        {
+          "file": "Assets/Tests/PlayMode/BootstrapperSerializationTests.cs",
+          "line": 76,
+          "text": "Assert.AreEqual(7, imported.AbstractVizPerRow);"
+        }
+      ]
+    },
+    {
+      "name": "ShowDeviceLabels",
+      "type": "bool",
+      "consumers": [
+        {
+          "file": "Assets/Tests/PlayMode/BootstrapperLifecycleTests.cs",
+          "line": 162,
+          "text": "_bootstrapper.ShowDeviceLabels = false;"
+        }
+      ]
+    },
+    {
+      "name": "DeviceLabelOffset",
+      "type": "Vector3",
+      "consumers": []
+    },
+    {
+      "name": "DeviceLabelFontSize",
+      "type": "float",
+      "consumers": []
+    },
+    {
+      "name": "DeviceLabelColor",
+      "type": "Color",
+      "consumers": []
+    },
+    {
+      "name": "AutoSpawnAbstractViz",
+      "type": "bool",
+      "consumers": [
+        {
+          "file": "Assets/Tests/PlayMode/BootstrapperLifecycleTests.cs",
+          "line": 46,
+          "text": "_bootstrapper.AutoSpawnAbstractViz = false;"
+        },
+        {
+          "file": "Assets/Tests/PlayMode/BootstrapperLifecycleTests.cs",
+          "line": 160,
+          "text": "_bootstrapper.AutoSpawnAbstractViz = true;"
+        },
+        {
+          "file": "Assets/Tests/PlayMode/BootstrapperSerializationTests.cs",
+          "line": 35,
+          "text": "bootstrapper.AutoSpawnAbstractViz = false;"
+        },
+        {
+          "file": "Assets/Tests/PlayMode/BootstrapperSerializationTests.cs",
+          "line": 77,
+          "text": "Assert.IsFalse(imported.AutoSpawnAbstractViz);"
+        }
+      ]
+    },
+    {
+      "name": "AutoSpawnArtistVizFromChannels",
+      "type": "bool",
+      "consumers": [
+        {
+          "file": "Assets/Tests/PlayMode/BootstrapperLifecycleTests.cs",
+          "line": 48,
+          "text": "_bootstrapper.AutoSpawnArtistVizFromChannels = false;"
+        }
+      ]
+    },
+    {
+      "name": "ArtistVizPrefab",
+      "type": "GameObject",
+      "consumers": []
+    },
+    {
+      "name": "ArtistVizParent",
+      "type": "Transform",
+      "consumers": []
+    },
+    {
+      "name": "UseIndividualSensorEngagement",
+      "type": "bool",
+      "consumers": [
+        {
+          "file": "Assets/Tests/PlayMode/BootstrapperLifecycleTests.cs",
+          "line": 45,
+          "text": "_bootstrapper.UseIndividualSensorEngagement = false;"
+        }
+      ]
+    },
+    {
+      "name": "SensorEngagementChannelTemplate",
+      "type": "string",
+      "consumers": []
+    },
+    {
+      "name": "SensorEngagementChannelOverrides",
+      "type": "SensorEngagementChannelOverride[]",
+      "consumers": []
+    },
+    {
+      "name": "SensorEngagementTimeoutSeconds",
+      "type": "float",
+      "consumers": []
+    },
+    {
+      "name": "SensorEngagementNeutralValue",
+      "type": "float",
+      "consumers": []
+    },
+    {
+      "name": "SensorEngagementPayloadFormat",
+      "type": "SensorEngagementJsonFormat",
+      "consumers": []
+    },
+    {
+      "name": "UseSingleSelectedSensorStream",
+      "type": "bool",
+      "consumers": [
+        {
+          "file": "Assets/Tests/PlayMode/BootstrapperLifecycleTests.cs",
+          "line": 130,
+          "text": "_bootstrapper.UseSingleSelectedSensorStream = false;"
+        },
+        {
+          "file": "Assets/Tests/PlayMode/BootstrapperLifecycleTests.cs",
+          "line": 141,
+          "text": "_bootstrapper.UseSingleSelectedSensorStream = true;"
+        }
+      ]
+    },
+    {
+      "name": "SensorHudCamera",
+      "type": "Camera",
+      "consumers": [
+        {
+          "file": "Assets/Tests/PlayMode/BootstrapperLifecycleTests.cs",
+          "line": 172,
+          "text": "_bootstrapper.SensorHudCamera = Child(\"HudCamera\").AddComponent<Camera>();"
+        },
+        {
+          "file": "Assets/Tests/PlayMode/BootstrapperPlacementTests.cs",
+          "line": 72,
+          "text": "_bootstrapper.SensorHudCamera = cameraObject.AddComponent<Camera>();"
+        }
+      ]
+    },
+    {
+      "name": "SensorHudLocalPosition",
+      "type": "Vector3",
+      "consumers": [
+        {
+          "file": "Assets/Tests/PlayMode/BootstrapperPlacementTests.cs",
+          "line": 73,
+          "text": "_bootstrapper.SensorHudLocalPosition = new Vector3(1f, 2f, 3f);"
+        }
+      ]
+    },
+    {
+      "name": "SensorHudLocalScale",
+      "type": "float",
+      "consumers": [
+        {
+          "file": "Assets/Tests/PlayMode/BootstrapperPlacementTests.cs",
+          "line": 74,
+          "text": "_bootstrapper.SensorHudLocalScale = scale;"
+        }
+      ]
+    },
+    {
+      "name": "SensorHudFontSize",
+      "type": "float",
+      "consumers": [
+        {
+          "file": "Assets/Tests/PlayMode/BootstrapperPlacementTests.cs",
+          "line": 75,
+          "text": "_bootstrapper.SensorHudFontSize = fontSize;"
+        }
+      ]
+    },
+    {
+      "name": "SensorHudColor",
+      "type": "Color",
+      "consumers": [
+        {
+          "file": "Assets/Tests/PlayMode/BootstrapperPlacementTests.cs",
+          "line": 76,
+          "text": "_bootstrapper.SensorHudColor = Color.cyan;"
+        }
+      ]
+    },
+    {
+      "name": "AutoSpawnGraphVisualsFromChannels",
+      "type": "bool",
+      "consumers": [
+        {
+          "file": "Assets/Tests/PlayMode/BootstrapperLifecycleTests.cs",
+          "line": 47,
+          "text": "_bootstrapper.AutoSpawnGraphVisualsFromChannels = false;"
+        },
+        {
+          "file": "Assets/Tests/PlayMode/BootstrapperLifecycleTests.cs",
+          "line": 161,
+          "text": "_bootstrapper.AutoSpawnGraphVisualsFromChannels = true;"
+        }
+      ]
+    },
+    {
+      "name": "GraphPrefab",
+      "type": "GameObject",
+      "consumers": [
+        {
+          "file": "Assets/Tests/PlayMode/BootstrapperLifecycleTests.cs",
+          "line": 69,
+          "text": "_bootstrapper.GraphPrefab = Child(\"ManualGraphTemplate\");"
+        },
+        {
+          "file": "Assets/Tests/PlayMode/BootstrapperLifecycleTests.cs",
+          "line": 70,
+          "text": "_bootstrapper.GraphPrefab.AddComponent<GraphManualDriver>();"
+        },
+        {
+          "file": "Assets/Tests/PlayMode/BootstrapperLifecycleTests.cs",
+          "line": 168,
+          "text": "_bootstrapper.GraphPrefab = Child(\"GraphTemplate\");"
+        },
+        {
+          "file": "Assets/Tests/PlayMode/BootstrapperLifecycleTests.cs",
+          "line": 169,
+          "text": "_bootstrapper.GraphPrefab.AddComponent<AudienceSignalBinding>();"
+        },
+        {
+          "file": "Assets/Tests/PlayMode/BootstrapperLifecycleTests.cs",
+          "line": 170,
+          "text": "_bootstrapper.GraphPrefab.AddComponent<AudienceSignalVisualizerBinding>();"
+        },
+        {
+          "file": "Assets/Tests/PlayMode/BootstrapperLifecycleTests.cs",
+          "line": 171,
+          "text": "_bootstrapper.GraphPrefab.AddComponent<GraphVisualizer>();"
+        },
+        {
+          "file": "Assets/Tests/PlayMode/BootstrapperRetainedGraphTests.cs",
+          "line": 54,
+          "text": "bootstrapper.GraphPrefab = LoadPrefab(\"GraphPrefab\");"
+        }
+      ]
+    },
+    {
+      "name": "GraphGroupParent",
+      "type": "Transform",
+      "consumers": [
+        {
+          "file": "Assets/Tests/PlayMode/BootstrapperLifecycleTests.cs",
+          "line": 42,
+          "text": "_bootstrapper.GraphGroupParent = _root.transform;"
+        },
+        {
+          "file": "Assets/Tests/PlayMode/BootstrapperRetainedGraphTests.cs",
+          "line": 55,
+          "text": "bootstrapper.GraphGroupParent = _testRoot.transform;"
+        }
+      ]
+    },
+    {
+      "name": "GraphGroupOriginOffset",
+      "type": "Vector3",
+      "consumers": [
+        {
+          "file": "Assets/Tests/PlayMode/BootstrapperPlacementTests.cs",
+          "line": 28,
+          "text": "_bootstrapper.GraphGroupOriginOffset = new Vector3(2f, 3f, 4f);"
+        }
+      ]
+    },
+    {
+      "name": "GraphGroupSpacing",
+      "type": "Vector3",
+      "consumers": [
+        {
+          "file": "Assets/Tests/PlayMode/BootstrapperPlacementTests.cs",
+          "line": 29,
+          "text": "_bootstrapper.GraphGroupSpacing = new Vector3(5f, 6f, 7f);"
+        }
+      ]
+    },
+    {
+      "name": "GraphGroupsPerRow",
+      "type": "int",
+      "consumers": [
+        {
+          "file": "Assets/Tests/PlayMode/BootstrapperPlacementTests.cs",
+          "line": 30,
+          "text": "_bootstrapper.GraphGroupsPerRow = 2;"
+        }
+      ]
+    },
+    {
+      "name": "ShowGraphGroupLabels",
+      "type": "bool",
+      "consumers": [
+        {
+          "file": "Assets/Tests/PlayMode/BootstrapperLifecycleTests.cs",
+          "line": 163,
+          "text": "_bootstrapper.ShowGraphGroupLabels = false;"
+        }
+      ]
+    },
+    {
+      "name": "GraphGroupLabelOffset",
+      "type": "Vector3",
+      "consumers": [
+        {
+          "file": "Assets/Tests/PlayMode/BootstrapperChannelAndLabelTests.cs",
+          "line": 78,
+          "text": "_bootstrapper.GraphGroupLabelOffset = offset;"
+        }
+      ]
+    },
+    {
+      "name": "GraphGroupLabelVerticalOffset",
+      "type": "float",
+      "consumers": [
+        {
+          "file": "Assets/Tests/PlayMode/BootstrapperChannelAndLabelTests.cs",
+          "line": 79,
+          "text": "_bootstrapper.GraphGroupLabelVerticalOffset = verticalOffset;"
+        }
+      ]
+    },
+    {
+      "name": "GraphGroupLabelFontSize",
+      "type": "float",
+      "consumers": []
+    },
+    {
+      "name": "GraphGroupLabelColor",
+      "type": "Color",
+      "consumers": []
+    },
+    {
+      "name": "GraphItemBoundsSize",
+      "type": "Vector3",
+      "consumers": [
+        {
+          "file": "Assets/Tests/PlayMode/BootstrapperChannelAndLabelTests.cs",
+          "line": 76,
+          "text": "_bootstrapper.GraphItemBoundsSize = bounds;"
+        }
+      ]
+    },
+    {
+      "name": "GraphGroupBoundsPadding",
+      "type": "Vector3",
+      "consumers": [
+        {
+          "file": "Assets/Tests/PlayMode/BootstrapperChannelAndLabelTests.cs",
+          "line": 77,
+          "text": "_bootstrapper.GraphGroupBoundsPadding = padding;"
+        }
+      ]
+    },
+    {
+      "name": "SpawnPosition",
+      "type": "Vector3",
+      "consumers": [
+        {
+          "file": "Assets/Tests/PlayMode/BootstrapperPlacementTests.cs",
+          "line": 23,
+          "text": "_bootstrapper.SpawnPosition = new Vector3(3f, 4f, 5f);"
+        },
+        {
+          "file": "Assets/Tests/PlayMode/BootstrapperSerializationTests.cs",
+          "line": 36,
+          "text": "bootstrapper.SpawnPosition = new Vector3(8f, 9f, 10f);"
+        },
+        {
+          "file": "Assets/Tests/PlayMode/BootstrapperSerializationTests.cs",
+          "line": 78,
+          "text": "Assert.AreEqual(new Vector3(8f, 9f, 10f), imported.SpawnPosition);"
+        }
+      ]
+    },
+    {
+      "name": "SpawnRotationEuler",
+      "type": "Vector3",
+      "consumers": [
+        {
+          "file": "Assets/Tests/PlayMode/BootstrapperPlacementTests.cs",
+          "line": 24,
+          "text": "_bootstrapper.SpawnRotationEuler = new Vector3(10f, 20f, 30f);"
+        },
+        {
+          "file": "Assets/Tests/PlayMode/BootstrapperSerializationTests.cs",
+          "line": 37,
+          "text": "bootstrapper.SpawnRotationEuler = new Vector3(11f, 12f, 13f);"
+        },
+        {
+          "file": "Assets/Tests/PlayMode/BootstrapperSerializationTests.cs",
+          "line": 79,
+          "text": "Assert.AreEqual(new Vector3(11f, 12f, 13f), imported.SpawnRotationEuler);"
+        }
+      ]
+    }
+  ],
+  "field_count": 50,
+  "production_direct_consumers": [],
+  "runtime_reflection_field_consumers": [],
+  "retained_public_unityevent_method": "BeginAfterEndpoint"
+}

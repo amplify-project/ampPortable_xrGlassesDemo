@@ -1,0 +1,39 @@
+{
+  "runs": {
+    "reproduction-before": {
+      "total": 2,
+      "passed": 1,
+      "failed": 1,
+      "skipped": 0,
+      "exit_code": 2,
+      "xml_sha256": "d89b7c0feac5afc14cdeaefedcab24bd7b2afa27f7eee5fe80b140bea03979d3"
+    },
+    "fixed-focused": {
+      "total": 11,
+      "passed": 11,
+      "failed": 0,
+      "skipped": 0,
+      "exit_code": 0,
+      "xml_sha256": "dd0b441e963a6c12c118460384a2ef2c54bf7bef66bf75c84e21b379f90617ac"
+    },
+    "full": {
+      "total": 208,
+      "passed": 208,
+      "failed": 0,
+      "skipped": 0,
+      "exit_code": 0,
+      "xml_sha256": "fcd74b3aac53f097815fbfa3558a5449ec03f6337a08e5dc63e7e6ff4a8b5df9"
+    }
+  },
+  "all_206_prior_test_identities_retained": true,
+  "new_test_cases": [
+    "AmpPortableDataViz.Tests.PlayMode.ParticleMeshVisualizerOrthogonalityTests.CornerHalos_DirectionCheck_WithOneMillisecondFrames",
+    "AmpPortableDataViz.Tests.PlayMode.ParticleMeshVisualizerOrthogonalityTests.CornerHalos_DirectionCheck_WithSixtyHertzFrames"
+  ],
+  "runtime_or_asset_changes": false,
+  "android_rebuild_required": false,
+  "previous_android_validation_commit": "1c68388552db9606f05edfacd24d4232b3a98f84",
+  "previous_failure_records_preserved": true,
+  "push_target": "origin/cleanup/obsolete-code",
+  "device_install_or_test_performed": false
+}
