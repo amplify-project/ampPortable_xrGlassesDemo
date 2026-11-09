@@ -19,7 +19,7 @@
     "com.unity.xr.interaction.toolkit": "2.5.4",
     "com.unity.xr.mock-hmd": "1.4.0-preview.2",
     "com.unity.xr.openxr": "1.7.0",
-    "com.unity.xr.rayneo.openxr": "file:C:/Users/Bryan Dunphy/Documents/RayNeoSDK/RayNeo OpenXR Unity ARDK/RayNeo OpenXR Unity ARDK",
+    "com.unity.xr.rayneo.openxr": "file:com.unity.xr.rayneo.openxr-1.1.2.tgz",
     "io.livekit.livekit-sdk": "https://github.com/livekit/client-sdk-unity.git",
     "com.unity.modules.ai": "1.0.0",
     "com.unity.modules.androidjni": "1.0.0",

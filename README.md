@@ -36,7 +36,7 @@ Use **Unity 2022.3.36f1** with **Android Build Support**, **Android SDK & NDK To
 
 | Dependency | Project version/source | Role |
 | --- | --- | --- |
-| RayNeo OpenXR Unity ARDK | **1.1.2** in the assessed local SDK; external `file:` package | RayNeo runtime, controller input, and OpenXR integration. |
+| RayNeo OpenXR Unity ARDK | **1.1.2**, bundled in `Packages/com.unity.xr.rayneo.openxr-1.1.2.tgz` | RayNeo runtime, controller input, and OpenXR integration. |
 | OpenXR Plugin | `1.7.0` | XR loader and feature configuration. |
 | XR Interaction Toolkit | `2.5.4` | XR interaction support. |
 | AR Foundation | `5.1.6` | AR framework support. |
@@ -55,7 +55,7 @@ Other packages remain declared, including USD and the LiveKit Unity SDK. **LiveK
 
 ### RayNeo SDK and Glass OS
 
-Obtain the matching **RayNeo OpenXR Unity ARDK 1.1.2** from [RayNeo's SDK downloads](https://leiniao-ibg.feishu.cn/wiki/IDFfwLKR4iihBuknkVrcGiMUnic), linked by [Qualcomm's X3 Pro development walkthrough](https://www.qualcomm.com/developer/project/get-started-with-rayneo-x3-pro-ar-development). The walkthrough uses Unity 2022.3.36f1 and specifies SDK 1.1.2 for Glass OS versions above 23.8.29. Confirm compatibility for the glasses being used before changing their OS or SDK; an existing working device does not need an OS upgrade just to follow this guide.
+The matching **RayNeo OpenXR Unity ARDK 1.1.2** is bundled in this repository; no separate SDK download or extraction is needed to build. See [the package notes](Packages/RayNeo-ARDK.md) for provenance and archive verification. For upstream releases, use [RayNeo's SDK downloads](https://leiniao-ibg.feishu.cn/wiki/IDFfwLKR4iihBuknkVrcGiMUnic), linked by [Qualcomm's X3 Pro development walkthrough](https://www.qualcomm.com/developer/project/get-started-with-rayneo-x3-pro-ar-development). Confirm compatibility for the glasses being used before changing their OS or SDK; an existing working device does not need an OS upgrade just to follow this guide.
 
 The [public RayNeo SDK repository](https://github.com/github-for-rayneo/OpenXR-Unity-ARDK) is a useful reference, but check its package version before using it. Its public `main` package was `1.0.1-r3` when checked for this documentation and differs from the assessed `1.1.2` package.
 
@@ -63,28 +63,22 @@ The [public RayNeo SDK repository](https://github.com/github-for-rayneo/OpenXR-U
 
 Skip this section if an operator has already supplied the APK you intend to install. APKs and Unity build output are ignored by Git.
 
-### 1. Get the project and resolve the SDK
+### 1. Get the project
 
 ```powershell
-git clone https://github.com/amplify-project/ampPortable_xrGlassesDemo.git
+git clone --branch main https://github.com/amplify-project/ampPortable_xrGlassesDemo.git
 cd ampPortable_xrGlassesDemo
 ```
 
-Check out the branch or revision you intend to build. `main` is the primary RayNeo baseline; `rayNeoPort` is the port development branch. The older XREAL Air 2 Ultra / Beam Pro project using Unity **6000.3.10f1** is preserved at the annotated tag `xreal-unity6-pre-rayneo`; that version has a different device setup.
+Build from `main`, which contains the current RayNeo baseline. The older XREAL Air 2 Ultra / Beam Pro project using Unity **6000.3.10f1** is preserved at the annotated tag `xreal-unity6-pre-rayneo`; that version has a different device setup.
 
-Extract the compatible RayNeo ARDK. The current manifest contains this machine-specific dependency:
-
-```json
-"com.unity.xr.rayneo.openxr": "file:C:/Users/Bryan Dunphy/Documents/RayNeoSDK/RayNeo OpenXR Unity ARDK/RayNeo OpenXR Unity ARDK"
-```
-
-On another build machine, update **only this path** in `Packages/manifest.json` to the extracted package directory containing its `package.json`. For example:
+The RayNeo ARDK is included in the checkout. The manifest references its archive using a path relative to `Packages/`:
 
 ```json
-"com.unity.xr.rayneo.openxr": "file:C:/SDKs/RayNeo/OpenXR-Unity-ARDK"
+"com.unity.xr.rayneo.openxr": "file:com.unity.xr.rayneo.openxr-1.1.2.tgz"
 ```
 
-These snippets show the dependency entry, not a complete replacement manifest. Keep the other entries intact. Let Unity resolve `Packages/packages-lock.json`; do not hand-edit it or upgrade packages as part of initial setup.
+Unity restores this package from the archive on each build machine. No manifest edits, user-specific SDK folders, or RayNeo Git credentials are required. This follows [Unity's local tarball dependency format](https://docs.unity3d.com/2022.3/Documentation/Manual/upm-localpath.html). Keep the manifest and archive together when copying the project. The snippet shows one dependency entry, not a complete replacement manifest. Let Unity resolve `Packages/packages-lock.json`; do not hand-edit it or upgrade packages as part of initial setup.
 
 ### 2. Open and import
 
@@ -270,7 +264,7 @@ Engagement must be confirmed and match a known sensor. Accepted scores are clamp
 
 | Symptom | What to check |
 | --- | --- |
-| Unity cannot resolve the RayNeo package | Confirm the manifest's `file:` path exists and ends at the directory containing the compatible ARDK's `package.json`. |
+| Unity cannot resolve the RayNeo package | Confirm `Packages/com.unity.xr.rayneo.openxr-1.1.2.tgz` is present and the manifest references `file:com.unity.xr.rayneo.openxr-1.1.2.tgz`. Restore both from the same revision; no external SDK path is needed. |
 | Package restoration or compilation fails | Check Git/network access, NuGet restoration, and Unity version. For Windows path-length errors during Git package checkout, enable long-path support for the Git process used by Unity, then retry. |
 | `adb` is not recognized | Add Platform Tools to `PATH`, or run `./adb.exe` from its directory in PowerShell. |
 | ADB lists no glasses or says `unauthorized` | Check the data cable, developer/ADB mode, USB debugging, and authorization on the glasses. |

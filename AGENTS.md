@@ -4,11 +4,11 @@
 
 This is a Unity XR glasses proof-of-concept for real-time audience data visualization. Visualizations act as abstract graphical scores and engagement/emotion displays.
 
-Primary branch: `main`. Port development branch: `rayNeoPort`.
+Primary branch: `main`, which contains the current RayNeo baseline. The former `rayNeoPort` branch is no longer available.
 
 Current baseline: the XR Score Viewer app ported from XREAL Air 2 Ultra glasses to RayNeo X3 Pro glasses.
 
-Unity version for `main` and `rayNeoPort`: `2022.3.36f1`
+Unity version for `main`: `2022.3.36f1`
 
 The previous XREAL / Unity `6000.3.10f1` main baseline is preserved by the annotated tag `xreal-unity6-pre-rayneo`.
 
@@ -67,7 +67,7 @@ Important packages include:
 - URP
 - LiveKit Unity SDK remains declared pending dependency cleanup; its application integration is retired.
 - NuGetForUnity
-- RayNeo SDK / ARDK for the `rayNeoPort` branch
+- RayNeo OpenXR ARDK 1.1.2, bundled as `Packages/com.unity.xr.rayneo.openxr-1.1.2.tgz`
 
 Do not alter `Packages/manifest.json` or `Packages/packages-lock.json` unless dependency work is explicitly requested.
 
